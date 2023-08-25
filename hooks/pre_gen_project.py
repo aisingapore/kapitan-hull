@@ -17,9 +17,6 @@ COOKIE_INPUTS = {
     "src_package_name_short": {
         "user_input": "{{cookiecutter.src_package_name_short}}",
         "regex": r"^[a-z](?:_?[a-z0-9]+)*$"},
-    "harbor_registry_project_path": {
-        "user_input": "{{cookiecutter.harbor_registry_project_path}}",
-        "regex": r"^registry\.aisingapore\.net:[a-zA-Z0-9]+$"},
     "author_name": {
         "user_input": "{{cookiecutter.author_name}}",
         "regex": r"^[a-zA-Z](?:_?[a-zA-Z0-9]+)*$"}
@@ -52,9 +49,9 @@ def check_input_regex(cookie_input_key, cookie_input_val):
             ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid Python package name."
                 % (cookie_input_key, cookie_input_val["user_input"]))
 
-        if cookie_input_key == "harbor_registry_project_path":
-            ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid GCP project ID."
-                % (cookie_input_key, cookie_input_val["user_input"]))
+        # if cookie_input_key == "harbor_registry_project_path":
+        #     ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid Harbor path."
+        #         % (cookie_input_key, cookie_input_val["user_input"]))
 
         if cookie_input_key == "author_name":
             ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid GCR subdirectory name."
