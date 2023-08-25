@@ -1,0 +1,22 @@
+process_data:
+  raw_data_dir_path: "/path/to/raw/data/dir"
+  processed_data_dir_path: "/path/to/processed/data/dir"
+
+train_model:
+  setup_mlflow: false
+  mlflow_autolog: false
+  mlflow_tracking_uri: "mlflow-svc.runai.svc.local"
+  mlflow_exp_name: "experiment-01"
+  data_dir_path: "/path/to/processed/data/dir"
+  no_cuda: true
+  no_mps: true
+  train_bs: 64
+  test_bs: 1000
+  lr: 1.0
+  gamma: 0.7
+  seed: 1111
+  epochs: 3
+  log_interval: 100
+  dry_run: false
+  model_checkpoint_interval: 2
+  model_checkpoint_dir_path: "/path/to/model/checkpoint"
