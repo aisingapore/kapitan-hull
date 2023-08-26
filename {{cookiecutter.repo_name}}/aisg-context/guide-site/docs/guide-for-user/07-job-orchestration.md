@@ -64,7 +64,7 @@ provided in this template:
     ```
 
 Now that we have the Docker image pushed to the registry, we can submit
-a job using that image to Run:ai:
+a job using that image to Run:ai\:
 
 === "Linux/macOS"
 
@@ -73,7 +73,9 @@ a job using that image to Run:ai:
         --job-name-prefix <YOUR_NAME>-data-prep \
         -i {{cookiecutter.harbor_registry_project_path}}/data-prep:0.1.0 \
         --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/{{cookiecutter.repo_name}} \
-        --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> --cpu 2 --memory 4G \
+        --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
+        --cpu 2 \
+        --memory 4G \
         --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py process_data.raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/data/mnist-pngs-data-aisg" process_data.processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/data/processed/mnist-pngs-data-aisg-processed'
     ```
 
@@ -84,7 +86,9 @@ a job using that image to Run:ai:
         --job-name-prefix <YOUR_NAME>-data-prep `
         -i {{cookiecutter.harbor_registry_project_path}}/data-prep:0.1.0 `
         --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/{{cookiecutter.repo_name}} `
-        --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> --cpu 2 --memory 4G `
+        --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> `
+        --cpu 2 `
+        --memory 4G `
         --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py process_data.raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/data/mnist-pngs-data-aisg" process_data.processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/data/processed/mnist-pngs-data-aisg-processed'
     ```
 
@@ -166,7 +170,9 @@ we can run a job using it:
         -i {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0 \
         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
-        -e AWS_ACCESS_KEY_ID=SECRET:s3-credentials,accessKeyId \
+        --cpu 2 \
+        --memory 4G \
+        -e AWS_ACCESS_KEY_ID=SECRET:s3-credentials,accessKeyId \
         -e AWS_SECRET_ACCESS_KEY=SECRET:s3-credentials,secretAccessKey \
         -e MLFLOW_S3_ENDPOINT_URL="https://necs.nus.edu.sg" \
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
@@ -182,7 +188,9 @@ we can run a job using it:
         -i {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0 `
         --working-dir /home/aisg/{{cookiecutter.repo_name}} `
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> `
-        -e AWS_ACCESS_KEY_ID=SECRET:s3-credentials,accessKeyId `
+        --cpu 2 `
+        --memory 4G `
+        -e AWS_ACCESS_KEY_ID=SECRET:s3-credentials,accessKeyId `
         -e AWS_SECRET_ACCESS_KEY=SECRET:s3-credentials,secretAccessKey `
         -e MLFLOW_S3_ENDPOINT_URL="https://necs.nus.edu.sg" `
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> `
