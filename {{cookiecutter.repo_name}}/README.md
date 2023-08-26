@@ -52,7 +52,7 @@ To spin up the site on your local machine, you can create a virtual
 environment to install the dependencies first:
 
 ```bash
-$ conda create -n aisg-eptg-onprem-runaiy-guide python=3.10.11
+$ conda create -n aisg-eptg-onprem-runai-guide python=3.10.11
 $ conda activate aisg-eptg-onprem-runai-guide
 $ pip install -r aisg-context/guide-site/mkdocs-requirements.txt
 ```
