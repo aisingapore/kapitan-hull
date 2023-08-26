@@ -151,8 +151,6 @@ Within a developer workspace and environment, developers can interact
 which serves as __the organisation’s default version control (Git)
 remote server__.
 
-<iframe width="1280" height="315" src="https://www.youtube.com/embed/qr_Y6jKvXJ0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-
 ??? info "Reference Link(s)"
 
     - [Atlassian Tutorials - What is Git?](https://www.atlassian.com/git/tutorials/what-is-git)
