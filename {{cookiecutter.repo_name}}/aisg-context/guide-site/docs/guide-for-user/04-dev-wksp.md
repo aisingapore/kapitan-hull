@@ -235,7 +235,7 @@ a JupyterLab using the following recommended blocks:
 
 !!! warning "Attention"
     Under the `Environment` block, there is an expandable section called
-    `More settiongs`. Under this section, you can provide more arguments
+    `More settings`. Under this section, you can provide more arguments
     for a container that will be spun up for the workspace. For the
     JupyterLab interface to be able to access any PVC mounted to the
     container, you should include the following argument:
