@@ -8,8 +8,8 @@ ARG NON_ROOT_GID="2222"
 ARG HOME_DIR="/home/${NON_ROOT_USER}"
 
 ARG REPO_DIR="."
-ARG CONDA_ENV_FILE="aiap-dsp-mlops-conda-env.yaml"
-ARG CONDA_ENV_NAME="aiap-dsp-mlops"
+ARG CONDA_ENV_FILE="{{cookiecutter.repo_name}}-conda-env.yaml"
+ARG CONDA_ENV_NAME="{{cookiecutter.repo_name}}"
 
 # Miniconda arguments
 ARG CONDA_HOME="/miniconda3"
@@ -42,7 +42,7 @@ ENV LD_LIBRARY_PATH /usr/local/cuda/lib64:$LD_LIBRARY_PATH
 USER ${NON_ROOT_USER}
 WORKDIR ${HOME_DIR}
 
-COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} $REPO_DIR aiap-dsp-mlops
+COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} $REPO_DIR {{cookiecutter.repo_name}}
 
 # Install Miniconda
 RUN curl -O https://repo.anaconda.com/miniconda/$MINICONDA_SH && \
@@ -51,7 +51,7 @@ RUN curl -O https://repo.anaconda.com/miniconda/$MINICONDA_SH && \
     rm $MINICONDA_SH
 ENV PATH $CONDA_HOME/bin:$HOME_DIR/.local/bin:$PATH
 # Install conda environment
-RUN $CONDA_BIN env create -f aiap-dsp-mlops/$CONDA_ENV_FILE && \
+RUN $CONDA_BIN env create -f {{cookiecutter.repo_name}}/$CONDA_ENV_FILE && \
     $CONDA_BIN init bash && \
     $CONDA_BIN clean -a -y && \
     echo "source activate $CONDA_ENV_NAME" >> "$HOME_DIR/.bashrc"
