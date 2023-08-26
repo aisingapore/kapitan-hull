@@ -23,8 +23,10 @@ theme:
   features:
     # - navigation.instant
     # - navigation.sections
+    - navigation.footer
     - navigation.tabs
     - navigation.top
+    - toc.follow
   palette:
     - scheme: aisg
       primary: red
