@@ -25,3 +25,9 @@ dependencies:
     - pygments==2.15.1
     - semgrep==1.33.2
     - ipykernel==6.25.1
+    - fastapi==0.103.0
+    - uvicorn[standard]==0.23.2
+    - gunicorn==21.2.0
+    - pydantic==1.10.12
+    - python-multipart==0.0.6
+    - jsonlines==3.1.0
