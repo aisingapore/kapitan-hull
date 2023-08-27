@@ -749,3 +749,15 @@ run that looks similar to the following:
 ??? info "Reference Link(s)"
 
     - [MLflow Docs - MLflow Tracking](https://www.mlflow.org/docs/latest/tracking.html)
+
+## Local Virtual Environments
+
+While we will be making use of AI Singapore's remote infrastructure
+to carry out some workflows, we can still make use of our local
+machine to execute some of the steps of the end-to-end machine learning
+workflow. Hence, we can begin by creating a virtual environment that
+will contain all the dependencies required for this guide.
+
+```bash
+$ conda env create -f {{cookiecutter.repo_name}}-conda-env.yml
+```
