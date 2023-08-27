@@ -49,7 +49,7 @@ recommended environment, compute resource, and data source that you
 may make use of to spin up your first VSCode workspace, in the context
 of AI Singapore's infrastructure.
 
-- __Workspace name:__ `<YOUR_NAME>-vscode`
+- __Workspace name:__ `<YOUR_HYPHENATED_NAME>-vscode`
 
 - __Environment:__ `aisg-vscode-server-v4-16-1`
 
@@ -83,7 +83,7 @@ following command:
 
     ```bash
     $ kubectl get pods -n runai-<NAME_OF_PROJECT> | \
-    awk '/<NAME_OF_WORKSPACE/ {print $1}' | \
+    awk '/<NAME_OF_WORKSPACE>/ {print $1}' | \
     xargs -I{} kubectl exec pod/{} -- bash -c "cat ~/.config/code-server/config.yaml"
     bind-addr: 127.0.0.1:8080
     auth: password
@@ -117,6 +117,10 @@ For persistence, we look into using a persistent volume claim, which if
 you have followed the recommendations above, a PVC would have been
 mounted to the container.
 
+__Reference(s):__
+
+- [Kubernetes Docs - Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes)
+
 ### Persistent Workspaces
 
 As mentioned, a PVC should be attached to the workspaces to persist
@@ -140,7 +144,7 @@ persisted.
 
     ```bash
     $ cd /<NAME_OF_DATA_SOURCE>/workspaces
-    $ mkdir <YOUR_NAME>
+    $ mkdir <YOUR_HYPHENATED_NAME>
     ```
 
 ### Git from VSCode
@@ -160,7 +164,7 @@ Now, let's clone your repository from the remote:
 === "VSCode Server Terminal"
 
     ```bash
-    $ cd /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>
+    $ cd /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>
     $ git clone <REMOTE_URL_HTTPS>
     $ cd {{cookiecutter.repo_name}}
     ```
@@ -238,7 +242,7 @@ a VSCode environment, most are still more familiar with Jupyter's
 interface for interacting with or editing notebooks. We can spin up
 a JupyterLab using the following recommended blocks:
 
-- __Workspace name:__ `<YOUR_NAME>-jupyterlab`
+- __Workspace name:__ `<YOUR_HYPHENATED_NAME>-jupyterlab`
 
 - __Environment:__ `aisg-jupyterlab-server-0-1-0`
 
@@ -280,7 +284,7 @@ following command:
     ```bash
     $ kubectl get pods -n runai-<NAME_OF_PROJECT> | \
     awk '/<NAME_OF_WORKSPACE>/ {print $1}' | \
-    xargs -I{} kubectl logs pod/{} | grep "lab?token
+    xargs -I{} kubectl logs pod/{} | grep "lab?token"
     [I YYYY-MM-DD hh:mm:ss ServerApp] http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     [I YYYY-MM-DD hh:mm:ss ServerApp]     http://127.0.0.1:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -292,7 +296,7 @@ following command:
     ```powershell
     $ kubectl get pods -n runai-<NAME_OF_PROJECT> | `
     awk '/<NAME_OF_WORKSPACE>/ {print $1}' | `
-    xargs -I{} kubectl logs pod/{} | grep "lab?token
+    xargs -I{} kubectl logs pod/{} | grep "lab?token"
     [I YYYY-MM-DD hh:mm:ss ServerApp] http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     [I YYYY-MM-DD hh:mm:ss ServerApp]     http://127.0.0.1:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -308,15 +312,38 @@ __Reference(s):__
 
 - [Jupyter Server Docs - Config file and command line options](https://jupyter-server.readthedocs.io/en/stable/other/full-config.html#other-full-config)
 
-### Customising JupyterLab Server
-
-> TO BE FILLED...
-
 !!! Info
     Do head over
     [here](./05-virtual-env.md#jupyter-kernel-for-jupyterlab)
     on how to enable the usage of virtual `conda` environments within
     JupyterLab.
+
+### Customising JupyterLab Server
+
+Of course, like with the VSCode server, one can work on a customised
+JupyterLab server image. The Dockerfile for the prebuilt JupyterLab
+server as well as any associated files can be found under
+`docker/jupyterlab-server`:
+
+=== "Linux/macOS"
+
+    ```bash
+    $ docker build \
+        -t {{cookiecutter.harbor_registry_project_path}}/jupyterlab-server-custom:0.1.0 \
+        -f docker/jupyterlab-server/jupyterlab-server.Dockerfile \
+        --platform linux/amd64 .
+    $ docker push {{cookiecutter.harbor_registry_project_path}}/jupyterlab-server-custom:0.1.0
+    ```
+
+=== "Windows PowerShell"
+
+    ```powershell
+    $ docker build `
+        -t {{cookiecutter.harbor_registry_project_path}}/jupyterlab-server-custom:0.1.0 `
+        -f docker/jupyterlab-server/jupyterlab-server.Dockerfile `
+        --platform linux/amd64 .
+    $ docker push {{cookiecutter.harbor_registry_project_path}}/jupyterlab-server-custom:0.1.0
+    ```
 
 ## Using Docker within Kubernetes
 

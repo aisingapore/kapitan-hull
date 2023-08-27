@@ -11,7 +11,7 @@ at hand within our VSCode server workspace.
 === "VSCode Server Terminal"
 
     ```bash
-    $ mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/data && cd "$_"
+    $ mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data && cd "$_"
     $ wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/mnist-pngs-data-aisg.zip
     $ unzip mnist-pngs-data-aisg.zip
     ```

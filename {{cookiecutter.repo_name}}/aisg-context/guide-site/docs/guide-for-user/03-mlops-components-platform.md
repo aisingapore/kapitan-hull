@@ -101,7 +101,7 @@ workspaces on Run:ai.
 
 ## MLOps Components
 
-The diagram below showcases the different components that this guide
+The diagram below showcases the some of the components that this guide
 will cover as well as how each of them relate to each other.
 
 [![AISG's End-to-end MLOps Workflow & Components Diagram](../assets/images/aisg-e2e-mlops-workflow-components_jul2023.png)](../assets/aisg-e2e-mlops-workflow-components_jul2023.html)
@@ -759,5 +759,5 @@ workflow. Hence, we can begin by creating a virtual environment that
 will contain all the dependencies required for this guide.
 
 ```bash
-$ conda env create -f {{cookiecutter.repo_name}}-conda-env.yml
+$ conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml
 ```

@@ -7,7 +7,7 @@ Singapore's AI engineers to onboard their AI projects.
 Instructions for generating this template is detailed in the
 [`cookiecutter`](https://github.com/cookiecutter/cookiecutter)
 template's repository's
-[`README.md`](https://github.com/aisingapore/ml-project-cookiecutter-onprem-runai/blob/master/README.md).
+[`README.md`](https://github.com/aisingapore/ml-project-cookiecutter-onprem-runai/blob/main/README.md).
 
 While this repository provides users with a set of boilerplates,
 here you are also presented with a linear guide on

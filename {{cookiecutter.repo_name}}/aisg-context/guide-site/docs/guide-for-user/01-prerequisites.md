@@ -67,7 +67,7 @@ follow through with the guide:
         $ Get-ChildItem . -Force
         ```
 
-    !!! caution
+    !!! warning
         If you are on Windows OS, you would need to ensure that the
         files you've cloned or written on your machine be with
         `LF` line endings. Otherwise, issues would arise when Docker

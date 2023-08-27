@@ -11,17 +11,17 @@ workspace directory:
   previously by heading over to the top left hand corner, selecting
   `File > Open Folder...`, and entering the path to the repository.
   In this case, you should be navigating to the folder
-  `/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/{{cookiecutter.repo_name}}`.
+  `/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}`.
 
 - Now, let's initialise `conda` for the bash shell, and create
   the virtual environment specified in
-  `{{cookiecutter.repo_name}}-conda-env.yml`.
+  `{{cookiecutter.repo_name}}-conda-env.yaml`.
 
-=== "VSCode Server Terminal"
+=== "VSCode Server Terminal
 
     ```bash
-    (base) $ conda env create -f {{cookiecutter.repo_name}}-conda-env.yml \
-                -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/conda_envs/{{cookiecutter.repo_name}}-conda-env
+    (base) $ conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml \
+                -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}-conda-env
     ```
 
 - After creating the `conda` environment, let's create a permanent
@@ -30,7 +30,7 @@ workspace directory:
 === "VSCode Server Terminal"
 
     ```bash
-    (base) $ echo 'alias {{cookiecutter.repo_name}}-conda-env="conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/conda_envs/{{cookiecutter.repo_name}}-conda-env"' >> ~/.bashrc
+    (base) $ echo 'alias {{cookiecutter.repo_name}}-conda-env="conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}-conda-env"' >> ~/.bashrc
     (base) $ source ~/.bashrc
     (base) $ {{cookiecutter.repo_name}}-conda-env
     ({{cookiecutter.repo_name}}-conda-env) $ # conda environment has been activated
@@ -62,7 +62,7 @@ server to detect the `conda` environments that you would have created.
 - Ensure that you are in a project folder which you intend to work
   on. You can open a folder through `File > Open Folder...`.
   In this case, you should be navigating to the folder
-  `/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/{{cookiecutter.repo_name}}`.
+  `/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}`.
 
 - Install the VSCode extensions
   [`ms-python.python`](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
@@ -76,13 +76,13 @@ server to detect the `conda` environments that you would have created.
   [`ipykernel`](https://ipython.readthedocs.io/en/stable/install/kernel_install.html)
   installed in the `conda` environment that you intend to use.
   This template by default lists the library as a dependency under
-  `{{cookiecutter.repo_name}}-conda-env.yml`. You can check for the
+  `{{cookiecutter.repo_name}}-conda-env.yaml`. You can check for the
   library like so:
 
 === "VSCode Server Terminal"
 
     ```bash
-    $ conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/conda_envs/{{cookiecutter.repo_name}}-conda-env
+    $ conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}-conda-env
     $ conda list | grep "ipykernel"
     ipykernel  X.X.X  pypi_0  pypi
     ```
@@ -98,7 +98,7 @@ server to detect the `conda` environments that you would have created.
   corresponds to the environment you intend to use.
 
 - Test out the kernel by running the cells in the sample notebook
-  provided under `notebooks/sample-tf-classification.ipynb`.
+  provided under `notebooks/sample-pytorch-notebook.ipynb`.
 
 ## Jupyter Kernel for JupyterLab
 
@@ -114,13 +114,13 @@ within your `conda` environment.
   [`ipykernel`](https://ipython.readthedocs.io/en/stable/install/kernel_install.html)
   installed in the `conda` environment that you intend to use.
   This template by default lists the library as a dependency under
-  `{{cookiecutter.repo_name}}-conda-env.yml`. You can check for the
+  `{{cookiecutter.repo_name}}-conda-env.yaml`. You can check for the
   library like so:
 
 === "JupyterLab Terminal"
 
     ```bash
-    $ conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/conda_envs/{{cookiecutter.repo_name}}-conda-env
+    $ conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}-conda-env
     $ conda list | grep "ipykernel"
     ipykernel  6.9.2  pypi_0  pypi
     ```
