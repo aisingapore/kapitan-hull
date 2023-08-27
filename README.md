@@ -26,7 +26,7 @@ URL of this template as an argument, like such:
 
 ```bash
 $ pip install cookiecutter
-$ cruft create https://github.com/aisingapore/ml-project-cookiecutter-onprem-runai
+$ cookiecutter https://github.com/aisingapore/ml-project-cookiecutter-onprem-runai
 ```
 
 You will then be prompted to provide inputs.These inputs will be used to
