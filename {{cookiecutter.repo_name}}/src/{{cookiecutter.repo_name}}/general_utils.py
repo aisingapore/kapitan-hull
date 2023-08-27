@@ -11,8 +11,9 @@ import mlflow
 logger = logging.getLogger(__name__)
 
 
-def setup_logging(logging_config_path="./conf/base/logging.yml",
-                default_level=logging.INFO):
+def setup_logging(
+    logging_config_path="./conf/base/logging.yaml", default_level=logging.INFO
+):
     """Set up configuration for logging utilities.
 
     Parameters
@@ -24,17 +25,17 @@ def setup_logging(logging_config_path="./conf/base/logging.yml",
     """
 
     try:
-        with open(logging_config_path, "rt") as file:
+        with open(logging_config_path, "rt", encoding="utf-8") as file:
             log_config = yaml.safe_load(file.read())
         logging.config.dictConfig(log_config)
 
     except Exception as error:
         logging.basicConfig(
             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-            level=default_level)
+            level=default_level,
+        )
         logger.info(error)
-        logger.info(
-            "Logging config file is not found. Basic config is being used.")
+        logger.info("Logging config file is not found. Basic config is being used.")
 
 
 def mlflow_init(args, setup_mlflow=False, autolog=False):
@@ -74,23 +75,21 @@ def mlflow_init(args, setup_mlflow=False, autolog=False):
             mlflow.start_run()
 
             if "MLFLOW_HPTUNING_TAG" in os.environ:
-                mlflow.set_tag(
-                    "hptuning_tag",
-                    os.environ.get("MLFLOW_HPTUNING_TAG"))
+                mlflow.set_tag("hptuning_tag", os.environ.get("MLFLOW_HPTUNING_TAG"))
+            if "JOB_UUID" in os.environ:
+                mlflow.set_tag("job_uuid", os.environ.get("JOB_UUID"))
 
             mlflow_run = mlflow.active_run()
             init_success = True
             logger.info("MLflow initialisation has succeeded.")
-            logger.info("UUID for MLflow run: {}".format(
-                mlflow_run.info.run_id))
-        except:
+            logger.info("UUID for MLflow run: %s", mlflow_run.info.run_id)
+        except Exception:
             logger.error("MLflow initialisation has failed.")
 
     return init_success, mlflow_run
 
 
-def mlflow_log(mlflow_init_status,
-            log_function, **kwargs):
+def mlflow_log(mlflow_init_status, log_function, **kwargs):
     """Custom function for utilising MLflow's logging functions.
 
     This function is only relevant when the function `mlflow_init`
@@ -111,7 +110,12 @@ def mlflow_log(mlflow_init_status,
     if mlflow_init_status:
         try:
             method = getattr(mlflow, log_function)
-            method(**{key: value for key, value in kwargs.items()
-                    if key in method.__code__.co_varnames})
+            method(
+                **{
+                    key: value
+                    for key, value in kwargs.items()
+                    if key in method.__code__.co_varnames
+                }
+            )
         except Exception as error:
             logger.error(error)
