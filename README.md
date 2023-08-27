@@ -1,10 +1,10 @@
-# AISG's Cookiecutter Template for End-to-end ML Projects (On-prem | Run:ai)
+# AI Singapore's Cookiecutter Template for End-to-end ML Projects (On-prem | Run:ai)
 
 ![AI Singapore's Kapitan Hull EPTG Onprem Run:ai Banner](./assets/kapitan-hull-eptg-onprem-runai-banner.png)
 
 ## Table of Contents
 
-- [AISG's Cookiecutter Template for End-to-end ML Projects (On-prem | Run:ai)](#aisgs-cookiecutter-template-for-end-to-end-ml-projects-on-prem--runai)
+- [AI Singapore's Cookiecutter Template for End-to-end ML Projects (On-prem | Run:ai)](#ai-singapores-cookiecutter-template-for-end-to-end-ml-projects-on-prem--runai)
   - [Table of Contents](#table-of-contents)
   - [Preface](#preface)
   - [Usage](#usage)

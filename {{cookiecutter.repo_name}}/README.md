@@ -1,4 +1,4 @@
-# End-to-end Project Template (On-premise | Run:ai)
+# End-to-end Project Template (On-prem | Run:ai)
 
 ![AI Singapore's Kapitan Hull EPTG Onprem Run:ai Banner](./aisg-context/guide-site/docs/assets/images/kapitan-hull-eptg-onprem-runai-banner.png)
 
