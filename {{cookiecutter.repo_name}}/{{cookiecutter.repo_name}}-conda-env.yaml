@@ -7,6 +7,7 @@ dependencies:
   - pip=23.1.2
   - pip:
     - python-json-logger==2.0.7
+    - pytest-7.4.0
     - pandas==2.0.3
     - torch==2.0.1
     - torchdata==0.6.1
