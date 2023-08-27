@@ -81,7 +81,7 @@ def main(args):
         curr_train_loss = {{cookiecutter.src_package_name_short}}.modeling.utils.train(
             args, model, device, train_loader, optimiser, epoch, mlflow_init_status
         )
-        curr_test_loss = {{cookiecutter.src_package_name_short}}.modeling.utils.test(
+        curr_test_loss, curr_test_accuracy = {{cookiecutter.src_package_name_short}}.modeling.utils.test(
             model, device, test_loader, epoch, mlflow_init_status
         )
 
@@ -130,6 +130,8 @@ def main(args):
         mlflow.end_run()
     else:
         logger.info("Model training has completed.")
+
+    return curr_test_loss, curr_test_accuracy
 
 
 if __name__ == "__main__":
