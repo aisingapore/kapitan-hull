@@ -1,6 +1,6 @@
 # End-to-end Project Template (On-premise Run:ai)
 
-![AI Singapore's Kapitan MLOps EPTG Banner](./assets/images/kapitan-mlops-eptg-banner.png)
+![AI Singapore's Kapitan Hull EPTG Onprem Run:ai Banner](./assets/images/kapitan-hull-eptg-onprem-runai-banner.png)
 
 __Customised for `{{cookiecutter.project_name}}`__.
 
@@ -11,7 +11,8 @@ generated and customised using the
 following
 [`cookiecutter`](https://cookiecutter.readthedocs.io/en/stable/)
 template:
-https://github.com/aisingapore/ml-project-cookiecutter-onprem-runai
+
+> https://github.com/aisingapore/ml-project-cookiecutter-onprem-runai
 
 This `mkdocs` site is for serving the contents of the end-to-end
 guide in a more readable manner, as opposed to plain
@@ -38,7 +39,6 @@ template:
 1. [Prerequisites](./guide-for-user/01-prerequisites.md)
 2. [Preface](./guide-for-user/02-preface.md)
 3. [MLOps Components & Platform](./guide-for-user/03-mlops-components-platform.md)
-md#google-container-registry)
 4. [Developer Workspace](guide-for-user/04-dev-wksp.md)
 5. [Virtual Environment](./guide-for-user/05-virtual-env.md)
 6. [Data Storage & Versioning](./guide-for-user/06-data-storage-versioning.md)
