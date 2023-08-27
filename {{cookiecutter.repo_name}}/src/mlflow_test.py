@@ -1,3 +1,5 @@
+"""Script for testing of logging to MLflow server.
+"""
 import sys
 import time
 import random
@@ -5,6 +7,7 @@ import mlflow
 
 
 def main():
+    """Main function for testing of logging to MLflow server."""
     mlflow.set_tracking_uri(sys.argv[1])
     mlflow.set_experiment(sys.argv[2])
     dummy_param_1 = 64
@@ -13,9 +16,9 @@ def main():
     tracking_uri = mlflow.get_tracking_uri()
     experiment = mlflow.get_experiment_by_name(sys.argv[2])
 
-    print("Current tracking URI: {}".format(tracking_uri))
-    print("Current unique experiment ID: {}".format(experiment.experiment_id))
-    print("Current location of artifacts: {}".format(experiment.artifact_location))
+    print("Current tracking URI: %s", tracking_uri)
+    print("Current unique experiment ID: %s", experiment.experiment_id)
+    print("Current location of artifacts: %s", experiment.artifact_location)
 
     with mlflow.start_run():
         print("Logging parameters...")
@@ -29,12 +32,12 @@ def main():
             time.sleep(2)
 
         dummy_text_content = "This text content should be uploaded to the ECS bucket."
-        with open("text_artifact.txt", "w") as f:
-            f.write(dummy_text_content)
+        with open("text_artifact.txt", "w", encoding="utf-8") as file:
+            file.write(dummy_text_content)
         mlflow.log_artifact("text_artifact.txt")
 
         artifact_uri = mlflow.get_artifact_uri()
-        print("Current artifact URI: {}".format(artifact_uri))
+        print("Current artifact URI: %s", artifact_uri)
 
 
 if __name__ == "__main__":
