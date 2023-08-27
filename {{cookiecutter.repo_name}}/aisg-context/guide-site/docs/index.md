@@ -43,6 +43,8 @@ md#google-container-registry)
 5. [Virtual Environment](./guide-for-user/05-virtual-env.md)
 6. [Data Storage & Versioning](./guide-for-user/06-data-storage-versioning.md)
 7. [Job Orchestration](./guide-for-user/07-job-orchestration.md)
+8. [Deployment](./guide-for-user/08-deployment.md)
+9. [Batch Inferencing](./guide-for-user/09-batch-inferencing.md)
 
 ## Directory Tree
 

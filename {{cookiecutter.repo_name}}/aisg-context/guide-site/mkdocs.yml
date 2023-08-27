@@ -54,8 +54,8 @@ nav:
     - Virtual Environment: guide-for-user/05-virtual-env.md
     - Data Storage & Versioning: guide-for-user/06-data-storage-versioning.md
     - Job Orchestration: guide-for-user/07-job-orchestration.md
-    # - Deployment: guide-for-user/08-deployment.md
-    # - Batch Inferencing: guide-for-user/09-batch-inferencing.md
+    - Deployment: guide-for-user/08-deployment.md
+    - Batch Inferencing: guide-for-user/09-batch-inferencing.md
     # - CI/CD: guide-for-user/10-cicd.md
     # - Documentation: guide-for-user/11-documentation.md
     # - Streamlit: guide-for-user/12-streamlit.md
