@@ -19,10 +19,10 @@ workspace directory:
 
 === "VSCode Server Terminal"
 
-```bash
-(base) $ conda env create -f {{cookiecutter.repo_name}}-conda-env.yml \
-            -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/conda_envs/{{cookiecutter.repo_name}}-conda-env
-```
+    ```bash
+    (base) $ conda env create -f {{cookiecutter.repo_name}}-conda-env.yml \
+                -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/conda_envs/{{cookiecutter.repo_name}}-conda-env
+    ```
 
 - After creating the `conda` environment, let's create a permanent
   alias for easy activation.
