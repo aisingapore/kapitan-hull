@@ -1,7 +1,10 @@
+"""Module for containing architectures/definition of models."""
 import torch
 
 
 class Net(torch.nn.Module):
+    """Simple CNN model for MNIST classification."""
+
     def __init__(self):
         super(Net, self).__init__()
         self.conv1 = torch.nn.Conv2d(1, 32, 3, 1)
@@ -12,6 +15,13 @@ class Net(torch.nn.Module):
         self.fc2 = torch.nn.Linear(128, 10)
 
     def forward(self, x):
+        """Forward pass of the model.
+
+        Parameters
+        ----------
+        x : torch.Tensor
+            Input tensor.
+        """
         x = self.conv1(x)
         x = torch.nn.functional.relu(x)
         x = self.conv2(x)

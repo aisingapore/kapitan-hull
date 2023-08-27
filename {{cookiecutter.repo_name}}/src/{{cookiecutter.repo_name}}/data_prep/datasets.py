@@ -1,3 +1,5 @@
+"""Dataset classes for defining how datasets are to be loaded.
+"""
 import os
 import pandas as pd
 from PIL import Image
@@ -6,6 +8,8 @@ import torchvision
 
 
 class MNISTDataset(torch_data.Dataset):
+    """MNIST dataset class."""
+
     def __init__(
         self,
         data_dir_path,
