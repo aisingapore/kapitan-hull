@@ -79,15 +79,29 @@ prompted for a password.
 To retrieve the password, head over to your terminal and run the
 following command:
 
-=== "Local Machine"
+=== "Linux/macOS"
 
-```bash
-$ kubectl exec pod/<NAME_OF_WORKSPACE>-0-0 -- bash -c "cat ~/.config/code-server/config.yaml"
-bind-addr: 127.0.0.1:8080
-auth: password
-password: xxxxxxxxxxxxxxxxxxxxxxxx
-cert: false
-```
+    ```bash
+    $ kubectl get pods -n runai-<NAME_OF_PROJECT> | \
+    awk '/<NAME_OF_WORKSPACE/ {print $1}' | \
+    xargs -I{} kubectl exec pod/{} -- bash -c "cat ~/.config/code-server/config.yaml"
+    bind-addr: 127.0.0.1:8080
+    auth: password
+    password: xxxxxxxxxxxxxxxxxxxxxxxx
+    cert: false
+    ```
+
+=== "Windows PowerShell"
+
+    ```powershell
+    $ kubectl get pods -n runai-<NAME_OF_PROJECT> | `
+    awk '/<NAME_OF_WORKSPACE/ {print $1}' | `
+    xargs -I{} kubectl exec pod/{} -- bash -c "cat ~/.config/code-server/config.yaml"
+    bind-addr: 127.0.0.1:8080
+    auth: password
+    password: xxxxxxxxxxxxxxxxxxxxxxxx
+    cert: false
+    ```
 
 Copy the value for the `password` field into the prompt on the browser
 and you should be directed to the VSCode server welcome tab.
@@ -261,13 +275,27 @@ prompted for a token.
 To retrieve the token, head over to your terminal and run the
 following command:
 
-=== "Local Machine"
+=== "Linux/macOS"
 
     ```bash
-    $ kubectl logs pod/<NAME_OF_WORKSPACE>-0-0 | grep "lab?token"
-    [I YYYY-MM-DD hh:mm:ss ServerApp] http://<NAME_OF_WORKSPACE>-0-0:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    $ kubectl get pods -n runai-<NAME_OF_PROJECT> | \
+    awk '/<NAME_OF_WORKSPACE>/ {print $1}' | \
+    xargs -I{} kubectl logs pod/{} | grep "lab?token
+    [I YYYY-MM-DD hh:mm:ss ServerApp] http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     [I YYYY-MM-DD hh:mm:ss ServerApp]     http://127.0.0.1:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-            http://<NAME_OF_WORKSPACE>-0-0:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            http://127.0.0.1:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    ```
+
+=== "Windows PowerShell"
+
+    ```powershell
+    $ kubectl get pods -n runai-<NAME_OF_PROJECT> | `
+    awk '/<NAME_OF_WORKSPACE>/ {print $1}' | `
+    xargs -I{} kubectl logs pod/{} | grep "lab?token
+    [I YYYY-MM-DD hh:mm:ss ServerApp] http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    [I YYYY-MM-DD hh:mm:ss ServerApp]     http://127.0.0.1:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             http://127.0.0.1:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     ```
 
