@@ -70,32 +70,32 @@ a job using that image to Run:ai\:
 
     ```bash
     $ runai submit \
-        --job-name-prefix <YOUR_NAME>-data-prep \
+        --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
         -i {{cookiecutter.harbor_registry_project_path}}/data-prep:0.1.0 \
-        --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/{{cookiecutter.repo_name}} \
+        --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} \
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
         --cpu 2 \
         --memory 4G \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py process_data.raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/data/mnist-pngs-data-aisg" process_data.processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/data/processed/mnist-pngs-data-aisg-processed'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py process_data.raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg" process_data.processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed'
     ```
 
 === "Windows PowerShell"
 
     ```powershell
     $ runai submit `
-        --job-name-prefix <YOUR_NAME>-data-prep `
+        --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep `
         -i {{cookiecutter.harbor_registry_project_path}}/data-prep:0.1.0 `
-        --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/{{cookiecutter.repo_name}} `
+        --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} `
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> `
         --cpu 2 `
         --memory 4G `
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py process_data.raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/data/mnist-pngs-data-aisg" process_data.processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/data/processed/mnist-pngs-data-aisg-processed'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py process_data.raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg" process_data.processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed'
     ```
 
 After some time, the data processing job should conclude and we can
 proceed with training the predictive model.
 The processed data is exported to the directory
-`/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/data/processed/mnist-pngs-data-aisg-processed`.
+`/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed`.
 We will be passing this path to the model training workflows.
 
 ## Model Training
@@ -166,7 +166,7 @@ we can run a job using it:
 
     ```bash
     $ runai submit \
-        --job-name-prefix <YOUR_NAME>-train \
+        --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
         -i {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0 \
         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
@@ -177,14 +177,14 @@ we can run a job using it:
         -e MLFLOW_S3_ENDPOINT_URL="https://necs.nus.edu.sg" \
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
     ```
 
 === "Windows PowerShell"
 
     ```powershell
     $ runai submit `
-        --job-name-prefix <YOUR_NAME>-train `
+        --job-name-prefix <YOUR_HYPHENATED_NAME>-train `
         -i {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0 `
         --working-dir /home/aisg/{{cookiecutter.repo_name}} `
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> `
@@ -195,7 +195,7 @@ we can run a job using it:
         -e MLFLOW_S3_ENDPOINT_URL="https://necs.nus.edu.sg" `
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> `
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> `
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
     ```
 
 Once you have successfully run an experiment, you may inspect the run
@@ -332,7 +332,7 @@ by default.
 
     ```bash
     $ runai submit \
-        --job-name-prefix <YOUR_NAME>-train \
+        --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
         -i {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0 \
         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
@@ -344,14 +344,14 @@ by default.
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
     ```
 
 === "Windows PowerShell"
 
     ```powershell
     $ runai submit `
-        --job-name-prefix <YOUR_NAME>-train `
+        --job-name-prefix <YOUR_HYPHENATED_NAME>-train `
         -i {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0 `
         --working-dir /home/aisg/{{cookiecutter.repo_name}} `
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> `
@@ -363,7 +363,7 @@ by default.
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> `
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> `
         -e MLFLOW_HPTUNING_TAG=$(Get-Date -UFormat %s -Millisecond 0) `
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
     ```
 
 > SCREENSHOT HERE...
