@@ -17,7 +17,7 @@ The contents of the guide have been customised
 according to the inputs provided upon generation of this repository
 through the usage of `cookiecutter` CLI,
 following instructions detailed
-[here](https://github.com/aisingapore/ml-project-cookiecutter-onprem-runai/blob/master/README.md)
+[here](https://github.com/aisingapore/ml-project-cookiecutter-onprem-runai/blob/main/README.md)
 .
 
 Inputs provided to `cookiecutter` for the generation of this

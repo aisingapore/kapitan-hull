@@ -20,7 +20,7 @@ Markdown views. The contents of this guide have been customised
 according to the inputs provided upon generation of this repository
 through the usage of the `cookiecutter` CLI,
 following instructions detailed
-[here](https://github.com/aisingapore/ml-project-cookiecutter-onprem-runai/blob/master/README.md)
+[here](https://github.com/aisingapore/ml-project-cookiecutter-onprem-runai/blob/main/README.md)
 .
 
 Inputs provided to `cookiecutter` for the generation of this
@@ -45,6 +45,8 @@ template:
 7. [Job Orchestration](./guide-for-user/07-job-orchestration.md)
 8. [Deployment](./guide-for-user/08-deployment.md)
 9. [Batch Inferencing](./guide-for-user/09-batch-inferencing.md)
+10. PLACEHOLDER
+11. [Documentation](./guide-for-user/11-documentation.md)
 
 ## Directory Tree
 
