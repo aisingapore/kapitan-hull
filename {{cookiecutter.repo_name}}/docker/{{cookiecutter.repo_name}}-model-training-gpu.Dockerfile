@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM nvcr.io/nvidia/cuda:11.3.1-cudnn8-devel-ubuntu20.04
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
@@ -33,6 +33,9 @@ RUN apt-get update && \
 ENV PYTHONIOENCODING utf8
 ENV LANG "C.UTF-8"
 ENV LC_ALL "C.UTF-8"
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
+ENV LD_LIBRARY_PATH /usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
 USER ${NON_ROOT_USER}
 WORKDIR ${HOME_DIR}
@@ -42,7 +45,7 @@ RUN curl -O https://repo.anaconda.com/miniconda/${MINICONDA_SH} && \
     chmod +x ${MINICONDA_SH} && \
     ./${MINICONDA_SH} -u -b -p ${CONDA_HOME} && \
     rm ${MINICONDA_SH}
-ENV PATH ${CONDA_HOME}/bin:${HOME_DIR}/.local/bin:$PATH
+ENV PATH ${CONDA_HOME}/bin:${HOME_DIR}/.local/bin:$PATH 
 
 COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} ${CONDA_ENV_FILE} {{cookiecutter.repo_name}}/${CONDA_ENV_FILE}
 
