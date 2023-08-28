@@ -57,3 +57,8 @@ bucket; instructions for downloading the data into your development
 environment are detailed under
 ["Data Storage & Versioning"](./06-data-storage-versioning.md),
 to be referred to later on.
+
+!!! info
+    __License:__ Yann LeCun and Corinna Cortes hold the copyright of MNIST
+    dataset. MNIST dataset is made available under the terms of the
+    [Creative Commons Attribution-Share Alike 3.0 license](https://creativecommons.org/licenses/by-sa/3.0/).
