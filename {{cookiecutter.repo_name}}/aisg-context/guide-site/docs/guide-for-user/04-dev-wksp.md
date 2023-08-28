@@ -94,9 +94,9 @@ following command:
 === "Windows PowerShell"
 
     ```powershell
-    $ kubectl get pods -n runai-<NAME_OF_PROJECT> | `
-    awk '/<NAME_OF_WORKSPACE/ {print $1}' | `
-    xargs -I{} kubectl exec pod/{} -- bash -c "cat ~/.config/code-server/config.yaml"
+    $ kubectl get pods -n runai-<NAME_OF_PROJECT> | Where-Object{$_ -match "<NAME_OF_WORKSPACE>"} | ForEach-Object{($_ -split "\s+")[0]}
+    <NAME_OF_WORKSPACE>-X-X
+    $ kubectl exec pod/<NAME_OF_WORKSPACE>-X-X -- bash -c "cat ~/.config/code-server/config.yaml"
     bind-addr: 127.0.0.1:8080
     auth: password
     password: xxxxxxxxxxxxxxxxxxxxxxxx
@@ -294,9 +294,9 @@ following command:
 === "Windows PowerShell"
 
     ```powershell
-    $ kubectl get pods -n runai-<NAME_OF_PROJECT> | `
-    awk '/<NAME_OF_WORKSPACE>/ {print $1}' | `
-    xargs -I{} kubectl logs pod/{} | grep "lab?token"
+    $ kubectl get pods -n runai-<NAME_OF_PROJECT> | Where-Object{$_ -match "<NAME_OF_WORKSPACE>"} | ForEach-Object{($_ -split "\s+")[0]}
+    <NAME_OF_WORKSPACE>-X-X
+    $ kubectl logs pod/<NAME_OF_WORKSPACE>-X-X | Where-Object{$_ -match "<NAME_OF_WORKSPACE>"}
     [I YYYY-MM-DD hh:mm:ss ServerApp] http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     [I YYYY-MM-DD hh:mm:ss ServerApp]     http://127.0.0.1:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
