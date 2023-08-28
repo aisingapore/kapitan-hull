@@ -16,9 +16,9 @@ def main():
     tracking_uri = mlflow.get_tracking_uri()
     experiment = mlflow.get_experiment_by_name(sys.argv[2])
 
-    print("Current tracking URI: %s", tracking_uri)
-    print("Current unique experiment ID: %s", experiment.experiment_id)
-    print("Current location of artifacts: %s", experiment.artifact_location)
+    print("Current tracking URI: ", tracking_uri)
+    print("Current unique experiment ID: ", experiment.experiment_id)
+    print("Current location of artifacts: ", experiment.artifact_location)
 
     with mlflow.start_run():
         print("Logging parameters...")
@@ -37,7 +37,7 @@ def main():
         mlflow.log_artifact("text_artifact.txt")
 
         artifact_uri = mlflow.get_artifact_uri()
-        print("Current artifact URI: %s", artifact_uri)
+        print("Current artifact URI: ", artifact_uri)
 
 
 if __name__ == "__main__":
