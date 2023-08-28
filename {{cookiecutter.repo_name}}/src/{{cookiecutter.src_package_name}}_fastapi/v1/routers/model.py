@@ -5,15 +5,15 @@ import fastapi
 import torchvision
 from PIL import Image
 
-import mpcor_ai_fastapi as mpcor_ai_fapi
+import {{cookiecutter.src_package_name}}_fastapi as {{cookiecutter.src_package_name_short}}_fapi
 
 
 logger = logging.getLogger(__name__)
 
 
 ROUTER = fastapi.APIRouter()
-PRED_MODEL = mpcor_ai_fapi.deps.PRED_MODEL
-DEVICE = mpcor_ai_fapi.deps.DEVICE
+PRED_MODEL = {{cookiecutter.src_package_name_short}}_fapi.deps.PRED_MODEL
+DEVICE = {{cookiecutter.src_package_name_short}}_fapi.deps.DEVICE
 
 
 @ROUTER.post("/predict", status_code=fastapi.status.HTTP_200_OK)
@@ -80,4 +80,4 @@ def get_model_version():
         Dictionary containing the UUID of the predictive model being
         served.
     """
-    return {"data": {"model_uuid": mpcor_ai_fapi.config.SETTINGS.PRED_MODEL_UUID}}
+    return {"data": {"model_uuid": {{cookiecutter.src_package_name_short}}_fapi.config.SETTINGS.PRED_MODEL_UUID}}

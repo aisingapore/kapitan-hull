@@ -3,25 +3,25 @@ import logging
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 
-import mpcor_ai as mai
-import mpcor_ai_fastapi as assist_fapi
+import {{cookiecutter.src_package_name}} as {{cookiecutter.src_package_name_short}}
+import {{cookiecutter.src_package_name}}_fastapi as {{cookiecutter.src_package_name_short}}_fapi
 
 
 LOGGER = logging.getLogger(__name__)
 LOGGER.info("Setting up logging configuration.")
-mai.general_utils.setup_logging(
-    logging_config_path=assist_fapi.config.SETTINGS.LOGGER_CONFIG_PATH
+{{cookiecutter.src_package_name_short}}.general_utils.setup_logging(
+    logging_config_path={{cookiecutter.src_package_name_short}}_fapi.config.SETTINGS.LOGGER_CONFIG_PATH
 )
 
-API_V1_STR = assist_fapi.config.SETTINGS.API_V1_STR
+API_V1_STR = {{cookiecutter.src_package_name_short}}_fapi.config.SETTINGS.API_V1_STR
 APP = fastapi.FastAPI(
-    title=assist_fapi.config.SETTINGS.API_NAME, openapi_url=f"{API_V1_STR}/openapi.json"
+    title={{cookiecutter.src_package_name_short}}_fapi.config.SETTINGS.API_NAME, openapi_url=f"{API_V1_STR}/openapi.json"
 )
 API_ROUTER = fastapi.APIRouter()
 API_ROUTER.include_router(
-    assist_fapi.v1.routers.model.ROUTER, prefix="/model", tags=["model"]
+    {{cookiecutter.src_package_name_short}}_fapi.v1.routers.model.ROUTER, prefix="/model", tags=["model"]
 )
-APP.include_router(API_ROUTER, prefix=assist_fapi.config.SETTINGS.API_V1_STR)
+APP.include_router(API_ROUTER, prefix={{cookiecutter.src_package_name_short}}_fapi.config.SETTINGS.API_V1_STR)
 
 ORIGINS = ["*"]
 
