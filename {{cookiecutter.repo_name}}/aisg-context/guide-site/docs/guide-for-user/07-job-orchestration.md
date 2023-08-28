@@ -201,10 +201,10 @@ we can run a job using it:
 Once you have successfully run an experiment, you may inspect the run
 on the MLflow Tracking server. Through the MLflow Tracking server
 interface, you can view the metrics and parameters logged for the run,
-as well as downloadthe artifacts that have been uploaded to the ECS
+as well as download the artifacts that have been uploaded to the ECS
 bucket. You can also compare runs with each other.
 
-> PERHAPS A GIF OF MLFLOW EXPERIMENT HERE...
+![MLflow Tracking Server - Inspecting Runs](https://storage.googleapis.com/aisg-mlops-pub-data/images/mlflow-tracking-server-inspect.gif)
 
 !!! tip
     Every job submitted with `runai submit` is assigned a unique ID,
@@ -366,7 +366,7 @@ by default.
         --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
     ```
 
-> SCREENSHOT HERE...
+![MLflow Tracking Server - Hyperparameter Tuning Runs](../assets/screenshots/mlflow-tracking-hptuning-runs.png)
 
 __Reference(s):__
 
