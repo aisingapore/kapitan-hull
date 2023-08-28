@@ -1,0 +1,9 @@
+[MAIN]
+extension-pkg-whitelist=pydantic
+
+[TYPECHECK]
+generated-members=torch.*
+
+[FORMAT]
+max-line-length = 88
+expected-line-ending-format=LF
