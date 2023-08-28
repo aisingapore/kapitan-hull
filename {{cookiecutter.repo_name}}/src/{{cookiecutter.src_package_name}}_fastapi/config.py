@@ -5,7 +5,7 @@ import pydantic
 class Settings(pydantic.BaseSettings):
     """Settings for the FastAPI application."""
 
-    API_NAME: str = "assist_fastapi"
+    API_NAME: str = "{{cookiecutter.project_name}} - Fastapi"
     API_V1_STR: str = "/api/v1"
     LOGGER_CONFIG_PATH: str = "../conf/base/logging.yaml"
 

@@ -40,8 +40,8 @@ To execute the batch inferencing script locally:
     $ export PRED_MODEL_PATH="$PWD/models/$PRED_MODEL_UUID/artifacts/model/model.pt"
     $ conda activate {{cookiecutter.repo_name}}
     $ python src/batch_inferencing.py \
-        inference.model_path=$PRED_MODEL_PATH \
-        inference.input_data_dir="$PWD/data/batched-mnist-input-data"
+        batch_infer.model_path=$PRED_MODEL_PATH \
+        batch_infer.input_data_dir="$PWD/data/batched-mnist-input-data"
     ```
 
 === "Windows PowerShell"
@@ -54,8 +54,8 @@ To execute the batch inferencing script locally:
     $ conda activate {{cookiecutter.repo_name}}
     $ python src/batch_inferencing.py `
         hydra.job.chdir=True `
-        inference.model_path=$PRED_MODEL_PATH `
-        inference.input_data_dir="$(Get-Location)\data\batched-mnist-input-data"
+        batch_infer.model_path=$PRED_MODEL_PATH `
+        batch_infer.input_data_dir="$(Get-Location)\data\batched-mnist-input-data"
     ```
 
 The script will log to the terminal the location of the
