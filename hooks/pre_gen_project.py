@@ -5,7 +5,7 @@ import sys
 COOKIE_INPUTS = {
     "project_name": {
         "user_input": "{{cookiecutter.project_name}}",
-        "regex": r"^[a-zA-Z0-9_]+(?:_? [a-zA-Z0-9]+)*$"},
+        "regex": r"^[a-zA-Z_]+(?:_? [a-zA-Z0-9]+)*$"},
     "description": {
         "user_input": "{{cookiecutter.description}}"},
     "repo_name": {
