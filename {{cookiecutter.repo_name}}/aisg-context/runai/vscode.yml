@@ -35,11 +35,11 @@ spec:
           customUrl: false
   pvcs:
     items:
-      pvc-{{cookiecutter.runai_proj_name}}-pvc:
+      pvc-sample-project-pvc:
         value:
-          claimName: {{cookiecutter.runai_proj_name}}-pvc
+          claimName: sample-project-pvc
           existingPvc: false
-          path: /{{cookiecutter.runai_proj_name}}-pvc
+          path: /sample-project-pvc
           readOnly: false
           readWriteMany: true
           size: 1000G
