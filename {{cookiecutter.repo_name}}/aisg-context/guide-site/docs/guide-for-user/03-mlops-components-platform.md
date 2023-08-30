@@ -60,7 +60,7 @@ Upon one's assignment to a project, any relevant clusters that one has
 access to would be viewable on
 [AI Singapore's Rancher dashboard](https://rancher.aisingapore.net).
 
-![AISG's Rancher Dashboard - Home Dashboard](../assets/screenshots/rancher-home-dashboard.png)
+![AISG's Rancher Dashboard - Home Dashboard](assets/screenshots/rancher-home-dashboard.png)
 
 [Rancher](https://www.rancher.com) is a Kubernetes management platform
 that provides cluster administrators or users to manage Kubernetes
@@ -104,7 +104,7 @@ workspaces on Run:ai.
 The diagram below showcases the some of the components that this guide
 will cover as well as how each of them relate to each other.
 
-[![AISG's End-to-end MLOps Workflow & Components Diagram](../assets/images/aisg-e2e-mlops-workflow-components_jul2023.png)](../assets/aisg-e2e-mlops-workflow-components_jul2023.html)
+[![AISG's End-to-end MLOps Workflow & Components Diagram](assets/images/aisg-e2e-mlops-workflow-components_jul2023.png)](assets/aisg-e2e-mlops-workflow-components_jul2023.html)
 
 !!! note
     Click on the image above for an interactive view of the diagram.
@@ -198,7 +198,7 @@ registries, be it Google Cloud’s
 [Artifact Registry](https://cloud.google.com/artifact-registry)
 or AI Singapore’s on-premise [Harbor](https://goharbor.io) registry.
 
-![Harbor Registry - Sample Screenshot](../assets/screenshots/external/goharbor-blog-harbor-2.0-artifacts.png)
+![Harbor Registry - Sample Screenshot](assets/screenshots/external/goharbor-blog-harbor-2.0-artifacts.png)
 <p style="text-align: center;"><i>Harbor Registry</i></p>
 
 ??? info "Reference Link(s)"
@@ -334,13 +334,13 @@ login page at the following link:
 
 The link above will bring you to the login page:
 
-![AISG's Run:ai Login Page](../assets/screenshots/runai-login-page.png)
+![AISG's Run:ai Login Page](assets/screenshots/runai-login-page.png)
 
 To login, click on `CONTINUE WITH SSO`. You will be redirected to login
 with your Azure account. After a successful login, you will
 be brought to the platform's home (`Overview`) page.
 
-![AISG's Run:ai Home Page](../assets/screenshots/runai-home-page.png)
+![AISG's Run:ai Home Page](assets/screenshots/runai-home-page.png)
 
 ### Authentication
 
@@ -509,7 +509,7 @@ registry.
 
 > https://registry.aisingapore.net
 
-![AI Singapore's Harbor Registry - Login Page](../assets/screenshots/harbor-login-page.png)
+![AI Singapore's Harbor Registry - Login Page](assets/screenshots/harbor-login-page.png)
 
 To login, use your Azure account username without the domain
 (if your username is `user@aisingapore.org`, your username in this
@@ -519,7 +519,7 @@ account.
 On a successful login, you should be able to see a list of Harbor
 projects that you have access to.
 
-![AI Singapore's Harbor Registry - Projects Page](../assets/screenshots/harbor-projects-page.png)
+![AI Singapore's Harbor Registry - Projects Page](assets/screenshots/harbor-projects-page.png)
 
 ### Docker CLI Authentication
 
@@ -690,7 +690,7 @@ to make use of the MLflow Tracking server:
 One would be prompted for a username and password when accessing an
 MLflow Tracking server for the first time:
 
-![MLflow Tracking Server - Login Page](../assets/screenshots/mlflow-tracking-login-prompt.png)
+![MLflow Tracking Server - Login Page](assets/screenshots/mlflow-tracking-login-prompt.png)
 
 Following a successful login, most end-users would be brought to the
 `Experiments` page. Depending on whether one is an admin or a common
@@ -698,7 +698,7 @@ user, the page would look different. Admin users would be able to view
 all experiments while common users would only be able to view
 experiments that they have been provided access to.
 
-![MLflow Tracking Server - First Login View](../assets/screenshots/mlflow-tracking-first-login.png)
+![MLflow Tracking Server - First Login View](assets/screenshots/mlflow-tracking-first-login.png)
 
 ??? info "Reference Link(s)"
 
@@ -744,7 +744,7 @@ MLflow Tracking server.
 A successful run of the script would present you with an experiment
 run that looks similar to the following:
 
-![MLflow Tracking Server - Post Test Script](../assets/screenshots/mlflow-tracking-post-test-script.png)
+![MLflow Tracking Server - Post Test Script](assets/screenshots/mlflow-tracking-post-test-script.png)
 
 ??? info "Reference Link(s)"
 

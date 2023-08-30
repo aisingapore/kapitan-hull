@@ -64,7 +64,7 @@ workspace and you will be redirected to the workspaces page. On this
 page, you may view the status of the workspace that you have just
 created.
 
-![Run:ai Dashboard - Workspaces Page Post VSCode](../assets/screenshots/runai-dashboard-workspaces-page-post-vscode.png)
+![Run:ai Dashboard - Workspaces Page Post VSCode](assets/screenshots/runai-dashboard-workspaces-page-post-vscode.png)
 
 Once the workspace is active (indicated by a green status), you may
 access the workspace by clicking on the `CONNECT` button and choosing
@@ -74,7 +74,7 @@ accessible through a URL that follows the following convention:
 However, you cannot access the VSCode interface just yet; you will
 prompted for a password.
 
-![Run:ai - VSCode Server Login](../assets/screenshots/runai-vscode-server-login.png)
+![Run:ai - VSCode Server Login](assets/screenshots/runai-vscode-server-login.png)
 
 To retrieve the password, head over to your terminal and run the
 following command:
@@ -102,7 +102,7 @@ following command:
 Copy the value for the `password` field into the prompt on the browser
 and you should be directed to the VSCode server welcome tab.
 
-![Run:ai - VSCode Server Welcome](../assets/screenshots/runai-vscode-server-welcome.png)
+![Run:ai - VSCode Server Welcome](assets/screenshots/runai-vscode-server-welcome.png)
 
 However, the default folder that your VSCode server is accessing is the
 home directory of the container's user, which is `/home/coder`.
@@ -260,7 +260,7 @@ workspace and you will be redirected to the workspaces page. On this
 page, you may view the status of the workspace that you have just
 created.
 
-![Run:ai Dashboard - Workspaces Page Post JupyterLab](../assets/screenshots/runai-dashboard-workspaces-page-post-jupyterlab.png)
+![Run:ai Dashboard - Workspaces Page Post JupyterLab](assets/screenshots/runai-dashboard-workspaces-page-post-jupyterlab.png)
 
 Once the workspace is active (indicated by a green status), you may
 access the workspace by clicking on the `CONNECT` button and choosing
@@ -270,7 +270,7 @@ accessible through a URL that follows the following convention:
 However, you cannot access the JupyterLab interface just yet; you will
 prompted for a token.
 
-![Run:ai - JupyterLab Server Login](../assets/screenshots/runai-jupyterlab-server-login.png)
+![Run:ai - JupyterLab Server Login](assets/screenshots/runai-jupyterlab-server-login.png)
 
 To retrieve the token, head over to your terminal and run the
 following command:
@@ -298,7 +298,7 @@ following command:
 Copy the token value into the prompt on the browser and you should be
 directed to a view like such:
 
-![Run:ai - JupyterLab Server Welcome](../assets/screenshots/runai-jupyterlab-server-launcher.png)
+![Run:ai - JupyterLab Server Welcome](assets/screenshots/runai-jupyterlab-server-launcher.png)
 
 __Reference(s):__
 

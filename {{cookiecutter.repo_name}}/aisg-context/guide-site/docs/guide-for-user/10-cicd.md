@@ -18,7 +18,7 @@ as introduced by GitLab's Docs.
 The defined pipeline assumes a GitHub flow which only relies on
 feature branches and a `main` (default) branch.
 
-![AISG's GitHub Flow Diagram](../assets/images/github-flow-aisg-diagram.png)
+![AISG's GitHub Flow Diagram](assets/images/github-flow-aisg-diagram.png)
 
 With reference to the diagram above, we have the following pointers:
 
@@ -105,7 +105,7 @@ into a CI/CD environment variable of type `File`
 }
 ```
 
-![GitLab UI - Set File Variable under CI/CD Settings](../assets/screenshots/gitlab-settings-cicd-set-file-var.png)
+![GitLab UI - Set File Variable under CI/CD Settings](assets/screenshots/gitlab-settings-cicd-set-file-var.png)
 
 __Reference(s):__
 

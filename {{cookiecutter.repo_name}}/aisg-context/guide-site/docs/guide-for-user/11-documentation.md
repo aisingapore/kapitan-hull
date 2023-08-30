@@ -20,7 +20,7 @@ $ sphinx-build -b html docs public
 Open the file `public/index.html` with your browser and you will be
 presented with a static site similar to the one shown below:
 
-![Sphinx - Generated Landing Page for Documentation Site](../assets/screenshots/sphinx-generated-doc-landing-page.png)
+![Sphinx - Generated Landing Page for Documentation Site](assets/screenshots/sphinx-generated-doc-landing-page.png)
 
 Browse through the site and inspect the documentation that was
 automatically generated through Sphinx.

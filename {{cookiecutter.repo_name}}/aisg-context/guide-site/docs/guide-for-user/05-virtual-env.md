@@ -142,7 +142,7 @@ within your `conda` environment.
   the toolbar under
   `Kernel` -> `Change Kernel...`.
 
-![Run:ai - JupyterLab Server Change Kernel](../assets/screenshots/runai-jupyterlab-server-change-kernel.png)
+![Run:ai - JupyterLab Server Change Kernel](assets/screenshots/runai-jupyterlab-server-change-kernel.png)
 
 - Test out the kernel by running the cells in the sample notebook.
 

@@ -137,7 +137,7 @@ Before doing that, identify from the MLflow dashboard the unique ID
 of the experiment run that resulted in the predictive model that you
 would like to serve.
 
-![MLflow - Dashboard Run View](../assets/screenshots/mlflow-dashboard-run-view.png)
+![MLflow - Dashboard Run View](assets/screenshots/mlflow-dashboard-run-view.png)
 
 With reference to the example screenshot above, the UUID for
 the experiment run is `7251ac3655934299aad4cfebf5ffddbe`.
@@ -284,7 +284,7 @@ the server. You can view the documentation through
 [`localhost:8080/docs`](http://localhost:8080/docs). It will look like
 such:
 
-![FastAPI - OpenAPI Docs](../assets/screenshots/fastapi-openapi-docs.png)
+![FastAPI - OpenAPI Docs](assets/screenshots/fastapi-openapi-docs.png)
 
 __Reference(s):__
 
