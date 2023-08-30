@@ -268,7 +268,7 @@ class Settings(pydantic.BaseSettings):
 
     API_NAME: str = "{{cookiecutter.src_package_name}}_fastapi"
     API_V1_STR: str = "/api/v1"
-    LOGGER_CONFIG_PATH: str = "../conf/base/logging.yml"
+    LOGGER_CONFIG_PATH: str = "../conf/base/logging.yaml"
 
     USE_CUDA: bool = False
     USE_MPS: bool = False

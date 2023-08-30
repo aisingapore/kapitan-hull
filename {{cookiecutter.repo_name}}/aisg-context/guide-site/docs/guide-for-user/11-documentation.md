@@ -40,7 +40,7 @@ pages:
   image:
     name: continuumio/miniconda:4.7.12
   script:
-  - conda env update -f {{cookiecutter.repo_name}}-conda-env.yml
+  - conda env update -f {{cookiecutter.repo_name}}-conda-env.yaml
   - conda init bash
   - source ~/.bashrc
   - conda activate {{cookiecutter.repo_name}}

@@ -169,7 +169,7 @@ Let's look at the job defined for the `test`stage first:
       image:
         name: continuumio/miniconda:4.7.12
       before_script:
-        - conda env create -f {{cookiecutter.repo_name}}-conda-env.yml
+        - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml
         - source activate {{cookiecutter.repo_name}}
       script:
         - pylint src --fail-under=7.0 --ignore=tests --disable=W1202
