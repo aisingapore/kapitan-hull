@@ -1,0 +1,51 @@
+apiVersion: run.ai/v2alpha1
+kind: InteractiveWorkload
+metadata:
+  name: {{cookiecutter.author_name}}-jupyterlab
+  namespace: runai-{{cookiecutter.runai_proj_name}}
+spec:
+  name:
+    value: {{cookiecutter.author_name}}-jupyterlab
+  image:
+    value: registry.aisingapore.net/runai/workspaces/jupyterlab-server:0.1.0
+  imagePullPolicy:
+    value: Always
+  command:
+    value: jupyter lab
+  arguments:
+    value: '--no-browser --ip=0.0.0.0 --allow-root'
+  cpu:
+    value: '2'
+  cpuLimit:
+    value: '4'
+  memory:
+    value: 4G
+  memoryLimit:
+    value: 8G
+  gpu:
+    value: '0'
+  environment:
+    items:
+      RUNAI_JOB_NAME:
+        value: ${RUNAI_JOB_NAME}
+      RUNAI_PROJECT:
+        value: ${RUNAI_PROJECT}
+  exposedUrls:
+    items:
+      url-0:
+        value:
+          containerPort: 8888
+          customUrl: false
+  pvcs:
+    items:
+      pvc-sample-project-pvc:
+        value:
+          claimName: sample-project-pvc
+          existingPvc: false
+          path: /sample-project-pvc
+          readOnly: false
+          readWriteMany: true
+          size: 1000G
+          storageClass: nfs-client
+  username:
+    value: {{cookiecutter.author_name}}
