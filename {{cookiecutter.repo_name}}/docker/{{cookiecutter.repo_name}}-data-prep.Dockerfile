@@ -45,8 +45,9 @@ RUN curl -O https://repo.anaconda.com/miniconda/$MINICONDA_SH && \
     ./${MINICONDA_SH} -u -b -p ${CONDA_HOME} && \
     rm ${MINICONDA_SH}
 ENV PATH ${CONDA_HOME}/bin:${HOME_DIR}/.local/bin:$PATH
+
 # Install conda environment
-RUN $CONDA_BIN env create -f {{cookiecutter.repo_name}}/${CONDA_ENV_FILE} && \
-    $CONDA_BIN init bash && \
-    $CONDA_BIN clean -a -y && \
+RUN ${CONDA_BIN} env create -f {{cookiecutter.repo_name}}/${CONDA_ENV_FILE} && \
+    ${CONDA_BIN} init bash && \
+    ${CONDA_BIN} clean -a -y && \
     echo "source activate ${CONDA_ENV_NAME}" >> "${HOME_DIR}/.bashrc"
