@@ -57,7 +57,7 @@ def check_input_regex(cookie_input_key, cookie_input_val):
                 % (cookie_input_key, cookie_input_val["user_input"]))
 
         if cookie_input_key == "author_name":
-            ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid GCR subdirectory name."
+            ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid name."
                 % (cookie_input_key, cookie_input_val["user_input"]))
 
 

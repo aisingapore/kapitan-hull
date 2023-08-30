@@ -151,7 +151,7 @@ following commands:
     ```bash
     $ export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
     $ export PRED_MODEL_ECS_S3_URI=<MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/$PRED_MODEL_UUID
-    $ aws cp --recursive --endpoint-url "https://necs.nus.edu.sg" $PRED_MODEL_ECS_S3_URI ./models/$PRED_MODEL_UUID
+    $ aws s3 cp --recursive --endpoint-url "https://necs.nus.edu.sg" $PRED_MODEL_ECS_S3_URI ./models/$PRED_MODEL_UUID
     ```
 
 === "Windows PowerShell"
