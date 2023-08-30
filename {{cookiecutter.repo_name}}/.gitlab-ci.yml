@@ -1,0 +1,105 @@
+default:
+  tags:
+    - dind
+    - on-prem
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+
+stages:
+  - test
+  - build
+  - deploy-docs
+
+test:pylint-pytest:
+  stage: test
+  image:
+    name: continuumio/miniconda:4.7.12
+  before_script:
+    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yml
+    - source activate {{cookiecutter.repo_name}}
+  script:
+    - pylint src --fail-under=7.0 --ignore=tests --disable=W1202
+    - pytest src/tests
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      changes:
+        - src/**/*
+        - conf/**/*
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_COMMIT_TAG
+      when: never
+
+build:data-prep-image:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - mkdir -p /kaniko/.docker
+    - cat $HARBOR_ROBOT_CREDS_JSON > /kaniko/.docker/config.json
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile"
+      --destination "{{cookiecutter.harbor_registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA}"
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      changes:
+        - docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile
+        - src/**/*
+        - conf/**/*
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+build:model-training-image:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - mkdir -p /kaniko/.docker
+    - cat $HARBOR_ROBOT_CREDS_JSON > /kaniko/.docker/config.json
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/docker/{{cookiecutter.repo_name}}-model-training.Dockerfile"
+      --destination "{{cookiecutter.harbor_registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA}"
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      changes:
+        - docker/{{cookiecutter.repo_name}}-model-training.Dockerfile
+        - src/**/*
+        - conf/**/*
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+build:retag-images:
+  stage: build
+  image:
+    name: gcr.io/go-containerregistry/crane:debug
+    entrypoint: [""]
+  script:
+    - cat $HARBOR_ROBOT_CREDS_JSON > /root/.docker/config.json
+    - crane tag {{cookiecutter.harbor_registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
+    - crane tag {{cookiecutter.harbor_registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
+  rules:
+    - if: $CI_COMMIT_TAG && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+pages:
+  stage: deploy-docs
+  image:
+    name: continuumio/miniconda:4.7.12
+  before_script:
+    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yml
+    - source activate {{cookiecutter.repo_name}}
+  script:
+    - sphinx-apidoc -f -o docs src
+    - sphinx-build -b html docs public
+  artifacts:
+    paths:
+    - public
+  only:
+    - main
