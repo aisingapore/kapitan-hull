@@ -110,6 +110,7 @@ into a CI/CD environment variable of type `File`
 __Reference(s):__
 
 - [GitLab Docs - GitLab CI/CD variables](https://docs.gitlab.com/ee/ci/variables/)
+- [Docker Docs - Configuration files](https://docs.docker.com/engine/reference/commandline/cli/#configuration-files)
 
 ## Stages & Jobs
 
