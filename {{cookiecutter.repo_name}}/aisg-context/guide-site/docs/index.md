@@ -45,7 +45,7 @@ template:
 7. [Job Orchestration](./guide-for-user/07-job-orchestration.md)
 8. [Deployment](./guide-for-user/08-deployment.md)
 9. [Batch Inferencing](./guide-for-user/09-batch-inferencing.md)
-10. PLACEHOLDER
+10. [Continuous Integration & Deployment](./guide-for-user/10-cicd.md)
 11. [Documentation](./guide-for-user/11-documentation.md)
 
 ## Directory Tree
