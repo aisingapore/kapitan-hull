@@ -80,15 +80,13 @@ so:
     <ENCODED_OUTPUT_HERE>
     ```
 
-    Copy and paste the contents
-
 === "Windows PowerShell"
 
     ```powershell
-    $cred = "<HARBOR_USERNAME>:<HARBOR_PASSWORD>"
-    $bytes = [System.Text.Encoding]::ASCII.GetBytes($cred)
-    $base64 = [Convert]::ToBase64String($bytes)
-    echo $base64
+    $ $cred = "<HARBOR_USERNAME>:<HARBOR_PASSWORD>"
+    $ $bytes = [System.Text.Encoding]::ASCII.GetBytes($cred)
+    $ $base64 = [Convert]::ToBase64String($bytes)
+    $ echo $base64
     <ENCODED_OUTPUT_HERE>
     ```
 
