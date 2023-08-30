@@ -17,7 +17,7 @@ copyright: Copyright &copy; 2023 - AI Singapore
 docs_dir: docs
 theme:
   name: material
-  logo: assets/aisg-logo.png
+  logo: aisg-logo.png
   # Default values, taken from mkdocs_theme.yml
   language: en
   features:
@@ -42,7 +42,7 @@ theme:
         icon: material/weather-night
         name: Switch to light mode
 
-  favicon: assets/favicon.svg
+  favicon: favicon.svg
 
 # Page Tree
 nav:
