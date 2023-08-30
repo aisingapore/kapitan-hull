@@ -31,6 +31,12 @@ follow through with the guide:
       for Python virtual environment management.
     - __[`kubectl`](https://kubernetes.io/docs/tasks/tools/):__
       CLI for Kubernetes.
+    - __[AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html):__ CLI for AWS services, but we will specifically be using it
+      for interacting with the AI Singapore's Elastic Cloud Storage
+      (ECS) service through the S3 protocol.
+        - You may choose to just install the Python SDK for AWS instead,
+          to interact with the ECS service within a Python environment.
+          [`boto3`](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html).
     - *(Optional)* __[`helm`](https://helm.sh/docs/intro/install/):__
       CLI for Kubernetes' package manager.
 - Access to a project on AI Singapore's Run:ai cluster.
