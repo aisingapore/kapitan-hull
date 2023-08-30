@@ -27,6 +27,7 @@ theme:
     - navigation.tabs
     - navigation.top
     - toc.follow
+    - content.tabs.link
   palette:
     - scheme: aisg
       primary: red
