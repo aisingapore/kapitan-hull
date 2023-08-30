@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM nvcr.io/nvidia/cuda:11.3.0-cudnn8-devel-ubuntu18.04
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
@@ -22,6 +22,8 @@ RUN useradd -l -m -s /bin/bash -u ${NON_ROOT_UID} ${NON_ROOT_USER} && \
     mkdir -p ${CONDA_HOME} && \
     chown -R ${NON_ROOT_USER}:${NON_ROOT_GID} ${CONDA_HOME}
 
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
+
 RUN apt-get update && \
     apt-get -y install bzip2 curl wget gcc rsync git vim locales && \
     sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
@@ -33,9 +35,14 @@ RUN apt-get update && \
 ENV PYTHONIOENCODING utf8
 ENV LANG "C.UTF-8"
 ENV LC_ALL "C.UTF-8"
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
+ENV LD_LIBRARY_PATH /usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
 USER ${NON_ROOT_USER}
 WORKDIR ${HOME_DIR}
+
+COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} ${REPO_DIR} {{cookiecutter.repo_name}}
 
 # Install Miniconda
 RUN curl -O https://repo.anaconda.com/miniconda/${MINICONDA_SH} && \
@@ -44,12 +51,8 @@ RUN curl -O https://repo.anaconda.com/miniconda/${MINICONDA_SH} && \
     rm ${MINICONDA_SH}
 ENV PATH ${CONDA_HOME}/bin:${HOME_DIR}/.local/bin:$PATH
 
-COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} ${CONDA_ENV_FILE} {{cookiecutter.repo_name}}/${CONDA_ENV_FILE}
-
 # Install conda environment
 RUN ${CONDA_BIN} env create -f {{cookiecutter.repo_name}}/${CONDA_ENV_FILE} && \
     ${CONDA_BIN} init bash && \
     ${CONDA_BIN} clean -a -y && \
     echo "source activate ${CONDA_ENV_NAME}" >> "${HOME_DIR}/.bashrc"
-
-COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} ${REPO_DIR} {{cookiecutter.repo_name}}
