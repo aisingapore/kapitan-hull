@@ -1,0 +1,40 @@
+apiVersion: run.ai/v2alpha1
+kind: TrainingWorkload
+metadata:
+  name: {{cookiecutter.author_name}}-data-prep
+  namespace: runai-{{cookiecutter.runai_proj_name}}
+spec:
+  environment:
+    items:
+      WORKSPACE_NAME:
+        value: <YOUR_HYPHENATED_NAME>
+  name: 
+    value: {{cookiecutter.author_name}}-data-prep
+  image:
+    value: {{cookiecutter.harbor_registry_project_path}}/data-prep:0.1.0
+  imagePullPolicy:
+    value: Always
+  command:
+    value: >-
+      /bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py 
+      process_data.raw_data_dir_path=/{{cookiecutter.runai_proj_name}}-pvc/workspaces/$WORKSPACE_NAME/data/mnist-pngs-data-aisg
+      process_data.processed_data_dir_path=/{{cookiecutter.runai_proj_name}}-pvc/workspaces/$WORKSPACE_NAME/data/processed/mnist-pngs-data-aisg-processed"
+  workingDir:
+    value: /{{cookiecutter.runai_proj_name}}-pvc/workspaces/$WORKSPACE_NAME/{{cookiecutter.repo_name}}
+  cpu:
+    value: '2'
+  memory:
+    value: 4G
+  pvcs:
+    items:
+      pvc-{{cookiecutter.runai_proj_name}}-pvc:
+        value:
+          claimName: {{cookiecutter.runai_proj_name}}-pvc
+          existingPvc: false
+          path: /{{cookiecutter.runai_proj_name}}-pvc
+          readOnly: false
+          readWriteMany: true
+          size: 1000G
+          storageClass: nfs-client
+  username:
+    value: {{cookiecutter.author_name}}
