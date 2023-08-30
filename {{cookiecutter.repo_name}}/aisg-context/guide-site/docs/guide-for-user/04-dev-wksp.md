@@ -1,4 +1,4 @@
-# Development Environment
+# Development Workspace
 
 An advantage presented by orchestration platforms is that you can
 utilise the Kubernetes cluster's resources for your development and
