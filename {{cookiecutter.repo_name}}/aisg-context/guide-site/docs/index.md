@@ -50,4 +50,48 @@ template:
 
 ## Directory Tree
 
-> TO BE FILLED...
+```tree
+{{cookiecutter.repo_name}}
+├── aisg-context        <- Folders containing files and assets relevant
+│   │                      for works within the context of AISG's
+│   │                      development environments.
+│   └── guide-site      <- Files relevant for spinning up the `mkdocs`
+│                          site to view the end-to-end guide.
+├── conf                <- Configuration files associated with the
+│                          various pipelines as well as for logging.
+├── data                <- Folder to contain any data for the various
+│                          pipelines. Ignored by Git except its
+│                          `.gitkeep` file.
+├── docker              <- Dockerfiles associated with the various
+│                          stages of the pipeline.
+├── docs                <- A default Sphinx project; see sphinx-doc.org
+│                          for details.
+├── models              <- Directory for trained and serialised models.
+├── notebooks           <- Jupyter notebooks. Suggested naming
+│                          convention would be number (for ordering),
+│                          the creator's initials, and a short `-`
+│                          delimited description, e.g.
+│                          `1.0-jqp-initial-data-exploration`.
+├── src                 <- Directory containing the source code and
+|   |                       packages for the project repository.
+│   ├── {{cookiecutter.src_package_name}}
+│   │   ^- Package containing modules for all pipelines except
+│   │      deployment of API server.
+│   ├── {{cookiecutter.src_package_name}}_fastapi
+│   │   ^- Package for deploying the predictive models within a FastAPI
+│   │      server.
+│   └── tests           <- Directory containing tests for the
+│                          repository's packages.
+├── .dockerignore       <- File for specifying files or directories
+│                          to be ignored by Docker contexts.
+├── .gitignore          <- File for specifying files or directories
+│                          to be ignored by Git.
+├── .gitlab-ci.yml      <- AML file for configuring GitLab CI/CD
+│                          pipelines.
+├── .pylintrc           <- Configurations for `pylint`.
+├── {{cookiecutter.repo_name}}-conda-env.yaml
+│   ^- The `conda` environment file for reproducing
+│      the project's development environment.
+└── README.md           <- The top-level README containing the basic
+                           guide for using the repository.
+```
