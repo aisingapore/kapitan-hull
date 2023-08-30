@@ -56,7 +56,8 @@ define the following variable(s) for the pipeline beforehand:
 - `HARBOR_ROBOT_CREDS_JSON`: A JSON formatted value that contains
   encoded credentials for a robot account on Harbor. This is to allow
   the pipeline to interact with the Harbor server. See
-  [here]() on how to generate this value/file.
+  [here](#docker-configuration-file-for-accessing-harbor) on how to
+  generate this value/file.
 
 To define CI/CD variables for a project (repository), follow the steps
 listed
@@ -81,7 +82,7 @@ so:
 
     Copy and paste the contents
 
-=== "Windows"
+=== "Windows PowerShell"
 
     ```powershell
     $cred = "<HARBOR_USERNAME>:<HARBOR_PASSWORD>"
