@@ -17,7 +17,7 @@ workspace directory:
   the virtual environment specified in
   `{{cookiecutter.repo_name}}-conda-env.yaml`.
 
-=== "VSCode Server Terminal
+=== "VSCode Server Terminal"
 
     ```bash
     (base) $ conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml \

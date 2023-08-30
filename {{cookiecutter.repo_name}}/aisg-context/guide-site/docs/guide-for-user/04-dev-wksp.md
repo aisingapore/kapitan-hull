@@ -278,7 +278,7 @@ following command:
 === "Linux/macOS"
 
     ```bash
-    $ runai logs <YOUR_HYPHENATED_NAME-jupyterlab -p  <NAME_OF_PROJECT> | grep "lab?token"
+    $ runai logs <YOUR_HYPHENATED_NAME>-jupyterlab -p  <NAME_OF_PROJECT> | grep "lab?token"
     [I YYYY-MM-DD hh:mm:ss ServerApp] http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     [I YYYY-MM-DD hh:mm:ss ServerApp]     http://127.0.0.1:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -288,7 +288,7 @@ following command:
 === "Windows PowerShell"
 
     ```powershell
-    $ runai logs <YOUR_HYPHENATED_NAME-jupyterlab -p  <NAME_OF_PROJECT> | Where-Object{$_ -match "lab?token"}
+    $ runai logs <YOUR_HYPHENATED_NAME>-jupyterlab -p  <NAME_OF_PROJECT> | Where-Object{$_ -match "lab?token"}
     [I YYYY-MM-DD hh:mm:ss ServerApp] http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     [I YYYY-MM-DD hh:mm:ss ServerApp]     http://127.0.0.1:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
