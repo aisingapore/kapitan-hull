@@ -42,7 +42,11 @@ spec:
     value: /{{cookiecutter.runai_proj_name}}-pvc/workspaces/$WORKSPACE_NAME/{{cookiecutter.repo_name}}
   cpu:
     value: '2'
+  cpuLimit:
+    value: '2'
   memory:
+    value: 4G
+  memoryLimit:
     value: 4G
   pvcs:
     items:
