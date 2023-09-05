@@ -89,3 +89,9 @@ follow through with the guide:
 - If you're using Rancher Desktop, you might encounter issues with regards to the lack of CPU and memory.
   + For Mac/Linux users, from the main window, click on the gear button on the top right.  
     Then, proceed to the Virtual Machines section and increase your CPU and memory resources directly.
+  + For Windows users, create a `.wslconfig` file user `%UserProfile%` with the following content:
+    ```toml
+    [wsl2]
+    memory=8GB
+    ```
+    Change the amount of memory to something you're comfortable with giving up to build Docker images.
