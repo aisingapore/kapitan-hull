@@ -156,7 +156,7 @@ we need to build the Docker image to be used for it:
         -t {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0 `
         -f docker/{{cookiecutter.repo_name}}-model-training.Dockerfile `
         --platform linux/amd64 .
-    $ docker push {{cookiecutter.harbor_registry_project_path}}/model-train:0.1.0
+    $ docker push {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0
     ```
 
 Now that we have the Docker image pushed to the registry,
