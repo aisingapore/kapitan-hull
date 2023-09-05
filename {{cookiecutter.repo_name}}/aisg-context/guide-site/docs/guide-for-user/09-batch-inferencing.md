@@ -54,7 +54,7 @@ To execute the batch inferencing script locally:
     $ conda activate {{cookiecutter.repo_name}}
     $ python src/batch_inferencing.py `
         hydra.job.chdir=True `
-        batch_infer.model_path=$PRED_MODEL_PATH `
+        batch_infer.model_path=$Env:PRED_MODEL_PATH `
         batch_infer.input_data_dir="$(Get-Location)\data\batched-mnist-input-data"
     ```
 

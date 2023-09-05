@@ -56,7 +56,7 @@ of AI Singapore's infrastructure.
 - __Compute Resource:__ `cpu-mid`
 
 - __Data Source:__ The persistent volume claim (PVC) that is dedicated
-  to your project. For a sample project, you may make use of
+  to your project. For a project named `sample-project`, you may make use of
   `sample-project-pvc`.
 
 Once you have selected the blocks, you can proceed to create the
@@ -82,7 +82,7 @@ following command:
 === "Linux/macOS"
 
     ```bash
-    $ runai exec <YOUR_HYPHENATED_NAME>-vscode -p <NAME_OF_PROJECT> -- cat /home/coder/.config/code-server/config.yaml
+    $ runai exec <YOUR_HYPHENATED_NAME>-vscode -p {{cookiecutter.runai_proj_name}} -- cat /home/coder/.config/code-server/config.yaml
     bind-addr: 127.0.0.1:8080
     auth: password
     password: xxxxxxxxxxxxxxxxxxxxxxxx
@@ -92,7 +92,7 @@ following command:
 === "Windows PowerShell"
 
     ```powershell
-    $ runai exec <YOUR_HYPHENATED_NAME>-vscode -p <NAME_OF_PROJECT> -- cat /home/coder/.config/code-server/config.yaml
+    $ runai exec <YOUR_HYPHENATED_NAME>-vscode -p {{cookiecutter.runai_proj_name}} -- cat /home/coder/.config/code-server/config.yaml
     bind-addr: 127.0.0.1:8080
     auth: password
     password: xxxxxxxxxxxxxxxxxxxxxxxx
@@ -139,7 +139,7 @@ persisted.
 === "VSCode Server Terminal"
 
     ```bash
-    $ cd /<NAME_OF_DATA_SOURCE>/workspaces
+    $ cd /{{cookiecutter.runai_proj_name}}_pvc/workspaces
     $ mkdir <YOUR_HYPHENATED_NAME>
     ```
 
@@ -160,7 +160,7 @@ Now, let's clone your repository from the remote:
 === "VSCode Server Terminal"
 
     ```bash
-    $ cd /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>
+    $ cd /{{cookiecutter.runai_proj_name}}/workspaces/<YOUR_HYPHENATED_NAME>
     $ git clone <REMOTE_URL_HTTPS>
     $ cd {{cookiecutter.repo_name}}
     ```
@@ -278,7 +278,7 @@ following command:
 === "Linux/macOS"
 
     ```bash
-    $ runai logs <YOUR_HYPHENATED_NAME>-jupyterlab -p  <NAME_OF_PROJECT> | grep "lab?token"
+    $ runai logs <YOUR_HYPHENATED_NAME>-jupyterlab -p  {{cookiecutter.runai_proj_name}} | grep "lab?token"
     [I YYYY-MM-DD hh:mm:ss ServerApp] http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     [I YYYY-MM-DD hh:mm:ss ServerApp]     http://127.0.0.1:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -288,7 +288,7 @@ following command:
 === "Windows PowerShell"
 
     ```powershell
-    $ runai logs <YOUR_HYPHENATED_NAME>-jupyterlab -p  <NAME_OF_PROJECT> | Where-Object{$_ -match "lab?token"}
+    $ runai logs <YOUR_HYPHENATED_NAME>-jupyterlab -p  {{cookiecutter.runai_proj_name}} | Where-Object{$_ -match "lab?token"}
     [I YYYY-MM-DD hh:mm:ss ServerApp] http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     [I YYYY-MM-DD hh:mm:ss ServerApp]     http://127.0.0.1:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

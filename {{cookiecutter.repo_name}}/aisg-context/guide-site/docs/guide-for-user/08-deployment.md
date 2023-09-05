@@ -158,8 +158,8 @@ following commands:
 
     ```powershell
     $ $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-    $ $Env:PRED_MODEL_ECS_S3_URI=<MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/$MLFLOW_RUN_UUID
-    $ aws s3 cp --recursive --endpoint-url "https://necs.nus.edu.sg" $PRED_MODEL_ECS_S3_URI .\models\$PRED_MODEL_UUID
+    $ $Env:PRED_MODEL_ECS_S3_URI=<MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/$Env:MLFLOW_RUN_UUID
+    $ aws s3 cp --recursive --endpoint-url "https://necs.nus.edu.sg" $Env:PRED_MODEL_ECS_S3_URI .\models\$Env:PRED_MODEL_UUID
     ```
 
 Executing the commands above will download the artifacts related to the
@@ -179,7 +179,7 @@ Let's export this path to an environment variable:
 === "Windows PowerShell"
 
     ```powershell
-    $ $Env:PRED_MODEL_PATH="$(Get-Location)\models\$Env:PRED_MODEL_UUID\artifacts\artifacts\model\model.pt"
+    $ $Env:PRED_MODEL_PATH="$(Get-Location)\models\$Env:PRED_MODEL_UUID\artifacts\model\model.pt"
     ```
 
 The variable exported above (`PRED_MODEL_UUID` and `PRED_MODEL_PATH`)
