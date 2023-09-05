@@ -83,3 +83,9 @@ follow through with the guide:
         [here](https://stackoverflow.com/questions/48692741/how-can-i-make-all-line-endings-eols-in-all-files-in-visual-studio-code-unix)
         on how to configure consistent line endings for a whole folder
         or workspace using VSCode.
+
+## Tips and Tricks
+
+- If you're using Rancher Desktop, you might encounter issues with regards to the lack of CPU and memory.
+  + For Mac/Linux users, from the main window, click on the gear button on the top right.  
+    Then, proceed to the Virtual Machines section and increase your CPU and memory resources directly.
