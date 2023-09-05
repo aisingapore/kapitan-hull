@@ -95,3 +95,8 @@ follow through with the guide:
     memory=8GB
     ```
     Change the amount of memory to something you're comfortable with giving up to build Docker images.
+- For Windows users, if you have both Rancher and Docker Desktop 
+  installed, you may need to disable the networking tunnel:
+    - From the gear button on the top right, go to the WSL section 
+      under the Network tab. From there, uncheck the `Enable networking 
+      tunnel`.
