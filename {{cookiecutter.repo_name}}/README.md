@@ -28,6 +28,7 @@ template:
 - __`repo_name`:__ {{cookiecutter.repo_name}}
 - __`src_package_name`:__ {{cookiecutter.src_package_name}}
 - __`src_package_name_short`:__ {{cookiecutter.src_package_name_short}}
+- __`runai_proj_name`:__ {{cookiecutter.runai_proj_name}}
 - __`harbor_registry_project_path`:__ {{cookiecutter.harbor_registry_project_path}}
 - __`author_name`:__ {{cookiecutter.author_name}}
 
