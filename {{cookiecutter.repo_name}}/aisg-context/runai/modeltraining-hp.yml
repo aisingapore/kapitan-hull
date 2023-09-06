@@ -22,8 +22,6 @@ spec:
         value: SECRET:mlflow-admin-credentials,username
       MLFLOW_TRACKING_PASSWORD:
         value: SECRET:mlflow-admin-credentials,password
-      MLFLOW_HPTUNING_TAG:
-        value: $(date +%s)
   name:
     value: {{cookiecutter.author_name.replace('_', '-')}}-hp-train
   image: 
@@ -32,7 +30,7 @@ spec:
     value: Always
   command:
     value: >-
-      /bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun
+      /bin/bash -c "export MLFLOW_HPTUNING_TAG=$(date +%s) && source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun
       train_model.data_dir_path=/{{cookiecutter.runai_proj_name}}-pvc/workspaces/$WORKSPACE_NAME/data/processed/mnist-pngs-data-aisg-processed
       train_model.model_checkpoint_dir_path=/{{cookiecutter.runai_proj_name}}-pvc/workspaces/$WORKSPACE_NAME/{{cookiecutter.repo_name}}/models
       train_model.setup_mlflow=true train_model.epochs=3
