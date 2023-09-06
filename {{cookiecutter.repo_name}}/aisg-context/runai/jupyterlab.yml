@@ -1,11 +1,11 @@
 apiVersion: run.ai/v2alpha1
 kind: InteractiveWorkload
 metadata:
-  name: {{cookiecutter.author_name}}-jupyterlab
-  namespace: runai-{{cookiecutter.runai_proj_name}}
+  name: {{cookiecutter.author_name.replace('_', '-')}}-jupyterlab
+  namespace: runai-{{cookiecutter.runai_proj_name.replace('_', '-')}}
 spec:
   name:
-    value: {{cookiecutter.author_name}}-jupyterlab
+    value: {{cookiecutter.author_name.replace('_', '-')}}-jupyterlab
   image:
     value: registry.aisingapore.net/runai/workspaces/jupyterlab-server:0.1.0
   imagePullPolicy:

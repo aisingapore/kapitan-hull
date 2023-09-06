@@ -1,11 +1,11 @@
 apiVersion: run.ai/v2alpha1
 kind: InteractiveWorkload
 metadata:
-  name: {{cookiecutter.author_name}}-vscode
-  namespace: runai-{{cookiecutter.runai_proj_name}}
+  name: {{cookiecutter.author_name.replace('_', '-')}}-vscode
+  namespace: runai-{{cookiecutter.runai_proj_name.replace('_', '-')}}
 spec:
   name:
-    value: {{cookiecutter.author_name}}-vscode
+    value: {{cookiecutter.author_name.replace('_', '-')}}-vscode
   image:
     value: registry.aisingapore.net/runai/workspaces/code-server:v4.16.1-0.1.0
   imagePullPolicy:

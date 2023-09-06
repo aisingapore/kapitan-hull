@@ -1,8 +1,8 @@
 apiVersion: run.ai/v2alpha1
 kind: TrainingWorkload
 metadata:
-  name: {{cookiecutter.author_name}}-hp-train
-  namespace: runai-{{cookiecutter.runai_proj_name}}
+  name: {{cookiecutter.author_name.replace('_', '-')}}-hp-train
+  namespace: runai-{{cookiecutter.runai_proj_name.replace('_', '-')}}
 spec:
   environment:
     items:
@@ -25,7 +25,7 @@ spec:
       MLFLOW_HPTUNING_TAG:
         value: $(date +%s)
   name:
-    value: {{cookiecutter.author_name}}-hp-train
+    value: {{cookiecutter.author_name.replace('_', '-')}}-hp-train
   image: 
     value: {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0
   imagePullPolicy:
