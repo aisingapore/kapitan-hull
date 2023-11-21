@@ -1,12 +1,26 @@
+image:
+  name: python:3.10
+
 stages:
+  - docs
   - update
+
+pages:
+  stage: docs
+  before_script:
+    - pip install -r mkdocs-requirements.txt
+  script:
+    - mkdocs build --strict --verbose --site-dir public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
 
 update:onprem-runai:
   stage: update
   tags:
     - on-prem
-  image:
-    name: python:3.10
   #variables:
   #  REPO_URL_ONPREM_RUNAI: url-in-settings
   #  REPO_USERNAME_ONPREM_RUNAI: username-in-settings
