@@ -24,5 +24,5 @@ update:onprem-runai:
     - cp -rv ../kapitan-hull-onprem-runai-test/* .
     - cp -rv ../kapitan-hull-onprem-runai-test/.* .
     - git add .
-    - git commit -m "$CI_COMMIT_MESSAGE"
-    - git push origin $CI_COMMIT_BRANCH
+    - git commit -m "$CI_COMMIT_MESSAGE" || echo "Nothing to commit"
+    - git push origin $CI_COMMIT_BRANCH || echo "Nothing to push"
