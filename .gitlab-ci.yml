@@ -14,6 +14,8 @@ update:onprem-runai:
   before_script:
     - pip install cookiecutter
     - mkdir -p /tmp/kapitan-hull && cd $_
+    - git config --global user.name "Kapitan Hull Bot"
+    - git config --global user.email "mlops@aisingapore.org"
   script:
     - cookiecutter --replay-file $CI_PROJECT_DIR/cookiecutter-onprem-runai.json $CI_PROJECT_DIR
     - git clone https://$REPO_USERNAME_ONPREM_RUNAI:$REPO_PASSWORD_ONPREM_RUNAI@$REPO_URL_ONPREM_RUNAI git-repo
