@@ -1,0 +1,24 @@
+stages:
+  - update
+
+update:onprem-runai:
+  stage: update
+  image:
+    name: python:3.10
+  #variables:
+  #  REPO_URL_ONPREM_RUNAI: url-in-settings
+  #  REPO_USERNAME_ONPREM_RUNAI: username-in-settings
+  #  REPO_PASSWORD_ONPREM_RUNAI: password-in-settings
+  before_script:
+    - pip install cookiecutter
+    - mkdir -p /tmp/kapitan-hull && cd $_
+  script:
+    - cookiecutter --replay-file $CI_PROJECT_DIR/cookiecutter-onprem-runai.json $CI_PROJECT_DIR
+    - git clone https://$REPO_USERNAME_ONPREM_RUNAI:$REPO_PASSWORD_ONPREM_RUNAI@$REPO_URL_ONPREM_RUNAI git-repo
+    - cd git-repo
+    - git checkout -B $CI_COMMIT_BRANCH
+    - cp -rv ../kapitan-hull-onprem-runai-test/* .
+    - cp -rv ../kapitan-hull-onprem-runai-test/.* .
+    - git add .
+    - git commit -m $CI_COMMIT_MESSAGE
+    - git push origin $CI_COMMIT_BRANCH
