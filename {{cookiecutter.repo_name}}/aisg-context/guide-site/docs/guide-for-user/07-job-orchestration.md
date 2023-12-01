@@ -47,20 +47,20 @@ provided in this template:
 
     ```bash
     $ docker build \
-        -t {{cookiecutter.harbor_registry_project_path}}/data-prep:0.1.0 \
+        -t {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
         -f docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile \
         --platform linux/amd64 .
-    $ docker push {{cookiecutter.harbor_registry_project_path}}/data-prep:0.1.0
+    $ docker push {{cookiecutter.registry_project_path}}/data-prep:0.1.0
     ```
 
 === "Windows PowerShell"
 
     ```powershell
     $ docker build `
-        -t {{cookiecutter.harbor_registry_project_path}}/data-prep:0.1.0 `
+        -t {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
         -f docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile `
         --platform linux/amd64 .
-    $ docker push {{cookiecutter.harbor_registry_project_path}}/data-prep:0.1.0
+    $ docker push {{cookiecutter.registry_project_path}}/data-prep:0.1.0
     ```
 
 Now that we have the Docker image pushed to the registry, we can submit
@@ -71,7 +71,7 @@ a job using that image to Run:ai\:
     ```bash
     $ runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
-        -i {{cookiecutter.harbor_registry_project_path}}/data-prep:0.1.0 \
+        -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
         --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} \
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
         --cpu 2 \
@@ -84,7 +84,7 @@ a job using that image to Run:ai\:
     ```powershell
     $ runai submit `
         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep `
-        -i {{cookiecutter.harbor_registry_project_path}}/data-prep:0.1.0 `
+        -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
         --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} `
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> `
         --cpu 2 `
@@ -143,20 +143,20 @@ we need to build the Docker image to be used for it:
 
     ```bash
     $ docker build \
-        -t {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0 \
+        -t {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
         -f docker/{{cookiecutter.repo_name}}-model-training.Dockerfile \
         --platform linux/amd64 .
-    $ docker push {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0
+    $ docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
     ```
 
 === "Windows PowerShell"
 
     ```powershell
     $ docker build `
-        -t {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0 `
+        -t {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
         -f docker/{{cookiecutter.repo_name}}-model-training.Dockerfile `
         --platform linux/amd64 .
-    $ docker push {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0
+    $ docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
     ```
 
 Now that we have the Docker image pushed to the registry,
@@ -167,7 +167,7 @@ we can run a job using it:
     ```bash
     $ runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
-        -i {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0 \
+        -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
         --cpu 2 \
@@ -185,7 +185,7 @@ we can run a job using it:
     ```powershell
     $ runai submit `
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train `
-        -i {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0 `
+        -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
         --working-dir /home/aisg/{{cookiecutter.repo_name}} `
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> `
         --cpu 2 `
@@ -333,7 +333,7 @@ by default.
     ```bash
     $ runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
-        -i {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0 \
+        -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
         --cpu 2 \
@@ -352,7 +352,7 @@ by default.
     ```powershell
     $ runai submit `
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train `
-        -i {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0 `
+        -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
         --working-dir /home/aisg/{{cookiecutter.repo_name}} `
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> `
         --cpu 2 `

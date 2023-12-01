@@ -225,8 +225,8 @@ __Reference(s):__
 The template has thus far introduced a couple of Docker images relevant
 for the team. The tags for all the Docker images are listed below:
 
-- `{{cookiecutter.harbor_registry_project_path}}/data-prep`
-- `{{cookiecutter.harbor_registry_project_path}}/model-training`
+- `{{cookiecutter.registry_project_path}}/data-prep`
+- `{{cookiecutter.registry_project_path}}/model-training`
 
 The `build` stage aims at automating the building of these Docker
 images in a parallel manner. Let's look at a snippet for a single job
@@ -248,7 +248,7 @@ that builds a Docker image:
           /kaniko/executor
           --context "${CI_PROJECT_DIR}"
           --dockerfile "${CI_PROJECT_DIR}/docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile"
-          --destination "{{cookiecutter.harbor_registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA}"
+          --destination "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA}"
       rules:
         - if: $CI_MERGE_REQUEST_IID
           changes:
@@ -325,8 +325,8 @@ to the default branch before this.
       script:
         - cat $HARBOR_ROBOT_CREDS_JSON > /root/.docker/config.json
         - crane auth login registry.aisingapore.net
-        - crane tag {{cookiecutter.harbor_registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
-        - crane tag {{cookiecutter.harbor_registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
+        - crane tag {{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
+        - crane tag {{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
       rules:
         - if: $CI_COMMIT_TAG && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     ...

@@ -2,7 +2,7 @@ apiVersion: run.ai/v2alpha1
 kind: TrainingWorkload
 metadata:
   name: {{cookiecutter.author_name.replace('_', '-')}}-train
-  namespace: runai-{{cookiecutter.runai_proj_name.replace('_', '-')}}
+  namespace: runai-{{cookiecutter.proj_name.replace('_', '-')}}
 spec:
   environment:
     items:
@@ -25,19 +25,19 @@ spec:
   name:
     value: {{cookiecutter.author_name.replace('_', '-')}}-train
   image: 
-    value: {{cookiecutter.harbor_registry_project_path}}/model-training:0.1.0
+    value: {{cookiecutter.registry_project_path}}/model-training:0.1.0
   imagePullPolicy:
     value: Always
   command:
     value: >-
       /bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py
-      train_model.data_dir_path=/{{cookiecutter.runai_proj_name}}-pvc/workspaces/$WORKSPACE_NAME/data/processed/mnist-pngs-data-aisg-processed
-      train_model.model_checkpoint_dir_path=/{{cookiecutter.runai_proj_name}}-pvc/workspaces/$WORKSPACE_NAME/{{cookiecutter.repo_name}}/models
+      train_model.data_dir_path=/{{cookiecutter.proj_name}}-pvc/workspaces/$WORKSPACE_NAME/data/processed/mnist-pngs-data-aisg-processed
+      train_model.model_checkpoint_dir_path=/{{cookiecutter.proj_name}}-pvc/workspaces/$WORKSPACE_NAME/{{cookiecutter.repo_name}}/models
       train_model.setup_mlflow=true train_model.epochs=3
       train_model.mlflow_tracking_uri=$MLFLOW_TRACKING_URI
       train_model.mlflow_exp_name=$MLFLOW_EXP_NAME"
   workingDir:
-    value: /{{cookiecutter.runai_proj_name}}-pvc/workspaces/$WORKSPACE_NAME/{{cookiecutter.repo_name}}
+    value: /{{cookiecutter.proj_name}}-pvc/workspaces/$WORKSPACE_NAME/{{cookiecutter.repo_name}}
   cpu:
     value: '2'
   cpuLimit:
@@ -50,9 +50,9 @@ spec:
     items:
       pvc-0:
         value:
-          claimName: {{cookiecutter.runai_proj_name}}-pvc
+          claimName: {{cookiecutter.proj_name}}-pvc
           existingPvc: false
-          path: /{{cookiecutter.runai_proj_name}}-pvc
+          path: /{{cookiecutter.proj_name}}-pvc
           readOnly: false
           readWriteMany: true
           size: 1000G

@@ -31,7 +31,7 @@ template:
 - __`repo_name`:__ {{cookiecutter.repo_name}}
 - __`src_package_name`:__ {{cookiecutter.src_package_name}}
 - __`src_package_name_short`:__ {{cookiecutter.src_package_name_short}}
-- __`harbor_registry_project_path`:__ {{cookiecutter.harbor_registry_project_path}}
+- __`registry_project_path`:__ {{cookiecutter.registry_project_path}}
 - __`author_name`:__ {{cookiecutter.author_name}}
 
 ## Overview For User Guide

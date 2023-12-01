@@ -2,7 +2,7 @@ apiVersion: run.ai/v2alpha1
 kind: InteractiveWorkload
 metadata:
   name: {{cookiecutter.author_name.replace('_', '-')}}-vscode
-  namespace: runai-{{cookiecutter.runai_proj_name.replace('_', '-')}}
+  namespace: runai-{{cookiecutter.proj_name.replace('_', '-')}}
 spec:
   name:
     value: {{cookiecutter.author_name.replace('_', '-')}}-vscode
@@ -36,11 +36,11 @@ spec:
           customUrl: false
   pvcs:
     items:
-      pvc-{{cookiecutter.runai_proj_name}}-pvc:
+      pvc-{{cookiecutter.proj_name}}-pvc:
         value:
-          claimName: {{cookiecutter.runai_proj_name}}-pvc
+          claimName: {{cookiecutter.proj_name}}-pvc
           existingPvc: false
-          path: /{{cookiecutter.runai_proj_name}}-pvc
+          path: /{{cookiecutter.proj_name}}-pvc
           readOnly: false
           readWriteMany: true
           size: 1000G

@@ -7,8 +7,8 @@
         "src_package_name_short": "khor_test",
         "platform": "onprem",
         "orchestrator": "runai",
-        "runai_proj_name": "mlops-test",
-        "harbor_registry_project_path": "registry.aisingapore.net/mlops/kapitan-hull-onprem-runai",
+        "proj_name": "mlops-test",
+        "registry_project_path": "registry.aisingapore.net/mlops/kapitan-hull-onprem-runai",
         "author_name": "mlops"
     }
 }

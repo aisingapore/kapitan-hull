@@ -6,8 +6,8 @@
     "src_package_name_short": "{{ cookiecutter.src_package_name }}",
     "platform": ["onprem", "gcp"],
     "orchestrator": ["runai", "polyaxon", "none"],
-    "runai_proj_name": "sample-project",
-    "harbor_registry_project_path": "registry.aisingapore.net/sample-project/my-project",
+    "proj_name": "sample-project",
+    "registry_project_path": "registry.domain.tld/sample-project/my-project",
     "author_name": "AISG",
     "__prompts__": {
         "project_name": "Name of project that will be the header for the README.md. Input to start with alphabet. Only whitespace as separators.",
@@ -26,8 +26,8 @@
             "polyaxon": "Polyaxon (not implemented yet)",
             "none": "No orchestrator (not implemented yet)"
         },
-        "runai_proj_name": "The RunAI namespace used by the project - the project name that you're sending jobs to.",
-        "harbor_registry_project_path": "Path of the Harbor registry repository for your container images to be located under. Cannot end with a slash character.",
+        "proj_name": "The project name used in by the repository. If you're using Run:AI, this will be the Run:AI project name used by the repository.",
+        "registry_project_path": "Path of the registry repository for your container images to be located under. Cannot end with a slash character.",
         "author_name": "Your alias or project team's name. Relatively arbitrary. No hyphens are allowed."
     }
 }
