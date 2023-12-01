@@ -18,13 +18,13 @@
         "platform": {
             "__prompt__": "The platform the project is running on.",
             "onprem": "On premise",
-            "gcp": "Google Cloud Platform"
+            "gcp": "Google Cloud Platform (not implemented yet)"
         },
         "orchestrator": {
             "__prompt__": "The orchestrator the project is using.",
             "runai": "Run:AI",
-            "polyaxon": "Polyaxon",
-            "none": "No orchestrator"
+            "polyaxon": "Polyaxon (not implemented yet)",
+            "none": "No orchestrator (not implemented yet)"
         },
         "runai_proj_name": "The RunAI namespace used by the project - the project name that you're sending jobs to.",
         "harbor_registry_project_path": "Path of the Harbor registry repository for your container images to be located under. Cannot end with a slash character.",
