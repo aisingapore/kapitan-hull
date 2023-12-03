@@ -4,7 +4,7 @@ metadata:
   name: {{cookiecutter.proj_name.replace('_', '-')}}-pvc
   namespace: runai-{{cookiecutter.proj_name.replace('_', '-')}}
 spec:
-{%- if cookiecuttter.platform == 'onprem' -%}
+{%- if cookiecutter.platform == 'onprem' -%}
   storageClassName: nfs-client
 {%- elif cookiecutter.platform == 'gcp' -%}
   storageClassName: filestore-standard

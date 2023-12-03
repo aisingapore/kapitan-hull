@@ -6,7 +6,7 @@ metadata:
 spec:
   environment:
     items:
-{%- if cookiecuttter.platform == 'onprem' -%}
+{%- if cookiecutter.platform == 'onprem' -%}
       HARBOR_ROBOT_CREDS_JSON:
         value: SECRET:harbor-credentials,.dockerconfigjson
 {%- elif cookiecutter.platform == 'gcp' -%}
