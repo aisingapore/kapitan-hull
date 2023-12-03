@@ -7,7 +7,7 @@ spec:
   name:
     value: {{cookiecutter.author_name.replace('_', '-')}}-vscode
   image:
-{%- if cookiecuttter.platform == 'onprem' -%}
+{%- if cookiecutter.platform == 'onprem' -%}
     value: registry.aisingapore.net/mlops-pub/kapitan-hull/code-server:0.2.0
 {%- elif cookiecutter.platform == 'gcp' -%}
     value: asia-southeast1-docker.pkg.dev/machine-learning-ops/pub-images/code-server:0.2.0
