@@ -7,11 +7,16 @@ spec:
   name:
     value: {{cookiecutter.author_name.replace('_', '-')}}-vscode
   image:
-    value: registry.aisingapore.net/runai/workspaces/code-server:v4.16.1-0.1.0
+
+{%- if cookiecuttter.platform == 'onprem' -%}
+    value: registry.aisingapore.net/mlops-pub/kapitan-hull/code-server:0.2.0
+{%- elif cookiecutter.platform == 'gcp' -%}
+    value: asia-southeast1-docker.pkg.dev/machine-learning-ops/pub-images/code-server:0.2.0
+{% endif %}
   imagePullPolicy:
     value: Always
   arguments:
-    value: '--bind-addr 0.0.0.0:8080 --auth none --disable-telemetry .'
+    value: '--bind-addr 0.0.0.0:8080 --disable-telemetry .'
   cpu:
     value: '2'
   cpuLimit:
@@ -38,12 +43,16 @@ spec:
     items:
       pvc-{{cookiecutter.proj_name}}-pvc:
         value:
-          claimName: {{cookiecutter.proj_name}}-pvc
+          claimName: {{cookiecutter.proj_name.replace('_', '-')}}-pvc
           existingPvc: false
-          path: /{{cookiecutter.proj_name}}-pvc
+          path: /{{cookiecutter.proj_name.replace('_', '-')}}-pvc
           readOnly: false
           readWriteMany: true
           size: 1000G
+{%- if cookiecuttter.platform == 'onprem' -%}
           storageClass: nfs-client
+{%- elif cookiecutter.platform == 'gcp' -%}
+          storageClass: filestore-standard
+{% endif %}
   username:
     value: {{cookiecutter.author_name}}
