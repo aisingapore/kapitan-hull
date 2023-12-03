@@ -7,7 +7,11 @@ spec:
   name:
     value: {{cookiecutter.author_name.replace('_', '-')}}-jupyterlab
   image:
-    value: registry.aisingapore.net/runai/workspaces/jupyterlab-server:0.1.0
+{%- if cookiecuttter.platform == 'onprem' -%}
+    value: registry.aisingapore.net/mlops-pub/kapitan-hull/jupyterlab-server:0.2.0
+{%- elif cookiecutter.platform == 'gcp' -%}
+    value: asia-southeast1-docker.pkg.dev/machine-learning-ops/pub-images/jupyterlab-server:0.2.0
+{% endif %}
   imagePullPolicy:
     value: Always
   command:
@@ -38,14 +42,12 @@ spec:
           customUrl: false
   pvcs:
     items:
-      pvc-{{cookiecutter.proj_name}}-pvc:
+      pvc-{{cookiecutter.proj_name.replace('_', '-')}}-pvc:
         value:
-          claimName: {{cookiecutter.proj_name}}-pvc
-          existingPvc: false
-          path: /{{cookiecutter.proj_name}}-pvc
+          claimName: {{cookiecutter.proj_name.replace('_', '-')}}-pvc
+          existingPvc: true
+          path: /{{cookiecutter.proj_name.replace('_', '-')}}-pvc
           readOnly: false
           readWriteMany: true
-          size: 1000G
-          storageClass: nfs-client
   username:
     value: {{cookiecutter.author_name}}

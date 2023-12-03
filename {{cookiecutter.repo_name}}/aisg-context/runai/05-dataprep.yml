@@ -7,20 +7,20 @@ spec:
   environment:
     items:
       WORKSPACE_NAME:
-        value: <YOUR_HYPHENATED_NAME>
+        value: {{cookiecutter.author_name.replace('_', '-')}}
   name: 
     value: {{cookiecutter.author_name.replace('_', '-')}}-data-prep
   image:
-    value: {{cookiecutter.registry_project_path}}/data-prep:0.1.0
+    value: {{cookiecutter.registry_project_path}}/data-prep:runai-yaml-build
   imagePullPolicy:
     value: Always
   command:
     value: >-
       /bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py 
-      process_data.raw_data_dir_path=/{{cookiecutter.proj_name}}-pvc/workspaces/$WORKSPACE_NAME/data/mnist-pngs-data-aisg
-      process_data.processed_data_dir_path=/{{cookiecutter.proj_name}}-pvc/workspaces/$WORKSPACE_NAME/data/processed/mnist-pngs-data-aisg-processed"
+      process_data.raw_data_dir_path=../data/mnist-pngs-data-aisg
+      process_data.processed_data_dir_path=../data/processed/mnist-pngs-data-aisg-processed"
   workingDir:
-    value: /{{cookiecutter.proj_name}}-pvc/workspaces/$WORKSPACE_NAME/{{cookiecutter.repo_name}}
+    value: /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}}/{{cookiecutter.repo_name}}
   cpu:
     value: '2'
   cpuLimit:
@@ -31,14 +31,12 @@ spec:
     value: 4G
   pvcs:
     items:
-      pvc-{{cookiecutter.proj_name}}-pvc:
+      pvc-{{cookiecutter.proj_name.replace('_', '-')}}-pvc:
         value:
-          claimName: {{cookiecutter.proj_name}}-pvc
-          existingPvc: false
-          path: /{{cookiecutter.proj_name}}-pvc
+          claimName: {{cookiecutter.proj_name.replace('_', '-')}}-pvc
+          existingPvc: true
+          path: /{{cookiecutter.proj_name.replace('_', '-')}}-pvc
           readOnly: false
           readWriteMany: true
-          size: 1000G
-          storageClass: nfs-client
   username:
     value: {{cookiecutter.author_name}}

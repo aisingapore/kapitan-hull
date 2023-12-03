@@ -1,0 +1,57 @@
+apiVersion: run.ai/v2alpha1
+kind: TrainingWorkload
+metadata:
+  name: {{cookiecutter.author_name.replace('_', '-')}}-build-dataprep
+  namespace: runai-{{cookiecutter.proj_name.replace('_', '-')}}
+spec:
+  environment:
+    items:
+{%- if cookiecuttter.platform == 'onprem' -%}
+      HARBOR_ROBOT_CREDS_JSON:
+        value: SECRET:harbor-credentials,.dockerconfigjson
+{%- elif cookiecutter.platform == 'gcp' -%}
+      SA_CREDENTIALS:
+        value: SECRET:gcp-sa-credentials,gcp-service-account.json
+      GOOGLE_APPLICATION_CREDENTIALS:
+        value: /kaniko/config.json
+{% endif %}
+  name:
+    value: {{cookiecutter.author_name.replace('_', '-')}}-build-dataprep
+  image: 
+    value: gcr.io/kaniko-project/executor:debug
+  imagePullPolicy:
+    value: IfNotPresent
+  command: 
+    value: >- 
+      /bin/sh -c 
+      "mkdir -p /kaniko/.docker;
+{%- elif cookiecutter.platform == 'gcp' -%}
+      echo $HARBOR_ROBOT_CREDS_JSON > /kaniko/.docker/config.json; 
+{%- elif cookiecutter.platform == 'gcp' -%}
+      echo $SA_CREDENTIALS > $GOOGLE_APPLICATION_CREDENTIALS; 
+{% endif %}
+      /kaniko/executor
+      --context .
+      --dockerfile ./docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile
+      --destination {{cookiecutter.registry_project_path}}/data-prep:runai-yaml-build"
+  workingDir:
+    value: /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}}/{{cookiecutter.repo_name}}
+  cpu:
+    value: '4'
+  cpuLimit:
+    value: '4'
+  memory:
+    value: 6G
+  memoryLimit:
+    value: 6G
+  pvcs:
+    items:
+      pvc-{{cookiecutter.proj_name.replace('_', '-')}}-pvc:
+        value: 
+          claimName: {{cookiecutter.proj_name.replace('_', '-')}}-pvc
+          existingPvc: true
+          path: /{{cookiecutter.proj_name.replace('_', '-')}}-pvc
+          readOnly: false
+          readWriteMany: true
+  username:
+    value: {{cookiecutter.author_name}}

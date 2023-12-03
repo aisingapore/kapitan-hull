@@ -1,0 +1,50 @@
+apiVersion: run.ai/v2alpha1
+kind: TrainingWorkload
+metadata:
+  name: {{cookiecutter.author_name.replace('_', '-')}}-repo-download
+  namespace: runai-{{cookiecutter.proj_name.replace('_', '-')}}
+spec:
+  environment:
+    items:
+      GITLAB_USERNAME:
+        value: SECRET:gitlab-ro-credentials,username
+      GITLAB_PASSWORD:
+        value: SECRET:gitlab-ro-credentials,password
+      GITLAB_URL:
+        value: SECRET:gitlab-ro-credentials,url
+  name:
+    value: {{cookiecutter.author_name.replace('_', '-')}}-repo-download
+  image:
+    value: alpine/git
+  imagePullPolicy:
+    value: IfNotPresent
+  command:
+    value: >-
+      /bin/sh -c 
+      "git clone https://$GITLAB_USERNAME:$GITLAB_PASSWORD@$GITLAB_URL.git &&
+      chown -R 2222:2222 {{cookiecutter.repo_name}}"
+  runAsUid:
+    value: 2222
+  runAsGid:
+    value: 2222
+  workingDir:
+    value: /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}}
+  cpu:
+    value: '0.5'
+  cpuLimit:
+    value: '0.5'
+  memory:
+    value: 1G
+  memoryLimit:
+    value: 1G
+  pvcs:
+    items:
+      pvc-{{cookiecutter.proj_name.replace('_', '-')}}-pvc:
+        value: 
+          claimName: {{cookiecutter.proj_name.replace('_', '-')}}-pvc
+          existingPvc: true
+          path: /{{cookiecutter.proj_name.replace('_', '-')}}-pvc
+          readOnly: false
+          readWriteMany: true
+  username:
+    value: {{cookiecutter.author_name}} 
