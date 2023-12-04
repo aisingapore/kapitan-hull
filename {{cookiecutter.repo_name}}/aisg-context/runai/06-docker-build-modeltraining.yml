@@ -25,7 +25,7 @@ spec:
     value: >- 
       /bin/sh -c 
       "mkdir -p /kaniko/.docker;
-{%- elif cookiecutter.platform == 'gcp' -%}
+{%- if cookiecutter.platform == 'onprem' -%}
       echo $HARBOR_ROBOT_CREDS_JSON > /kaniko/.docker/config.json; 
 {%- elif cookiecutter.platform == 'gcp' -%}
       echo $SA_CREDENTIALS > $GOOGLE_APPLICATION_CREDENTIALS; 
