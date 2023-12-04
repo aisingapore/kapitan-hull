@@ -1,0 +1,14 @@
+{
+    "cookiecutter": {
+        "project_name": "Kapitan Hull GCP RunAI Test",
+        "description": "Testing Grounds for Kapitan Hull on GCP using RunAI.",
+        "repo_name": "kapitan-hull-gcp-runai-test",
+        "src_package_name": "kapitan_hull_gcp_runai_test",
+        "src_package_name_short": "khgr_test",
+        "platform": "gcp",
+        "orchestrator": "runai",
+        "proj_name": "mlops-test",
+        "registry_project_path": "registry.aisingapore.net/mlops/kapitan-hull-gcp-runai",
+        "author_name": "mlops"
+    }
+}
