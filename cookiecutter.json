@@ -24,7 +24,7 @@
             "__prompt__": "The orchestrator the project is using.",
             "runai": "Run:AI",
             "polyaxon": "Polyaxon (not implemented yet)",
-            "none": "No orchestrator (not implemented yet)"
+            "noorch": "No orchestrator (not implemented yet)"
         },
         "proj_name": "The project name used in by the repository. If you're using Run:AI, this will be the Run:AI project name used by the repository.",
         "registry_project_path": "Path of the registry repository for your container images to be located under. Cannot end with a slash character.",
