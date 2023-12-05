@@ -54,6 +54,8 @@ build:data-prep-image:
         - src/**/*
         - conf/**/*
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
+    - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_DATAPREP
 
 build:model-training-image:
   stage: build
@@ -75,6 +77,8 @@ build:model-training-image:
         - src/**/*
         - conf/**/*
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
+    - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_MODEL
 
 build:retag-images:
   stage: build
