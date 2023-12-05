@@ -14,8 +14,16 @@ spec:
 {% endif %}
   imagePullPolicy:
     value: Always
-  arguments:
-    value: '--bind-addr 0.0.0.0:8080 --disable-telemetry .'
+  command:
+    value: >-
+      /bin/sh -c "
+      mkdir -p /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}}/vscode/local &&
+      mkdir -p /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}}/vscode/config &&
+      rm -rf ~/.local ~/.config &&
+      ln -sf /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}}/vscode/local ~/.local &&
+      ln -sf /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}}/vscode/config ~/.config &&
+      ln -sf /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}} ~/workspace &&
+      code-server --bind-addr 0.0.0.0:8080 --disable-telemetry ."
   cpu:
     value: '2'
   cpuLimit:
