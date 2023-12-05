@@ -38,11 +38,7 @@ spec:
     value: /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}}/{{cookiecutter.repo_name}}
   cpu:
     value: '4'
-  cpuLimit:
-    value: '4'
   memory:
-    value: 6G
-  memoryLimit:
     value: 6G
   pvcs:
     items:
