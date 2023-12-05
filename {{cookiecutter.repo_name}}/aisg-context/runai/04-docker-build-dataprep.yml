@@ -6,10 +6,10 @@ metadata:
 spec:
   environment:
     items:
-{%- if cookiecutter.platform == 'onprem' -%}
+{%- if cookiecutter.platform == 'onprem' %}
       HARBOR_ROBOT_CREDS_JSON:
         value: SECRET:harbor-credentials,.dockerconfigjson
-{%- elif cookiecutter.platform == 'gcp' -%}
+{%- elif cookiecutter.platform == 'gcp' %}
       SA_CREDENTIALS:
         value: SECRET:gcp-sa-credentials,gcp-service-account.json
       GOOGLE_APPLICATION_CREDENTIALS:
@@ -25,9 +25,9 @@ spec:
     value: >- 
       /bin/sh -c 
       "mkdir -p /kaniko/.docker;
-{%- if cookiecutter.platform == 'onprem' -%}
+{%- if cookiecutter.platform == 'onprem' %}
       echo $HARBOR_ROBOT_CREDS_JSON > /kaniko/.docker/config.json; 
-{%- elif cookiecutter.platform == 'gcp' -%}
+{%- elif cookiecutter.platform == 'gcp' %}
       echo $SA_CREDENTIALS > $GOOGLE_APPLICATION_CREDENTIALS; 
 {% endif %}
       /kaniko/executor

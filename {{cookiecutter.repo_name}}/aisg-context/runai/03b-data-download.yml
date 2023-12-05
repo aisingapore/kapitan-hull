@@ -25,10 +25,10 @@ spec:
       wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/mnist-pngs-data-aisg.zip &&
       unzip mnist-pngs-data-aisg.zip &&
       chown -R 2222:2222 ."
-    workingDir:
-      value: /{{cookiecutter.proj_name.replace('_', '-')}}-pvc
-    cpu:
-      value: '0.5'
+  workingDir:
+    value: /{{cookiecutter.proj_name.replace('_', '-')}}-pvc
+  cpu:
+    value: '0.5'
   cpu:
     value: '0.5'
   cpuLimit:

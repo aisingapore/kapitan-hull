@@ -1,4 +1,4 @@
-apiVersion: runai/v2alpha1
+apiVersion: run.ai/v2alpha1
 kind: TrainingWorkload
 metadata:
   name: {{cookiecutter.author_name.replace('_', '-')}}-workspace-prep
