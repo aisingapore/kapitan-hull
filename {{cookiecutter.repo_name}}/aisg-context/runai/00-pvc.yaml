@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{cookiecutter.proj_name.replace('_', '-')}}-pvc
+  namespace: runai-{{cookiecutter.proj_name.replace('_', '-')}}
+spec:
+{%- if cookiecutter.platform == 'onprem' -%}
+  storageClassName: nfs-client
+{%- elif cookiecutter.platform == 'gcp' -%}
+  storageClassName: filestore-standard
+{% endif %}
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Ti

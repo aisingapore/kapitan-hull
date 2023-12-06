@@ -8,58 +8,62 @@ follow through with the guide:
 - NUS Staff/Student account.
 - Azure account provisioned by AI Singapore.
 - PC with the following installed:
-    - If your machine is with a Windows OS, use
-      [__PowerShell__](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.2)
+    - If your machine is with a Windows OS, use [__PowerShell__][pshell]
       instead of the default Command (`cmd.exe`) shell. Best if you
-      resort to
-      [Windows Terminal](https://docs.microsoft.com/en-us/windows/terminal/).
+      resort to [Windows Terminal][winterm].
     - __Pulse Secure__
-        - Refer to [NUS IT eGuides](https://nusit.nus.edu.sg/eguides/)
-          for installation guides.
+        - Refer to [NUS IT eGuides][nus-it] for installation guides.
     - __Web browser__
     - __Terminal__
-    - __[Git](https://git-scm.com/downloads)__
-    - __[Rancher Desktop](https://rancherdesktop.io)__ or
-      __[Docker Engine](https://docs.docker.com/engine/install):__
+    - __[Git][git]__
+    - __[Rancher Desktop][rancher]__ or __[Docker Engine][docker]:__
       Client-server application for containerising applications as well
       as interacting with the Docker daemon.
-        - For Linux users, you may install the Docker Engine (Docker daemon)
-          directly.
+        - For Linux users, you may install the Docker Engine (Docker 
+          daemon) directly.
         - For Windows or macOS users, the Docker daemon can be installed
-          through [Rancher Desktop](https://rancherdesktop.io).
-    - __[miniconda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html):__
-      for Python virtual environment management.
-    - __[`kubectl`](https://kubernetes.io/docs/tasks/tools/):__
-      CLI for Kubernetes.
-    - __[AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html):__ CLI for AWS services, but we will specifically be using it
-      for interacting with the AI Singapore's Elastic Cloud Storage
-      (ECS) service through the S3 protocol.
-        - You may choose to just use
-          [`boto3`](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html),
-          the Python SDK for AWS instead, to interact with the ECS
-          service within a Python environment. However, this does
-          not fall under the scope of this guide.
-    - *(Optional)* __[`helm`](https://helm.sh/docs/intro/install/):__
-      CLI for Kubernetes' package manager.
-- Access to a project on AI Singapore's Run:ai cluster.
-  See [here](./03-mlops-components-platform.md#runai) for more information.
-- Credentials for AI Singapore's Elastic Cloud Storage (ECS) service.
-  See [here](./03-mlops-components-platform.md#elastic-cloud-storage-ecs) for more information.
-- Credentials for AI Singapore's Harbor registry.
-  See [here](./03-mlops-components-platform.md#harbor) for more information.
-- Credentials for an MLflow Tracking server.
-  See [here](./03-mlops-components-platform.md#mlflow) for more information.
+          through [Rancher Desktop][rancher].
+    - __[miniconda][mcond]:__ for Python virtual environment management.
+    - __[`kubectl`][kubectl]:__ CLI for Kubernetes.
+{% if cookiecutter.platform == 'onprem' -%}  
+    - __[AWS CLI][awscli]:__ CLI for AWS services, but we will 
+      specifically be using it for interacting with the AI Singapore's 
+      Elastic Cloud Storage (ECS) service through the S3 protocol.
+        - You may choose to just use [`boto3`][boto3], the Python SDK 
+          for AWS instead, to interact with the ECS service within a 
+          Python environment. However, this does not fall under the 
+          scope of this guide.
+{% elif cookiecutter.platform == 'gcp' -%}
+    - __[`gcloud` CLI][gcloud]:__ CLI for interacting with GCP services.
+{% endif -%}
+    - *(Optional)* __[`helm`][helm]:__ CLI for Kubernetes' package 
+      manager.
+{% if cookiecutter.orchestrator == 'runai' -%}  
+- Access to a project on AI Singapore's Run:ai cluster.  
+  See [here][runai-page] for more information.
+{% elif cookiecutter.orchestrator == 'polyaxon' -%}  
+{% elif cookiecutter.orchestrator == 'noorch' -%}  
+{% endif -%}
+{% if cookiecutter.platform == 'onprem' -%}  
+- Credentials for AI Singapore's Elastic Cloud Storage (ECS) service.  
+  See [here][ecs-page] for more information.
+- Credentials for AI Singapore's Harbor registry.  
+  See [here][harbor-page] for more information.
+{% elif cookiecutter.platform == 'gcp' -%}
+- Access to a project on [Google Cloud Platform][gcp].  
+  See [here][gcp-page] for more information.
+{% endif -%}
+- Credentials for an MLflow Tracking server.  
+  See [here][mlflow-page] for more information.
 
 !!! note
-    If you do not have any of the required credentials,
-    please verify with or notify the MLOps team at
-    `mlops@aisingapore.org`.
+    If you do not have any of the required credentials, please verify 
+    with or notify the MLOps team at `mlops@aisingapore.org`.
 
 !!! info
     Wherever relevant, you can toggle between the different commands
-    that need to be executed
-    for either Linux/macOS or the Windows environment (PowerShell).
-    See below for an example:
+    that need to be executed for either Linux/macOS or the Windows 
+    environment (PowerShell). See below for an example:
 
     === "Linux/macOS"
 
@@ -76,13 +80,40 @@ follow through with the guide:
         ```
 
     !!! warning
-        If you are on Windows OS, you would need to ensure that the
-        files you've cloned or written on your machine be with
-        `LF` line endings. Otherwise, issues would arise when Docker
-        containers are being built or run. See
-        [here](https://stackoverflow.com/questions/48692741/how-can-i-make-all-line-endings-eols-in-all-files-in-visual-studio-code-unix)
-        on how to configure consistent line endings for a whole folder
-        or workspace using VSCode.
+        If you are on Windows OS, you would need to ensure that the 
+        files you've cloned or written on your machine be with `LF` line
+        endings. Otherwise, issues would arise when Docker containers 
+        are being built or run. See [here][lf-set] on how to configure 
+        consistent line endings for a whole folder or workspace using 
+        VSCode.
+
+[pshell]: https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.2
+[winterm]: https://docs.microsoft.com/en-us/windows/terminal/
+[nus-it]: https://nusit.nus.edu.sg/eguides/
+[git]: https://git-scm.com/downloads
+[rancher]: https://rancherdesktop.io
+[docker]: https://docs.docker.com/engine/install
+[mcond]: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
+[kubectl]: https://kubernetes.io/docs/tasks/tools/
+[helm]: https://helm.sh/docs/intro/install/
+[runai-page]: ./03-mlops-components-platform.md#runai
+[mlflow-page]: ./03-mlops-components-platform.md#mlflow
+[lf-set]: https://stackoverflow.com/questions/48692741/how-can-i-make-all-line-endings-eols-in-all-files-in-visual-studio-code-unix
+{%- if cookiecutter.platform == 'onprem' -%}  
+[awscli]: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+[boto3]: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html
+[ecs-page]: ./03-mlops-components-platform.md#elastic-cloud-storage-ecs
+[harbor-page]: ./03-mlops-components-platform.md#harbor
+{%- elif cookiecutter.platform == 'gcp' -%}
+[gcloud]: https://cloud.google.com/sdk/docs/install
+[gcp]: https://console.cloud.google.com
+[gcp-page]: ./02-preface.md#google-cloud-platform-gcp-projects
+{% endif %}
+{%- if cookiecutter.orchestrator == 'runai' -%}  
+[runai-page]: ./03-mlops-components-platform.md#runai
+{%- elif cookiecutter.orchestrator == 'polyaxon' -%}  
+{%- elif cookiecutter.orchestrator == 'noorch' -%}  
+{% endif %}
 
 ## Tips and Tricks
 
@@ -92,8 +123,8 @@ follow through with the guide:
       button on the top right.  
       Then, proceed to the Virtual Machines section and increase your 
       CPU and memory resources directly.
-    - For Windows users, create a `.wslconfig` file user `%UserProfile%` 
-      with the following content:
+    - For Windows users, create a `.wslconfig` file user 
+      `%UserProfile%` with the following content:
       ```toml
       [wsl2]
       memory=8GB

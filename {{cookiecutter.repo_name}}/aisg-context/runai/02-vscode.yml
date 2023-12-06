@@ -1,0 +1,59 @@
+apiVersion: run.ai/v2alpha1
+kind: InteractiveWorkload
+metadata:
+  name: {{cookiecutter.author_name.replace('_', '-')}}-vscode
+  namespace: runai-{{cookiecutter.proj_name.replace('_', '-')}}
+spec:
+  name:
+    value: {{cookiecutter.author_name.replace('_', '-')}}-vscode
+  image:
+{%- if cookiecutter.platform == 'onprem' %}
+    value: registry.aisingapore.net/mlops-pub/kapitan-hull/code-server:0.2.0
+{%- elif cookiecutter.platform == 'gcp' %}
+    value: asia-southeast1-docker.pkg.dev/machine-learning-ops/pub-images/code-server:0.2.0
+{% endif %}
+  imagePullPolicy:
+    value: Always
+  command:
+    value: >-
+      /bin/sh -c "
+      mkdir -p /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}}/vscode/local &&
+      mkdir -p /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}}/vscode/config &&
+      rm -rf ~/.local ~/.config &&
+      ln -sf /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}}/vscode/local ~/.local &&
+      ln -sf /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}}/vscode/config ~/.config &&
+      ln -sf /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}} ~/workspace &&
+      code-server --bind-addr 0.0.0.0:8080 --disable-telemetry ."
+  cpu:
+    value: '2'
+  cpuLimit:
+    value: '4'
+  memory:
+    value: 4G
+  memoryLimit:
+    value: 8G
+  gpu:
+    value: '0'
+  environment:
+    items:
+      RUNAI_JOB_NAME:
+        value: ${RUNAI_JOB_NAME}
+      RUNAI_PROJECT:
+        value: ${RUNAI_PROJECT}
+  exposedUrls:
+    items:
+      url-0:
+        value:
+          containerPort: 8080
+          customUrl: false
+  pvcs:
+    items:
+      pvc-{{cookiecutter.proj_name.replace('_', '-')}}-pvc:
+        value:
+          claimName: {{cookiecutter.proj_name.replace('_', '-')}}-pvc
+          existingPvc: true
+          path: /{{cookiecutter.proj_name.replace('_', '-')}}-pvc
+          readOnly: false
+          readWriteMany: true
+  username:
+    value: {{cookiecutter.author_name}}

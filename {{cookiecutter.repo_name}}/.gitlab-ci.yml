@@ -46,7 +46,7 @@ build:data-prep-image:
       /kaniko/executor
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile"
-      --destination "{{cookiecutter.harbor_registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA}"
+      --destination "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA}"
   rules:
     - if: $CI_MERGE_REQUEST_IID
       changes:
@@ -54,6 +54,8 @@ build:data-prep-image:
         - src/**/*
         - conf/**/*
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
+    - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_DATAPREP
 
 build:model-training-image:
   stage: build
@@ -67,7 +69,7 @@ build:model-training-image:
       /kaniko/executor
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/docker/{{cookiecutter.repo_name}}-model-training.Dockerfile"
-      --destination "{{cookiecutter.harbor_registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA}"
+      --destination "{{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA}"
   rules:
     - if: $CI_MERGE_REQUEST_IID
       changes:
@@ -75,6 +77,8 @@ build:model-training-image:
         - src/**/*
         - conf/**/*
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
+    - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_MODEL
 
 build:retag-images:
   stage: build
@@ -83,8 +87,8 @@ build:retag-images:
     entrypoint: [""]
   script:
     - cat $HARBOR_ROBOT_CREDS_JSON > /root/.docker/config.json
-    - crane tag {{cookiecutter.harbor_registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA} ${CI_COMMIT_TAG}
-    - crane tag {{cookiecutter.harbor_registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA} ${CI_COMMIT_TAG}
+    - crane tag {{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA} ${CI_COMMIT_TAG}
+    - crane tag {{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA} ${CI_COMMIT_TAG}
   rules:
     - if: $CI_COMMIT_TAG && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
