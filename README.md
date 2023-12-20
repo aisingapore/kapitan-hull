@@ -4,7 +4,7 @@
 
 ## Table of Contents
 
-- [Kapitan Hull)](#kapitan-hull)
+- [Kapitan Hull](#kapitan-hull)
   - [Table of Contents](#table-of-contents)
   - [Preface](#preface)
   - [Usage](#usage)
