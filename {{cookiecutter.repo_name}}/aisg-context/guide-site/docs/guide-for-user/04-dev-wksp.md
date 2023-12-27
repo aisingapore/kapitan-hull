@@ -41,78 +41,112 @@ these building blocks.
 
 ### Prebuilt VSCode Server
 
-Every end-user of Run:ai would be able to quickly spin up a VSCode
-server workspace using prebuilt blocks. While the
-[steps for creating a workspace](https://docs.run.ai/v2.13/Researcher/user-interface/workspaces/create/workspace)
-are detailed on Run:ai's documentation, listed below are the
-recommended environment, compute resource, and data source that you
-may make use of to spin up your first VSCode workspace, in the context
-of AI Singapore's infrastructure.
+The MLOps team would have told you whether you'd be using Coder or the
+Run:ai Workspaces to spin up a VSCode server. Otherwise, you can choose
+either method to gain access to a remote VSCode developer workspace.
 
-- __Workspace name:__ `<YOUR_HYPHENATED_NAME>-vscode`
-- __Environment:__ `aisg-vscode-server-v4-16-1`
-- __Compute Resource:__ `cpu-mid`
-- __Data Source:__ The persistent volume claim (PVC) that is dedicated
-  to your project. For a project named `sample-project`, you may make use of
-  `sample-project-pvc`.
+=== "Coder"
 
-Once you have selected the blocks, you can proceed to create the
-workspace and you will be redirected to the workspaces page. On this
-page, you may view the status of the workspace that you have just
-created.
+    The MLOps team should have spun up a Coder instance in the cluster
+    and handed the URL to you. The only thing you would need to do is
+    to log into Coder with OpenID Connect:
 
-![Run:ai Dashboard - Workspaces Page Post VSCode](assets/screenshots/runai-dashboard-workspaces-page-post-vscode.png)
+    ![Coder Login](assets/screenshots/coder-login-vscode.png)
 
-Once the workspace is active (indicated by a green status), you may
-access the workspace by clicking on the `CONNECT` button and choosing
-`VSCode`. This will open up a new browser tab for the VSCode server,
-accessible through a URL that follows the following convention:
-`<NAME_OF_PROJECT>-<NAME_OF_WORKSPACE>.runai.aisingapore.net`.
-However, you cannot access the VSCode interface just yet; you will
-prompted for a password.
+    Once you're in, you should be seeing something similar to this:
 
-![Run:ai - VSCode Server Login](assets/screenshots/runai-vscode-server-login.png)
+    ![Coder Workspace](assets/screenshots/coder-workspace.png)
 
-To retrieve the password, head over to your terminal and run the
-following command:
+    If you do not see a workspace running, or you could not access the
+    Coder workspace allocated to you, you can contact the MLOps team.
 
-=== "Linux/macOS"
+    If you have the permissions, you could also create a workspace on
+    your own. The template you have access to will only work for one
+    workspace at a time, so you could switch out workspaces with 
+    different CPU and RAM resources, depending on the needs of your 
+    team's project requirements.
 
-    ```bash
-    $ runai exec <YOUR_HYPHENATED_NAME>-vscode -p {{cookiecutter.proj_name}} -- cat /home/coder/.config/code-server/config.yaml
-    bind-addr: 127.0.0.1:8080
-    auth: password
-    password: xxxxxxxxxxxxxxxxxxxxxxxx
-    cert: false
-    ```
+    ![Coder create new workspace](assets/screenshots/coder-create-workspace.png)
 
-=== "Windows PowerShell"
+    If all of it runs normally, you should have two buttons: VS Code 
+    Desktop and code-server. Click on the latter to start running the 
+    remote VSCode Workspace.
 
-    ```powershell
-    $ runai exec <YOUR_HYPHENATED_NAME>-vscode -p {{cookiecutter.proj_name}} -- cat /home/coder/.config/code-server/config.yaml
-    bind-addr: 127.0.0.1:8080
-    auth: password
-    password: xxxxxxxxxxxxxxxxxxxxxxxx
-    cert: false
-    ```
+    ![Coder workspace running](assets/screenshots/coder-workspace-running.png)
 
-Copy the value for the `password` field into the prompt on the browser
-and you should be directed to the VSCode server welcome tab.
+    You should be directed to the VSCode server welcome tab without 
+    password prompt.
 
-![Run:ai - VSCode Server Welcome](assets/screenshots/runai-vscode-server-welcome.png)
+    ![Run:ai - VSCode Server Welcome](assets/screenshots/runai-vscode-server-welcome.png)
 
-However, the default folder that your VSCode server is accessing is the
-home directory of the container's user, which is `/home/coder`.
-__Since a container's filesystem is ephemeral, we have to make use of a
-persistent storage__. Otherwise, any changes written within the
-container's filesystem will be lost once the container is terminated.
-For persistence, we look into using a persistent volume claim, which if
-you have followed the recommendations above, a PVC would have been
-mounted to the container.
+=== "Run:ai"
 
-__Reference(s):__
+    Every end-user of Run:ai would be able to quickly spin up a VSCode
+    server workspace using prebuilt blocks. While the
+    [steps for creating a workspace][workspace] are detailed on 
+    Run:ai's documentation, listed below are the recommended 
+    environment, compute resource, and data source that you may make 
+    use of to spin up your first VSCode workspace, in the context of AI 
+    Singapore's infrastructure.
 
-- [Kubernetes Docs - Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes)
+    - __Workspace name:__ `<YOUR_HYPHENATED_NAME>-vscode`
+    - __Environment:__ `aisg-vscode-server-v4-16-1`
+    - __Compute Resource:__ `cpu-mid`
+    - __Data Source:__ The persistent volume claim (PVC) that is 
+      dedicated to your project. For a project named `sample-project`, 
+      you may make use of `sample-project-pvc`.
+
+    Once you have selected the blocks, you can proceed to create the
+    workspace and you will be redirected to the workspaces page. On 
+    this page, you may view the status of the workspace that you have 
+    just created.
+
+    ![Run:ai Dashboard - Workspaces Page Post VSCode](assets/screenshots/runai-dashboard-workspaces-page-post-vscode.png)
+
+    Once the workspace is active (indicated by a green status), you may
+    access the workspace by clicking on the `CONNECT` button and 
+    choosing `VSCode`. This will open up a new browser tab for the 
+    VSCode server, accessible through a URL that follows the following 
+    convention: 
+    `<NAME_OF_PROJECT>-<NAME_OF_WORKSPACE>.runai.aisingapore.net`.
+    However, you cannot access the VSCode interface just yet; you will
+    prompted for a password.
+
+    ![Run:ai - VSCode Server Login](assets/screenshots/runai-vscode-server-login.png)
+
+    To retrieve the password, head over to your terminal and run the
+    following command:
+
+    === "Linux/macOS/Windows PowerShell"
+
+        ```bash
+        $ runai exec <YOUR_HYPHENATED_NAME>-vscode -p {{cookiecutter.proj_name}} -- cat /home/coder/.config/code-server/config.yaml
+        bind-addr: 127.0.0.1:8080
+        auth: password
+        password: xxxxxxxxxxxxxxxxxxxxxxxx
+        cert: false
+        ```
+
+    Copy the value for the `password` field into the prompt on the 
+    browser and you should be directed to the VSCode server welcome 
+    tab.
+
+    ![Run:ai - VSCode Server Welcome](assets/screenshots/runai-vscode-server-welcome.png)
+
+    However, the default folder that your VSCode server is accessing is 
+    the home directory of the container's user, which is `/home/coder`.
+    __Since a container's filesystem is ephemeral, we have to make use 
+    of a persistent storage__. Otherwise, any changes written within 
+    the container's filesystem will be lost once the container is 
+    terminated. For persistence, we look into using a persistent volume 
+    claim, which if you have followed the recommendations above, a PVC 
+    would have been mounted to the container.
+
+    [workspace]: https://docs.run.ai/v2.13/Researcher/user-interface/workspaces/create/workspace
+
+    __Reference(s):__
+
+    - [Kubernetes Docs - Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes)
 
 ### Persistent Workspaces
 
