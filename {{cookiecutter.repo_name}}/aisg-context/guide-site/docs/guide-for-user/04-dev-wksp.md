@@ -25,7 +25,7 @@ These building blocks allows for reusable setups where separate
 configuration can be mixed and match to provide end-users with their
 ideal setup.
 
-Every workspace intance are built using the following building blocks:
+Every workspace instance are built using the following building blocks:
 
 - [environment](https://docs.run.ai/v2.13/Researcher/user-interface/workspaces/blocks/environments)
 - [data source](https://docs.run.ai/v2.13/Researcher/user-interface/workspaces/blocks/datasources)
@@ -50,11 +50,8 @@ may make use of to spin up your first VSCode workspace, in the context
 of AI Singapore's infrastructure.
 
 - __Workspace name:__ `<YOUR_HYPHENATED_NAME>-vscode`
-
 - __Environment:__ `aisg-vscode-server-v4-16-1`
-
 - __Compute Resource:__ `cpu-mid`
-
 - __Data Source:__ The persistent volume claim (PVC) that is dedicated
   to your project. For a project named `sample-project`, you may make use of
   `sample-project-pvc`.
@@ -239,11 +236,8 @@ interface for interacting with or editing notebooks. We can spin up
 a JupyterLab using the following recommended blocks:
 
 - __Workspace name:__ `<YOUR_HYPHENATED_NAME>-jupyterlab`
-
 - __Environment:__ `aisg-jupyterlab-server-0-1-0`
-
 - __Compute Resource:__ `cpu-mid`
-
 - __Data Source:__ The PVC that is dedicated to your project. For a
   sample project, you may make use of `sample-project-pvc`.
 

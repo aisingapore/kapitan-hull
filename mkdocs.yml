@@ -6,12 +6,12 @@ site_description: >-
   "{{cookiecutter.description}}"
 
 # Repository
-repo_name: "aisingapore/ml-project-cookiecutter-onprem-runai"
-repo_url: "https://github.com/aisingapore/ml-project-cookiecutter-onprem-runai"
+repo_name: "aisingapore/kapitan-hull"
+repo_url: "https://github.com/aisingapore/kapitan-hull"
 edit_uri: ""
 
 # Copyright
-copyright: Copyright &copy; 2023 - AI Singapore
+copyright: Copyright &copy; 2023-2024 - AI Singapore
 
 # Configuration
 docs_dir: "{{cookiecutter.repo_name}}/aisg-context/guide-site/docs"
