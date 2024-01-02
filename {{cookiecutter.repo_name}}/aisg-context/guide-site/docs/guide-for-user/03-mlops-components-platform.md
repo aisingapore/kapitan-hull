@@ -170,13 +170,12 @@ Run:AI.
 {%- endif %}
 
 ??? info "Reference Link(s)"
-
-{% if cookiecutter.platform == "onprem" -%}
+{% if cookiecutter.platform == "onprem" %}
     - [Rancher Docs - Rancher Server and Components](https://ranchermanager.docs.rancher.com/reference-guides/rancher-manager-architecture/rancher-server-and-components)
-{% elif cookiecutter.platform == "gcp" -%}
+{% elif cookiecutter.platform == "gcp" %}
     - [GKE Overview](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview)
 {%- endif -%}
-{% if cookiecutter.orchestrator == "runai" -%}
+{%- if cookiecutter.orchestrator == "runai" %}
     - [Run:ai Docs - System Components](https://docs.run.ai/home/components)
 {%- endif %}
 
@@ -799,9 +798,9 @@ to make use of the MLflow Tracking server:
 
 - MLflow Tracking server URL(s)
 - Your own username and password for the same server(s)
-{%- if cookiecutter.platform == 'onprem' -%}
+{% if cookiecutter.platform == 'onprem' -%}
 - _(Optional)_ ECS credentials for artifact storage
-{%- elif cookiecutter.platform == 'gcp' -%}
+{% elif cookiecutter.platform == 'gcp' -%}
 - _(Optional)_ GCS credentials for artifact storage
 {% endif %}
 

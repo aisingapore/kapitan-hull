@@ -99,12 +99,12 @@ follow through with the guide:
 [runai-page]: ./03-mlops-components-platform.md#runai
 [mlflow-page]: ./03-mlops-components-platform.md#mlflow
 [lf-set]: https://stackoverflow.com/questions/48692741/how-can-i-make-all-line-endings-eols-in-all-files-in-visual-studio-code-unix
-{%- if cookiecutter.platform == 'onprem' -%}  
+{% if cookiecutter.platform == 'onprem' -%}  
 [awscli]: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 [boto3]: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html
 [ecs-page]: ./03-mlops-components-platform.md#elastic-cloud-storage-ecs
 [harbor-page]: ./03-mlops-components-platform.md#harbor
-{%- elif cookiecutter.platform == 'gcp' -%}
+{% elif cookiecutter.platform == 'gcp' -%}
 [gcloud]: https://cloud.google.com/sdk/docs/install
 [gcp]: https://console.cloud.google.com
 [gcp-page]: ./02-preface.md#google-cloud-platform-gcp-projects

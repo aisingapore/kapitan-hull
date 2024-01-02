@@ -10,7 +10,7 @@ ML project template.__
 This template that is also accompanied with an end-to-end guide was
 generated and customised using the following [`cookiecutter`][ccutter]
 template:
-https://github.com/aisingapore/ml-project-cookiecutter-onprem-runai
+https://github.com/aisingapore/kapitan-hull
 
 The contents of the guide have been customised according to the inputs 
 provided upon generation of this repository through the usage of 
@@ -30,7 +30,7 @@ Inputs provided to `cookiecutter` for the generation of this template:
 - __`author_name`:__ {{cookiecutter.author_name}}
 
 [ccutter]: https://cookiecutter.readthedocs.io/en/stable/
-[kh-readme]: https://github.com/aisingapore/ml-project-cookiecutter-onprem-runai/blob/main/README.md
+[kh-readme]: https://github.com/aisingapore/kapitan-hull/blob/main/README.md
 
 ## End-to-end Guide
 
@@ -48,8 +48,8 @@ To spin up the site on your local machine, you can create a virtual
 environment to install the dependencies first:
 
 ```bash
-$ conda create -n aisg-eptg-onprem-runai-guide python=3.10.11
-$ conda activate aisg-eptg-onprem-runai-guide
+$ conda create -n aisg-kh-guide python=3.10.11
+$ conda activate aisg-kh-guide
 $ pip install -r aisg-context/guide-site/mkdocs-requirements.txt
 ```
 
@@ -65,5 +65,5 @@ The site for the guide should then be viewable on
 
 [mkdocs]: https://www.mkdocs.org
 [mkdocs-material]: https://squidfunk.github.io/mkdocs-material
-[kh-site]: https://aisingapore.github.io/ml-project-cookiecutter-onprem-runai
+[kh-site]: https://aisingapore.github.io/kapitan-hull
 [lhost]: http://localhost:8000
