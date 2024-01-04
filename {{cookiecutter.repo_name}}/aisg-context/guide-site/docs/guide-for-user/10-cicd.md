@@ -106,10 +106,10 @@ into a CI/CD environment variable of type `File`
 
 ![GitLab UI - Set File Variable under CI/CD Settings](assets/screenshots/gitlab-settings-cicd-set-file-var.png)
 
-__Reference(s):__
+??? info "Reference Link(s)"
 
-- [GitLab Docs - GitLab CI/CD variables](https://docs.gitlab.com/ee/ci/variables/)
-- [Docker Docs - Configuration files](https://docs.docker.com/engine/reference/commandline/cli/#configuration-files)
+    - [GitLab Docs - GitLab CI/CD variables](https://docs.gitlab.com/ee/ci/variables/)
+    - [Docker Docs - Configuration files](https://docs.docker.com/engine/reference/commandline/cli/#configuration-files)
 
 ## Stages & Jobs
 
@@ -214,11 +214,11 @@ The job would have to succeed before moving on to the `build` stage.
 Otherwise, no Docker images will be built. This is so that source
 code that fail tests would never be packaged.
 
-__Reference(s):__
+??? info "Reference Link(s)"
 
-- [GitLab Docs - Predefined variables reference](https://docs.gitlab.com/ee/ci/variables/predefined_variables.html)
-- [Real Python - Effective Python Testing With Pytest](https://realpython.com/pytest-python-testing/)
-- [VSCode Docs - Linting Python in Visual Studio Code](https://code.visualstudio.com/docs/python/linting)
+    - [GitLab Docs - Predefined variables reference](https://docs.gitlab.com/ee/ci/variables/predefined_variables.html)
+    - [Real Python - Effective Python Testing With Pytest](https://realpython.com/pytest-python-testing/)
+    - [VSCode Docs - Linting Python in Visual Studio Code](https://code.visualstudio.com/docs/python/linting)
 
 ## Automated Builds
 
@@ -293,10 +293,10 @@ Images built through the pipeline will be tagged with the commit
 hashes associated with the commits that triggered it. This is seen
 through the usage of the predefined variable `CI_COMMIT_SHORT_SHA`.
 
-__Reference(s):__
+??? info "Reference Link(s)"
 
-- [GitLab Docs - Use kaniko to build Docker images](https://docs.gitlab.com/ee/ci/docker/using_kaniko.html)
-- [GitLab Docs - Use Docker to build Docker images](https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker)
+    - [GitLab Docs - Use kaniko to build Docker images](https://docs.gitlab.com/ee/ci/docker/using_kaniko.html)
+    - [GitLab Docs - Use Docker to build Docker images](https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker)
 
 ## Tagging
 
@@ -332,11 +332,11 @@ to the default branch before this.
     ...
     ```
 
-__Reference(S):__
+??? info "Reference Link(s)"
 
-- [GitHub Docs - GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow)
-- [GitLab Docs - GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html)
-- [`go-containerregistry` GitHub - `crane`](https://github.com/google/go-containerregistry/blob/main/cmd/crane/README.md)
+    - [GitHub Docs - GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow)
+    - [GitLab Docs - GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html)
+    - [`go-containerregistry` GitHub - `crane`](https://github.com/google/go-containerregistry/blob/main/cmd/crane/README.md)
 
 ## Conclusion
 

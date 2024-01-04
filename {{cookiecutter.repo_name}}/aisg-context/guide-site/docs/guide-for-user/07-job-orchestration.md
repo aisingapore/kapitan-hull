@@ -32,9 +32,9 @@ the CLI.
     [Hydra](https://hydra.cc/)'s
     concepts before you move on.
 
-__Reference(s):__
+??? info "Reference Link(s)"
 
-- [Hydra Docs - Basic Override Syntax](https://hydra.cc/docs/advanced/override_grammar/basic/)
+    - [Hydra Docs - Basic Override Syntax](https://hydra.cc/docs/advanced/override_grammar/basic/)
 
 ## Data Preparation & Preprocessing
 
@@ -61,6 +61,13 @@ provided in this template:
         -f docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile `
         --platform linux/amd64 .
     $ docker push {{cookiecutter.registry_project_path}}/data-prep:0.1.0
+    ```
+
+=== "Run:ai YAML"
+
+    ```bash
+    # Change the values within the file if any before running this
+    kubectl apply -f aisg-context/runai/04-docker-build-dataprep.yml
     ```
 
 Now that we have the Docker image pushed to the registry, we can submit
@@ -90,6 +97,13 @@ a job using that image to Run:ai\:
         --cpu 2 `
         --memory 4G `
         --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/process_data.py process_data.raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg process_data.processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed'"
+    ```
+
+=== "Run:ai YAML"
+
+    ```bash
+    # Change the values within the file if any before running this
+    kubectl apply -f aisg-context/runai/05-dataprep.yml
     ```
 
 After some time, the data processing job should conclude and we can
@@ -129,10 +143,10 @@ To log and upload artifacts to ECS buckets through MLflow, you need to
 ensure that the client has access to the credentials of an account that
 can write to a bucket.
 
-__Reference(s):__
+??? info "Reference Link(s)"
 
-- [MLflow Docs - Tracking](https://www.mlflow.org/docs/latest/tracking.html#)
-- [MLflow Docs - Tracking (Artifact Stores)](https://www.mlflow.org/docs/latest/tracking.html#artifact-stores)
+    - [MLflow Docs - Tracking](https://www.mlflow.org/docs/latest/tracking.html#)
+    - [MLflow Docs - Tracking (Artifact Stores)](https://www.mlflow.org/docs/latest/tracking.html#artifact-stores)
 
 ### Container for Experiment Job
 
@@ -157,6 +171,13 @@ we need to build the Docker image to be used for it:
         -f docker/{{cookiecutter.repo_name}}-model-training.Dockerfile `
         --platform linux/amd64 .
     $ docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
+    ```
+
+=== "Run:ai YAML"
+
+    ```bash
+    # Change the values within the file if any before running this
+    kubectl apply -f aisg-context/runai/06-docker-build-modeltraining.yml
     ```
 
 Now that we have the Docker image pushed to the registry,
@@ -198,6 +219,13 @@ we can run a job using it:
         --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3'"
     ```
 
+=== "Run:ai YAML"
+
+    ```bash
+    # Change the values within the file if any before running this
+    kubectl apply -f aisg-context/runai/07-modeltraining.yml
+    ```
+
 Once you have successfully run an experiment, you may inspect the run
 on the MLflow Tracking server. Through the MLflow Tracking server
 interface, you can view the metrics and parameters logged for the run,
@@ -218,10 +246,10 @@ bucket. You can also compare runs with each other.
     specific Run:ai job by using MLflow's search filter expressions
     and API.
 
-    __Reference(s):__
+    ??? info "Reference Link(s)"
 
-    - [Run:ai Docs - Environment Variables inside a Run:ai Workload](https://docs.run.ai/v2.9/Researcher/best-practices/env-variables/)
-    - [MLflow Docs - Search Runs](https://mlflow.org/docs/latest/search-runs.html)
+        - [Run:ai Docs - Environment Variables inside a Run:ai Workload](https://docs.run.ai/v2.9/Researcher/best-practices/env-variables/)
+        - [MLflow Docs - Search Runs](https://mlflow.org/docs/latest/search-runs.html)
 
 !!! info
     If your project has GPU quotas assigned to it, you can make use of
@@ -366,10 +394,17 @@ by default.
         --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3'"
     ```
 
+=== "Run:ai YAML"
+
+    ```bash
+    # Change the values within the file if any before running this
+    kubectl apply -f aisg-context/runai/08-modeltraining-hp.yml
+    ```
+
 ![MLflow Tracking Server - Hyperparameter Tuning Runs](assets/screenshots/mlflow-tracking-hptuning-runs.png)
 
-__Reference(s):__
+??? info "Reference Link(s)"
 
-- [Run:ai Docs - Environment Variables inside a Run:ai Workload](https://docs.run.ai/v2.9/Researcher/best-practices/env-variables/)
-- [Hydra Docs - Optuna Sweeper Plugin](https://hydra.cc/docs/plugins/optuna_sweeper/)
-- [MLflow Docs - Search Syntax](https://www.mlflow.org/docs/latest/search-syntax.html)
+    - [Run:ai Docs - Environment Variables inside a Run:ai Workload](https://docs.run.ai/v2.9/Researcher/best-practices/env-variables/)
+    - [Hydra Docs - Optuna Sweeper Plugin](https://hydra.cc/docs/plugins/optuna_sweeper/)
+    - [MLflow Docs - Search Syntax](https://www.mlflow.org/docs/latest/search-syntax.html)

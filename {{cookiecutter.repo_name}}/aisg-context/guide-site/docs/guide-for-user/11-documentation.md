@@ -58,7 +58,7 @@ The documentation page is viewable through the following convention:
 `<NAMESPACE>.gitlab.aisingapore.net/<PROJECT_NAME>` or
 `<NAMESPACE>.gitlab.aisingapore.net/<GROUP>/<PROJECT_NAME>`.
 
-__Reference(s):__
+??? info "Reference Link(s)"
 
-- [GitLab Docs - Pages domain names, URLs, and base URLs](https://docs.gitlab.com/ee/user/project/pages/getting_started_part_one.html)
-- [GitLab Docs - Namespaces](https://docs.gitlab.com/ee/user/group/#namespaces)
+    - [GitLab Docs - Pages domain names, URLs, and base URLs](https://docs.gitlab.com/ee/user/project/pages/getting_started_part_one.html)
+    - [GitLab Docs - Namespaces](https://docs.gitlab.com/ee/user/group/#namespaces)
