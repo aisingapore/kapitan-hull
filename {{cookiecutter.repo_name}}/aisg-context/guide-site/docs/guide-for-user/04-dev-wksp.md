@@ -79,7 +79,7 @@ either method to gain access to a remote VSCode developer workspace.
 
     ![Run:ai - VSCode Server Welcome](assets/screenshots/runai-vscode-server-welcome.png)
 
-=== "Run:ai"
+=== "Run:ai Workspaces"
 
     Every end-user of Run:ai would be able to quickly spin up a VSCode
     server workspace using prebuilt blocks. While the
@@ -102,6 +102,24 @@ either method to gain access to a remote VSCode developer workspace.
     just created.
 
     ![Run:ai Dashboard - Workspaces Page Post VSCode](assets/screenshots/runai-dashboard-workspaces-page-post-vscode.png)
+
+=== "Run:ai YAML"
+
+    You can create a VSCode workspace with the YAML file 
+    `aisg-context/runai/02-vscode.yml`. But before that, you would need 
+    to prepare the workspace to spin it up with:
+
+    ```bash
+    # Change the values within the file if any before running this
+    kubectl apply -f aisg-context/runai/01-workspace-prep.yml
+    ```
+
+    After that, you can spin up the workspace with:
+
+    ```bash
+    # Change the values within the file if any before running this
+    kubectl apply -f aisg-context/runai/02-vscode.yml
+    ```
 
     Once the workspace is active (indicated by a green status), you may
     access the workspace by clicking on the `CONNECT` button and 
@@ -150,6 +168,11 @@ either method to gain access to a remote VSCode developer workspace.
 
 ### Persistent Workspaces
 
+!!! warning "Attention"
+    If you have spun up using the Run:ai YAML method, then you can 
+    skip this step since you've already prepared your workspace prior 
+    to spinning it up.
+
 As mentioned, a PVC should be attached to the workspaces to persist
 changes to the filesystems. If a PVC is attached, the usual path to
 access it would be `/<NAME_OF_DATA_SOURCE>`. For example, if the name of
@@ -196,22 +219,31 @@ Now, let's clone your repository from the remote:
     $ cd {{cookiecutter.repo_name}}
     ```
 
+=== "Run:ai YAML"
+
+    ```bash
+    # Change the values within the file if any before running this
+    kubectl apply -f aisg-context/runai/03-repo-download.yml
+    ```
+
 ### Extensions for VSCode
 
 You can install a multitude of extensions for your VSCode service but
 there are a couple that would be crucial for your workflow, especially
 if you intend to use Jupyter notebooks within the VSCode environment.
 
-- [`ms-python.python`](https://marketplace.visualstudio.com/items?itemName=ms-python.python):
-  Official extension by Microsoft for rich support for many things
-  Python.
-- [`ms-toolsai.jupyter`](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter):
-  Official extension by Microsoft for Jupyter support.
+- [`ms-python.python`][vsx-python]: Official extension by Microsoft for
+  rich support for many things Python.
+- [`ms-toolsai.jupyter`][vsx-jy]: Official extension by Microsoft 
+  for Jupyter support.
 
 !!! warning "Attention"
-    Do head over [here](./05-virtual-env.md#jupyter-kernel-for-vscode)
-    on how to enable the usage of virtual `conda` environments within
-    VSCode.
+    Do head over [here][jy-vscode] on how to enable the usage of 
+    virtual `conda` environments within VSCode.
+
+[vsx-python]: https://marketplace.visualstudio.com/items?itemName=ms-python.python
+[vsx-jy]: https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter
+[jy-vscode]: ./05-virtual-env.md#jupyter-kernel-for-vscode
 
 ### Customising VSCode Server
 
@@ -266,29 +298,48 @@ custom image:
 
 While Jupyter Notebooks are viewable, editable and executable within
 a VSCode environment, most are still more familiar with Jupyter's
-interface for interacting with or editing notebooks. We can spin up
-a JupyterLab using the following recommended blocks:
+interface for interacting with or editing notebooks. 
 
-- __Workspace name:__ `<YOUR_HYPHENATED_NAME>-jupyterlab`
-- __Environment:__ `aisg-jupyterlab-server-0-1-0`
-- __Compute Resource:__ `cpu-mid`
-- __Data Source:__ The PVC that is dedicated to your project. For a
-  sample project, you may make use of `sample-project-pvc`.
+=== "Run:ai Workspaces"
+    We can spin up a JupyterLab using the following recommended blocks:
 
-!!! warning "Attention"
-    Under the `Environment` block, there is an expandable section called
-    `More settings`. Under this section, you can provide more arguments
-    for a container that will be spun up for the workspace. For the
-    JupyterLab interface to be able to access any PVC mounted to the
-    container, you should include the following argument:
-    `--NotebookApp.notebook_dir="/path/to/pvc"`.
+    - __Workspace name:__ `<YOUR_HYPHENATED_NAME>-jupyterlab`
+    - __Environment:__ `aisg-jupyterlab-server-0-1-0`
+    - __Compute Resource:__ `cpu-mid`
+    - __Data Source:__ The PVC that is dedicated to your project. For a
+      sample project, you may make use of `sample-project-pvc`.
 
-Once you have selected the blocks, you can proceed to create the
-workspace and you will be redirected to the workspaces page. On this
-page, you may view the status of the workspace that you have just
-created.
+    !!! warning "Attention"
+        Under the `Environment` block, there is an expandable section 
+        called `More settings`. Under this section, you can provide more 
+        arguments for a container that will be spun up for the 
+        workspace. For the JupyterLab interface to be able to access any 
+        PVC mounted to the container, you should include the following argument: `--NotebookApp.notebook_dir="/path/to/pvc"`.
 
-![Run:ai Dashboard - Workspaces Page Post JupyterLab](assets/screenshots/runai-dashboard-workspaces-page-post-jupyterlab.png)
+    Once you have selected the blocks, you can proceed to create the
+    workspace and you will be redirected to the workspaces page. On this
+    page, you may view the status of the workspace that you have just
+    created.
+
+    ![Run:ai Dashboard - Workspaces Page Post JupyterLab](assets/screenshots/runai-dashboard-workspaces-page-post-jupyterlab.png)
+
+=== "Run:ai YAML"
+
+    You can also create a Jupyter workspace with the YAML file 
+    `aisg-context/runai/02b-jupyterlab.yml`. But before that, you would
+    need to prepare the workspace to spin it up with:
+
+    ```bash
+    # Change the values within the file if any before running this
+    kubectl apply -f aisg-context/runai/01-workspace-prep.yml
+    ```
+
+    After that, you can spin up the workspace with:
+
+    ```bash
+    # Change the values within the file if any before running this
+    kubectl apply -f aisg-context/runai/02b-jupyterlab.yml
+    ```
 
 Once the workspace is active (indicated by a green status), you may
 access the workspace by clicking on the `CONNECT` button and choosing

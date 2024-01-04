@@ -63,6 +63,13 @@ provided in this template:
     $ docker push {{cookiecutter.registry_project_path}}/data-prep:0.1.0
     ```
 
+=== "Run:ai YAML"
+
+    ```bash
+    # Change the values within the file if any before running this
+    kubectl apply -f aisg-context/runai/04-docker-build-dataprep.yml
+    ```
+
 Now that we have the Docker image pushed to the registry, we can submit
 a job using that image to Run:ai\:
 
@@ -90,6 +97,13 @@ a job using that image to Run:ai\:
         --cpu 2 `
         --memory 4G `
         --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/process_data.py process_data.raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg process_data.processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed'"
+    ```
+
+=== "Run:ai YAML"
+
+    ```bash
+    # Change the values within the file if any before running this
+    kubectl apply -f aisg-context/runai/05-dataprep.yml
     ```
 
 After some time, the data processing job should conclude and we can
@@ -159,6 +173,13 @@ we need to build the Docker image to be used for it:
     $ docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
     ```
 
+=== "Run:ai YAML"
+
+    ```bash
+    # Change the values within the file if any before running this
+    kubectl apply -f aisg-context/runai/06-docker-build-modeltraining.yml
+    ```
+
 Now that we have the Docker image pushed to the registry,
 we can run a job using it:
 
@@ -196,6 +217,13 @@ we can run a job using it:
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> `
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> `
         --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3'"
+    ```
+
+=== "Run:ai YAML"
+
+    ```bash
+    # Change the values within the file if any before running this
+    kubectl apply -f aisg-context/runai/07-modeltraining.yml
     ```
 
 Once you have successfully run an experiment, you may inspect the run
@@ -364,6 +392,13 @@ by default.
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> `
         -e MLFLOW_HPTUNING_TAG=$(Get-Date -UFormat %s -Millisecond 0) `
         --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3'"
+    ```
+
+=== "Run:ai YAML"
+
+    ```bash
+    # Change the values within the file if any before running this
+    kubectl apply -f aisg-context/runai/08-modeltraining-hp.yml
     ```
 
 ![MLflow Tracking Server - Hyperparameter Tuning Runs](assets/screenshots/mlflow-tracking-hptuning-runs.png)
