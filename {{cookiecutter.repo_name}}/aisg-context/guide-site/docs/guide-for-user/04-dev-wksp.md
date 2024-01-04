@@ -79,47 +79,49 @@ either method to gain access to a remote VSCode developer workspace.
 
     ![Run:ai - VSCode Server Welcome](assets/screenshots/runai-vscode-server-welcome.png)
 
-=== "Run:ai Workspaces"
+=== "Run:ai"
 
-    Every end-user of Run:ai would be able to quickly spin up a VSCode
-    server workspace using prebuilt blocks. While the
-    [steps for creating a workspace][workspace] are detailed on 
-    Run:ai's documentation, listed below are the recommended 
-    environment, compute resource, and data source that you may make 
-    use of to spin up your first VSCode workspace, in the context of AI 
-    Singapore's infrastructure.
+    === "Workspaces"
 
-    - __Workspace name:__ `<YOUR_HYPHENATED_NAME>-vscode`
-    - __Environment:__ `aisg-vscode-server-v4-16-1`
-    - __Compute Resource:__ `cpu-mid`
-    - __Data Source:__ The persistent volume claim (PVC) that is 
-      dedicated to your project. For a project named `sample-project`, 
-      you may make use of `sample-project-pvc`.
+        Every end-user of Run:ai would be able to quickly spin up a VSCode
+        server workspace using prebuilt blocks. While the
+        [steps for creating a workspace][workspace] are detailed on 
+        Run:ai's documentation, listed below are the recommended 
+        environment, compute resource, and data source that you may make 
+        use of to spin up your first VSCode workspace, in the context of AI 
+        Singapore's infrastructure.
 
-    Once you have selected the blocks, you can proceed to create the
-    workspace and you will be redirected to the workspaces page. On 
-    this page, you may view the status of the workspace that you have 
-    just created.
+        - __Workspace name:__ `<YOUR_HYPHENATED_NAME>-vscode`
+        - __Environment:__ `aisg-vscode-server-v4-16-1`
+        - __Compute Resource:__ `cpu-mid`
+        - __Data Source:__ The persistent volume claim (PVC) that is 
+          dedicated to your project. For a project named `sample-project`, 
+          you may make use of `sample-project-pvc`.
 
-    ![Run:ai Dashboard - Workspaces Page Post VSCode](assets/screenshots/runai-dashboard-workspaces-page-post-vscode.png)
+        Once you have selected the blocks, you can proceed to create the
+        workspace and you will be redirected to the workspaces page. On 
+        this page, you may view the status of the workspace that you have 
+        just created.
 
-=== "Run:ai YAML"
+        ![Run:ai Dashboard - Workspaces Page Post VSCode](assets/screenshots/runai-dashboard-workspaces-page-post-vscode.png)
 
-    You can create a VSCode workspace with the YAML file 
-    `aisg-context/runai/02-vscode.yml`. But before that, you would need 
-    to prepare the workspace to spin it up with:
+    === "YAML"
 
-    ```bash
-    # Change the values within the file if any before running this
-    kubectl apply -f aisg-context/runai/01-workspace-prep.yml
-    ```
+        You can create a VSCode workspace with the YAML file 
+        `aisg-context/runai/02-vscode.yml`. But before that, you would need 
+        to prepare the workspace to spin it up with:
 
-    After that, you can spin up the workspace with:
+        ```bash
+        # Change the values within the file if any before running this
+        kubectl apply -f aisg-context/runai/01-workspace-prep.yml
+        ```
 
-    ```bash
-    # Change the values within the file if any before running this
-    kubectl apply -f aisg-context/runai/02-vscode.yml
-    ```
+        After that, you can spin up the workspace with:
+
+        ```bash
+        # Change the values within the file if any before running this
+        kubectl apply -f aisg-context/runai/02-vscode.yml
+        ```
 
     Once the workspace is active (indicated by a green status), you may
     access the workspace by clicking on the `CONNECT` button and 
