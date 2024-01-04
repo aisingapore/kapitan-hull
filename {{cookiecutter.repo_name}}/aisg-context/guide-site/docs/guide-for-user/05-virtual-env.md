@@ -1,5 +1,7 @@
 # Virtual Environment
 
+## Creating Persistent `conda` Environments in the Workspace
+
 While the Docker images you will be using to run experiments on Run:ai
 would contain the `conda` environments you would need, you can also
 create these virtual environments within your development environment,
