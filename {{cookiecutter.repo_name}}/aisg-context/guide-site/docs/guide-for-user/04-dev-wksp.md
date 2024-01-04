@@ -164,9 +164,9 @@ either method to gain access to a remote VSCode developer workspace.
 
     [workspace]: https://docs.run.ai/v2.13/Researcher/user-interface/workspaces/create/workspace
 
-    __Reference(s):__
+    ??? info "Reference Link(s)"
 
-    - [Kubernetes Docs - Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes)
+        - [Kubernetes Docs - Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes)
 
 ### Persistent Workspaces
 
@@ -381,9 +381,9 @@ directed to a view like such:
 
 ![Run:ai - JupyterLab Server Welcome](assets/screenshots/runai-jupyterlab-server-launcher.png)
 
-__Reference(s):__
+??? info "Reference Link(s)"
 
-- [Jupyter Server Docs - Config file and command line options](https://jupyter-server.readthedocs.io/en/stable/other/full-config.html#other-full-config)
+    - [Jupyter Server Docs - Config file and command line options](https://jupyter-server.readthedocs.io/en/stable/other/full-config.html#other-full-config)
 
 !!! Info
     Do head over
@@ -426,6 +426,6 @@ server as well as any associated files can be found under
     themselves is not feasible by default and while possible,
     should be avoided.
 
-__Reference(s):__
+??? info "Reference Link(s)"
 
-- [Using Docker-in-Docker for your CI or testing environment? Think twice. - jpetazzo](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)
+    - [Using Docker-in-Docker for your CI or testing environment? Think twice. - jpetazzo](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)

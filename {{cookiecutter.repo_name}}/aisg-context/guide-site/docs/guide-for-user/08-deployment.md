@@ -12,9 +12,9 @@ our REST API. Popular examples include
 resort to the well-known [FastAPI](https://fastapi.tiangolo.com/)
 (which is based on Starlette itself).
 
-__Reference(s):__
+??? info "Reference Link(s)"
 
-- [IBM Technology - What is a REST API? (Video)](https://www.youtube.com/watch?v=lsMQRaeKNDk)
+    - [IBM Technology - What is a REST API? (Video)](https://www.youtube.com/watch?v=lsMQRaeKNDk)
 
 ## Model Artifacts
 
@@ -286,9 +286,9 @@ such:
 
 ![FastAPI - OpenAPI Docs](assets/screenshots/fastapi-openapi-docs.png)
 
-__Reference(s):__
+??? info "Reference Link(s)"
 
-- [PyTorch Tutorials - Saving and Loading Models](https://pytorch.org/tutorials/beginner/saving_loading_models.html)
-- [FastAPI Docs](https://fastapi.tiangolo.com)
-- [Pydantic Docs - Settings Management](https://pydantic-docs.helpmanual.io/usage/settings/)
-- [`curl` tutorial](https://curl.se/docs/manual.html)
+    - [PyTorch Tutorials - Saving and Loading Models](https://pytorch.org/tutorials/beginner/saving_loading_models.html)
+    - [FastAPI Docs](https://fastapi.tiangolo.com)
+    - [Pydantic Docs - Settings Management](https://pydantic-docs.helpmanual.io/usage/settings/)
+    - [`curl` tutorial](https://curl.se/docs/manual.html)

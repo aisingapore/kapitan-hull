@@ -49,11 +49,11 @@ workspace directory:
     `pip install` executions. However, there's no similar flag for
     `conda` at the moment so the above is a blanket solution.
 
-__Reference(s):__
+??? info "Reference Link(s)"
 
-- [`conda` Docs - Managing environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file)
-- [StackOverflow - "Pip install killed - out of memory - how to get around it?"](https://stackoverflow.com/questions/57058641/pip-install-killed-out-of-memory-how-to-get-around-it)
-- [phoenixNAP - Linux alias Command: How to Use It With Examples](https://phoenixnap.com/kb/linux-alias-command#:~:text=In%20Linux%2C%20an%20alias%20is,and%20avoiding%20potential%20spelling%20errors.)
+    - [`conda` Docs - Managing environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file)
+    - [StackOverflow - "Pip install killed - out of memory - how to get around it?"](https://stackoverflow.com/questions/57058641/pip-install-killed-out-of-memory-how-to-get-around-it)
+    - [phoenixNAP - Linux alias Command: How to Use It With Examples](https://phoenixnap.com/kb/linux-alias-command#:~:text=In%20Linux%2C%20an%20alias%20is,and%20avoiding%20potential%20spelling%20errors.)
 
 ## Jupyter Kernel for VSCode
 
@@ -148,6 +148,6 @@ within your `conda` environment.
 
 - Test out the kernel by running the cells in the sample notebook.
 
-__Reference(s):__
+??? info "Reference Link(s)"
 
-- [Jupyter Docs - Kernels (Programming Languages)](https://docs.jupyter.org/en/latest/projects/kernels.html)
+    - [Jupyter Docs - Kernels (Programming Languages)](https://docs.jupyter.org/en/latest/projects/kernels.html)

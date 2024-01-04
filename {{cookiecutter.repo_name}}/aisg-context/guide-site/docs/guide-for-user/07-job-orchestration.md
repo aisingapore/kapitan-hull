@@ -32,9 +32,9 @@ the CLI.
     [Hydra](https://hydra.cc/)'s
     concepts before you move on.
 
-__Reference(s):__
+??? info "Reference Link(s)"
 
-- [Hydra Docs - Basic Override Syntax](https://hydra.cc/docs/advanced/override_grammar/basic/)
+    - [Hydra Docs - Basic Override Syntax](https://hydra.cc/docs/advanced/override_grammar/basic/)
 
 ## Data Preparation & Preprocessing
 
@@ -143,10 +143,10 @@ To log and upload artifacts to ECS buckets through MLflow, you need to
 ensure that the client has access to the credentials of an account that
 can write to a bucket.
 
-__Reference(s):__
+??? info "Reference Link(s)"
 
-- [MLflow Docs - Tracking](https://www.mlflow.org/docs/latest/tracking.html#)
-- [MLflow Docs - Tracking (Artifact Stores)](https://www.mlflow.org/docs/latest/tracking.html#artifact-stores)
+    - [MLflow Docs - Tracking](https://www.mlflow.org/docs/latest/tracking.html#)
+    - [MLflow Docs - Tracking (Artifact Stores)](https://www.mlflow.org/docs/latest/tracking.html#artifact-stores)
 
 ### Container for Experiment Job
 
@@ -246,10 +246,10 @@ bucket. You can also compare runs with each other.
     specific Run:ai job by using MLflow's search filter expressions
     and API.
 
-    __Reference(s):__
+    ??? info "Reference Link(s)"
 
-    - [Run:ai Docs - Environment Variables inside a Run:ai Workload](https://docs.run.ai/v2.9/Researcher/best-practices/env-variables/)
-    - [MLflow Docs - Search Runs](https://mlflow.org/docs/latest/search-runs.html)
+        - [Run:ai Docs - Environment Variables inside a Run:ai Workload](https://docs.run.ai/v2.9/Researcher/best-practices/env-variables/)
+        - [MLflow Docs - Search Runs](https://mlflow.org/docs/latest/search-runs.html)
 
 !!! info
     If your project has GPU quotas assigned to it, you can make use of
@@ -403,8 +403,8 @@ by default.
 
 ![MLflow Tracking Server - Hyperparameter Tuning Runs](assets/screenshots/mlflow-tracking-hptuning-runs.png)
 
-__Reference(s):__
+??? info "Reference Link(s)"
 
-- [Run:ai Docs - Environment Variables inside a Run:ai Workload](https://docs.run.ai/v2.9/Researcher/best-practices/env-variables/)
-- [Hydra Docs - Optuna Sweeper Plugin](https://hydra.cc/docs/plugins/optuna_sweeper/)
-- [MLflow Docs - Search Syntax](https://www.mlflow.org/docs/latest/search-syntax.html)
+    - [Run:ai Docs - Environment Variables inside a Run:ai Workload](https://docs.run.ai/v2.9/Researcher/best-practices/env-variables/)
+    - [Hydra Docs - Optuna Sweeper Plugin](https://hydra.cc/docs/plugins/optuna_sweeper/)
+    - [MLflow Docs - Search Syntax](https://www.mlflow.org/docs/latest/search-syntax.html)
