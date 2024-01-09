@@ -29,7 +29,8 @@ when the steps are reproduced.
 
 ## Expected and Actual Result
 
-Let us know what the expected result should be, and what the actual result that you encountered.
+Let us know what the expected result should be, and what the actual 
+result that you encountered.
 
 ## Logtrace, if any
 
