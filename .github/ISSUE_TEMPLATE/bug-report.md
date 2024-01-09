@@ -2,8 +2,9 @@
 name: Bug Report
 about: File a bug report
 title: "[Bug]: "
-labels: ["bug", "triage"]
-assignees: ["syakyr", "deonchia"]
+labels: bug
+assignees: deonchia, Syakyr
+
 ---
 
 Please fill this form if you have any bugs you wish to resolve when 
