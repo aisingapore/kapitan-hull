@@ -1,6 +1,6 @@
 name: Query (Questions, Feature Request, etc.)
 description: File a query
-title: ""
+title: "[Query]: "
 labels: ["triage"]
 body:
   - type: markdown
