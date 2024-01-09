@@ -1,6 +1,6 @@
 # Kapitan Hull
 
-![AI Singapore's Kapitan Hull EPTG Onprem Run:ai Banner](./assets/kapitan-hull-eptg-onprem-runai-banner.png)
+![AI Singapore's Kapitan Hull EPTG Onprem Run:ai Banner](./assets/kapitan-hull-banner.png)
 
 ## Table of Contents
 
