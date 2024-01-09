@@ -1,0 +1,66 @@
+name: Bug Report
+description: File a bug report
+title: ""
+labels: ["bug", "triage"]
+assignees: ["syakyr", "deonchia"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please fill this form if you have any bugs you wish to resolve 
+        when using Kapitan Hull.
+  - type: checkboxes
+    attributes:
+      label: Problem Domain
+      description: \
+        Let us know which service(s) this problem has impacted.  
+        You can choose more than one domain depending on your issue.
+      options:
+        - label: Docker
+        - label: Run:ai
+        - label: MLFlow
+        - label: Kubernetes 
+        - label: Other issue
+      validation:
+        required: true
+  - type: textarea
+    attributes:
+      label: Problem Brief
+      description: |
+        Briefly explain what the problem is about in 1 to 3 sentences.
+      validation:
+        required: true
+  - type: textarea
+    attributes:
+      label: Steps to Reproduce
+      description: |
+        This may be the most grueling step to write about as you may 
+        need to trace back your steps on how you encounter it. If it's 
+        a random chance that you may get the issue, estimate the chance 
+        of getting the issue when the steps are reproduced.
+      validation:
+        required: true
+  - type: textarea
+    attributes:
+      label: Expected Result
+      description: |
+        What is the expected result when reproducing the steps?
+      validation:
+        required: true
+  - type: textarea
+    attributes:
+      label: Actual Result
+      description: |
+        What is the actual result when reproducing the steps?
+      validation:
+        required: true
+  - type: typearea
+    attributes:
+      label: Logtrace
+      description: |
+        Submit a log trace or a link to the log trace if you have 
+        access to it.
+  - type: markdown
+    attribtues:
+      value: |
+        Thank you for filling up the form!

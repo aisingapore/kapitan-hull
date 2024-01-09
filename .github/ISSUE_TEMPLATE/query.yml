@@ -1,0 +1,31 @@
+name: Query (Questions, Feature Request, etc.)
+description: File a query
+title: ""
+labels: ["triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please fill this form if you have any queries/issues with 
+        Kapitan Hull.
+  - type: checkboxes
+    attributes:
+      label: Query Domain
+      description: \
+        Let us know which service(s) this query is about.  
+        You can choose more than one domain depending on your query.
+      options:
+        - label: Docker
+        - label: Run:ai
+        - label: MLFlow
+        - label: Kubernetes 
+        - label: Other issue
+      validation:
+        required: true
+  - type: textarea
+    attributes:
+      label: Query Brief
+      description: |
+        Briefly explain what the query is about in 1 to 3 sentences.
+      validation:
+        required: true
