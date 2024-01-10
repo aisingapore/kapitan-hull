@@ -20,12 +20,12 @@ body:
         - label: MLFlow
         - label: Kubernetes 
         - label: Other issue
-      validation:
+      validations:
         required: true
   - type: textarea
     attributes:
       label: Query Brief
       description: |
         Briefly explain what the query is about in 1 to 3 sentences.
-      validation:
+      validations:
         required: true
