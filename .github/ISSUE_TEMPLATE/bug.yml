@@ -21,15 +21,15 @@ body:
         - label: MLFlow
         - label: Kubernetes 
         - label: Other issue
-      validations:
-        required: true
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: Problem Brief
       description: |
         Briefly explain what the problem is about in 1 to 3 sentences.
-      validations:
-        required: true
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: Steps to Reproduce
@@ -38,23 +38,23 @@ body:
         need to trace back your steps on how you encounter it. If it's 
         a random chance that you may get the issue, estimate the chance 
         of getting the issue when the steps are reproduced.
-      validations:
-        required: true
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: Expected Result
       description: |
         What is the expected result when reproducing the steps?
-      validations:
-        required: true
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: Actual Result
       description: |
         What is the actual result when reproducing the steps?
-      validations:
-        required: true
-  - type: typearea
+    validations:
+      required: true
+  - type: textarea
     attributes:
       label: Logtrace
       description: |
