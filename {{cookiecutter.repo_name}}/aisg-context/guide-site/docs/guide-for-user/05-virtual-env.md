@@ -23,7 +23,7 @@ workspace directory:
 
     ```bash
     (base) $ conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml \
-                -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}-conda-env
+                -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}
     ```
 
 - After creating the `conda` environment, let's create a permanent
@@ -32,10 +32,10 @@ workspace directory:
 === "VSCode Server Terminal"
 
     ```bash
-    (base) $ echo 'alias {{cookiecutter.repo_name}}-conda-env="conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}-conda-env"' >> ~/.bashrc
+    (base) $ echo 'alias {{cookiecutter.repo_name}}-conda="conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}"' >> ~/.bashrc
     (base) $ source ~/.bashrc
-    (base) $ {{cookiecutter.repo_name}}-conda-env
-    ({{cookiecutter.repo_name}}-conda-env) $ # conda environment has been activated
+    (base) $ {{cookiecutter.repo_name}}-conda
+    ({{cookiecutter.repo_name}}-conda) $ # conda environment has been activated
     ```
 
 !!! tip

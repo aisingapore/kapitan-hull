@@ -6,6 +6,7 @@ import logging
 import logging.config
 import yaml
 import mlflow
+import time
 
 
 logger = logging.getLogger(__name__)
@@ -72,7 +73,13 @@ def mlflow_init(args, setup_mlflow=False, autolog=False):
             if autolog:
                 mlflow.autolog()
 
-            mlflow.start_run()
+            run_name = "train-model"
+
+            if "MLFLOW_HPTUNING_TAG" in os.environ: run_name += "-hp"
+
+            run_name += "-{:.0f}".format(time.time())
+
+            mlflow.start_run(run_name=run_name)
 
             if "MLFLOW_HPTUNING_TAG" in os.environ:
                 mlflow.set_tag("hptuning_tag", os.environ.get("MLFLOW_HPTUNING_TAG"))
