@@ -1,8 +1,8 @@
 """Configuration module for the FastAPI application."""
-import pydantic
+import pydantic_settings
 
 
-class Settings(pydantic.BaseSettings):
+class Settings(pydantic_settings.BaseSettings):
     """Settings for the FastAPI application."""
 
     API_NAME: str = "{{cookiecutter.project_name}} - Fastapi"

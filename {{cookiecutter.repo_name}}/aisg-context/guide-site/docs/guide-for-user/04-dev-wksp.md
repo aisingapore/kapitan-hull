@@ -66,6 +66,12 @@ either method to gain access to a remote VSCode developer workspace.
     different CPU and RAM resources, depending on the needs of your 
     team's project requirements.
 
+    Recommended settings for your first time are as follows:
+
+    - __Workspace Name:__ `<YOUR_HYPHENATED_NAME>-vscode`
+    - CPU: 2 Cores
+    - Memory: 4GB
+
     ![Coder create new workspace](assets/screenshots/coder-create-workspace.png)
 
     If all of it runs normally, you should have two buttons: VS Code 
@@ -176,16 +182,16 @@ either method to gain access to a remote VSCode developer workspace.
     to spinning it up.
 
 As mentioned, a PVC should be attached to the workspaces to persist
-changes to the filesystems. If a PVC is attached, the usual path to
-access it would be `/<NAME_OF_DATA_SOURCE>`. For example, if the name of
-the data source is called `sample-project-pvc`, the path to the PVC that
-has been mounted to the container would be `/sample-project-pvc`.
+changes to the filesystems. You can use the following command to search
+for the PVC:
 
 === "VSCode Server Terminal"
 
     ```bash
     $ ls -la / | grep "pvc"
     ```
+
+If there's no result, check with the MLOps team about this.
 
 By default, the PVCs would contain a `workspaces` directory with which
 you can create a subdirectory for yourself treat it as your own personal
@@ -195,7 +201,7 @@ persisted.
 === "VSCode Server Terminal"
 
     ```bash
-    $ cd /{{cookiecutter.proj_name}}_pvc/workspaces
+    $ cd /<PVC_LOCATION>/workspaces
     $ mkdir <YOUR_HYPHENATED_NAME>
     ```
 
