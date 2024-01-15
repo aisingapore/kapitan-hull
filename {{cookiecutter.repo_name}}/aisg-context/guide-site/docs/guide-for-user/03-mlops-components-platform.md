@@ -835,7 +835,7 @@ MLflow Tracking server.
     ```bash
     $ conda create -n mlflow-test python=3.10.11
     $ conda activate mlflow-test
-    $ pip install boto3==1.28.2 mlflow
+    $ pip install boto3==1.34.17 mlflow==2.9.2
     $ export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
     $ export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
     $ python src/mlflow_test.py <MLFLOW_TRACKING_URI> <NAME_OF_DEFAULT_MLFLOW_EXPERIMENT>
@@ -846,7 +846,7 @@ MLflow Tracking server.
     ```powershell
     $ conda create -n mlflow-test python=3.10.11
     $ conda activate mlflow-test
-    $ pip install boto3==1.28.2 mlflow
+    $ pip install boto3==1.34.17 mlflow==2.9.2
     $ $MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
     $ $MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
     $ python src/mlflow_test.py <MLFLOW_TRACKING_URI> <NAME_OF_DEFAULT_MLFLOW_EXPERIMENT>
