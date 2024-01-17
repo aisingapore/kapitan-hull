@@ -171,6 +171,7 @@ Let's look at the job defined for the `test`stage first:
       before_script:
         - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml
         - source activate {{cookiecutter.repo_name}}
+        - pip install -r dev-requirements.txt
       script:
         - pylint src --fail-under=7.0 --ignore=tests --disable=W1202
         - pytest src/tests

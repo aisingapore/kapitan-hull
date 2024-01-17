@@ -222,7 +222,7 @@ Now, let's clone your repository from the remote:
 === "VSCode Server Terminal"
 
     ```bash
-    $ cd /{{cookiecutter.proj_name}}/workspaces/<YOUR_HYPHENATED_NAME>
+    $ cd /<PVC_LOCATION>/workspaces/<YOUR_HYPHENATED_NAME>
     $ git clone <REMOTE_URL_HTTPS>
     $ cd {{cookiecutter.repo_name}}
     ```

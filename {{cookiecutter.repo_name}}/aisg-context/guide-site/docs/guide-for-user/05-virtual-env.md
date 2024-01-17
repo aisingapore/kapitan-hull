@@ -35,7 +35,7 @@ workspace directory:
     (base) $ echo 'alias {{cookiecutter.repo_name}}-conda="conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}"' >> ~/.bashrc
     (base) $ source ~/.bashrc
     (base) $ {{cookiecutter.repo_name}}-conda
-    ({{cookiecutter.repo_name}}-conda) $ # conda environment has been activated
+    ({{cookiecutter.repo_name}}) $ # conda environment has been activated
     ```
 
 !!! tip

@@ -833,7 +833,7 @@ MLflow Tracking server.
 === "Linux/macOS"
 
     ```bash
-    $ conda create -n mlflow-test python=3.10.11
+    $ conda create -n mlflow-test python=3.11.7
     $ conda activate mlflow-test
     $ pip install boto3==1.34.17 mlflow==2.9.2
     $ export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
@@ -844,7 +844,7 @@ MLflow Tracking server.
 === "Windows PowerShell"
 
     ```powershell
-    $ conda create -n mlflow-test python=3.10.11
+    $ conda create -n mlflow-test python=3.11.7
     $ conda activate mlflow-test
     $ pip install boto3==1.34.17 mlflow==2.9.2
     $ $MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>

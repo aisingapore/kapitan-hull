@@ -264,7 +264,7 @@ the environment variables.
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
 ```python
 ...
-class Settings(pydantic.BaseSettings):
+class Settings(pydantic_settings.BaseSettings):
 
     API_NAME: str = "{{cookiecutter.src_package_name}}_fastapi"
     API_V1_STR: str = "/api/v1"
