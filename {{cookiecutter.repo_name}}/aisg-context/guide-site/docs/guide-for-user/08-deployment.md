@@ -32,11 +32,13 @@ autolog). With that, we have the following pointers to take note of:
   convention similar to the following:
   `<MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/<MLFLOW_RUN_UUID>/artifacts`.
 - With this path/URI, we can use the AWS CLI to download the predictive
-  model from ECS into a mounted volume when we run the Docker image for
+  model from ECS. Alternatively, we can utilise the MLFlow Client
+  library to retrieve the predictive model. This model can then be
+  propagated into a mounted volume when we run the Docker image for
   the REST APIs.
 
-Here's how you can quickly retrieve the artifact location of a
-specific MLflow experiment within your VSCode server:
+Here's how you can quickly retrieve the artifact of a specific MLflow
+Run within your VSCode server with the MLFlow Client library:
 
 === "Linux/macOS"
 
@@ -44,8 +46,8 @@ specific MLflow experiment within your VSCode server:
     $ export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
     $ export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
     $ export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
-    $  python -c "import mlflow; mlflow_experiment = mlflow.get_experiment_by_name('<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT>'); print(mlflow_experiment.artifact_location)"
-    s3://<BUCKET_NAME>/subdir/paths
+    $ python -c "import mlflow; mlflow.artifacts.download_artifact(artifact_uri='runs:/<MLFLOW_RUN_UUID>/', dst_path='models/<MLFLOW_RUN_UUID')"
+    Downloading artifacts: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.18it/s]
     ```
 
 === "Windows PowerShell"
@@ -54,57 +56,12 @@ specific MLflow experiment within your VSCode server:
     $ $Env:MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
     $ $Env:MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
     $ $Env:MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
-    $  python -c "import mlflow; mlflow_experiment = mlflow.get_experiment_by_name('<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT>'); print(mlflow_experiment.artifact_location)"
-    s3://<BUCKET_NAME>/subdir/paths
+    $ python -c "import mlflow; mlflow.artifacts.download_artifact(artifact_uri='runs:/<MLFLOW_RUN_UUID>/', dst_path='models/<MLFLOW_RUN_UUID')"
+    Downloading artifacts: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.18it/s]
     ```
 
-To list the contents of the artifact location, you can use the AWS CLI
-(installed within the VSCOde server by default) like so:
 
-=== "Linux/macOS"
-
-    ```bash
-    $ export AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
-    $ export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
-    $ aws s3 ls --endpoint-url "https://necs.nus.edu.sg" <MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/
-                           PRE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/
-                           PRE YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY/
-                           PRE ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ/
-    ```
-
-=== "Windows PowerShell"
-
-    ```powershell
-    $ $Env:AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
-    $ $Env:AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
-    $ aws s3 ls --endpoint-url "https://necs.nus.edu.sg" <MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/
-                           PRE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/
-                           PRE YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY/
-                           PRE ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ/
-    ```
-
-What would be listed are subdirectories named after MLflow experiment
-unique IDs. Within each of these subdirectories, we will find the
-artifacts uploaded to ECS.To list the artifacts of a specific run,
-we can run a command like the following:
-
-=== "Linux/macOS"
-
-    ```bash
-    $ aws s3 ls --recursive --endpoint-url "https://necs.nus.edu.sg" <MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/<MLFLOW_RUN_UUID>
-    YYYY-MM-DD hh:mm:ss   XXXXXXXX <MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/<MLFLOW_RUN_UUID>/artifacts/model/model.pt
-    YYYY-MM-DD hh:mm:ss   XXXXXXXX <MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/<MLFLOW_RUN_UUID>/artifacts/train_model_config.json
-    ```
-
-=== "Windows PowerShell"
-
-    ```powershell
-    $ aws s3 ls --recursive --endpoint-url "https://necs.nus.edu.sg" <MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/<MLFLOW_RUN_UUID>
-    YYYY-MM-DD hh:mm:ss   XXXXXXXX <MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/<MLFLOW_RUN_UUID>/artifacts/model/model.pt
-    YYYY-MM-DD hh:mm:ss   XXXXXXXX <MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/<MLFLOW_RUN_UUID>/artifacts/train_model_config.json
-    ```
-
-Now that we have established on how we are to obtain the models for the
+Now that we have established on how we are to obtain a specific model for the
 API server, let's look into the servers themselves.
 
 ## Model Serving (FastAPI)
@@ -116,7 +73,7 @@ among other things. These factors have made it a popular framework
 within AI Singapore across many projects.
 
 If you were to inspect the `src` folder, you would notice that there
-exist more than one package:
+exists more than one package:
 
 - `{{cookiecutter.src_package_name}}`
 - `{{cookiecutter.src_package_name}}_fastapi`
@@ -150,16 +107,20 @@ following commands:
 
     ```bash
     $ export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-    $ export PRED_MODEL_ECS_S3_URI=<MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/$PRED_MODEL_UUID
-    $ aws s3 cp --recursive --endpoint-url "https://necs.nus.edu.sg" $PRED_MODEL_ECS_S3_URI ./models/$PRED_MODEL_UUID
+    $ export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
+    $ export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
+    $ export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
+    $ python -c "import mlflow; mlflow.artifacts.download_artifact(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
     ```
 
 === "Windows PowerShell"
 
     ```powershell
     $ $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-    $ $Env:PRED_MODEL_ECS_S3_URI=<MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/$Env:MLFLOW_RUN_UUID
-    $ aws s3 cp --recursive --endpoint-url "https://necs.nus.edu.sg" $Env:PRED_MODEL_ECS_S3_URI .\models\$Env:PRED_MODEL_UUID
+    $ $Env:MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
+    $ $Env:MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
+    $ $Env:MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
+    $ python -c "import mlflow; mlflow.artifacts.download_artifact(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
     ```
 
 Executing the commands above will download the artifacts related to the
@@ -203,7 +164,7 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org)
     ```bash
     $ conda activate {{cookiecutter.repo_name}}
     $ cd src
-    $ gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP -b 0.0.0.0:8080 -w 4 -k uvicorn.workers.UvicornWorker
+    $ gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP -b 0.0.0.0:8080 -w 2 -k uvicorn.workers.UvicornWorker -t 90
     ```
 
     See
@@ -280,8 +241,29 @@ class Settings(pydantic_settings.BaseSettings):
 FastAPI automatically generates interactive API documentation for
 easy viewing of all the routers/endpoints you have made available for
 the server. You can view the documentation through
-`<API_SERVER_URL>:<PORT>/docs`. In our case here, it is viewable through
-[`localhost:8080/docs`](http://localhost:8080/docs). It will look like
+`<API_SERVER_URL>:<PORT>/docs`. 
+
+It's optional, but let's view the labour of our hard work:
+
+> The following steps assumes you have installed coder on your machine.
+> Else, follow the installation steps [here](https://coder.com/docs/v2/latest/install#install-coder)
+> and login via `coder login <CODER_URL>`
+
+=== "Linux/macOS"
+    
+    ```bash
+    $ coder port-forward <WORKSPACE_NAME> --tcp 8080:8080
+    ```
+
+=== "Windows PowerShell"
+
+    ```powershell
+
+    $ coder port-forward <WORKSPACE_NAME> --tcp 8080:8080
+    ```
+    
+And with that, our document site for our server is viewable through
+[`localhost:8080/docs`](http://localhost:8080/docs) and will look as
 such:
 
 ![FastAPI - OpenAPI Docs](assets/screenshots/fastapi-openapi-docs.png)
