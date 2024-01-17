@@ -1,6 +1,5 @@
 default:
   tags:
-    - dind
     - on-prem
 
 variables:
