@@ -23,6 +23,22 @@ body:
         - label: Other issue
     validations:
       required: true
+  - type: checkboxes
+    attributes:
+      label: OS/Platform(s) Used
+      description: \
+        What OS or platform(s) did you encounter this issue? Specify
+        exact version or distro in the Problem Brief if needed.
+      options:
+        - label: Windows (local)
+        - label: MacOS Intel (local)
+        - label: MacOS Apple Silicon (local)
+        - label: Linux (local)
+        - label: Coder
+        - label: Run:ai VSCode
+        - label: Run:ai JupyterLab
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: Problem Brief
