@@ -23,4 +23,3 @@ dependencies:
     - pydantic==2.5.3
     - pydantic-settings==2.1.0
     - ipykernel==6.25.0
-    - sphinx==7.2.5

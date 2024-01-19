@@ -2,25 +2,35 @@ default:
   tags:
     - on-prem
 
-variables:
-  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-
-cache:
-  paths:
-    - .cache/pip
-
 stages:
   - test
-  - build
   - deploy-docs
+  - build
+
+test:conda-build:
+  stage: test
+  image:
+    name: continuumio/miniconda3:23.10.0-1
+  script:
+    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p ./conda/{{cookiecutter.repo_name}}
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      changes:
+        - {{cookiecutter.repo_name}}-conda-env.yaml
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_COMMIT_TAG
+      when: never
+  artifacts:
+    paths:
+      - ./conda
+  needs: []
 
 test:pylint-pytest:
   stage: test
   image:
-    name: continuumio/miniconda:4.7.12
+    name: continuumio/miniconda3:23.10.0-1
   before_script:
-    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml
-    - source activate {{cookiecutter.repo_name}}
+    - source activate ./conda/{{cookiecutter.repo_name}}
     - pip install -r dev-requirements.txt
   script:
     - pylint src --fail-under=7.0 --ignore=tests --disable=W1202
@@ -33,6 +43,26 @@ test:pylint-pytest:
     - if: $CI_PIPELINE_SOURCE == "push"
     - if: $CI_COMMIT_TAG
       when: never
+  needs:
+    - test:conda-build
+
+pages:
+  stage: deploy-docs
+  image:
+    name: continuumio/miniconda3:23.10.0-1
+  before_script:
+    - source activate ./conda/{{cookiecutter.repo_name}}
+    - pip install -r docs-requirements.txt
+  script:
+    - sphinx-apidoc -f -o docs src
+    - sphinx-build -b html docs public
+  artifacts:
+    paths:
+    - public
+  only:
+    - main
+  needs:
+    - test:conda-build
 
 build:data-prep-image:
   stage: build
@@ -40,7 +70,7 @@ build:data-prep-image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
   before_script:
-    - "[[ -z ${HARBOR_ROBOT_CREDS_JSON} ]] && exit 1"
+    - "[[ -z ${HARBOR_ROBOT_CREDS_JSON} ]] && echo 'HARBOR_ROBOT_CREDS_JSON variable is not set.' && exit 1"
   script:
     - mkdir -p /kaniko/.docker
     - cat $HARBOR_ROBOT_CREDS_JSON > /kaniko/.docker/config.json
@@ -58,6 +88,8 @@ build:data-prep-image:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_DATAPREP
+  needs:
+    - test:pylint-pytest
 
 build:model-training-image:
   stage: build
@@ -65,7 +97,7 @@ build:model-training-image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
   before_script:
-    - "[[ -z ${HARBOR_ROBOT_CREDS_JSON} ]] && exit 1"
+    - "[[ -z ${HARBOR_ROBOT_CREDS_JSON} ]] && echo 'HARBOR_ROBOT_CREDS_JSON variable is not set.' && exit 1"
   script:
     - mkdir -p /kaniko/.docker
     - cat $HARBOR_ROBOT_CREDS_JSON > /kaniko/.docker/config.json
@@ -83,6 +115,8 @@ build:model-training-image:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_MODEL
+  needs:
+    - test:pylint-pytest
 
 build:retag-images:
   stage: build
@@ -90,26 +124,10 @@ build:retag-images:
     name: gcr.io/go-containerregistry/crane:debug
     entrypoint: [""]
   before_script:
-    - "[[ -z ${HARBOR_ROBOT_CREDS_JSON} ]] && exit 1"
+    - "[[ -z ${HARBOR_ROBOT_CREDS_JSON} ]] && echo 'HARBOR_ROBOT_CREDS_JSON variable is not set.' && exit 1"
   script:
     - cat $HARBOR_ROBOT_CREDS_JSON > /root/.docker/config.json
     - crane tag {{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA} ${CI_COMMIT_TAG}
     - crane tag {{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA} ${CI_COMMIT_TAG}
   rules:
     - if: $CI_COMMIT_TAG && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-
-pages:
-  stage: deploy-docs
-  image:
-    name: continuumio/miniconda:4.7.12
-  before_script:
-    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml
-    - source activate {{cookiecutter.repo_name}}
-  script:
-    - sphinx-apidoc -f -o docs src
-    - sphinx-build -b html docs public
-  artifacts:
-    paths:
-    - public
-  only:
-    - main
