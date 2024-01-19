@@ -66,8 +66,7 @@ provided in this template:
 === "VSCode Server Terminal"
 
     ```bash
-    # `runai login` and `runai config project {{cookiecutter.proj_name}}` 
-    # first if needed
+    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
     # Run this in the base of your project repository, and change accordingly
     $ khull kaniko --context $(pwd) \
         --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile \
@@ -189,8 +188,7 @@ we need to build the Docker image to be used for it:
 === "VSCode Server Terminal"
 
     ```bash
-    # `runai login` and `runai config project {{cookiecutter.proj_name}}` 
-    # first if needed
+    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
     # Run this in the base of your project repository, and change accordingly
     $ khull kaniko --context $(pwd) \
         --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-model-training.Dockerfile \
