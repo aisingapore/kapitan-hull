@@ -63,6 +63,18 @@ provided in this template:
     $ docker push {{cookiecutter.registry_project_path}}/data-prep:0.1.0
     ```
 
+=== "VSCode Server Terminal"
+
+    ```bash
+    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
+    # Run this in the base of your project repository, and change accordingly
+    $ khull kaniko --context $(pwd) \
+        --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile \
+        --destination {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
+        --cred-file /path/to/docker/config.json \
+        -v <pvc-name>:/path/to/pvc/mount
+    ```
+
 === "Run:ai YAML"
 
     ```bash
@@ -171,6 +183,18 @@ we need to build the Docker image to be used for it:
         -f docker/{{cookiecutter.repo_name}}-model-training.Dockerfile `
         --platform linux/amd64 .
     $ docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
+    ```
+
+=== "VSCode Server Terminal"
+
+    ```bash
+    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
+    # Run this in the base of your project repository, and change accordingly
+    $ khull kaniko --context $(pwd) \
+        --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-model-training.Dockerfile \
+        --destination {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
+        --cred-file /path/to/docker/config.json \
+        -v <pvc-name>:/path/to/pvc/mount
     ```
 
 === "Run:ai YAML"

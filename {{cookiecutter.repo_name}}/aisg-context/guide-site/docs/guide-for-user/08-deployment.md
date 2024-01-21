@@ -46,7 +46,7 @@ Run within your VSCode server with the MLFlow Client library:
     $ export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
     $ export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
     $ export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
-    $ python -c "import mlflow; mlflow.artifacts.download_artifact(artifact_uri='runs:/<MLFLOW_RUN_UUID>/', dst_path='models/<MLFLOW_RUN_UUID')"
+    $ python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/<MLFLOW_RUN_UUID>/', dst_path='models/<MLFLOW_RUN_UUID')"
     Downloading artifacts: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.18it/s]
     ```
 
@@ -56,7 +56,7 @@ Run within your VSCode server with the MLFlow Client library:
     $ $Env:MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
     $ $Env:MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
     $ $Env:MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
-    $ python -c "import mlflow; mlflow.artifacts.download_artifact(artifact_uri='runs:/<MLFLOW_RUN_UUID>/', dst_path='models/<MLFLOW_RUN_UUID')"
+    $ python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/<MLFLOW_RUN_UUID>/', dst_path='models/<MLFLOW_RUN_UUID')"
     Downloading artifacts: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.18it/s]
     ```
 
@@ -110,7 +110,7 @@ following commands:
     $ export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
     $ export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
     $ export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
-    $ python -c "import mlflow; mlflow.artifacts.download_artifact(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
+    $ python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
     ```
 
 === "Windows PowerShell"
@@ -120,7 +120,7 @@ following commands:
     $ $Env:MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
     $ $Env:MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
     $ $Env:MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
-    $ python -c "import mlflow; mlflow.artifacts.download_artifact(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
+    $ python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
     ```
 
 Executing the commands above will download the artifacts related to the
