@@ -6,13 +6,13 @@ assignees: ["syakyr", "deonchia"]
 body:
   - type: markdown
     attributes:
-      value: |
+      value:
         Please fill this form if you have any bugs you wish to resolve 
         when using Kapitan Hull.
   - type: checkboxes
     attributes:
       label: Problem Domain
-      description: \
+      description:
         Let us know which service(s) this problem has impacted.  
         You can choose more than one domain depending on your issue.
       options:
@@ -20,13 +20,14 @@ body:
         - label: Run:ai
         - label: MLFlow
         - label: Kubernetes 
+        - label: Gitlab
         - label: Other issue
     validations:
       required: true
   - type: checkboxes
     attributes:
       label: OS/Platform(s) Used
-      description: \
+      description:
         What OS or platform(s) did you encounter this issue? Specify
         exact version or distro in the Problem Brief if needed.
       options:
@@ -37,19 +38,20 @@ body:
         - label: Coder
         - label: Run:ai VSCode
         - label: Run:ai JupyterLab
+        - label: Other platforms/None
     validations:
       required: true
   - type: textarea
     attributes:
       label: Problem Brief
-      description: |
+      description:
         Briefly explain what the problem is about in 1 to 3 sentences.
     validations:
       required: true
   - type: textarea
     attributes:
       label: Steps to Reproduce
-      description: |
+      description:
         This may be the most grueling step to write about as you may 
         need to trace back your steps on how you encounter it. If it's 
         a random chance that you may get the issue, estimate the chance 
@@ -59,7 +61,7 @@ body:
   - type: textarea
     attributes:
       label: Expected Result
-      description: |
+      description:
         What is the expected result when reproducing the steps?
     validations:
       required: true
