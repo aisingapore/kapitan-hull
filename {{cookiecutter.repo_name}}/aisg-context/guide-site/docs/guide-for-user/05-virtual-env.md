@@ -22,7 +22,8 @@ workspace directory:
 === "VSCode Server Terminal"
 
     ```bash
-    (base) $ conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml \
+    (base) $ conda env create \
+                -f {{cookiecutter.repo_name}}-conda-env.yaml \
                 -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}
     ```
 
@@ -66,33 +67,30 @@ server to detect the `conda` environments that you would have created.
   In this case, you should be navigating to the folder
   `/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}`.
 
-- Install the VSCode extensions
-  [`ms-python.python`](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
-  and
-  [`ms-toolsai.jupyter`](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter).
-  After installation of these extensions, restart VSCode by using
-  the shortcut `Ctrl + Shift + P`, entering `Developer: Reload Window` in the
-  prompt and pressing `Enter` following that.
+- Install the VSCode extensions [`ms-python.python`][py-ext] and
+  [`ms-toolsai.jupyter`][jy-ext]. After installation of these 
+  extensions, restart VSCode by using the shortcut `Ctrl + Shift + P`, 
+  entering `Developer: Reload Window` in the prompt and pressing 
+  `Enter` following that.
 
-- Ensure that you have
-  [`ipykernel`](https://ipython.readthedocs.io/en/stable/install/kernel_install.html)
-  installed in the `conda` environment that you intend to use.
-  This template by default lists the library as a dependency under
+- Ensure that you have [`ipykernel`][ipyk] installed in the `conda` 
+  environment that you intend to use. This template by default lists 
+  the library as a dependency under 
   `{{cookiecutter.repo_name}}-conda-env.yaml`. You can check for the
   library like so:
 
 === "VSCode Server Terminal"
 
     ```bash
-    $ conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}-conda-env
+    $ conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}
     $ conda list | grep "ipykernel"
     ipykernel  X.X.X  pypi_0  pypi
     ```
 
-- Now enter `Ctrl + Shift + P` again and execute `Python: Select Interpreter`.
-  Provide the path to the Python executable within the `conda`
-  environment that you intend to use, something like so:
-  `path/to/conda_env/bin/python`.
+- Now enter `Ctrl + Shift + P` again and execute 
+  `Python: Select Interpreter`. Provide the path to the Python 
+  executable within the `conda` environment that you intend to use, 
+  something like so: `path/to/conda_env/bin/python`.
 
 - Open up any Jupyter notebook and click on the button that says
   `Select Kernel` on the top right hand corner. You will be presented
@@ -102,27 +100,29 @@ server to detect the `conda` environments that you would have created.
 - Test out the kernel by running the cells in the sample notebook
   provided under `notebooks/sample-pytorch-notebook.ipynb`.
 
+[py-ext]: https://marketplace.visualstudio.com/items?itemName=ms-python.python
+[jy-ext]: https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter
+[ipyk]: https://ipython.readthedocs.io/en/stable/install/kernel_install.html
+
 ## Jupyter Kernel for JupyterLab
 
-The same with the VSCode server, the JupyterLab server
-would not by default detect `conda` environments. You would have to
-specify to the JupyterLab installation the `ipython` kernel existing
-within your `conda` environment.
+The same with the VSCode server, the JupyterLab server would not by 
+default detect `conda` environments. You would have to specify to the 
+JupyterLab installation the `ipython` kernel existing within your 
+`conda` environment.
 
-- Open up a
-  [terminal within JupyterLab](https://jupyterlab.readthedocs.io/en/stable/user/terminal.html).
+- Open up a [terminal within JupyterLab][jy-tty].
 
 - Activate the `conda` environment in question and ensure that you have
-  [`ipykernel`](https://ipython.readthedocs.io/en/stable/install/kernel_install.html)
-  installed in the `conda` environment that you intend to use.
-  This template by default lists the library as a dependency under
-  `{{cookiecutter.repo_name}}-conda-env.yaml`. You can check for the
-  library like so:
+  [`ipykernel`][ipyk] installed in the `conda` environment that you 
+  intend to use. This template by default lists the library as a 
+  dependency under `{{cookiecutter.repo_name}}-conda-env.yaml`. You can 
+  check for the library like so:
 
 === "JupyterLab Terminal"
 
     ```bash
-    $ conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}-conda-env
+    $ conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}
     $ conda list | grep "ipykernel"
     ipykernel  6.9.2  pypi_0  pypi
     ```
@@ -132,17 +132,16 @@ within your `conda` environment.
 === "JupyterLab Terminal"
 
     ```bash
-    $ ipython kernel install --name "{{cookiecutter.repo_name}}-conda-env" --user
+    $ ipython kernel install --name "{{cookiecutter.repo_name}}" --user
     ```
 
 - Refresh the page.
 
 - Open up the sample notebook provided under `notebooks/sample-pytorch-notebook.ipynb`.
 
-- Within each Jupyter notebook, you can select the kernel of
-  specific `conda` environments that you intend to use by heading to
-  the toolbar under
-  `Kernel` -> `Change Kernel...`.
+- Within each Jupyter notebook, you can select the kernel of specific
+  `conda` environments that you intend to use by heading to the toolbar 
+  under `Kernel` -> `Change Kernel...`.
 
 ![Run:ai - JupyterLab Server Change Kernel](assets/screenshots/runai-jupyterlab-server-change-kernel.png)
 
@@ -151,3 +150,5 @@ within your `conda` environment.
 ??? info "Reference Link(s)"
 
     - [Jupyter Docs - Kernels (Programming Languages)](https://docs.jupyter.org/en/latest/projects/kernels.html)
+
+[jy-tty]: https://jupyterlab.readthedocs.io/en/stable/user/terminal.html

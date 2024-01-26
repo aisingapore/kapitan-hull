@@ -4,19 +4,20 @@ An advantage presented by orchestration platforms is that you can
 utilise the Kubernetes cluster's resources for your development and
 engineering works instead of your own resources.
 
-We can make use of
-[Run:ai workspaces](https://docs.run.ai/v2.13/Researcher/user-interface/workspaces/overview/)
-to spin up VSCode or JupyterLab servers with which cluster resources
-can be dedicated.
+We can make use of either [Coder][coder] or 
+[Run:ai workspaces][runai-wksp] to spin up VSCode or JupyterLab servers 
+with which cluster resources can be dedicated.
 
-While there exist the option for engineers to set up either a VSCode
-or JupyterLab service (or both), the former would suffice. Reason
+While there exist the option for engineers to set up either a VSCode or
+JupyterLab service (or both), the former would suffice. Reason being
 being VSCode is an excellent code editor with integrated terminal
-capabilities and it can also work with Jupyter notebooks.
-JupyterLab on the other hand, while being the best interface for
-Jupyter notebooks, has subpar UX for its terminal and code editor.
-That is to be expected however as it is dedicated to the
-Jupyter ecosystem.
+capabilities and it can also work with Jupyter notebooks. JupyterLab
+on the other hand, while being the best interface for Jupyter 
+notebooks, has subpar UX for its terminal and code editor. That is to 
+be expected however as it is dedicated to the Jupyter ecosystem.
+
+[coder]: https://coder.com/
+[runai-wksp]: https://docs.run.ai/v2.13/Researcher/user-interface/workspaces/overview/
 
 ## Workspace Building Blocks
 
@@ -177,9 +178,9 @@ either method to gain access to a remote VSCode developer workspace.
 ### Persistent Workspaces
 
 !!! warning "Attention"
-    If you have spun up using the Run:ai YAML method, then you can 
-    skip this step since you've already prepared your workspace prior 
-    to spinning it up.
+    If you have spun up using the Run:ai YAML method, then you can skip
+    this step since you've already prepared your workspace prior to
+    spinning it up.
 
 As mentioned, a PVC should be attached to the workspaces to persist
 changes to the filesystems. You can use the following command to search
@@ -194,9 +195,9 @@ for the PVC:
 If there's no result, check with the MLOps team about this.
 
 By default, the PVCs would contain a `workspaces` directory with which
-you can create a subdirectory for yourself treat it as your own personal
-workspace, where all your work and other relevant assets can be
-persisted.
+you can create a subdirectory for yourself treat it as your own 
+personal workspace, where all your work and other relevant assets can 
+be persisted.
 
 === "VSCode Server Terminal"
 
@@ -208,8 +209,8 @@ persisted.
 ### Git from VSCode
 
 To clone or push to Git repositories within the VSCode integrated
-terminal, it is recommended that you first disable VSCode's
-Git authentication handler:
+terminal, it is recommended that you first disable VSCode's Git
+authentication handler:
 
 Git by default is installed in the VSCode server image. One thing to
 take note is that as the persistent storage would be accessible by the
@@ -244,6 +245,16 @@ if you intend to use Jupyter notebooks within the VSCode environment.
   rich support for many things Python.
 - [`ms-toolsai.jupyter`][vsx-jy]: Official extension by Microsoft 
   for Jupyter support.
+
+!!! warning "Manual Installation"
+    For some clusters, you may need to install the extensions manually
+    due to firewall issues. If that is the case, you can download the
+    extension(s) through your local machine and upload them to the 
+    VSCode terminal. From there, you can make use of the following 
+    command:
+    ```
+    $ code-server --install-extension /path/to/extension.vsix
+    ```
 
 !!! warning "Attention"
     Do head over [here][jy-vscode] on how to enable the usage of 
@@ -319,10 +330,12 @@ interface for interacting with or editing notebooks.
 
     !!! warning "Attention"
         Under the `Environment` block, there is an expandable section 
-        called `More settings`. Under this section, you can provide more 
-        arguments for a container that will be spun up for the 
-        workspace. For the JupyterLab interface to be able to access any 
-        PVC mounted to the container, you should include the following argument: `--NotebookApp.notebook_dir="/path/to/pvc"`.
+        called `More settings`. Under this section, you can provide 
+        more arguments for a container that will be spun up for the 
+        workspace. For the JupyterLab interface to be able to access 
+        any PVC mounted to the container, you should include the 
+        following argument: 
+        `--NotebookApp.notebook_dir="/path/to/pvc"`.
 
     Once you have selected the blocks, you can proceed to create the
     workspace and you will be redirected to the workspaces page. On this
@@ -427,10 +440,10 @@ server as well as any associated files can be found under
 ## Using Docker within Kubernetes
 
 !!! caution
-    Since these development environments are essentially pods
-    deployed within a Kubernetes cluster, using Docker within the pods
-    themselves is not feasible by default and while possible,
-    should be avoided.
+    Since these development environments are essentially pods deployed
+    within a Kubernetes cluster, using Docker within the pods
+    themselves is not feasible by default and while possible, should
+    be avoided.
 
 ??? info "Reference Link(s)"
 

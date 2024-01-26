@@ -40,7 +40,8 @@ the CLI.
 
 To process the sample raw data, we will be spinning up a job on Run:ai,
 using the CLI. This job will be using a Docker image that will be built
-from a Dockerfile (`docker/{{cookiecutter.src_package_name}}-data-prep.Dockerfile`)
+from a Dockerfile 
+(`docker/{{cookiecutter.src_package_name}}-data-prep.Dockerfile`)
 provided in this template:
 
 === "Linux/macOS"
@@ -111,6 +112,19 @@ a job using that image to Run:ai\:
         --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/process_data.py process_data.raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg process_data.processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed'"
     ```
 
+=== "VSCode Server Terminal"
+
+    ```bash
+    $ runai submit \
+        --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
+        -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
+        --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} \
+        --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
+        --cpu 2 \
+        --memory 4G \
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py process_data.raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg process_data.processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
+    ```
+
 === "Run:ai YAML"
 
     ```bash
@@ -128,12 +142,12 @@ We will be passing this path to the model training workflows.
 
 Now that we have processed the raw data, we can look into training the
 sentiment classification model. The script relevant for this section
-is `src/train_model.py`. In this script, you can see it using
-some utility functions from
+is `src/train_model.py`. In this script, you can see it using some
+utility functions from
 `src/{{cookiecutter.src_package_name}}/general_utils.py`
-as well, most notably the functions for utilising MLflow utilities
-for tracking experiments. Let's set up the tooling for experiment
-tracking before we start model experimentation.
+as well, most notably the functions for utilising MLflow utilities for
+tracking experiments. Let's set up the tooling for experiment tracking
+before we start model experimentation.
 
 ### Experiment Tracking
 
@@ -144,8 +158,8 @@ for a run to a remote MLflow Tracking server.
 An MLflow Tracking server is usually set up within the Run:ai project's
 namespace for projects that requires model experimentation.
 Artifacts logged through the MLflow API can be
-uploaded to ECS buckets, assuming the client is authorised for access to
-ECS.
+uploaded to ECS buckets, assuming the client is authorised for access 
+to ECS.
 
 !!! note
     The username and password for the MLflow Tracking server
@@ -162,8 +176,8 @@ can write to a bucket.
 
 ### Container for Experiment Job
 
-Before we submit a job to Run:ai to train our model,
-we need to build the Docker image to be used for it:
+Before we submit a job to Run:ai to train our model, we need to build 
+the Docker image to be used for it:
 
 === "Linux/macOS"
 
@@ -204,8 +218,8 @@ we need to build the Docker image to be used for it:
     kubectl apply -f aisg-context/runai/06-docker-build-modeltraining.yml
     ```
 
-Now that we have the Docker image pushed to the registry,
-we can run a job using it:
+Now that we have the Docker image pushed to the registry, we can run a 
+job using it:
 
 === "Linux/macOS"
 
@@ -237,6 +251,21 @@ we can run a job using it:
         --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3'"
     ```
 
+=== "VSCode Server Terminal"
+
+    ```bash
+    $ runai submit \
+        --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
+        -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
+        --working-dir /home/aisg/{{cookiecutter.repo_name}} \
+        --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
+        --cpu 2 \
+        --memory 4G \
+        -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
+        -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
+    ```
+
 === "Run:ai YAML"
 
     ```bash
@@ -254,15 +283,14 @@ bucket. You can also compare runs with each other.
 
 !!! tip
     Every job submitted with `runai submit` is assigned a unique ID,
-    and a unique job name if the `--job-name-prefix` is used.
-    The `mlflow_init` function within the `general_utils.py` module
-    tags every experiment name with the job's name and UUID as provided
-    by Run:ai, with the tags `job_uuid` and `job_name`. This allows you
-    to easily identify the MLflow experiment
-    runs that are associated with each Run:ai job.
-    You can filter for MLflow experiment runs associated with a
-    specific Run:ai job by using MLflow's search filter expressions
-    and API.
+    and a unique job name if the `--job-name-prefix` is used. The
+    `mlflow_init` function within the `general_utils.py` module tags
+    every experiment name with the job's name and UUID as provided by
+    Run:ai, with the tags `job_uuid` and `job_name`. This allows you to
+    easily identify the MLflow experiment runs that are associated with 
+    each Run:ai job. You can filter for MLflow experiment runs 
+    associated with a specific Run:ai job by using MLflow's search 
+    filter expressions and API.
 
     ??? info "Reference Link(s)"
 
@@ -271,8 +299,8 @@ bucket. You can also compare runs with each other.
 
 !!! info
     If your project has GPU quotas assigned to it, you can make use of
-    it by specifying the `--gpu` flag in the `runai submit` command.
-    As part of Run:ai's unique selling point, you can also specify
+    it by specifying the `--gpu` flag in the `runai submit` command. As
+    part of Run:ai's unique selling point, you can also specify
     fractional values, which would allow you to utilise a fraction of a
     GPU. This is useful for projects that require a GPU for training,
     but do not require the full capacity of a GPU.
@@ -288,14 +316,12 @@ the optimal learning rate within a log space, we would have to execute
 script with a different learning rate value each time. It is reasonable
 that one seeks for ways to automate this workflow.
 
-[Optuna](https://optuna.readthedocs.io/en/stable/) is an optimisation
-framework designed for ML use-cases.
-Its features includes:
+[Optuna][optuna] is an optimisation framework designed for ML 
+use-cases. Its features includes:
 
 - ease of modularity,
 - optimisation algorithms for searching the best set of parameters,
-- and [paralellisation](https://optuna.readthedocs.io/en/stable/tutorial/10_key_features/004_distributed.html)
-  capabilities for faster sweeps.
+- and [parallelisation][parallel] capabilities for faster sweeps.
 
 In addition, Hydra has a plugin for utilising Optuna which further
 translates to ease of configuration. To use Hydra's plugin for Optuna,
@@ -327,15 +353,16 @@ Optuna study.
 !!! attention
     The fields defined are terminologies used by Optuna. Therefore, it is
     recommended that you understand the basics of the tool.
-    [This overview video](https://www.youtube.com/watch?v=P6NwZVl8ttc)
-    covers well on the concepts brought upon by Optuna.
+    [This overview video][optuna-vid] covers well on the concepts 
+    brought upon by Optuna.
 
     Here are the definitions for some of the fields:
 
-    - `params` is used to specify the parameters to be tuned, and the values
-      to be searched through
+    - `params` is used to specify the parameters to be tuned, and the 
+      values to be searched through
     - `n_trials` specifies the number of trials to be executed
-    - `n_jobs` specifies the number of trials to be executed in parallel
+    - `n_jobs` specifies the number of trials to be executed in 
+      parallel
 
 As to how the training script would work towards training a model with
 the best set of parameters, there are two important lines from two
@@ -356,17 +383,17 @@ different files that we have to pay attention to.
 ```
 
 In the training script the returned variables are to contain values
-that we seek to optimise for. In this case, we seek to minimise the loss
-and maximise the accuracy. The `hydra.sweeper.direction` field
-in the YAML config is used to specify the direction that those variables
+that we seek to optimise for. In this case, we seek to minimise the 
+loss and maximise the accuracy. The `hydra.sweeper.direction` field in 
+the YAML config is used to specify the direction that those variables 
 are to optimise towards, defined in a positional manner within a list.
 
 An additional thing to take note of is that for each trial where a
 different set of parameters are concerned, a new MLflow run has to be
 initialised. However, we need to somehow link all these different runs
 together so that we can compare all the runs within a single Optuna
-study (set of trials). How we do this is that we provide each trial with
-the same tag to be logged to MLflow (`hptuning_tag`) which would
+study (set of trials). How we do this is that we provide each trial 
+with the same tag to be logged to MLflow (`hptuning_tag`) which would
 essentially be the date epoch value of the moment you submitted the job
 to Run:ai. This tag is defined using the environment value
 `MLFLOW_HPTUNING_TAG`. This tag is especially useful if you are
@@ -406,6 +433,22 @@ by default.
         --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3'"
     ```
 
+=== "VSCode Server Terminal"
+
+    ```bash
+    $ runai submit \
+        --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
+        -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
+        --working-dir /home/aisg/{{cookiecutter.repo_name}} \
+        --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
+        --cpu 2 \
+        --memory 4G \
+        -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
+        -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
+        -e MLFLOW_HPTUNING_TAG=$(date +%s) \
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
+    ```
+
 === "Run:ai YAML"
 
     ```bash
@@ -420,3 +463,7 @@ by default.
     - [Run:ai Docs - Environment Variables inside a Run:ai Workload](https://docs.run.ai/v2.9/Researcher/best-practices/env-variables/)
     - [Hydra Docs - Optuna Sweeper Plugin](https://hydra.cc/docs/plugins/optuna_sweeper/)
     - [MLflow Docs - Search Syntax](https://www.mlflow.org/docs/latest/search-syntax.html)
+
+[optuna]: https://optuna.readthedocs.io/en/stable/
+[parallel]: https://optuna.readthedocs.io/en/stable/tutorial/10_key_features/004_distributed.html
+[optuna-vid]: https://www.youtube.com/watch?v=P6NwZVl8ttc
