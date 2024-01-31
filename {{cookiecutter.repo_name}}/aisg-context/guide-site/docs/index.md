@@ -11,7 +11,7 @@ This template that is also accompanied with an end-to-end guide was
 generated and customised using the following [`cookiecutter`][ccutter]
 template:
 
-> https://github.com/aisingapore/ml-project-cookiecutter-onprem-runai
+> https://github.com/aisingapore/kapitan-hull
 
 This `mkdocs` site is for serving the contents of the end-to-end guide 
 in a more readable manner, as opposed to plain Markdown views. The 

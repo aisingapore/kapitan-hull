@@ -3,10 +3,9 @@
 ## Sample Data
 
 While you may have your own project data to work with, for the purpose
-of following through with this template guide, let's download
-the sample data for the
-[sample problem statement](./02-preface.md#guides-problem-statement)
-at hand within our VSCode server workspace.
+of following through with this template guide, let's download the 
+sample data for the [sample problem statement][prob] at hand within our 
+VSCode server workspace.
 
 === "VSCode Server Terminal"
 
@@ -31,3 +30,5 @@ at hand within our VSCode server workspace.
 
 In the next section, we will work towards processing this set of raw
 data and eventually training an image classification model.
+
+[prob]: ./02-preface.md#guides-problem-statement

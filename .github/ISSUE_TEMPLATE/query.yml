@@ -5,13 +5,13 @@ labels: ["triage"]
 body:
   - type: markdown
     attributes:
-      value: |
+      value: 
         Please fill this form if you have any queries/issues with 
         Kapitan Hull.
   - type: checkboxes
     attributes:
       label: Query Domain
-      description: \
+      description:
         Let us know which service(s) this query is about.  
         You can choose more than one domain depending on your query.
       options:
@@ -19,13 +19,14 @@ body:
         - label: Run:ai
         - label: MLFlow
         - label: Kubernetes 
+        - label: Gitlab
         - label: Other issue
     validations:
       required: true
   - type: textarea
     attributes:
       label: Query Brief
-      description: |
+      description: 
         Briefly explain what the query is about in 1 to 3 sentences.
     validations:
       required: true
