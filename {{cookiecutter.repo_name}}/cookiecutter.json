@@ -1,0 +1,14 @@
+{
+    "cookiecutter": {
+        "project_name": "{{cookiecutter.project_name}}",
+        "description": "{{cookiecutter.description}}",
+        "repo_name": "{{cookiecutter.repo_name}}",
+        "src_package_name": "{{cookiecutter.src_package_name}}",
+        "src_package_name_short": "{{cookiecutter.src_package_name_short}}",
+        "platform": "{{cookiecutter.platform}}",
+        "orchestrator": "{{cookiecutter.orchestrator}}",
+        "proj_name": "{{cookiecutter.proj_name}}",
+        "registry_project_path": "{{cookiecutter.registry_project_path}}",
+        "author_name": "{{cookiecutter.author_name}}"
+    }
+}

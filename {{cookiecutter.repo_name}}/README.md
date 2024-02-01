@@ -32,6 +32,25 @@ Inputs provided to `cookiecutter` for the generation of this template:
 [ccutter]: https://cookiecutter.readthedocs.io/en/stable/
 [kh-readme]: https://github.com/aisingapore/kapitan-hull/blob/main/README.md
 
+## Regenerating/Updating from Kapitan Hull
+
+> It is ***strongly recommended*** to push any changes you made to git 
+> before running the command to revert back the changes you do not want, 
+> especially the model code and the files in the `conf` folder.
+
+If you need to regenerate the scripts from Kapitan Hull to update the 
+inputs or to a new version of Kapitan Hull, you can update the 
+`cookiecutter.json` with the new inputs and run this command 
+within this repository:
+
+```bash
+$ cookiecutter --replay-file cookiecutter.json \
+    https://github.com/aisingapore/kapitan-hull -o .. -f
+```
+
+Add the `-c` parameter to specify the tag/branch you wish to use 
+instead.
+
 ## End-to-end Guide
 
 This repository contains a myriad of boilerplate codes and configuration
