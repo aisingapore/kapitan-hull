@@ -53,15 +53,10 @@ See [here][sdk-auth] for more information on authorising your SDK.
 A simple command to authorise access:
 
 ```bash
+# For authorisation with user account
 $ gcloud auth login
-```
-
-To register `gcloud` for Docker so you can push to Google Container 
-Registry:
-
-```bash
-$ gcloud auth configure-docker \
-    asia-southeast1-docker.pkg.dev
+# For authorisation with service account
+$ gcloud auth login --cred-file=/path/to/service-account-key.json
 ```
 
 With your user account, you should have access to the following GCP
@@ -73,7 +68,8 @@ products/services:
 
 [gcp-sdk]: https://cloud.google.com/sdk
 [sdk-auth]: https://cloud.google.com/sdk/docs/authorizing
-{%- set kubeplat = 'GKE' -%}
+{%- set kubeplat = 'GKE' %}
+
 {% endif -%}
 
 ## Kubernetes
@@ -130,7 +126,8 @@ the same set of credentials that you use for your GitLab account.
 
 [aisg-rke]: https://rancher.aisingapore.net
 [rancher]: https://www.rancher.com
-{%- set kubeplat = 'Rancher' -%}
+{%- set kubeplat = 'Rancher' %}
+
 {% endif -%}
 
 {% if cookiecutter.orchestrator == 'runai' -%}
@@ -144,7 +141,7 @@ the same set of credentials that you use for your GitLab account.
 {% elif cookiecutter.orchestrator == "noorch" -%}
     {%- set vs_orch = " " -%}
     {%- set and_orch = " " -%}
-{% endif %}
+{% endif -%}
 
 ### Kubernetes VS {{kubeplat}}{{vs_orch}}
 
@@ -186,7 +183,13 @@ Run:AI.
 The diagram below showcases the some of the components that this guide
 will cover as well as how each of them relate to each other.
 
-[![AISG's End-to-end MLOps Workflow & Components Diagram](assets/images/aisg-e2e-mlops-workflow-components_jul2023.png)](assets/aisg-e2e-mlops-workflow-components_jul2023.html)
+{% if cookiecutter.platform == 'gcp' -%}
+[![AISG's End-to-end MLOps Workflow & Components Diagram for GCP Run:ai](assets/images/aisg-e2e-mlops-gcp-runai-workflow-components_jul2023.png)](assets/aisg-e2e-mlops-gcp-runai-workflow-components_jul2023.html)
+
+{% elif cookiecutter.platform == 'onprem' -%}
+[![AISG's End-to-end MLOps Workflow & Components Diagram for Onprem Run:ai](assets/images/aisg-e2e-mlops-onprem-runai-workflow-components_jul2023.png)](assets/aisg-e2e-mlops-onprem-runai-workflow-components_jul2023.html)
+
+{% endif -%}
 
 !!! note
     Click on the image above for an interactive view of the diagram.
@@ -398,7 +401,7 @@ Host gitlab.aisingapore.net
 
     - [GitLab Docs - Use SSH keys to communicate with GitLab](https://docs.gitlab.com/ee/user/ssh.html)
 
-{%- if cookiecutter.orchestrator == 'runai' -%}
+{% if cookiecutter.orchestrator == 'runai' -%}
 ## Run:AI
 
 Run:AI is an enterprise orchestration and cluster management platform
@@ -590,8 +593,7 @@ verification code and paste it into the terminal.
 {%- elif cookiecutter.orchestrator == 'polyaxon' -%}
 {%- elif cookiecutter.orchestrator == 'none' -%}
 {% endif %}
-
-{%- if cookiecutter.platform == 'onprem' -%}
+{% if cookiecutter.platform == 'onprem' %}
 ## Harbor
 
 AI Singapore uses a self-hosted Harbor as the on-premise container image
@@ -757,10 +759,10 @@ created by administrators. These accounts are usually created for
 automated workflows that require access to ECS. Configuring them for the
 CLI works the same as configuring a regular user account.
 
-{%- elif cookiecutter.platform == 'gcp' -%}
-## Google Container Registry
+{%- elif cookiecutter.platform == 'gcp' %}
+## Google Artifact Registry
 
-AI Singapore's emphases on reproducibility and portability of
+AI Singapore's emphasis on reproducibility and portability of
 workflows and accompanying environments translates to heavy usage of
 containerisation. Throughout this guide, we will be building Docker
 images necessary for setting up development environments, jobs for
@@ -773,13 +775,54 @@ like so:
 ```bash
 $ gcloud container images list --repository={{cookiecutter.registry_project_path}}
 ```
-You will be pushing the Docker images to the aforementioned repository.
+
+To push or pull images to/from Artifact Registry, you would need to
+authenticate with the Google Cloud project that the registry is
+associated with. You can do so by running the following command:
+
+```bash
+$ gcloud auth configure-docker asia-southeast1-docker.pkg.dev
+```
+
+The command above will populate your Docker configuration file with
+the intended Artifact Registry Docker host. Host names Google
+Artifact Registry ends with `-docker.pkg.dev`.
 
 ??? info "Reference Link(s)"
 
     - [`gcloud` Reference - `gcloud container images list`](https://cloud.google.com/sdk/gcloud/reference/container/images/list)
+    - [Google Cloud Artifact Registry Docs - Set up authentication for Docker](https://cloud.google.com/artifact-registry/docs/docker/authentication)
     - [Artifact Registry Guide - Pushing & Pulling Images](https://cloud.google.com/artifact-registry/docs/docker/pushing-and-pulling)
-{% endif %}
+
+## Google Cloud Storage (GCS)
+
+In the context of a Google Cloud infrastructure environment, there are
+two main storage mediums:
+
+1. Google Cloud Filestore for managed network file storage (NFS)
+2. Google Cloud Storage (GCS) for object storage
+
+The usage of NFS storage is mainly observable through Persistent
+Volumes (PVs) or virtual machine disks. There is however little to
+nothing for end-users to configure the NFS storage as most of the setup
+will be done by AI Singapore's Platforms team.
+
+As for GCS, one would be provided with access to one or more GCS buckets
+through the provided user or service account. Upon authorisation, one
+may list the contents of a bucket like so:
+
+!!! note inline end
+    `GCP_PROJECT_ID` and `GCP_PROJECT_ID` are provided by the MLOps
+    team. The team is reachable at `mlops@aisingapore.org`.
+
+```bash
+$ gsutil ls -p <GCP_PROJECT_ID> gs://<GCS_BUCKET_NAME>
+```
+
+??? info "Reference Link(s)"
+
+    - [IBM Blog - Object vs. File vs. Block Storage: What’s the Difference?](https://www.ibm.com/blog/object-vs-file-vs-block-storage)
+{%- endif %}
 
 ## MLflow
 
@@ -835,7 +878,9 @@ MLflow Tracking server.
     ```bash
     $ conda create -n mlflow-test python=3.11.7
     $ conda activate mlflow-test
-    $ pip install boto3==1.34.17 mlflow==2.9.2
+    $ pip install mlflow==2.9.2
+    # Install boto3 or google-cloud-storage packages if 
+    # custom object storage is used
     $ export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
     $ export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
     $ python src/mlflow_test.py <MLFLOW_TRACKING_URI> <NAME_OF_DEFAULT_MLFLOW_EXPERIMENT>
@@ -846,7 +891,9 @@ MLflow Tracking server.
     ```powershell
     $ conda create -n mlflow-test python=3.11.7
     $ conda activate mlflow-test
-    $ pip install boto3==1.34.17 mlflow==2.9.2
+    $ pip install mlflow==2.9.2
+    # Install boto3 or google-cloud-storage packages if 
+    # custom object storage is used
     $ $MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
     $ $MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
     $ python src/mlflow_test.py <MLFLOW_TRACKING_URI> <NAME_OF_DEFAULT_MLFLOW_EXPERIMENT>
