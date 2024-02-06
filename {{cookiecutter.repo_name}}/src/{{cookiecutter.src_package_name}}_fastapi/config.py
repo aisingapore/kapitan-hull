@@ -11,7 +11,7 @@ class Settings(pydantic_settings.BaseSettings):
 
     USE_CUDA: bool = False
     USE_MPS: bool = False
-    PRED_MODEL_UUID: str
+    PRED_MODEL_UUID: str = "test"
     PRED_MODEL_PATH: str
 
 
