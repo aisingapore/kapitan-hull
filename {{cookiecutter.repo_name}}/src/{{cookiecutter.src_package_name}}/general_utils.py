@@ -39,7 +39,7 @@ def setup_logging(
         logger.info("Logging config file is not found. Basic config is being used.")
 
 
-def mlflow_init(args, setup_mlflow=False, autolog=False):
+def mlflow_init(args, run_name='train-model', setup_mlflow=False, autolog=False):
     """Initialise MLflow connection.
 
     Parameters
@@ -72,8 +72,6 @@ def mlflow_init(args, setup_mlflow=False, autolog=False):
 
             if autolog:
                 mlflow.autolog()
-
-            run_name = "train-model"
 
             if "MLFLOW_HPTUNING_TAG" in os.environ: run_name += "-hp"
 
