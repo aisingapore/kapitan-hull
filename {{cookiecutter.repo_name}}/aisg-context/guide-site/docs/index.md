@@ -1,6 +1,12 @@
 # {{cookiecutter.project_name}}
 
+{% if cookiecutter.platform == 'gcp' -%}
+![AI Singapore's Kapitan Hull EPTG GCP Run:ai Banner](./kapitan-hull-eptg-gcp-runai-banner.png)
+
+{% elif cookiecutter.platform == 'onprem' -%}
 ![AI Singapore's Kapitan Hull EPTG Onprem Run:ai Banner](./kapitan-hull-eptg-onprem-runai-banner.png)
+
+{% endif -%}
 
 _{{cookiecutter.description}}_
 
