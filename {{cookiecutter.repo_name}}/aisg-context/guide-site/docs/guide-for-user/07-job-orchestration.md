@@ -72,6 +72,9 @@ provided in this template:
     $ khull kaniko --context $(pwd) \
         --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile \
         --destination {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
+{%- if cookiecutter.platform == 'gcp' %}
+        --gcp \
+{%- endif %}
         --cred-file /path/to/docker/config.json \
         -v <pvc-name>:/path/to/pvc/mount
     ```
@@ -207,6 +210,9 @@ the Docker image to be used for it:
     $ khull kaniko --context $(pwd) \
         --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-model-training.Dockerfile \
         --destination {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
+{%- if cookiecutter.platform == 'gcp' %}
+        --gcp \
+{%- endif %}
         --cred-file /path/to/docker/config.json \
         -v <pvc-name>:/path/to/pvc/mount
     ```
