@@ -84,7 +84,7 @@ server to detect the `conda` environments that you would have created.
     ```bash
     $ conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}
     $ conda list | grep "ipykernel"
-    ipykernel  X.X.X  pypi_0  pypi
+    ipykernel  6.25.0  pypi_0  pypi
     ```
 
 - Now enter `Ctrl + Shift + P` again and execute 
@@ -106,6 +106,10 @@ server to detect the `conda` environments that you would have created.
 
 ## Jupyter Kernel for JupyterLab
 
+!!! attention
+    If you're using VSCode and not JupyterLab, this section can be 
+    skipped.
+
 The same with the VSCode server, the JupyterLab server would not by 
 default detect `conda` environments. You would have to specify to the 
 JupyterLab installation the `ipython` kernel existing within your 
@@ -124,7 +128,7 @@ JupyterLab installation the `ipython` kernel existing within your
     ```bash
     $ conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}
     $ conda list | grep "ipykernel"
-    ipykernel  6.9.2  pypi_0  pypi
+    ipykernel  6.25.0  pypi_0  pypi
     ```
 
 - Within the `conda` environment, execute the following:

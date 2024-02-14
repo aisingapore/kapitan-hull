@@ -19,7 +19,7 @@ COOKIE_INPUTS = {
         "regex": r"^[a-z](?:_?[a-z0-9]+)*$"},
     "registry_project_path": {
         "user_input": "{{cookiecutter.registry_project_path}}",
-        "regex": r"^registry\.aisingapore\.net[\-\/\w\d]+(?:[a-z0-9]+)$"},
+        "regex": r"^(https?:\/\/)?([a-zA-Z0-9.-]+(:[a-zA-Z0-9.-]+)?@)?([a-zA-Z0-9.-]+)(:[0-9]+)?\/([a-zA-Z0-9._-]+\/)*([a-zA-Z0-9._-]+)(:[a-zA-Z0-9._-]+)?$"},
     "author_name": {
         "user_input": "{{cookiecutter.author_name}}",
         "regex": r"^[a-zA-Z](?:_?[a-zA-Z0-9]+)*$"}
@@ -53,7 +53,7 @@ def check_input_regex(cookie_input_key, cookie_input_val):
                 % (cookie_input_key, cookie_input_val["user_input"]))
 
         if cookie_input_key == "registry_project_path":
-            ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid Harbor path."
+            ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid container registry path."
                 % (cookie_input_key, cookie_input_val["user_input"]))
 
         if cookie_input_key == "author_name":
