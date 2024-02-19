@@ -27,13 +27,13 @@ After creating the remote repository, retrieve the remote URL and push
 the local repository to remote:
 
 ```bash
-$ git init
-$ git remote add origin <REMOTE_URL>
-$ git add .
-$ git config user.email "<YOUR_AISG_EMAIL>"
-$ git config user.name "<YOUR_NAME>"
-$ git commit -m "Initial commit."
-$ git push -u origin main
+git init
+git remote add origin <REMOTE_URL>
+git add .
+git config user.email "<YOUR_AISG_EMAIL>"
+git config user.name "<YOUR_NAME>"
+git commit -m "Initial commit."
+git push -u origin main
 ```
 
 Go to [this section][gitlab-page] for more information on interacting 

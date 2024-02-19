@@ -1,5 +1,17 @@
 # Virtual Environment
 
+## Local Virtual Environments
+
+While we will be making use of AI Singapore's remote infrastructure
+to carry out some workflows, we can still make use of our local
+machine to execute some of the steps of the end-to-end machine learning
+workflow. Hence, we can begin by creating a virtual environment that
+will contain all the dependencies required for this guide.
+
+```bash
+conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml
+```
+
 ## Creating Persistent `conda` Environments in the Workspace
 
 While the Docker images you will be using to run experiments on Run:ai
@@ -22,9 +34,9 @@ workspace directory:
 === "VSCode Server Terminal"
 
     ```bash
-    (base) $ conda env create \
-                -f {{cookiecutter.repo_name}}-conda-env.yaml \
-                -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}
+    conda env create \
+        -f {{cookiecutter.repo_name}}-conda-env.yaml \
+        -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}
     ```
 
 - After creating the `conda` environment, let's create a permanent
@@ -33,10 +45,10 @@ workspace directory:
 === "VSCode Server Terminal"
 
     ```bash
-    (base) $ echo 'alias {{cookiecutter.repo_name}}-conda="conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}"' >> ~/.bashrc
-    (base) $ source ~/.bashrc
-    (base) $ {{cookiecutter.repo_name}}-conda
-    ({{cookiecutter.repo_name}}) $ # conda environment has been activated
+    echo 'alias {{cookiecutter.repo_name}}-conda="conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}"' >> ~/.bashrc
+    source ~/.bashrc
+    {{cookiecutter.repo_name}}-conda
+    # conda environment has been activated as ({{cookiecutter.repo_name}})
     ```
 
 !!! tip
@@ -82,8 +94,13 @@ server to detect the `conda` environments that you would have created.
 === "VSCode Server Terminal"
 
     ```bash
-    $ conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}
-    $ conda list | grep "ipykernel"
+    conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}
+    conda list | grep "ipykernel"
+    ```
+    
+    Output should be:
+
+    ```
     ipykernel  6.25.0  pypi_0  pypi
     ```
 
@@ -126,8 +143,13 @@ JupyterLab installation the `ipython` kernel existing within your
 === "JupyterLab Terminal"
 
     ```bash
-    $ conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}
-    $ conda list | grep "ipykernel"
+    conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}
+    conda list | grep "ipykernel"
+    ```
+    
+    Output should be:
+
+    ```
     ipykernel  6.25.0  pypi_0  pypi
     ```
 
@@ -136,7 +158,7 @@ JupyterLab installation the `ipython` kernel existing within your
 === "JupyterLab Terminal"
 
     ```bash
-    $ ipython kernel install --name "{{cookiecutter.repo_name}}" --user
+    ipython kernel install --name "{{cookiecutter.repo_name}}" --user
     ```
 
 - Refresh the page.

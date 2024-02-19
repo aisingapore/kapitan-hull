@@ -54,9 +54,9 @@ A simple command to authorise access:
 
 ```bash
 # For authorisation with user account
-$ gcloud auth login
+gcloud auth login
 # For authorisation with service account
-$ gcloud auth login --cred-file=/path/to/service-account-key.json
+gcloud auth login --cred-file=/path/to/service-account-key.json
 ```
 
 With your user account, you should have access to the following GCP
@@ -544,14 +544,19 @@ for authentication. We first have to download the CLI.
 
 To verify your installation, you may run the following command:
 
- ```bash
- $ runai version
- Version: 2.XX.XX
- BuildDate: YYYY-MM-DDThh:mm:ssZ
- GitCommit: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
- GoVersion: goX.XX.X
- Compiler: gc
- ```
+```bash
+runai version
+```
+
+You should see an output similar to this:
+
+```
+Version: 2.XX.XX
+BuildDate: YYYY-MM-DDThh:mm:ssZ
+GitCommit: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GoVersion: goX.XX.X
+Compiler: gc
+```
 
 Now that the CLI has been successfully installed, you can use it to
 authenticate with the Run:ai cluster.
@@ -559,8 +564,13 @@ authenticate with the Run:ai cluster.
 === "Linux/macOS"
 
     ```bash
-    $ export KUBECONFIG=/path/to/provided/kubeconfig
-    $ runai login
+    export KUBECONFIG=/path/to/provided/kubeconfig
+    runai login
+    ```
+
+    You should see an interactive prompt similar to this:
+
+    ```
     Go to the following link in your browser:
             https://app.run.ai/auth/realms/aisingapore/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Faisingapore.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
     Enter verification code:
@@ -570,8 +580,13 @@ authenticate with the Run:ai cluster.
 === "Windows PowerShell"
 
     ```powershell
-    $ $KUBECONFIG='/path/to/provided/kubeconfig'
-    $ runai login
+    $Env:KUBECONFIG='/path/to/provided/kubeconfig'
+    runai login
+    ```
+
+    You should see an interactive prompt similar to this:
+
+    ```
     Go to the following link in your browser:
             https://app.run.ai/auth/realms/aisingapore/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Faisingapore.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
     Enter verification code:
@@ -618,7 +633,12 @@ While Harbor has its own front-end interface, one may use the Docker CLI
 to interact with the registry.
 
 ```bash
-$ docker login registry.aisingapore.net
+docker login registry.aisingapore.net
+```
+
+You should have an interactive prompt similar to this:
+
+```
 Username: <YOUR_USERNAME_HERE>
 Password:
 Login Succeeded!
@@ -729,7 +749,12 @@ To list the buckets that a profile as access to, you may run a command
 similar to the following:
 
 ```bash
-$ aws --profile profile-1 --endpoint-url="https://necs.nus.edu.sg" s3 ls
+aws --profile profile-1 --endpoint-url="https://necs.nus.edu.sg" s3 ls
+```
+
+With a similar output to this:
+
+```
 YYYY-MM-DD hh:mm:ss bucket-1
 YYYY-MM-DD hh:mm:ss bucket-2
 ```
@@ -773,7 +798,7 @@ used to store and version our Docker images. Following authorisation to
 `gcloud`, you can view the image repositories of your project's registry 
 like so:
 ```bash
-$ gcloud container images list --repository={{cookiecutter.registry_project_path}}
+gcloud container images list --repository={{cookiecutter.registry_project_path}}
 ```
 
 To push or pull images to/from Artifact Registry, you would need to
@@ -781,7 +806,7 @@ authenticate with the Google Cloud project that the registry is
 associated with. You can do so by running the following command:
 
 ```bash
-$ gcloud auth configure-docker asia-southeast1-docker.pkg.dev
+gcloud auth configure-docker asia-southeast1-docker.pkg.dev
 ```
 
 The command above will populate your Docker configuration file with
@@ -816,7 +841,7 @@ may list the contents of a bucket like so:
     team. The team is reachable at `mlops@aisingapore.org`.
 
 ```bash
-$ gsutil ls -p <GCP_PROJECT_ID> gs://<GCS_BUCKET_NAME>
+gsutil ls -p <GCP_PROJECT_ID> gs://<GCS_BUCKET_NAME>
 ```
 
 ??? info "Reference Link(s)"
@@ -876,27 +901,27 @@ MLflow Tracking server.
 === "Linux/macOS"
 
     ```bash
-    $ conda create -n mlflow-test python=3.11.7
-    $ conda activate mlflow-test
-    $ pip install mlflow==2.9.2
+    conda create -n mlflow-test python=3.11.7
+    conda activate mlflow-test
+    pip install mlflow==2.9.2
     # Install boto3 or google-cloud-storage packages if 
     # custom object storage is used
-    $ export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
-    $ export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
-    $ python src/mlflow_test.py <MLFLOW_TRACKING_URI> <NAME_OF_DEFAULT_MLFLOW_EXPERIMENT>
+    export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
+    export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
+    python src/mlflow_test.py <MLFLOW_TRACKING_URI> <NAME_OF_DEFAULT_MLFLOW_EXPERIMENT>
     ```
 
 === "Windows PowerShell"
 
     ```powershell
-    $ conda create -n mlflow-test python=3.11.7
-    $ conda activate mlflow-test
-    $ pip install mlflow==2.9.2
+    conda create -n mlflow-test python=3.11.7
+    conda activate mlflow-test
+    pip install mlflow==2.9.2
     # Install boto3 or google-cloud-storage packages if 
     # custom object storage is used
-    $ $MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
-    $ $MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
-    $ python src/mlflow_test.py <MLFLOW_TRACKING_URI> <NAME_OF_DEFAULT_MLFLOW_EXPERIMENT>
+    $MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
+    $MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
+    python src/mlflow_test.py <MLFLOW_TRACKING_URI> <NAME_OF_DEFAULT_MLFLOW_EXPERIMENT>
     ```
 
 A successful run of the script would present you with an experiment
@@ -907,15 +932,3 @@ run that looks similar to the following:
 ??? info "Reference Link(s)"
 
     - [MLflow Docs - MLflow Tracking](https://www.mlflow.org/docs/latest/tracking.html)
-
-## Local Virtual Environments
-
-While we will be making use of AI Singapore's remote infrastructure
-to carry out some workflows, we can still make use of our local
-machine to execute some of the steps of the end-to-end machine learning
-workflow. Hence, we can begin by creating a virtual environment that
-will contain all the dependencies required for this guide.
-
-```bash
-$ conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml
-```
