@@ -313,7 +313,7 @@ custom image:
 
 ## JupyterLab
 
-!!! attention
+!!! warning "Attention"
     Setting up of a JupyterLab server is optional and not needed
     as a VSCode server is sufficient as a developer workspace.
     Resources are limited so use only what you need.
