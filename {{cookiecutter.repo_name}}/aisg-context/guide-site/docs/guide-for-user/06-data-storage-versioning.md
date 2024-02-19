@@ -7,10 +7,10 @@ of following through with this template guide, let's download the
 sample data for the [sample problem statement][prob] at hand within our 
 VSCode server workspace.
 
-=== "Linux/macOS/VSCode Server Terminal"
+=== "Linux/macOS"
 
     ```bash
-    mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data && cd "$_"
+    mkdir -p ./data && cd "$_"
     wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/mnist-pngs-data-aisg.zip
     unzip mnist-pngs-data-aisg.zip
     ```
@@ -18,14 +18,18 @@ VSCode server workspace.
 === "Windows Powershell"
 
     ```powershell
-    $Env:NameOfDataSource = "<NAME_OF_DATA_SOURCE>"
-    $Env:YourHyphenatedName = "<YOUR_HYPHENATED_NAME>"
-
-    New-Item -ItemType Directory -Path "C:\$NameOfDataSource\workspaces\$YourHyphenatedName\data" -Force | Out-Null
-    Set-Location "C:\$NameOfDataSource\workspaces\$YourHyphenatedName\data"
-
+    New-Item -ItemType Directory -Force -Path "data" | Out-Null
+    Set-Location -Path "data"
     Invoke-WebRequest -Uri "https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/mnist-pngs-data-aisg.zip" -OutFile "mnist-pngs-data-aisg.zip"
-    Expand-Archive -Path "mnist-pngs-data-aisg.zip" -DestinationPath "C:\$NameOfDataSource\workspaces\$YourHyphenatedName\data"
+    Expand-Archive -Path "mnist-pngs-data-aisg.zip" -DestinationPath "."
+    ```
+
+=== "VSCode Server Terminal"
+
+    ```bash
+    mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data && cd "$_"
+    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/mnist-pngs-data-aisg.zip
+    unzip mnist-pngs-data-aisg.zip
     ```
 
 === "Run:ai YAML"
