@@ -38,30 +38,49 @@ the CLI.
 
 ## Data Preparation & Preprocessing
 
-To process the sample raw data, we will be spinning up a job on Run:ai,
-using the CLI. This job will be using a Docker image that will be built
-from a Dockerfile 
+### Local
+
+To process the sample raw data, there are many ways to do so. One way
+is to run it locally. Ensure that you have activated your Conda 
+environment before running the script. More information on this can be
+found [here][venv]. You can also update your configuration variables at
+`conf/base/logging.yaml`, specifically this section:
+
+```yaml
+process_data:
+  raw_data_dir_path: "./data/mnist-pngs-data-aisg"
+  processed_data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
+```
+
+After that, run the script:
+
+```bash
+python src/process_data.py
+```
+
+### Docker
+
+We can also run through a Docker container. This requires the Docker 
+image to be built from a Dockerfile 
 (`docker/{{cookiecutter.src_package_name}}-data-prep.Dockerfile`)
 provided in this template:
 
 === "Linux/macOS"
 
     ```bash
-    $ docker build \
+    docker build \
         -t {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
         -f docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile \
         --platform linux/amd64 .
-    $ docker push {{cookiecutter.registry_project_path}}/data-prep:0.1.0
     ```
 
 === "Windows PowerShell"
 
     ```powershell
-    $ docker build `
+    docker build `
         -t {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
         -f docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile `
         --platform linux/amd64 .
-    $ docker push {{cookiecutter.registry_project_path}}/data-prep:0.1.0
     ```
 
 === "VSCode Server Terminal"
@@ -69,7 +88,7 @@ provided in this template:
     ```bash
     # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
     # Run this in the base of your project repository, and change accordingly
-    $ khull kaniko --context $(pwd) \
+    khull kaniko --context $(pwd) \
         --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile \
         --destination {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
 {%- if cookiecutter.platform == 'gcp' %}
@@ -86,13 +105,60 @@ provided in this template:
     kubectl apply -f aisg-context/runai/04-docker-build-dataprep.yml
     ```
 
+After building the image, you can run the script through Docker:
+
+=== "Linux/macOS"
+
+    ```bash
+    docker run --rm \
+        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+        -w /home/aisg/{{cookiecutter.repo_name}} \
+        {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
+        python src/process_data.py
+    ```
+
+=== "Windows PowerShell"
+
+    ```powershell
+    docker run --rm `
+        -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
+        -w /home/aisg/{{cookiecutter.repo_name}} `
+        {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
+        python src/process_data.py
+    ```
+
+Once you are satisfied with the Docker image, you can push it to the 
+Docker registry:
+
+!!! warning "Attention"
+
+    If you're following the "VSCode Server Terminal" or "Run:ai YAML"
+    method, you can skip this as you have already pushed to the Docker
+    registry.
+
+=== "Linux/macOS"
+
+    ```bash
+    docker push {{cookiecutter.registry_project_path}}/data-prep:0.1.0
+    ```
+    
+=== "Windows PowerShell"
+
+    ```powershell
+    docker push {{cookiecutter.registry_project_path}}/data-prep:0.1.0
+    ```
+
+
+
+### Run:ai
+
 Now that we have the Docker image pushed to the registry, we can submit
 a job using that image to Run:ai\:
 
 === "Linux/macOS"
 
     ```bash
-    $ runai submit \
+    runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
         -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
         --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} \
@@ -105,7 +171,7 @@ a job using that image to Run:ai\:
 === "Windows PowerShell"
 
     ```powershell
-    $ runai submit `
+    runai submit `
         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep `
         -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
         --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} `
@@ -118,7 +184,7 @@ a job using that image to Run:ai\:
 === "VSCode Server Terminal"
 
     ```bash
-    $ runai submit \
+    runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
         -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
         --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} \
@@ -140,6 +206,8 @@ proceed with training the predictive model.
 The processed data is exported to the directory
 `/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed`.
 We will be passing this path to the model training workflows.
+
+[venv]: ./05-virtual-env.md#local-virtual-environments
 
 ## Model Training
 
