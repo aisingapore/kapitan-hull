@@ -43,8 +43,8 @@ theme:
 
 # Page Tree
 nav:
-  - Home: index.md
   - User Guide:
+    - Overview: index.md
     - Prerequisites: guide-for-user/01-prerequisites.md
     - Preface: guide-for-user/02-preface.md
     - MLOps Components & Platform: guide-for-user/03-mlops-components-platform.md
