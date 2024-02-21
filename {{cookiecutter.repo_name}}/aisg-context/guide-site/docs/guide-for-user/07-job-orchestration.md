@@ -16,25 +16,25 @@ through Run:ai's dashboard.
 ## Pipeline Configuration
 
 In this template, Hydra is the configuration framework of choice for the
-data preparation and model training pipelines (or any
-pipelines that doesn't belong to the model serving aspects).
+data preparation and model training pipelines (or any pipelines that
+doesn't belong to the model serving aspects).
 
-The configurations for logging, pipelines and hyperparameter tuning
-can be found under `conf/base`. These YAML files are then referred to
+The configurations for logging, pipelines and hyperparameter tuning can
+be found under `conf/base`. These YAML files are then referred to by
 by Hydra or general utility functions
 (`src/{{cookiecutter.src_package_name}}/general_utils.py`)
-for loading of parameters
-and configurations. The defined default values can be overridden through
-the CLI.
+for loading of parameters and configurations. The defined default 
+values can be overridden through the CLI.
 
 !!! attention
     It is recommended that you have a basic understanding of
-    [Hydra](https://hydra.cc/)'s
-    concepts before you move on.
+    [Hydra]'s concepts before you move on.
 
 ??? info "Reference Link(s)"
 
     - [Hydra Docs - Basic Override Syntax](https://hydra.cc/docs/advanced/override_grammar/basic/)
+
+[Hydra]: https://hydra.cc/
 
 ## Data Preparation & Preprocessing
 
