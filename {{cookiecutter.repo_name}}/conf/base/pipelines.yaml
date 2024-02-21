@@ -20,11 +20,11 @@ hydra:
       train_model.gamma: choice(0.7,0.8,0.9)
 
 train_model:
-  setup_mlflow: false
+  setup_mlflow: true
   mlflow_autolog: false
-  mlflow_tracking_uri: "mlflow-svc.runai.svc.local"
-  mlflow_exp_name: "experiment-01"
-  data_dir_path: "/path/to/processed/data/dir"
+  mlflow_tracking_uri: "./mlruns"
+  mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
+  data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
   no_cuda: true
   no_mps: true
   train_bs: 64
@@ -36,7 +36,7 @@ train_model:
   log_interval: 100
   dry_run: false
   model_checkpoint_interval: 2
-  model_checkpoint_dir_path: "/path/to/model/checkpoint"
+  model_checkpoint_dir_path: "./models/checkpoint"
 
 batch_infer:
   model_path: "./models/model-dir/model.pt"

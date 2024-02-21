@@ -44,7 +44,7 @@ To process the sample raw data, there are many ways to do so. One way
 is to run it locally. Ensure that you have activated your Conda 
 environment before running the script. More information on this can be
 found [here][venv]. You can also update your configuration variables at
-`conf/base/logging.yaml`, specifically this section:
+`conf/base/pipelines.yaml`, specifically this section:
 
 ```yaml
 process_data:
@@ -54,9 +54,17 @@ process_data:
 
 After that, run the script:
 
-```bash
-python src/process_data.py
-```
+=== "Linux/macOS"
+
+    ```bash
+    python src/process_data.py
+    ```
+
+=== "Windows PowerShell"
+
+    ```powershell
+    python src\process_data.py
+    ```
 
 ### Docker
 
@@ -148,8 +156,6 @@ Docker registry:
     docker push {{cookiecutter.registry_project_path}}/data-prep:0.1.0
     ```
 
-
-
 ### Run:ai
 
 Now that we have the Docker image pushed to the registry, we can submit
@@ -222,52 +228,116 @@ before we start model experimentation.
 
 ### Experiment Tracking
 
+{% if cookiecutter.platform == 'onprem' -%}
+    {%- set objstg = 'ECS' -%}
+{% elif cookiecutter.platform == 'gcp' -%}
+    {%- set objstg = 'GCS' -%}
+{% endif -%}
+
 In the module `src/{{cookiecutter.src_package_name}}/general_utils.py`,
 the functions `mlflow_init` and `mlflow_log` are used to initialise
 MLflow experiments as well as log information and artifacts relevant
-for a run to a remote MLflow Tracking server.
-An MLflow Tracking server is usually set up within the Run:ai project's
-namespace for projects that requires model experimentation.
-Artifacts logged through the MLflow API can be
-uploaded to ECS buckets, assuming the client is authorised for access 
-to ECS.
+for a run to a remote MLflow Tracking server. An MLflow Tracking server 
+is usually set up within the Run:ai project's namespace for projects 
+that requires model experimentation. Artifacts logged through the 
+MLflow API can be uploaded to {{objstg}} buckets, assuming the client 
+is authorised for access to {{objstg}}.
 
 !!! note
     The username and password for the MLflow Tracking server
     can be retrieved from the MLOps team or your team lead.
 
-To log and upload artifacts to ECS buckets through MLflow, you need to
-ensure that the client has access to the credentials of an account that
-can write to a bucket.
+To log and upload artifacts to {{objstg}} buckets through MLflow, you 
+need to ensure that the client has access to the credentials of an 
+account that can write to a bucket. This is usually settled by the 
+MLOps team, so you need only interact with MLFlow to download the 
+artifacts without explicitly knowing the {{objstg}} credentials.
 
 ??? info "Reference Link(s)"
 
     - [MLflow Docs - Tracking](https://www.mlflow.org/docs/latest/tracking.html#)
     - [MLflow Docs - Tracking (Artifact Stores)](https://www.mlflow.org/docs/latest/tracking.html#artifact-stores)
 
-### Container for Experiment Job
+### Local
 
-Before we submit a job to Run:ai to train our model, we need to build 
-the Docker image to be used for it:
+The beauty of MLFlow is that it can run locally, within a Docker 
+container or connecting to a remote MLFlow server. In this case, it is
+assumed that you are spinning up an MLFlow instance locally whenever it
+is needed.
+
+To run the model training script locally, you should have your Conda 
+environment activated from the data preparation stage, and update your
+configuration variables at `conf/base/pipelines.yaml`, especially this
+section:
+
+```yaml
+train_model:
+  setup_mlflow: true
+  mlflow_autolog: false
+  mlflow_tracking_uri: "./mlruns"
+  mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
+  data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
+  no_cuda: true
+  no_mps: true
+  train_bs: 64
+  test_bs: 1000
+  lr: 1.0
+  gamma: 0.7
+  seed: 1111
+  epochs: 3
+  log_interval: 100
+  dry_run: false
+  model_checkpoint_interval: 2
+  model_checkpoint_dir_path: "./models/checkpoint"
+```
+
+After that, run the script:
 
 === "Linux/macOS"
 
     ```bash
-    $ docker build \
-        -t {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
-        -f docker/{{cookiecutter.repo_name}}-model-training.Dockerfile \
-        --platform linux/amd64 .
-    $ docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
+    python src/train_model.py
     ```
 
 === "Windows PowerShell"
 
     ```powershell
-    $ docker build `
+    python src\train_model.py
+    ```
+
+This will generate the MLFlow logs and artifacts locally, of which you 
+can parse it with the MLFlow UI with:
+
+```bash
+conda activate mlflow-test
+mlflow server
+```
+
+and connect to http://localhost:5000.
+
+### Docker
+
+We shall build the Docker image from the Docker file 
+`docker/{{cookiecutter.repo_name}}-model-training.Dockerfile`:
+
+=== "Linux/macOS"
+
+    ```bash
+    docker build \
+        -t {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
+        -f docker/{{cookiecutter.repo_name}}-model-training.Dockerfile \
+        --platform linux/amd64 .
+    docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
+    ```
+
+=== "Windows PowerShell"
+
+    ```powershell
+    docker build `
         -t {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
         -f docker/{{cookiecutter.repo_name}}-model-training.Dockerfile `
         --platform linux/amd64 .
-    $ docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
+    docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
     ```
 
 === "VSCode Server Terminal"
@@ -275,7 +345,7 @@ the Docker image to be used for it:
     ```bash
     # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
     # Run this in the base of your project repository, and change accordingly
-    $ khull kaniko --context $(pwd) \
+    khull kaniko --context $(pwd) \
         --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-model-training.Dockerfile \
         --destination {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
 {%- if cookiecutter.platform == 'gcp' %}
@@ -291,6 +361,79 @@ the Docker image to be used for it:
     # Change the values within the file if any before running this
     kubectl apply -f aisg-context/runai/06-docker-build-modeltraining.yml
     ```
+
+After building the image, you can run the script through Docker:
+
+=== "Linux/macOS"
+
+    ```bash
+    docker run --rm \
+        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+        -v ./mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns \
+        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
+        -w /home/aisg/{{cookiecutter.repo_name}} \
+        {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
+        python src/train_model.py
+    ```
+
+=== "Windows PowerShell"
+
+    ```powershell
+    docker run --rm \
+        -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
+        -v .\mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns `
+        -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
+        -w /home/aisg/{{cookiecutter.repo_name}} `
+        {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
+        python src/train_model.py
+    ```
+
+You can run MLFlow in Docker as well with the following command:
+
+=== "Linux/macOS"
+
+    ```bash
+    docker run --rm -d \
+        -p 5000:5000
+        -v ./mlruns:/mlruns \
+        ghcr.io/mlflow/mlflow:v2.9.2 \
+        mlflow server -h 0.0.0.0
+    ```
+
+=== "Windows PowerShell"
+
+    ```powershell
+    docker run --rm -d `
+        -p 5000:5000 `
+        -v .\mlruns:/mlruns `
+        ghcr.io/mlflow/mlflow:v2.9.2 `
+        mlflow server -h 0.0.0.0
+    ```
+
+and connect to http://localhost:5000.
+
+Once you are satisfied with the Docker image, you can push it to the 
+Docker registry:
+
+!!! warning "Attention"
+
+    If you're following the "VSCode Server Terminal" or "Run:ai YAML"
+    method, you can skip this as you have already pushed to the Docker
+    registry.
+
+=== "Linux/macOS"
+
+    ```bash
+    docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
+    ```
+    
+=== "Windows PowerShell"
+
+    ```powershell
+    docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
+    ```
+
+### Run:ai
 
 Now that we have the Docker image pushed to the registry, we can run a 
 job using it:
@@ -475,10 +618,52 @@ executing the model training job out of the Run:ai platform, as the
 `JOB_NAME` and `JOB_UUID` environment variables would not be available
 by default.
 
+#### Local 
+
 === "Linux/macOS"
 
     ```bash
-    $ runai submit \
+    python src/train_model.py
+    ```
+
+=== "Windows PowerShell"
+
+    ```powershell
+    python src\train_model.py --multirun
+    ```
+
+#### Docker
+
+=== "Linux/macOS"
+
+    ```bash
+    docker run --rm \
+        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+        -v ./mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns \
+        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
+        -w /home/aisg/{{cookiecutter.repo_name}} \
+        {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
+        python src/train_model.py --multirun
+    ```
+
+=== "Windows PowerShell"
+
+    ```powershell
+    docker run --rm \
+        -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
+        -v .\mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns `
+        -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
+        -w /home/aisg/{{cookiecutter.repo_name}} `
+        {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
+        python src/train_model.py
+    ```
+    
+#### Run:ai
+
+=== "Linux/macOS"
+
+    ```bash
+    runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
@@ -494,7 +679,7 @@ by default.
 === "Windows PowerShell"
 
     ```powershell
-    $ runai submit `
+    runai submit `
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train `
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
         --working-dir /home/aisg/{{cookiecutter.repo_name}} `
@@ -510,7 +695,7 @@ by default.
 === "VSCode Server Terminal"
 
     ```bash
-    $ runai submit \
+    runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
