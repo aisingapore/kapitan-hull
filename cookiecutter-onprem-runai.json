@@ -9,6 +9,7 @@
         "orchestrator": "runai",
         "proj_name": "mlops-test",
         "registry_project_path": "registry.aisingapore.net/mlops/kapitan-hull-onprem-runai",
+        "default_problem_template": "cv",
         "author_name": "mlops"
     }
 }

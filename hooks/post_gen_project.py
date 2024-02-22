@@ -3,7 +3,7 @@ import os
 
 
 PROBLEM_TEMPLATE = "{{cookiecutter.default_problem_template}}"
-SUB_DIRS = ["src", "conf", "dockerfiles", "notebooks"]
+SUB_DIRS = ["src", "conf", "docker", "notebooks"]
 
 
 def populate_problem(problem_domain: str) -> None:
@@ -13,9 +13,10 @@ def populate_problem(problem_domain: str) -> None:
         src_dir = os.path.join(working_dir, "problem-templates", problem_domain)
         shutil.copytree(
             f"{src_dir}/{subdir}",
-            f"{working_dir}/{subdir}"
+            f"{working_dir}/{subdir}",
+            dirs_exist_ok=True
         )
-        shutil.copyfile(
+        shutil.copy2(
             f"{src_dir}/{{cookiecutter.repo_name}}-conda-env.yaml",
             f"{working_dir}/{{cookiecutter.repo_name}}-conda-env.yaml"
         )
