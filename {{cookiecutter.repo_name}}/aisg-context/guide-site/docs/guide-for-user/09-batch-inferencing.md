@@ -14,19 +14,19 @@ batch inferencing on:
 === "Linux/macOS/VSCode Server Terminal"
 
     ```bash
-    $ cd data
-    $ wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip
-    $ unzip batched-mnist-input-data.zip
-    $ rm batched-mnist-input-data.zip
+    cd data
+    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip
+    unzip batched-mnist-input-data.zip
+    rm batched-mnist-input-data.zip
     ```
 
 === "Windows PowerShell"
 
     ```powershell
-    $ cd data
-    $ wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip
-    $ Expand-Archive -Path batched-mnist-input-data.zip -DestinationPath .
-    $ rm batched-mnist-input-data.zip
+    cd data
+    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip
+    Expand-Archive -Path batched-mnist-input-data.zip -DestinationPath .
+    rm batched-mnist-input-data.zip
     ```
 
 To execute the batch inferencing script locally:
@@ -35,11 +35,11 @@ To execute the batch inferencing script locally:
 
     ```bash
     # Navigate back to root directory
-    $ cd "$(git rev-parse --show-toplevel)"
-    $ export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-    $ export PRED_MODEL_PATH="$PWD/models/$PRED_MODEL_UUID/artifacts/model/model.pt"
-    $ conda activate {{cookiecutter.repo_name}}
-    $ python src/batch_inferencing.py \
+    cd "$(git rev-parse --show-toplevel)"
+    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+    export PRED_MODEL_PATH="$PWD/models/$PRED_MODEL_UUID/artifacts/model/model.pt"
+    conda activate {{cookiecutter.repo_name}}
+    python src/batch_inferencing.py \
         batch_infer.model_path=$PRED_MODEL_PATH \
         batch_infer.input_data_dir="$PWD/data/batched-mnist-input-data"
     ```
@@ -48,11 +48,11 @@ To execute the batch inferencing script locally:
 
     ```powershell
     # Navigate back to root directory
-    $ cd "$(git rev-parse --show-toplevel)"
-    $ $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-    $ $Env:PRED_MODEL_PATH="$(Get-Location)\models\$PRED_MODEL_UUID\artifacts\model\model.pt"
-    $ conda activate {{cookiecutter.repo_name}}
-    $ python src/batch_inferencing.py `
+    cd "$(git rev-parse --show-toplevel)"
+    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+    $Env:PRED_MODEL_PATH="$(Get-Location)\models\$PRED_MODEL_UUID\artifacts\model\model.pt"
+    conda activate {{cookiecutter.repo_name}}
+    python src/batch_inferencing.py `
         hydra.job.chdir=True `
         batch_infer.model_path=$Env:PRED_MODEL_PATH `
         batch_infer.input_data_dir="$(Get-Location)\data\batched-mnist-input-data"

@@ -76,18 +76,16 @@ so:
 === "Linux/macOS"
 
     ```bash
-    $ echo -n <HARBOR_USERNAME>:<HARBOR_PASSWORD> | base64
-    <ENCODED_OUTPUT_HERE>
+    echo -n <HARBOR_USERNAME>:<HARBOR_PASSWORD> | base64
     ```
 
 === "Windows PowerShell"
 
     ```powershell
-    $ $cred = "<HARBOR_USERNAME>:<HARBOR_PASSWORD>"
-    $ $bytes = [System.Text.Encoding]::ASCII.GetBytes($cred)
-    $ $base64 = [Convert]::ToBase64String($bytes)
-    $ echo $base64
-    <ENCODED_OUTPUT_HERE>
+    $Env:cred = "<HARBOR_USERNAME>:<HARBOR_PASSWORD>"
+    $Env:bytes = [System.Text.Encoding]::ASCII.GetBytes($cred)
+    $Env:base64 = [Convert]::ToBase64String($bytes)
+    echo $base64
     ```
 
 Using the output from above, copy and paste the following content
@@ -140,10 +138,9 @@ These stages are defined and listed like so:
 
 The jobs for each of the stages are executed using Docker images 
 defined by users. For this, we have to specify in the pipeline the tag
-associated with the GitLab Runner that has the 
-[Docker executor][cicd-docker]. The `on-prem` tag calls for runners 
-within our on-premise infrastructure so on-premise services can be 
-accessed within our pipelines.
+associated with the GitLab Runner that has the [Docker executor]. The 
+`on-prem` tag calls for runners within our on-premise infrastructure so 
+on-premise services can be accessed within our pipelines.
 
 === "`.gitlab-ci.yml`"
 
@@ -154,7 +151,7 @@ accessed within our pipelines.
     ...
     ```
 
-[cicd-docker]: https://docs.gitlab.com/runner/executors/docker.html 
+[Docker executor]: https://docs.gitlab.com/runner/executors/docker.html 
 
 ## Building the Conda Environment
 

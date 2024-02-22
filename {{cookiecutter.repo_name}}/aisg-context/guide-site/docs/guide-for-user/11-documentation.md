@@ -8,9 +8,9 @@ HTML asset for the documentation:
 
 ```bash
 # From the root folder
-$ conda activate {{cookiecutter.repo_name}}
-$ sphinx-apidoc -f -o docs src
-$ sphinx-build -b html docs public
+conda activate {{cookiecutter.repo_name}}
+sphinx-apidoc -f -o docs src
+sphinx-build -b html docs public
 ```
 
 Open the file `public/index.html` with your browser and you will be
