@@ -147,7 +147,12 @@ either method to gain access to a remote VSCode developer workspace.
     === "Linux/macOS/Windows PowerShell"
 
         ```bash
-        $ runai exec <YOUR_HYPHENATED_NAME>-vscode -p {{cookiecutter.proj_name}} -- cat /home/coder/.config/code-server/config.yaml
+        runai exec <YOUR_HYPHENATED_NAME>-vscode -p {{cookiecutter.proj_name}} -- cat /home/coder/.config/code-server/config.yaml
+        ```
+        
+        Output should be similar to this:
+
+        ```
         bind-addr: 127.0.0.1:8080
         auth: password
         password: xxxxxxxxxxxxxxxxxxxxxxxx
@@ -189,7 +194,7 @@ for the PVC:
 === "VSCode Server Terminal"
 
     ```bash
-    $ ls -la / | grep "pvc"
+    ls -la / | grep "pvc"
     ```
 
 If there's no result, check with the MLOps team about this.
@@ -202,8 +207,8 @@ be persisted.
 === "VSCode Server Terminal"
 
     ```bash
-    $ cd /<PVC_LOCATION>/workspaces
-    $ mkdir <YOUR_HYPHENATED_NAME>
+    cd /<PVC_LOCATION>/workspaces
+    mkdir <YOUR_HYPHENATED_NAME>
     ```
 
 ### Git from VSCode
@@ -223,9 +228,9 @@ Now, let's clone your repository from the remote:
 === "VSCode Server Terminal"
 
     ```bash
-    $ cd /<PVC_LOCATION>/workspaces/<YOUR_HYPHENATED_NAME>
-    $ git clone <REMOTE_URL_HTTPS>
-    $ cd {{cookiecutter.repo_name}}
+    cd /<PVC_LOCATION>/workspaces/<YOUR_HYPHENATED_NAME>
+    git clone <REMOTE_URL_HTTPS>
+    cd {{cookiecutter.repo_name}}
     ```
 
 === "Run:ai YAML"
@@ -289,26 +294,26 @@ custom image:
 === "Linux/macOS"
 
     ```bash
-    $ docker build \
+    docker build \
         -t {{cookiecutter.registry_project_path}}/vscode-server-custom:0.1.0 \
         -f docker/vscode-server/vscode-server.Dockerfile \
         --platform linux/amd64 .
-    $ docker push {{cookiecutter.registry_project_path}}/vscode-server-custom:0.1.0
+    docker push {{cookiecutter.registry_project_path}}/vscode-server-custom:0.1.0
     ```
 
 === "Windows PowerShell"
 
     ```powershell
-    $ docker build `
+    docker build `
         -t {{cookiecutter.registry_project_path}}/vscode-server-custom:0.1.0 `
         -f docker/vscode-server/vscode-server.Dockerfile `
         --platform linux/amd64 .
-    $ docker push {{cookiecutter.registry_project_path}}/vscode-server-custom:0.1.0
+    docker push {{cookiecutter.registry_project_path}}/vscode-server-custom:0.1.0
     ```
 
 ## JupyterLab
 
-!!! attention
+!!! warning "Attention"
     Setting up of a JupyterLab server is optional and not needed
     as a VSCode server is sufficient as a developer workspace.
     Resources are limited so use only what you need.
@@ -378,7 +383,12 @@ following command:
 === "Linux/macOS"
 
     ```bash
-    $ runai logs <YOUR_HYPHENATED_NAME>-jupyterlab -p  {{cookiecutter.proj_name}} | grep "lab?token"
+    runai logs <YOUR_HYPHENATED_NAME>-jupyterlab -p  {{cookiecutter.proj_name}} | grep "lab?token"
+    ```
+    
+    Output should be similar to this:
+
+    ```
     [I YYYY-MM-DD hh:mm:ss ServerApp] http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     [I YYYY-MM-DD hh:mm:ss ServerApp]     http://127.0.0.1:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -388,7 +398,12 @@ following command:
 === "Windows PowerShell"
 
     ```powershell
-    $ runai logs <YOUR_HYPHENATED_NAME>-jupyterlab -p  {{cookiecutter.proj_name}} | Where-Object{$_ -match "lab?token"}
+    runai logs <YOUR_HYPHENATED_NAME>-jupyterlab -p  {{cookiecutter.proj_name}} | Where-Object{$_ -match "lab?token"}
+    ```
+    
+    Output should be similar to this:
+
+    ```
     [I YYYY-MM-DD hh:mm:ss ServerApp] http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     [I YYYY-MM-DD hh:mm:ss ServerApp]     http://127.0.0.1:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             http://<NAME_OF_WORKSPACE>-X-X:8888/lab?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -420,21 +435,21 @@ server as well as any associated files can be found under
 === "Linux/macOS"
 
     ```bash
-    $ docker build \
+    docker build \
         -t {{cookiecutter.registry_project_path}}/jupyterlab-server-custom:0.1.0 \
         -f docker/jupyterlab-server/jupyterlab-server.Dockerfile \
         --platform linux/amd64 .
-    $ docker push {{cookiecutter.registry_project_path}}/jupyterlab-server-custom:0.1.0
+    docker push {{cookiecutter.registry_project_path}}/jupyterlab-server-custom:0.1.0
     ```
 
 === "Windows PowerShell"
 
     ```powershell
-    $ docker build `
+    docker build `
         -t {{cookiecutter.registry_project_path}}/jupyterlab-server-custom:0.1.0 `
         -f docker/jupyterlab-server/jupyterlab-server.Dockerfile `
         --platform linux/amd64 .
-    $ docker push {{cookiecutter.registry_project_path}}/jupyterlab-server-custom:0.1.0
+    docker push {{cookiecutter.registry_project_path}}/jupyterlab-server-custom:0.1.0
     ```
 
 ## Using Docker within Kubernetes

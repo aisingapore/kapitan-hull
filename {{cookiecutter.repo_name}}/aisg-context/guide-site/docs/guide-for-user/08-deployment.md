@@ -42,20 +42,30 @@ Run within your VSCode server with the MLFlow Client library:
 === "Linux/macOS/VSCode Server Terminal"
 
     ```bash
-    $ export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
-    $ export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
-    $ export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
-    $ python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/<MLFLOW_RUN_UUID>/', dst_path='models/<MLFLOW_RUN_UUID')"
+    export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
+    export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
+    export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
+    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/<MLFLOW_RUN_UUID>/', dst_path='models/<MLFLOW_RUN_UUID')"
+    ```
+    
+    Output:
+
+    ```
     Downloading artifacts: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.18it/s]
     ```
 
 === "Windows PowerShell"
 
     ```powershell
-    $ $Env:MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
-    $ $Env:MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
-    $ $Env:MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
-    $ python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/<MLFLOW_RUN_UUID>/', dst_path='models/<MLFLOW_RUN_UUID')"
+    $Env:MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
+    $Env:MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
+    $Env:MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
+    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/<MLFLOW_RUN_UUID>/', dst_path='models/<MLFLOW_RUN_UUID')"
+    ```
+    
+    Output:
+    
+    ```
     Downloading artifacts: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.18it/s]
     ```
 
@@ -104,21 +114,21 @@ repository, execute the following commands:
 === "Linux/macOS/VSCode Server Terminal"
 
     ```bash
-    $ export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-    $ export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
-    $ export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
-    $ export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
-    $ python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
+    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+    export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
+    export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
+    export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
+    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
     ```
 
 === "Windows PowerShell"
 
     ```powershell
-    $ $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-    $ $Env:MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
-    $ $Env:MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
-    $ $Env:MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
-    $ python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
+    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+    $Env:MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
+    $Env:MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
+    $Env:MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
+    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
     ```
 
 Executing the commands above will download the artifacts related to the
@@ -129,13 +139,13 @@ Let's export this path to an environment variable:
 === "Linux/macOS/VSCode Server Terminal"
 
     ```bash
-    $ export PRED_MODEL_PATH="$PWD/models/$PRED_MODEL_UUID/model/model.pt"
+    export PRED_MODEL_PATH="$PWD/models/$PRED_MODEL_UUID/model/model.pt"
     ```
 
 === "Windows PowerShell"
 
     ```powershell
-    $ $Env:PRED_MODEL_PATH="$(Get-Location)\models\$Env:PRED_MODEL_UUID\artifacts\model\model.pt"
+    $Env:PRED_MODEL_PATH="$(Get-Location)\models\$Env:PRED_MODEL_UUID\artifacts\model\model.pt"
     ```
 
 The variable exported above (`PRED_MODEL_UUID` and `PRED_MODEL_PATH`)
@@ -159,9 +169,9 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org)
 === "Linux/macOS/VSCode Server Terminal"
 
     ```bash
-    $ conda activate {{cookiecutter.repo_name}}
-    $ cd src
-    $ gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP -b 0.0.0.0:8080 -w 2 -k uvicorn.workers.UvicornWorker -t 90
+    conda activate {{cookiecutter.repo_name}}
+    cd src
+    gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP -b 0.0.0.0:8080 -w 2 -k uvicorn.workers.UvicornWorker -t 90
     ```
 
     See [here][reason] as to why Gunicorn is to be used instead of just
@@ -172,9 +182,9 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org)
 === "Windows PowerShell"
 
     ```powershell
-    $ conda activate {{cookiecutter.repo_name}}
-    $ cd src
-    $ uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP
+    conda activate {{cookiecutter.repo_name}}
+    cd src
+    uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP
     ```
 
 In another terminal, use the `curl` command to submit a request to the API:
@@ -182,20 +192,30 @@ In another terminal, use the `curl` command to submit a request to the API:
 === "Linux/macOS/VSCode Server Terminal"
 
     ```bash
-    $ curl -X POST \
-    localhost:8080/api/v1/model/predict \
-    -H 'Content-Type: multipart/form-data' \
-    -F "image_file=@/path/to/image/file"
+    curl -X POST \
+        localhost:8080/api/v1/model/predict \
+        -H 'Content-Type: multipart/form-data' \
+        -F "image_file=@/path/to/image/file"
+    ```
+    
+    Output sample:
+
+    ```
     {"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
     ```
 
 === "Windows PowerShell"
 
     ```powershell
-    $ curl.exe '-X', 'POST', `
-    'localhost:8080/api/v1/model/predict', `
-    '-H', 'Content-Type: multipart/form-data', `
-    '-F', '"image_file=@\path\to\image\file"',
+    curl.exe '-X', 'POST', `
+        'localhost:8080/api/v1/model/predict', `
+        '-H', 'Content-Type: multipart/form-data', `
+        '-F', '"image_file=@\path\to\image\file"',
+    ```
+    
+    Output sample:
+
+    ```
     {"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
     ```
 
@@ -246,14 +266,14 @@ It's optional, but let's view the labour of our hard work:
 === "Linux/macOS/VSCode Server Terminal"
     
     ```bash
-    $ coder port-forward <WORKSPACE_NAME> --tcp 8080:8080
+    coder port-forward <WORKSPACE_NAME> --tcp 8080:8080
     ```
 
 === "Windows PowerShell"
 
     ```powershell
 
-    $ coder port-forward <WORKSPACE_NAME> --tcp 8080:8080
+    coder port-forward <WORKSPACE_NAME> --tcp 8080:8080
     ```
     
 And with that, our document site for our server is viewable through
