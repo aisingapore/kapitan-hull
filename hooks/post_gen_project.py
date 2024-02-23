@@ -24,6 +24,8 @@ def populate_problem(problem_domain: str) -> None:
 
 def generate_template_scripts() -> None:
 
+    global PROBLEM_TEMPLATE
+
     match PROBLEM_TEMPLATE.lower():
         case "cv":
             populate_problem("cv")
