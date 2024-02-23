@@ -3,7 +3,7 @@ import os
 
 
 PROBLEM_TEMPLATE = "{{cookiecutter.default_problem_template}}"
-SUB_DIRS = ["src", "conf", "docker", "notebooks"]
+SUB_DIRS = ["src", "conf", "notebooks"]
 
 
 def populate_problem(problem_domain: str) -> None:
