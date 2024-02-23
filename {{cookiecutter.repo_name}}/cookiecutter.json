@@ -9,7 +9,7 @@
         "orchestrator": "{{cookiecutter.orchestrator}}",
         "proj_name": "{{cookiecutter.proj_name}}",
         "registry_project_path": "{{cookiecutter.registry_project_path}}",
-        "default_problem_template": "{{cookiecutter.default_problem_template}}",
+        "problem_template": "{{cookiecutter.problem_template}}",
         "author_name": "{{cookiecutter.author_name}}"
     }
 }
