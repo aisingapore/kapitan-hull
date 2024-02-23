@@ -27,6 +27,8 @@ def generate_template_scripts() -> None:
     global PROBLEM_TEMPLATE
 
     match PROBLEM_TEMPLATE.lower():
+        case "none":
+            pass
         case "cv":
             populate_problem("cv")
         case "nlp":
@@ -34,8 +36,7 @@ def generate_template_scripts() -> None:
         case "tabular":
             populate_problem("tabular")
         case _:
-            for subdir in SUB_DIRS:
-                os.makedirs(subdir, exist_ok=True)
+            raise ValueError(f"{PROBLEM_TEMPLATE} is not a valid problem template.")
     shutil.rmtree(os.path.join(os.getcwd(), "problem-templates"))
 
 if __name__ == "__main__":
