@@ -25,11 +25,11 @@ spec:
   command:
     value: >-
       /bin/bash -c "export MLFLOW_HPTUNING_TAG=$(date +%s) && source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun
-      train_model.data_dir_path=../data/processed/mnist-pngs-data-aisg-processed
-      train_model.model_checkpoint_dir_path=./models
-      train_model.setup_mlflow=true train_model.epochs=3
-      train_model.mlflow_tracking_uri=$MLFLOW_TRACKING_URI
-      train_model.mlflow_exp_name=$MLFLOW_EXP_NAME"
+      data_dir_path=../data/processed/mnist-pngs-data-aisg-processed
+      model_checkpoint_dir_path=./models
+      setup_mlflow=true epochs=3
+      mlflow_tracking_uri=$MLFLOW_TRACKING_URI
+      mlflow_exp_name=$MLFLOW_EXP_NAME"
   workingDir:
     value: /{{cookiecutter.proj_name}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}}/{{cookiecutter.repo_name}}
   cpu:

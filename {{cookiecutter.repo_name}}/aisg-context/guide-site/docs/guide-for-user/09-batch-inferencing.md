@@ -5,7 +5,7 @@ but instead methods for conducting batched inferencing where a batch
 of data is provided to a script and it is able to churn out a set of
 predictions, perhaps exported to a file.
 
-This template provides a Python script (`src/batch_inferencing.py`) for
+This template provides a Python script (`src/batch_infer.py`) for
 this purpose.
 
 Let's first download some data on our local machine for us to conduct
@@ -39,9 +39,9 @@ To execute the batch inferencing script locally:
     export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
     export PRED_MODEL_PATH="$PWD/models/$PRED_MODEL_UUID/artifacts/model/model.pt"
     conda activate {{cookiecutter.repo_name}}
-    python src/batch_inferencing.py \
-        batch_infer.model_path=$PRED_MODEL_PATH \
-        batch_infer.input_data_dir="$PWD/data/batched-mnist-input-data"
+    python src/batch_infer.py \
+        model_path=$PRED_MODEL_PATH \
+        input_data_dir="$PWD/data/batched-mnist-input-data"
     ```
 
 === "Windows PowerShell"
@@ -52,10 +52,10 @@ To execute the batch inferencing script locally:
     $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
     $Env:PRED_MODEL_PATH="$(Get-Location)\models\$PRED_MODEL_UUID\artifacts\model\model.pt"
     conda activate {{cookiecutter.repo_name}}
-    python src/batch_inferencing.py `
+    python src/batch_infer.py `
         hydra.job.chdir=True `
-        batch_infer.model_path=$Env:PRED_MODEL_PATH `
-        batch_infer.input_data_dir="$(Get-Location)\data\batched-mnist-input-data"
+        model_path=$Env:PRED_MODEL_PATH `
+        input_data_dir="$(Get-Location)\data\batched-mnist-input-data"
     ```
 
 The script will log to the terminal the location of the

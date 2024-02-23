@@ -12,7 +12,7 @@ import {{cookiecutter.src_package_name}} as {{cookiecutter.src_package_name_shor
 
 
 # pylint: disable = no-value-for-parameter
-@hydra.main(version_base=None, config_path="../conf/base", config_name="pipelines.yaml")
+@hydra.main(version_base=None, config_path="../conf", config_name="process_data.yaml")
 def main(args):
     """This function processes raw MNIST images and saves them in the processed data directory.
 
@@ -21,13 +21,12 @@ def main(args):
     args : omegaconf.DictConfig
         An omegaconf.DictConfig object containing arguments for the main function.
     """
-    args = args["process_data"]
 
     logger = logging.getLogger(__name__)
     logger.info("Setting up logging configuration.")
     {{cookiecutter.src_package_name_short}}.general_utils.setup_logging(
         logging_config_path=os.path.join(
-            hydra.utils.get_original_cwd(), "conf/base/logging.yaml"
+            hydra.utils.get_original_cwd(), "conf/logging.yaml"
         )
     )
 

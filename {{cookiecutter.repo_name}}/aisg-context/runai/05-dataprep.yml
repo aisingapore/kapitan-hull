@@ -17,8 +17,8 @@ spec:
   command:
     value: >-
       /bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py 
-      process_data.raw_data_dir_path=../data/mnist-pngs-data-aisg
-      process_data.processed_data_dir_path=../data/processed/mnist-pngs-data-aisg-processed"
+      raw_data_dir_path=../data/mnist-pngs-data-aisg
+      processed_data_dir_path=../data/processed/mnist-pngs-data-aisg-processed"
   workingDir:
     value: /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}}/{{cookiecutter.repo_name}}
   cpu:

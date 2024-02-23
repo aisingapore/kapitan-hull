@@ -14,7 +14,7 @@ import {{cookiecutter.src_package_name}} as {{cookiecutter.src_package_name_shor
 
 
 # pylint: disable = no-value-for-parameter
-@hydra.main(version_base=None, config_path="../conf/base", config_name="pipelines.yaml")
+@hydra.main(version_base=None, config_path="../conf", config_name="batch_infer.yaml")
 def main(args):
     """This main function does the following:
     - load logging config
@@ -24,12 +24,11 @@ def main(args):
     - outputs prediction results to a jsonline file
     - returns an error if there are no files/data specified to be inferred
     """
-    args = args["batch_infer"]
 
     logger = logging.getLogger(__name__)
     logger.info("Setting up logging configuration.")
     logger_config_path = os.path.join(
-        hydra.utils.get_original_cwd(), "conf/base/logging.yaml"
+        hydra.utils.get_original_cwd(), "conf/logging.yaml"
     )
     {{cookiecutter.src_package_name_short}}.general_utils.setup_logging(logger_config_path)
 

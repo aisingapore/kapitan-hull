@@ -1,0 +1,6 @@
+model_path: "./models/model-dir/model.pt"
+input_data_dir: "./data/batch-infer-data-dir"
+output_path: "batch_infer_res.jsonl"
+file_check_glob: "*.png"
+use_cuda: false
+use_mps: false

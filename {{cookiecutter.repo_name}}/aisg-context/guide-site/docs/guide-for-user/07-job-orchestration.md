@@ -20,7 +20,7 @@ data preparation and model training pipelines (or any pipelines that
 doesn't belong to the model serving aspects).
 
 The configurations for logging, pipelines and hyperparameter tuning can
-be found under `conf/base`. These YAML files are then referred to by
+be found under the `conf` folder. These YAML files are then referred to 
 by Hydra or general utility functions
 (`src/{{cookiecutter.src_package_name}}/general_utils.py`)
 for loading of parameters and configurations. The defined default 
@@ -44,12 +44,11 @@ To process the sample raw data, there are many ways to do so. One way
 is to run it locally. Ensure that you have activated your Conda 
 environment before running the script. More information on this can be
 found [here][venv]. You can also update your configuration variables at
-`conf/base/pipelines.yaml`, specifically this section:
+`conf/process_data.yaml`, specifically this section:
 
 ```yaml
-process_data:
-  raw_data_dir_path: "./data/mnist-pngs-data-aisg"
-  processed_data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
+raw_data_dir_path: "./data/mnist-pngs-data-aisg"
+processed_data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
 ```
 
 After that, run the script:
@@ -171,7 +170,7 @@ a job using that image to Run:ai\:
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
         --cpu 2 \
         --memory 4G \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py process_data.raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg process_data.processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
     ```
 
 === "Windows PowerShell"
@@ -184,7 +183,7 @@ a job using that image to Run:ai\:
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> `
         --cpu 2 `
         --memory 4G `
-        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/process_data.py process_data.raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg process_data.processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed'"
+        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed'"
     ```
 
 === "VSCode Server Terminal"
@@ -197,7 +196,7 @@ a job using that image to Run:ai\:
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
         --cpu 2 \
         --memory 4G \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py process_data.raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg process_data.processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
     ```
 
 === "Run:ai YAML"
@@ -267,28 +266,27 @@ is needed.
 
 To run the model training script locally, you should have your Conda 
 environment activated from the data preparation stage, and update your
-configuration variables at `conf/base/pipelines.yaml`, especially this
+configuration variables at `conf/train_model.yaml`, especially this
 section:
 
 ```yaml
-train_model:
-  setup_mlflow: true
-  mlflow_autolog: false
-  mlflow_tracking_uri: "./mlruns"
-  mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
-  data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
-  no_cuda: true
-  no_mps: true
-  train_bs: 64
-  test_bs: 1000
-  lr: 1.0
-  gamma: 0.7
-  seed: 1111
-  epochs: 3
-  log_interval: 100
-  dry_run: false
-  model_checkpoint_interval: 2
-  model_checkpoint_dir_path: "./models/checkpoint"
+setup_mlflow: true
+mlflow_autolog: false
+mlflow_tracking_uri: "./mlruns"
+mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
+data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
+no_cuda: true
+no_mps: true
+train_bs: 64
+test_bs: 1000
+lr: 1.0
+gamma: 0.7
+seed: 1111
+epochs: 3
+log_interval: 100
+dry_run: false
+model_checkpoint_interval: 2
+model_checkpoint_dir_path: "./models/checkpoint"
 ```
 
 After that, run the script:
@@ -450,7 +448,7 @@ job using it:
         --memory 4G \
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
     ```
 
 === "Windows PowerShell"
@@ -465,7 +463,7 @@ job using it:
         --memory 4G `
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> `
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> `
-        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3'"
+        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3'"
     ```
 
 === "VSCode Server Terminal"
@@ -480,7 +478,7 @@ job using it:
         --memory 4G \
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
     ```
 
 === "Run:ai YAML"
@@ -543,7 +541,7 @@ use-cases. Its features includes:
 In addition, Hydra has a plugin for utilising Optuna which further
 translates to ease of configuration. To use Hydra's plugin for Optuna,
 we have to provide further overrides within the YAML config, and this is
-observed in `conf/base/pipelines.yaml`:
+observed in `conf/train_model.yaml`:
 
 ```yaml
 defaults:
@@ -592,7 +590,7 @@ different files that we have to pay attention to.
 ...
 ```
 
-`conf/base/pipelines.yaml`
+`conf/train_model.yaml`
 ```yaml
 ...
     direction: ["minimize", "maximize"]
@@ -673,7 +671,7 @@ by default.
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
     ```
 
 === "Windows PowerShell"
@@ -689,7 +687,7 @@ by default.
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> `
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> `
         -e MLFLOW_HPTUNING_TAG=$(Get-Date -UFormat %s -Millisecond 0) `
-        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3'"
+        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3'"
     ```
 
 === "VSCode Server Terminal"
@@ -705,7 +703,7 @@ by default.
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
     ```
 
 === "Run:ai YAML"
