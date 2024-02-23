@@ -70,7 +70,7 @@ After that, run the script:
 
 We can also run through a Docker container. This requires the Docker 
 image to be built from a Dockerfile 
-(`docker/{{cookiecutter.src_package_name}}-data-prep.Dockerfile`)
+(`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
 provided in this template:
 
 === "Linux/macOS"
@@ -78,7 +78,7 @@ provided in this template:
     ```bash
     docker build \
         -t {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
-        -f docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile \
+        -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile \
         --platform linux/amd64 .
     ```
 
@@ -87,7 +87,7 @@ provided in this template:
     ```powershell
     docker build `
         -t {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
-        -f docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile `
+        -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile `
         --platform linux/amd64 .
     ```
 
@@ -97,7 +97,7 @@ provided in this template:
     # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
     # Run this in the base of your project repository, and change accordingly
     khull kaniko --context $(pwd) \
-        --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile \
+        --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-cpu.Dockerfile \
         --destination {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
 {%- if cookiecutter.platform == 'gcp' %}
         --gcp \
@@ -318,14 +318,14 @@ and connect to http://localhost:5000.
 ### Docker
 
 We shall build the Docker image from the Docker file 
-`docker/{{cookiecutter.repo_name}}-model-training.Dockerfile`:
+`docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
 
 === "Linux/macOS"
 
     ```bash
     docker build \
         -t {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
-        -f docker/{{cookiecutter.repo_name}}-model-training.Dockerfile \
+        -f docker/{{cookiecutter.repo_name}}-gpu.Dockerfile \
         --platform linux/amd64 .
     docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
     ```
@@ -335,7 +335,7 @@ We shall build the Docker image from the Docker file
     ```powershell
     docker build `
         -t {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
-        -f docker/{{cookiecutter.repo_name}}-model-training.Dockerfile `
+        -f docker/{{cookiecutter.repo_name}}-gpu.Dockerfile `
         --platform linux/amd64 .
     docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
     ```
@@ -346,7 +346,7 @@ We shall build the Docker image from the Docker file
     # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
     # Run this in the base of your project repository, and change accordingly
     khull kaniko --context $(pwd) \
-        --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-model-training.Dockerfile \
+        --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-gpu.Dockerfile \
         --destination {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
 {%- if cookiecutter.platform == 'gcp' %}
         --gcp \

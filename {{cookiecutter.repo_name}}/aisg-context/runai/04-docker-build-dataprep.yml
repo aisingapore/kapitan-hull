@@ -32,7 +32,7 @@ spec:
 {% endif %}
       /kaniko/executor
       --context .
-      --dockerfile ./docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile
+      --dockerfile ./docker/{{cookiecutter.repo_name}}-cpu.Dockerfile
       --destination {{cookiecutter.registry_project_path}}/data-prep:runai-yaml-build"
   workingDir:
     value: /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}}/{{cookiecutter.repo_name}}
