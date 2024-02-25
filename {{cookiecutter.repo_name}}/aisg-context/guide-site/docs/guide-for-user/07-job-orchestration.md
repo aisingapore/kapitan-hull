@@ -325,7 +325,6 @@ We shall build the Docker image from the Docker file
         -t {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
         -f docker/{{cookiecutter.repo_name}}-gpu.Dockerfile \
         --platform linux/amd64 .
-    docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
     ```
 
 === "Windows PowerShell"
@@ -335,7 +334,6 @@ We shall build the Docker image from the Docker file
         -t {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
         -f docker/{{cookiecutter.repo_name}}-gpu.Dockerfile `
         --platform linux/amd64 .
-    docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
     ```
 
 === "VSCode Server Terminal"
