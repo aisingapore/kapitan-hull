@@ -83,3 +83,12 @@ $ cookiecutter --replay-file cookiecutter.json \
 Following the creation of your repository, initialise it with Git, push 
 it to a remote, and follow its `README.md` document for a full guide on 
 its usage.
+
+## Note on AMD GPUs
+
+Those who plan to use AMD GPUs and RoCM can check the `rocm` folder and
+copy the contents into the `{{cookiecutter.repo_name}}` folder before 
+populating your template. This is experimental, so official support for 
+this should not be expected any time soon. This is also not added to
+the main template to reduce the confusion of having multiple file 
+variants for the users.
