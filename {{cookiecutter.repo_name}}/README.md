@@ -33,6 +33,9 @@ Inputs provided to `cookiecutter` for the generation of this template:
 - __`orchestrator`:__ {{cookiecutter.orchestrator}}
 - __`proj_name`:__ {{cookiecutter.proj_name}}
 - __`registry_project_path`:__ {{cookiecutter.registry_project_path}}
+{% if cookiecutter.problem_template != 'none' -%}
+- __`problem_template`:__ {{cookiecutter.problem_template}}
+{% endif -%}
 - __`author_name`:__ {{cookiecutter.author_name}}
 
 [ccutter]: https://cookiecutter.readthedocs.io/en/stable/

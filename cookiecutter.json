@@ -30,7 +30,7 @@
         "proj_name": "proj_name - The project name used in by the repository. If you're using Run:AI, this will be the Run:AI project name used by the repository.",
         "registry_project_path": "registry_project_path - Path of the registry repository for your container images to be located under. Cannot end with a slash character.",
 		"problem_template": {
-            "__prompt__": "problem_template - Initialise the repository with a default problem statement, only accepts 'cv', 'nlp', 'tabular', no source codes will be populated for any other values.",
+            "__prompt__": "problem_template - Initialise the repository with a default problem statement.",
             "none": "none - No template used",
             "cv": "cv - Computer Vision (MNIST with Pytorch)",
             "nlp": "nlp - Natural Language Processing (not implemented yet)",
