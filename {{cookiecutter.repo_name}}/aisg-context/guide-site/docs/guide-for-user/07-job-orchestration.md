@@ -56,6 +56,10 @@ After that, run the script:
 === "Linux/macOS"
 
     ```bash
+    # Add no_cuda=False at the end to enable GPU use.
+    # Make sure you have installed CUDA/RoCM before using.
+    # Check that LD_LIBRARY_PATH has been set.
+    # Also set HIP_VISIBLE_DEVICES=0 if RoCM is used.
     python src/process_data.py
     ```
 
@@ -117,11 +121,12 @@ After building the image, you can run the script through Docker:
 === "Linux/macOS"
 
     ```bash
+    sudo chown 2222:2222 ./data
     docker run --rm \
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
         -w /home/aisg/{{cookiecutter.repo_name}} \
         {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
-        python src/process_data.py
+        bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py"
     ```
 
 === "Windows PowerShell"
@@ -131,7 +136,7 @@ After building the image, you can run the script through Docker:
         -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
         -w /home/aisg/{{cookiecutter.repo_name}} `
         {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
-        python src/process_data.py
+        bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py"
     ```
 
 Once you are satisfied with the Docker image, you can push it to the 
@@ -363,13 +368,17 @@ After building the image, you can run the script through Docker:
 === "Linux/macOS"
 
     ```bash
+    sudo chown 2222:2222 ./mlruns ./models
+    # Add --gpus=all for Nvidia GPUs in front of the image name
+    # Add --device=/dev/kfd --device=/dev/dri --group-add video for AMD GPUs in front of the image name
+    # Add no_cuda=false to use GPUs behind the image name
     docker run --rm \
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
         -v ./mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns \
         -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
         -w /home/aisg/{{cookiecutter.repo_name}} \
         {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
-        python src/train_model.py
+        bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py"
     ```
 
 === "Windows PowerShell"
@@ -381,7 +390,7 @@ After building the image, you can run the script through Docker:
         -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
         -w /home/aisg/{{cookiecutter.repo_name}} `
         {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
-        python src/train_model.py
+        bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py"
     ```
 
 You can run MLFlow in Docker as well with the following command:
@@ -437,7 +446,7 @@ job using it:
 === "Linux/macOS"
 
     ```bash
-    $ runai submit \
+    runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
@@ -452,7 +461,7 @@ job using it:
 === "Windows PowerShell"
 
     ```powershell
-    $ runai submit `
+    runai submit `
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train `
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
         --working-dir /home/aisg/{{cookiecutter.repo_name}} `
