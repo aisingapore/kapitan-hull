@@ -28,7 +28,7 @@ def classify_image(image_file: fastapi.UploadFile):
 
     Returns
     -------
-    dict
+    result_dict : dict
         Dictionary containing the file name and prediction for the image.
 
     Raises
