@@ -8,7 +8,7 @@
     "orchestrator": ["runai", "polyaxon", "none"],
     "proj_name": "sample-project",
     "registry_project_path": "registry.domain.tld/sample-project/my-project",
-	"problem_template": ["none", "cv", "nlp", "tabular"],
+	"problem_template": ["base", "cv", "nlp", "tabular"],
     "author_name": "AISG",
     "__prompts__": {
         "project_name": "project_name - Name of project that will be the header for the README.md. Input to start with alphabet. Only whitespace as separators.",
@@ -31,7 +31,7 @@
         "registry_project_path": "registry_project_path - Path of the registry repository for your container images to be located under. Cannot end with a slash character.",
 		"problem_template": {
             "__prompt__": "problem_template - Initialise the repository with a default problem statement.",
-            "none": "none - No template used",
+            "base": "base - Base template with no model packages",
             "cv": "cv - Computer Vision (MNIST with Pytorch)",
             "nlp": "nlp - Natural Language Processing (not implemented yet)",
             "tabular": "tabular - Tabular data (not implemented yet)"

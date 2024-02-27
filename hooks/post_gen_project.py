@@ -26,7 +26,7 @@ def generate_template_scripts() -> None:
     PROBLEM_TEMPLATE = "{{cookiecutter.problem_template}}"
 
     match PROBLEM_TEMPLATE:
-        case "none":
+        case "base":
             pass
         case "cv":
             populate_problem("cv")
