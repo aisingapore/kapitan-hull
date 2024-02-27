@@ -60,7 +60,7 @@ def classify_image(image_file: fastapi.UploadFile):
         )
 
     except Exception as error:
-        print(error)
+        logger.error(error)
         raise fastapi.HTTPException(status_code=500, detail="Internal server error.")
 
     finally:
