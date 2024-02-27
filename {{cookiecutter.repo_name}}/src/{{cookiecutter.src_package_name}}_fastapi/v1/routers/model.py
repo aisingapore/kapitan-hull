@@ -41,7 +41,7 @@ def predict(data: str):
         pred_str = PRED_MODEL.predict(data)
 
         result_dict["data"].append(
-            "input": pred_str
+            {"input": pred_str}
         )
         logger.info("Input: %s", data)
 
