@@ -71,7 +71,7 @@ def classify_image(image_file: fastapi.UploadFile):
 
 
 @ROUTER.get("/version", status_code=fastapi.status.HTTP_200_OK)
-def get_model_version():
+def model_version():
     """Get version (UUID) of predictive model used for the API.
 
     Returns
