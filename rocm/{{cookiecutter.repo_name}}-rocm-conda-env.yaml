@@ -1,4 +1,4 @@
-name: {{cookiecutter.repo_name}}
+name: {{cookiecutter.repo_name}}-rocm
 channels:
   - defaults
   - pytorch
