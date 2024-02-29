@@ -25,7 +25,7 @@ def main(args):
     logger.info("Setting up logging configuration.")
     {{cookiecutter.src_package_name_short}}.general_utils.setup_logging(
         logging_config_path=os.path.join(
-            hydra.utils.get_original_cwd(), "conf/logging.yaml"
+            hydra.utils.get_original_cwd(), "conf", "logging.yaml"
         )
     )
 
@@ -50,6 +50,18 @@ def main(args):
         artifact_file="train_model_config.json",
     )
 
+    artifact_path = os.path.join(
+        args["artifact_dir_path"], "output.txt"
+    )
+    with open(artifact_path, "w") as f:
+        f.write('\n'.join([f'{x}: {args[x]}' for x in args]))
+    {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
+        mlflow_init_status,
+        "log_artifact",
+        local_path=artifact_path,
+        artifact_path="."
+    )
+
     if mlflow_init_status:
         artifact_uri = mlflow.get_artifact_uri()
         logger.info("Artifact URI: %s", artifact_uri)
@@ -63,6 +75,10 @@ def main(args):
         mlflow.end_run()
     else:
         logger.info("Model training has completed.")
+
+    # Outputs for conf/train_model.yaml for hydra.sweeper.direction
+    return args["dummy_param1"], args["dummy_param2"]
+
 
 if __name__ == "__main__":
     main()

@@ -26,7 +26,7 @@ def main(args):
     logger = logging.getLogger(__name__)
     logger.info("Setting up logging configuration.")
     logger_config_path = os.path.join(
-        hydra.utils.get_original_cwd(), "conf/logging.yaml"
+        hydra.utils.get_original_cwd(), "conf", "logging.yaml"
     )
     {{cookiecutter.src_package_name_short}}.general_utils.setup_logging(logger_config_path)
 

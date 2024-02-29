@@ -14,7 +14,7 @@ PRED_MODEL = {{cookiecutter.src_package_name_short}}_fapi.deps.PRED_MODEL
 
 
 @ROUTER.post("/predict", status_code=fastapi.status.HTTP_200_OK)
-def predict(data: str):
+def predict(data: str = fastapi.Body()):
     """Endpoint that returns the input as-is.
 
     Parameters

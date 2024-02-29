@@ -26,7 +26,7 @@ def main(args):
     logger.info("Setting up logging configuration.")
     {{cookiecutter.src_package_name_short}}.general_utils.setup_logging(
         logging_config_path=os.path.join(
-            hydra.utils.get_original_cwd(), "conf/logging.yaml"
+            hydra.utils.get_original_cwd(), "conf", "logging.yaml"
         )
     )
 
@@ -130,6 +130,7 @@ def main(args):
     else:
         logger.info("Model training has completed.")
 
+    # Outputs for conf/train_model.yaml for hydra.sweeper.direction
     return curr_test_loss, curr_test_accuracy
 
 
