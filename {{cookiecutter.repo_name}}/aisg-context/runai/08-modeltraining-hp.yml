@@ -25,9 +25,7 @@ spec:
   command:
     value: >-
       /bin/bash -c "export MLFLOW_HPTUNING_TAG=$(date +%s) && source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun
-      data_dir_path=../data/processed/mnist-pngs-data-aisg-processed
-      model_checkpoint_dir_path=./models
-      setup_mlflow=true epochs=3
+      data_dir_path=../data/processed
       mlflow_tracking_uri=$MLFLOW_TRACKING_URI
       mlflow_exp_name=$MLFLOW_EXP_NAME"
   workingDir:

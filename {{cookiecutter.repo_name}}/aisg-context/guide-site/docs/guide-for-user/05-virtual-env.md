@@ -2,10 +2,7 @@
 
 ## Local Virtual Environments
 
-While we will be making use of AI Singapore's remote infrastructure
-to carry out some workflows, we can still make use of our local
-machine to execute some of the steps of the end-to-end machine learning
-workflow. Hence, we can begin by creating a virtual environment that
+We can begin by creating a virtual environment that
 will contain all the dependencies required for this guide.
 
 ```bash
@@ -14,11 +11,8 @@ conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml
 
 ## Creating Persistent `conda` Environments in the Workspace
 
-While the Docker images you will be using to run experiments on Run:ai
-would contain the `conda` environments you would need, you can also
-create these virtual environments within your development environment,
-and have it be persisted. The following set of commands allows you to
-create the `conda` environment and store the packages within your own
+The following set of commands allows you to create the `conda` 
+environment and store the packages within your own
 workspace directory:
 
 - First, have VSCode open the repository that you have cloned

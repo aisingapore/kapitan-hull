@@ -14,10 +14,10 @@ batch inferencing on:
 === "Linux/macOS/VSCode Server Terminal"
 
     ```bash
-    cd data
-    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip
-    unzip batched-mnist-input-data.zip
-    rm batched-mnist-input-data.zip
+    mkdir -p data/batch-infer && cd $_
+    echo -n "Output1" > in1.txt
+    echo -n "Output2" > in2.txt
+    echo -n "Output3" > in3.txt
     ```
 
 === "Windows PowerShell"
@@ -36,26 +36,17 @@ To execute the batch inferencing script locally:
     ```bash
     # Navigate back to root directory
     cd "$(git rev-parse --show-toplevel)"
-    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-    export PRED_MODEL_PATH="$PWD/models/$PRED_MODEL_UUID/artifacts/model/model.pt"
     conda activate {{cookiecutter.repo_name}}
-    python src/batch_infer.py \
-        model_path=$PRED_MODEL_PATH \
-        input_data_dir="$PWD/data/batched-mnist-input-data"
+    python src/batch_infer.py
     ```
 
 === "Windows PowerShell"
 
     ```powershell
     # Navigate back to root directory
-    cd "$(git rev-parse --show-toplevel)"
-    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-    $Env:PRED_MODEL_PATH="$(Get-Location)\models\$PRED_MODEL_UUID\artifacts\model\model.pt"
+    Set-Location -Path (git rev-parse --show-toplevel)
     conda activate {{cookiecutter.repo_name}}
-    python src/batch_infer.py `
-        hydra.job.chdir=True `
-        model_path=$Env:PRED_MODEL_PATH `
-        input_data_dir="$(Get-Location)\data\batched-mnist-input-data"
+    python src/batch_infer.py
     ```
 
 The script will log to the terminal the location of the
@@ -64,11 +55,9 @@ look like such:
 
 ```jsonl
 ...
-{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
-{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
-{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
-{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
-{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
+{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in1.txt", "prediction": "Output1"}
+{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in2.txt", "prediction": "Output2"}
+{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in3.txt", "prediction": "Output3"}
 ...
 ```
 
