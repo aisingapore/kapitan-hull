@@ -4,20 +4,20 @@ import os
 
 def populate_problem(problem_domain: str) -> None:
 
-    SUB_DIRS = ["src", "conf", "notebooks"]
+    SUB_DIRS = ["src", "conf", "notebooks", "aisg-context"]
 
     for subdir in SUB_DIRS:
 
         working_dir = os.getcwd()
         src_dir = os.path.join(working_dir, "problem-templates", problem_domain)
         shutil.copytree(
-            f"{src_dir}/{subdir}",
-            f"{working_dir}/{subdir}",
+            os.path.join(src_dir, subdir),
+            os.path.join(working_dir, subdir),
             dirs_exist_ok=True
         )
         shutil.copy2(
-            f"{src_dir}/{{cookiecutter.repo_name}}-conda-env.yaml",
-            f"{working_dir}/{{cookiecutter.repo_name}}-conda-env.yaml"
+            os.path.join(src_dir, "{{cookiecutter.repo_name}}-conda-env.yaml"),
+            os.path.join(working_dir, "{{cookiecutter.repo_name}}-conda-env.yaml")
         )
 
 
@@ -76,6 +76,12 @@ def remove_redundant_files() -> None:
             if not (PLATFORM in x and ORCH in x
         )]
     
+    # Remove runai yaml files if ORCH != runai
+    RUNAI_YAML_PATH = os.path.join(
+        os.getcwd(), "aisg-context", "runai"
+    )
+    if ORCH != 'runai':
+        shutil.rmtree(RUNAI_YAML_PATH)
 
 if __name__ == "__main__":
     generate_template_scripts()
