@@ -4,9 +4,14 @@ An advantage presented by orchestration platforms is that you can
 utilise the Kubernetes cluster's resources for your development and
 engineering works instead of your own resources.
 
-We can make use of either [Coder][coder] or 
-[Run:ai workspaces][runai-wksp] to spin up VSCode or JupyterLab servers 
-with which cluster resources can be dedicated.
+We can make use of 
+{% if cookiecutter.orchestrator == 'runai' -%}
+either [Coder][coder] or [Run:ai workspaces][runai-wksp] 
+{% else -%}
+[Coder][coder]
+{% endif -%}
+to spin up VSCode or JupyterLab servers with which cluster resources 
+can be dedicated.
 
 While there exist the option for engineers to set up either a VSCode or
 JupyterLab service (or both), the former would suffice. Reason being
@@ -17,6 +22,7 @@ notebooks, has subpar UX for its terminal and code editor. That is to
 be expected however as it is dedicated to the Jupyter ecosystem.
 
 [coder]: https://coder.com/
+{% if cookiecutter.orchestrator == 'runai' -%}
 [runai-wksp]: https://docs.run.ai/v2.13/Researcher/user-interface/workspaces/overview/
 
 ## Workspace Building Blocks
@@ -38,6 +44,7 @@ you may create your own which in turn can be used by other users.
 Do refer to Run:ai's documentation on more information for each of
 these building blocks.
 
+{% endif -%}
 ## VSCode
 
 ### Prebuilt VSCode Server
