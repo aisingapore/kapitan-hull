@@ -6,7 +6,7 @@ of data is provided to a script and it is able to churn out a set of
 predictions, perhaps exported to a file.
 
 This template provides a Python script (`src/batch_infer.py`) and a 
-configuration file (`conf/batch_infer.yaml`) for this purpose. There's 
+configuration file (`conf/batch_infer.yaml`) for this purpose. 
 
 Let's first download some data on our local machine for us to conduct
 batch inferencing on:
