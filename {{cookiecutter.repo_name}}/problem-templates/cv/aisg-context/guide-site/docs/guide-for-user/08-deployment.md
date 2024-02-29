@@ -20,12 +20,12 @@ our REST API. Popular examples include [Flask], [Django] and
 
 ## Model Artifacts
 
-{% if cookiecutter.platform == 'gcp' -%}
+{% if cookiecutter.platform == 'onprem' -%}
     {%- set objstg = 'ECS' -%}
     {%- set cli = 'AWS' -%}
-{% elif cookiecutter.platform == 'onprem' -%}
+{% elif cookiecutter.platform == 'gcp' -%}
     {%- set objstg = 'GCS' -%}
-    {%- set cli = 'gcloud' -%}
+    {%- set cli = 'gCloud' -%}
 {% endif -%}
 
 Seen in ["Model Training"][train], we have the trained models uploaded
@@ -41,9 +41,10 @@ autolog). With that, we have the following pointers to take note of:
       {{objstg}}. Artifacts for specific runs will be uploaded to a 
       directory with a convention similar to the following:
       `<MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/<MLFLOW_RUN_UUID>/artifacts`.
-- Alternatively, we can utilise the MLFlow Client library to retrieve 
-  the predictive model. This model can then be propagated into a 
-  mounted volume when we run the Docker image for the REST APIs.
+    - Alternatively, we can utilise the MLFlow Client library to 
+      retrieve the predictive model. This model can then be propagated 
+      into a mounted volume when we run the Docker image for the REST 
+      APIs. __We will be recommending this method in this guide.__
 
 ## Model Serving (FastAPI)
 
