@@ -9,7 +9,7 @@
         "orchestrator": "runai",
         "proj_name": "test-proj",
         "registry_project_path": "asia-southeast1-docker.pkg.dev/infratest-311303/mlops",
-        "default_problem_template": "cv",
+        "problem_template": "cv",
         "author_name": "mlops"
     }
 }
