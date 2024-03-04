@@ -10,7 +10,6 @@ class DummyDataset():
     def __init__(self, data_dir_path) -> None:
         if not os.path.isdir(data_dir_path):
             e = "Path is not a directory, or does not exist: {}".format(data_dir_path)
-            logger.error(e)
             raise ValueError(e)
         self.data_dir_path = data_dir_path
 

@@ -168,10 +168,11 @@ a job using that image to Run:ai\:
 === "Linux/macOS"
 
     ```bash
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
         -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
-        --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} \
+        --working-dir /home/aisg/{{cookiecutter.repo_name}} \
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
         --cpu 2 \
         --memory 4G \
@@ -181,10 +182,11 @@ a job using that image to Run:ai\:
 === "Windows PowerShell"
 
     ```powershell
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit `
         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep `
         -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
-        --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} `
+        --working-dir /home/aisg/{{cookiecutter.repo_name}} `
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> `
         --cpu 2 `
         --memory 4G `
@@ -194,10 +196,11 @@ a job using that image to Run:ai\:
 === "VSCode Server Terminal"
 
     ```bash
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
         -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
-        --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} \
+        --working-dir /home/aisg/{{cookiecutter.repo_name}} \
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
         --cpu 2 \
         --memory 4G \
@@ -432,6 +435,7 @@ job using it:
 === "Linux/macOS"
 
     ```bash
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
@@ -447,6 +451,7 @@ job using it:
 === "Windows PowerShell"
 
     ```powershell
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit `
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train `
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
@@ -462,6 +467,7 @@ job using it:
 === "VSCode Server Terminal"
 
     ```bash
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     $ runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
@@ -654,6 +660,7 @@ by default.
 === "Linux/macOS"
 
     ```bash
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
@@ -670,6 +677,7 @@ by default.
 === "Windows PowerShell"
 
     ```powershell
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit `
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train `
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
@@ -686,6 +694,7 @@ by default.
 === "VSCode Server Terminal"
 
     ```bash
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
