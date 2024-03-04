@@ -5,7 +5,7 @@ import os
 import logging
 import omegaconf
 import hydra
-import mlflow_test
+import mlflow
 
 import {{cookiecutter.src_package_name}} as {{cookiecutter.src_package_name_short}}
 
