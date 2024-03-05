@@ -59,7 +59,7 @@ def main(args):
         mlflow_init_status,
         "log_artifact",
         local_path=artifact_path,
-        artifact_path="."
+        artifact_path="outputs"
     )
 
     if mlflow_init_status:
