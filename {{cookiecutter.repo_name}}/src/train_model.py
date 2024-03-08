@@ -50,6 +50,7 @@ def main(args):
         artifact_file="train_model_config.json",
     )
 
+    os.makedirs(args["artifact_dir_path"], exist_ok=True)
     artifact_path = os.path.join(
         args["artifact_dir_path"], "output.txt"
     )

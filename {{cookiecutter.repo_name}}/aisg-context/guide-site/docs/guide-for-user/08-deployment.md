@@ -88,6 +88,7 @@ repository, execute the following commands:
 === "Linux/macOS/VSCode Server Terminal"
 
     ```bash
+    conda activate mlflow-test
     export MODEL_UUID=<MLFLOW_RUN_UUID>
     export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
     export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME> # If applicable
@@ -98,12 +99,17 @@ repository, execute the following commands:
 === "Windows PowerShell"
 
     ```powershell
+    conda activate mlflow-test
     $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
     $Env:MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
     $Env:MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME> # If applicable
     $Env:MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD> # If applicable
     python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
     ```
+
+!!! warning "Attention"
+    The `mlflow-test` conda environment should have been created while
+    [testing your MLFlow server](./03-mlops-components-platform/#logging-to-tracking-server).
 
 Executing the commands above will download the artifacts related to the
 experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 

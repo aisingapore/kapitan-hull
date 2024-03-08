@@ -445,7 +445,7 @@ job using it:
         --memory 4G \
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT>"'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"'
     ```
 
 === "Windows PowerShell"
@@ -461,7 +461,7 @@ job using it:
         --memory 4G `
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> `
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> `
-        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT>'"
+        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models mlflow_tracking_uri=<MLFLOW_TRACKING_URI>'"
     ```
 
 === "VSCode Server Terminal"
@@ -477,7 +477,7 @@ job using it:
         --memory 4G \
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT>"'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"'
     ```
 
 === "Run:ai YAML"
@@ -671,7 +671,7 @@ by default.
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun"'
+        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models mlflow_tracking_uri=<MLFLOW_TRACKING_URI>'"
     ```
 
 === "Windows PowerShell"
@@ -688,7 +688,7 @@ by default.
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> `
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> `
         -e MLFLOW_HPTUNING_TAG=$(Get-Date -UFormat %s -Millisecond 0) `
-        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT>'"
+        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models mlflow_tracking_uri=<MLFLOW_TRACKING_URI>'"
     ```
 
 === "VSCode Server Terminal"
@@ -705,7 +705,7 @@ by default.
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT>"'
+        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models mlflow_tracking_uri=<MLFLOW_TRACKING_URI>'"
     ```
 
 === "Run:ai YAML"
