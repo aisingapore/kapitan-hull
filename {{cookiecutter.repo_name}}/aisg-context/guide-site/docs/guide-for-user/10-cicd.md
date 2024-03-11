@@ -298,12 +298,12 @@ that builds a Docker image:
         - >-
           /kaniko/executor
           --context "${CI_PROJECT_DIR}"
-          --dockerfile "${CI_PROJECT_DIR}/docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile"
+          --dockerfile "${CI_PROJECT_DIR}/docker/{{cookiecutter.repo_name}}-cpu.Dockerfile"
           --destination "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA}"
       rules:
         - if: $CI_MERGE_REQUEST_IID
           changes:
-            - docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile
+            - docker/{{cookiecutter.repo_name}}-cpu.Dockerfile
             - src/**/*
             - conf/**/*
         - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

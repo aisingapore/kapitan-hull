@@ -17,9 +17,18 @@ COOKIE_INPUTS = {
     "src_package_name_short": {
         "user_input": "{{cookiecutter.src_package_name_short}}",
         "regex": r"^[a-z](?:_?[a-z0-9]+)*$"},
+    "platform": {
+        "user_input": "{{cookiecutter.platform}}",
+        "avail": ["onprem", "gcp"]},
+    "orchestrator": {
+        "user_input": "{{cookiecutter.orchestrator}}",
+        "avail": ["runai"]},
     "registry_project_path": {
         "user_input": "{{cookiecutter.registry_project_path}}",
         "regex": r"^(https?:\/\/)?([a-zA-Z0-9.-]+(:[a-zA-Z0-9.-]+)?@)?([a-zA-Z0-9.-]+)(:[0-9]+)?\/([a-zA-Z0-9._-]+\/)*([a-zA-Z0-9._-]+)(:[a-zA-Z0-9._-]+)?$"},
+    "problem_template": {
+        "user_input": "{{cookiecutter.problem_template}}",
+        "avail": ["base", "cv"]},
     "author_name": {
         "user_input": "{{cookiecutter.author_name}}",
         "regex": r"^[a-zA-Z](?:_?[a-zA-Z0-9]+)*$"}
@@ -30,6 +39,8 @@ ERROR_MSG_LIST = []
 
 def check_input_length(cookie_input_key, cookie_input_val):
 
+    global ERROR_MSG_LIST
+
     input_val = cookie_input_val["user_input"].strip()
     if len(input_val) not in range(1, 73):
         ERROR_MSG_LIST.append("ERROR: %s - '%s' is not of valid length (1 to 72)."
@@ -38,41 +49,53 @@ def check_input_length(cookie_input_key, cookie_input_val):
 
 def check_input_regex(cookie_input_key, cookie_input_val):
 
+    global ERROR_MSG_LIST
+
     if not re.match(cookie_input_val["regex"], cookie_input_val["user_input"]):
+        match cookie_input_key:
+            case "project_name":
+                ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid project name. Please use only alphanumeric characters."
+                    % (cookie_input_key, cookie_input_val["user_input"]))
+            case "repo_name":
+                ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid repository name. Only alphanumeric characters and hyphens are permitted."
+                    % (cookie_input_key, cookie_input_val["user_input"]))
+            case "src_package_name" | "src_package_name_short":
+                ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid Python package name."
+                    % (cookie_input_key, cookie_input_val["user_input"]))
+            case "registry_project_path":
+                ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid container registry path."
+                    % (cookie_input_key, cookie_input_val["user_input"]))
+            case "author_name":
+                ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid name."
+                    % (cookie_input_key, cookie_input_val["user_input"]))
 
-        if cookie_input_key == "project_name":
-            ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid project name. Please use only alphanumeric characters."
-                % (cookie_input_key, cookie_input_val["user_input"]))
 
-        if cookie_input_key == "repo_name":
-            ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid repository name. Only alphanumeric characters and hyphens are permitted."
-                % (cookie_input_key, cookie_input_val["user_input"]))
+def check_not_implemented(cookie_input_key, cookie_input_val):
+    
+    global ERROR_MSG_LIST
 
-        if cookie_input_key in ["src_package_name", "src_package_name_short"]:
-            ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid Python package name."
-                % (cookie_input_key, cookie_input_val["user_input"]))
-
-        if cookie_input_key == "registry_project_path":
-            ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid container registry path."
-                % (cookie_input_key, cookie_input_val["user_input"]))
-
-        if cookie_input_key == "author_name":
-            ERROR_MSG_LIST.append("ERROR: %s - '%s' is not a valid name."
-                % (cookie_input_key, cookie_input_val["user_input"]))
+    if cookie_input_val["user_input"] not in cookie_input_val["avail"]:
+        ERROR_MSG_LIST.append("ERROR: %s - '%s' has not been implemented."
+            % (cookie_input_key, cookie_input_val["user_input"]))
 
 
 def check_cookiecutter_inputs():
 
-    for cookie_input_key, cookie_input_val in COOKIE_INPUTS.items():
+    global COOKIE_INPUTS
+    global ERROR_MSG_LIST
 
+    for cookie_input_key, cookie_input_val in COOKIE_INPUTS.items():
         check_input_length(cookie_input_key, cookie_input_val)
         if "regex" in cookie_input_val:
             check_input_regex(cookie_input_key, cookie_input_val)
+        if "avail" in cookie_input_val:
+            check_not_implemented(cookie_input_key, cookie_input_val)
 
     if len(ERROR_MSG_LIST) > 0:
-
         for error_msg in ERROR_MSG_LIST:
             print(error_msg)
         sys.exit(1)
 
-check_cookiecutter_inputs()
+
+if __name__ == "__main__":
+    check_cookiecutter_inputs()

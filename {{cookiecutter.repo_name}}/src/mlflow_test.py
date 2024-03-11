@@ -31,7 +31,7 @@ def main():
             mlflow.log_metric("dummy_metric_2", random.uniform(0.1, 0.5), step=step)
             time.sleep(2)
 
-        dummy_text_content = "This text content should be uploaded to the ECS bucket."
+        dummy_text_content = "This text content should be uploaded to the bucket."
         with open("text_artifact.txt", "w", encoding="utf-8") as file:
             file.write(dummy_text_content)
         mlflow.log_artifact("text_artifact.txt")

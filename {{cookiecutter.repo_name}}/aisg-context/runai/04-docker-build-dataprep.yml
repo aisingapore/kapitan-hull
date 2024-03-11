@@ -14,7 +14,7 @@ spec:
         value: SECRET:gcp-sa-credentials,gcp-service-account.json
       GOOGLE_APPLICATION_CREDENTIALS:
         value: /kaniko/config.json
-{% endif %}
+{%- endif %}
   name:
     value: {{cookiecutter.author_name.replace('_', '-')}}-build-dataprep
   image: 
@@ -29,10 +29,10 @@ spec:
       echo $HARBOR_ROBOT_CREDS_JSON > /kaniko/.docker/config.json; 
 {%- elif cookiecutter.platform == 'gcp' %}
       echo $SA_CREDENTIALS > $GOOGLE_APPLICATION_CREDENTIALS; 
-{% endif %}
+{%- endif %}
       /kaniko/executor
       --context .
-      --dockerfile ./docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile
+      --dockerfile ./docker/{{cookiecutter.repo_name}}-cpu.Dockerfile
       --destination {{cookiecutter.registry_project_path}}/data-prep:runai-yaml-build"
   workingDir:
     value: /{{cookiecutter.proj_name.replace('_', '-')}}-pvc/workspaces/{{cookiecutter.author_name.replace('_', '-')}}/{{cookiecutter.repo_name}}

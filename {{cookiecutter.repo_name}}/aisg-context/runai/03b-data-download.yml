@@ -19,11 +19,12 @@ spec:
     # to your project needs.
     value: >-
       /bin/sh -c "
-      mkdir -p workspaces/$WORKSPACE_NAME/data && 
-      cd workspaces/$WORKSPACE_NAME/data &&
+      mkdir -p workspaces/$WORKSPACE_NAME/data/raw && 
+      cd workspaces/$WORKSPACE_NAME/data/raw &&
       echo Moved to $(pwd) &&
-      wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/mnist-pngs-data-aisg.zip &&
-      unzip mnist-pngs-data-aisg.zip &&
+      echo "Test1" > data1.txt &&
+      echo "Test2" > data2.txt &&
+      echo "Test3" > data3.txt &&
       chown -R 2222:2222 ."
   workingDir:
     value: /{{cookiecutter.proj_name.replace('_', '-')}}-pvc

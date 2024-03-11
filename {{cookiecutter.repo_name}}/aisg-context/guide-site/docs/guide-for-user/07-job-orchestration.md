@@ -20,7 +20,7 @@ data preparation and model training pipelines (or any pipelines that
 doesn't belong to the model serving aspects).
 
 The configurations for logging, pipelines and hyperparameter tuning can
-be found under `conf/base`. These YAML files are then referred to by
+be found under the `conf` folder. These YAML files are then referred to 
 by Hydra or general utility functions
 (`src/{{cookiecutter.src_package_name}}/general_utils.py`)
 for loading of parameters and configurations. The defined default 
@@ -44,12 +44,11 @@ To process the sample raw data, there are many ways to do so. One way
 is to run it locally. Ensure that you have activated your Conda 
 environment before running the script. More information on this can be
 found [here][venv]. You can also update your configuration variables at
-`conf/base/pipelines.yaml`, specifically this section:
+`conf/process_data.yaml`, specifically this section:
 
 ```yaml
-process_data:
-  raw_data_dir_path: "./data/mnist-pngs-data-aisg"
-  processed_data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
+raw_data_dir_path: "./data/raw"
+processed_data_dir_path: "./data/processed"
 ```
 
 After that, run the script:
@@ -57,6 +56,10 @@ After that, run the script:
 === "Linux/macOS"
 
     ```bash
+    # Add no_cuda=False at the end to enable GPU use.
+    # Make sure you have installed CUDA/RoCM before using.
+    # Check that LD_LIBRARY_PATH has been set.
+    # Also set HIP_VISIBLE_DEVICES=0 if RoCM is used.
     python src/process_data.py
     ```
 
@@ -70,7 +73,7 @@ After that, run the script:
 
 We can also run through a Docker container. This requires the Docker 
 image to be built from a Dockerfile 
-(`docker/{{cookiecutter.src_package_name}}-data-prep.Dockerfile`)
+(`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
 provided in this template:
 
 === "Linux/macOS"
@@ -78,7 +81,7 @@ provided in this template:
     ```bash
     docker build \
         -t {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
-        -f docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile \
+        -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile \
         --platform linux/amd64 .
     ```
 
@@ -87,7 +90,7 @@ provided in this template:
     ```powershell
     docker build `
         -t {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
-        -f docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile `
+        -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile `
         --platform linux/amd64 .
     ```
 
@@ -97,7 +100,7 @@ provided in this template:
     # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
     # Run this in the base of your project repository, and change accordingly
     khull kaniko --context $(pwd) \
-        --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-data-prep.Dockerfile \
+        --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-cpu.Dockerfile \
         --destination {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
 {%- if cookiecutter.platform == 'gcp' %}
         --gcp \
@@ -118,11 +121,12 @@ After building the image, you can run the script through Docker:
 === "Linux/macOS"
 
     ```bash
+    sudo chown 2222:2222 ./data
     docker run --rm \
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
         -w /home/aisg/{{cookiecutter.repo_name}} \
         {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
-        python src/process_data.py
+        bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py"
     ```
 
 === "Windows PowerShell"
@@ -132,7 +136,7 @@ After building the image, you can run the script through Docker:
         -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
         -w /home/aisg/{{cookiecutter.repo_name}} `
         {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
-        python src/process_data.py
+        bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py"
     ```
 
 Once you are satisfied with the Docker image, you can push it to the 
@@ -164,40 +168,43 @@ a job using that image to Run:ai\:
 === "Linux/macOS"
 
     ```bash
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
         -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
-        --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} \
+        --working-dir /home/aisg/{{cookiecutter.repo_name}} \
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
         --cpu 2 \
         --memory 4G \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py process_data.raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg process_data.processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed"'
     ```
 
 === "Windows PowerShell"
 
     ```powershell
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit `
         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep `
         -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
-        --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} `
+        --working-dir /home/aisg/{{cookiecutter.repo_name}} `
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> `
         --cpu 2 `
         --memory 4G `
-        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/process_data.py process_data.raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg process_data.processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed'"
+        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed'"
     ```
 
 === "VSCode Server Terminal"
 
     ```bash
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
         -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
-        --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} \
+        --working-dir /home/aisg/{{cookiecutter.repo_name}} \
         --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
         --cpu 2 \
         --memory 4G \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py process_data.raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg process_data.processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed"'
     ```
 
 === "Run:ai YAML"
@@ -210,7 +217,7 @@ a job using that image to Run:ai\:
 After some time, the data processing job should conclude and we can
 proceed with training the predictive model.
 The processed data is exported to the directory
-`/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed`.
+`/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed`.
 We will be passing this path to the model training workflows.
 
 [venv]: ./05-virtual-env.md#local-virtual-environments
@@ -243,11 +250,7 @@ that requires model experimentation. Artifacts logged through the
 MLflow API can be uploaded to {{objstg}} buckets, assuming the client 
 is authorised for access to {{objstg}}.
 
-!!! note
-    The username and password for the MLflow Tracking server
-    can be retrieved from the MLOps team or your team lead.
-
-To log and upload artifacts to {{objstg}} buckets through MLflow, you 
+To log and upload artifacts to {{objstg}} buckets through MLFlow, you 
 need to ensure that the client has access to the credentials of an 
 account that can write to a bucket. This is usually settled by the 
 MLOps team, so you need only interact with MLFlow to download the 
@@ -267,28 +270,17 @@ is needed.
 
 To run the model training script locally, you should have your Conda 
 environment activated from the data preparation stage, and update your
-configuration variables at `conf/base/pipelines.yaml`, especially this
+configuration variables at `conf/train_model.yaml`, especially this
 section:
 
 ```yaml
-train_model:
-  setup_mlflow: true
-  mlflow_autolog: false
-  mlflow_tracking_uri: "./mlruns"
-  mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
-  data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
-  no_cuda: true
-  no_mps: true
-  train_bs: 64
-  test_bs: 1000
-  lr: 1.0
-  gamma: 0.7
-  seed: 1111
-  epochs: 3
-  log_interval: 100
-  dry_run: false
-  model_checkpoint_interval: 2
-  model_checkpoint_dir_path: "./models/checkpoint"
+setup_mlflow: true
+mlflow_autolog: false
+mlflow_tracking_uri: "./mlruns"
+mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
+data_dir_path: "./data/processed"
+dummy_param1: 1.3
+dummy_param2: 0.8
 ```
 
 After that, run the script:
@@ -318,16 +310,15 @@ and connect to http://localhost:5000.
 ### Docker
 
 We shall build the Docker image from the Docker file 
-`docker/{{cookiecutter.repo_name}}-model-training.Dockerfile`:
+`docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
 
 === "Linux/macOS"
 
     ```bash
     docker build \
         -t {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
-        -f docker/{{cookiecutter.repo_name}}-model-training.Dockerfile \
+        -f docker/{{cookiecutter.repo_name}}-gpu.Dockerfile \
         --platform linux/amd64 .
-    docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
     ```
 
 === "Windows PowerShell"
@@ -335,9 +326,8 @@ We shall build the Docker image from the Docker file
     ```powershell
     docker build `
         -t {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
-        -f docker/{{cookiecutter.repo_name}}-model-training.Dockerfile `
+        -f docker/{{cookiecutter.repo_name}}-gpu.Dockerfile `
         --platform linux/amd64 .
-    docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
     ```
 
 === "VSCode Server Terminal"
@@ -346,7 +336,7 @@ We shall build the Docker image from the Docker file
     # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
     # Run this in the base of your project repository, and change accordingly
     khull kaniko --context $(pwd) \
-        --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-model-training.Dockerfile \
+        --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-gpu.Dockerfile \
         --destination {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
 {%- if cookiecutter.platform == 'gcp' %}
         --gcp \
@@ -367,13 +357,17 @@ After building the image, you can run the script through Docker:
 === "Linux/macOS"
 
     ```bash
+    sudo chown 2222:2222 ./mlruns ./models
+    # Add --gpus=all for Nvidia GPUs in front of the image name
+    # Add --device=/dev/kfd --device=/dev/dri --group-add video for AMD GPUs in front of the image name
+    # Add no_cuda=false to use GPUs behind the image name
     docker run --rm \
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
         -v ./mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns \
         -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
         -w /home/aisg/{{cookiecutter.repo_name}} \
         {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
-        python src/train_model.py
+        bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py"
     ```
 
 === "Windows PowerShell"
@@ -385,7 +379,7 @@ After building the image, you can run the script through Docker:
         -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
         -w /home/aisg/{{cookiecutter.repo_name}} `
         {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
-        python src/train_model.py
+        bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py"
     ```
 
 You can run MLFlow in Docker as well with the following command:
@@ -441,7 +435,8 @@ job using it:
 === "Linux/macOS"
 
     ```bash
-    $ runai submit \
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
+    runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
@@ -450,13 +445,14 @@ job using it:
         --memory 4G \
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"'
     ```
 
 === "Windows PowerShell"
 
     ```powershell
-    $ runai submit `
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
+    runai submit `
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train `
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
         --working-dir /home/aisg/{{cookiecutter.repo_name}} `
@@ -465,12 +461,13 @@ job using it:
         --memory 4G `
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> `
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> `
-        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3'"
+        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models mlflow_tracking_uri=<MLFLOW_TRACKING_URI>'"
     ```
 
 === "VSCode Server Terminal"
 
     ```bash
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     $ runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
@@ -480,7 +477,7 @@ job using it:
         --memory 4G \
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
+        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"'
     ```
 
 === "Run:ai YAML"
@@ -543,7 +540,7 @@ use-cases. Its features includes:
 In addition, Hydra has a plugin for utilising Optuna which further
 translates to ease of configuration. To use Hydra's plugin for Optuna,
 we have to provide further overrides within the YAML config, and this is
-observed in `conf/base/pipelines.yaml`:
+observed in `conf/train_model.yaml`:
 
 ```yaml
 defaults:
@@ -560,8 +557,8 @@ hydra:
     n_trials: 3
     n_jobs: 1
     params:
-      train_model.lr: range(0.9,1.7,step=0.1)
-      train_model.gamma: choice(0.7,0.8,0.9)
+      dummy_param1: range(0.9,1.7,step=0.1)
+      dummy_param2: choice(0.7,0.8,0.9)
 ```
 
 These fields are used by the Optuna Sweeper plugin to configure the
@@ -588,11 +585,11 @@ different files that we have to pay attention to.
 `src/train_model.py`
 ```python
 ...
-    return curr_test_loss, curr_test_accuracy
+    return args["dummy_param1"], args["dummy_param2"]
 ...
 ```
 
-`conf/base/pipelines.yaml`
+`conf/train_model.yaml`
 ```yaml
 ...
     direction: ["minimize", "maximize"]
@@ -663,6 +660,7 @@ by default.
 === "Linux/macOS"
 
     ```bash
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
@@ -673,12 +671,13 @@ by default.
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
+        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models mlflow_tracking_uri=<MLFLOW_TRACKING_URI>'"
     ```
 
 === "Windows PowerShell"
 
     ```powershell
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit `
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train `
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
@@ -689,12 +688,13 @@ by default.
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> `
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> `
         -e MLFLOW_HPTUNING_TAG=$(Get-Date -UFormat %s -Millisecond 0) `
-        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3'"
+        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models mlflow_tracking_uri=<MLFLOW_TRACKING_URI>'"
     ```
 
 === "VSCode Server Terminal"
 
     ```bash
+    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
@@ -705,7 +705,7 @@ by default.
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun train_model.data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed train_model.setup_mlflow=true train_model.mlflow_tracking_uri=<MLFLOW_TRACKING_URI> train_model.mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> train_model.model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models train_model.epochs=3"'
+        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models mlflow_tracking_uri=<MLFLOW_TRACKING_URI>'"
     ```
 
 === "Run:ai YAML"

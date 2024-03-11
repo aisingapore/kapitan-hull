@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 def setup_logging(
-    logging_config_path="./conf/base/logging.yaml", default_level=logging.INFO
+    logging_config_path="./conf/logging.yaml", default_level=logging.INFO
 ):
     """Set up configuration for logging utilities.
 

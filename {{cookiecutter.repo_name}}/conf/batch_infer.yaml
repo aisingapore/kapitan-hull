@@ -1,0 +1,8 @@
+# model_path: "./models/model.pt"
+input_data_dir: "./data/batch-infer"
+output_path: "batch_infer_res.jsonl"
+file_check_glob: "*.txt"
+
+hydra:
+  job:
+    chdir: False

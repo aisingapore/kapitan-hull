@@ -20,57 +20,31 @@ our REST API. Popular examples include [Flask], [Django] and
 
 ## Model Artifacts
 
+{% if cookiecutter.platform == 'onprem' -%}
+    {%- set objstg = 'ECS' -%}
+    {%- set cli = 'AWS' -%}
+{% elif cookiecutter.platform == 'gcp' -%}
+    {%- set objstg = 'GCS' -%}
+    {%- set cli = 'gCloud' -%}
+{% endif -%}
+
 Seen in ["Model Training"][train], we have the trained models uploaded
-to ECS through the MLflow Tracking server (done through autolog). With 
-that, we have the following pointers to take note of:
+to {{objstg}} through the MLflow Tracking server (done through 
+autolog). With that, we have the following pointers to take note of:
 
 - By default, each MLflow experiment run is given a unique ID.
-- When artifacts are uploaded to ECS through MLflow, the artifacts are
-  located within directories named after the unique IDs of the runs.
-- Artifacts for specific runs will be uploaded to a directory with a
-  convention similar to the following:
-  `<MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/<MLFLOW_RUN_UUID>/artifacts`.
-- With this path/URI, we can use the AWS CLI to download the predictive
-  model from ECS. Alternatively, we can utilise the MLFlow Client
-  library to retrieve the predictive model. This model can then be
-  propagated into a mounted volume when we run the Docker image for
-  the REST APIs.
-
-Here's how you can quickly retrieve the artifact of a specific MLflow
-Run within your VSCode server with the MLFlow Client library:
-
-=== "Linux/macOS/VSCode Server Terminal"
-
-    ```bash
-    export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
-    export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
-    export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
-    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/<MLFLOW_RUN_UUID>/', dst_path='models/<MLFLOW_RUN_UUID')"
-    ```
-    
-    Output:
-
-    ```
-    Downloading artifacts: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.18it/s]
-    ```
-
-=== "Windows PowerShell"
-
-    ```powershell
-    $Env:MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
-    $Env:MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
-    $Env:MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
-    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/<MLFLOW_RUN_UUID>/', dst_path='models/<MLFLOW_RUN_UUID')"
-    ```
-    
-    Output:
-    
-    ```
-    Downloading artifacts: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.18it/s]
-    ```
-
-Now that we have established on how we are to obtain a specific model 
-for the API server, let's look into the servers themselves.
+- When artifacts are uploaded to {{objstg}} through MLflow, the 
+  artifacts are located within directories named after the unique IDs 
+  of the runs.
+- There are two ways to download the artifacts:
+    - We can use the {{cli}} CLI to download the predictive model from 
+      {{objstg}}. Artifacts for specific runs will be uploaded to a 
+      directory with a convention similar to the following:
+      `<MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/<MLFLOW_RUN_UUID>/artifacts`.
+    - Alternatively, we can utilise the MLFlow Client library to 
+      retrieve the predictive model. This model can then be propagated 
+      into a mounted volume when we run the Docker image for the REST 
+      APIs. __We will be recommending this method in this guide.__
 
 [train]: ./07-job-orchestration.md#model-training
 
@@ -114,44 +88,36 @@ repository, execute the following commands:
 === "Linux/macOS/VSCode Server Terminal"
 
     ```bash
-    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+    conda activate mlflow-test
+    export MODEL_UUID=<MLFLOW_RUN_UUID>
     export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
-    export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
-    export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
-    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
+    export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME> # If applicable
+    export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD> # If applicable
+    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
     ```
 
 === "Windows PowerShell"
 
     ```powershell
-    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+    conda activate mlflow-test
+    $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
     $Env:MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
-    $Env:MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
-    $Env:MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD>
-    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
+    $Env:MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME> # If applicable
+    $Env:MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD> # If applicable
+    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
     ```
+
+!!! warning "Attention"
+    The `mlflow-test` conda environment should have been created while
+    [testing your MLFlow server](./03-mlops-components-platform/#logging-to-tracking-server).
 
 Executing the commands above will download the artifacts related to the
-experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory `models`. However, the specific subdirectory that is relevant for our modules to load will be
-`./models/<MLFLOW_RUN_UUID>/model/model.pt`.
-Let's export this path to an environment variable:
+experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 
+`models`. However, the specific subdirectory that is relevant for our 
+modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
 
-=== "Linux/macOS/VSCode Server Terminal"
-
-    ```bash
-    export PRED_MODEL_PATH="$PWD/models/$PRED_MODEL_UUID/model/model.pt"
-    ```
-
-=== "Windows PowerShell"
-
-    ```powershell
-    $Env:PRED_MODEL_PATH="$(Get-Location)\models\$Env:PRED_MODEL_UUID\artifacts\model\model.pt"
-    ```
-
-The variable exported above (`PRED_MODEL_UUID` and `PRED_MODEL_PATH`)
-will be used by the FastAPI server to load the model for prediction. We
-will get back to this in a bit. For now, let's proceed and spin up an
-inference server using the package that exists within the repository.
+Now, let's proceed and spin up an inference server using the package 
+that exists within the repository.
 
 [beginner tutorials]: https://fastapi.tiangolo.com/tutorial/
 
@@ -194,14 +160,14 @@ In another terminal, use the `curl` command to submit a request to the API:
     ```bash
     curl -X POST \
         localhost:8080/api/v1/model/predict \
-        -H 'Content-Type: multipart/form-data' \
-        -F "image_file=@/path/to/image/file"
+        -H 'Content-Type: application/json' \
+        -d '"string"'
     ```
     
     Output sample:
 
     ```
-    {"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
+    {"data":[{"input":"string"}]}
     ```
 
 === "Windows PowerShell"
@@ -210,13 +176,13 @@ In another terminal, use the `curl` command to submit a request to the API:
     curl.exe '-X', 'POST', `
         'localhost:8080/api/v1/model/predict', `
         '-H', 'Content-Type: multipart/form-data', `
-        '-F', '"image_file=@\path\to\image\file"',
+        '-d', '"string"',
     ```
     
     Output sample:
 
     ```
-    {"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
+    {"data":[{"input":"string"}]}
     ```
 
 With the returned JSON object, we have successfully submitted a request
@@ -233,8 +199,7 @@ data and schema validation, as well as [settings management]. There's a
 class called `Settings` under the module
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
 contains several fields: some are defined and some others not. The 
-fields `PRED_MODEL_UUID` and `PRED_MODEL_PATH` inherit their values 
-from the environment variables.
+field `MODEL_UUID` inherit their values from the environment variables.
 
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
 ```python
@@ -243,12 +208,9 @@ class Settings(pydantic_settings.BaseSettings):
 
     API_NAME: str = "{{cookiecutter.src_package_name}}_fastapi"
     API_V1_STR: str = "/api/v1"
-    LOGGER_CONFIG_PATH: str = "../conf/base/logging.yaml"
+    LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"
 
-    USE_CUDA: bool = False
-    USE_MPS: bool = False
-    PRED_MODEL_UUID: str
-    PRED_MODEL_PATH: str
+    MODEL_UUID: str
 ...
 ```
 
@@ -259,7 +221,7 @@ server. You can view the documentation through
 
 It's optional, but let's view the labour of our hard work:
 
-> The following steps assumes you have installed coder on your machine.
+> The following steps assumes you have installed `coder` on your machine.
 > Else, follow the installation steps [here](https://coder.com/docs/v2/latest/install#install-coder)
 > and login via `coder login <CODER_URL>`
 

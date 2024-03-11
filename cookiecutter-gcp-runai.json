@@ -7,8 +7,9 @@
         "src_package_name_short": "khgr_test",
         "platform": "gcp",
         "orchestrator": "runai",
-        "proj_name": "mlops-test",
-        "registry_project_path": "registry.aisingapore.net/mlops/kapitan-hull-gcp-runai",
+        "proj_name": "test-proj",
+        "registry_project_path": "asia-southeast1-docker.pkg.dev/infratest-311303/mlops",
+        "problem_template": "cv",
         "author_name": "mlops"
     }
 }
