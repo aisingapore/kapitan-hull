@@ -85,7 +85,8 @@ def check_cookiecutter_inputs():
     global ERROR_MSG_LIST
 
     for cookie_input_key, cookie_input_val in COOKIE_INPUTS.items():
-        check_input_length(cookie_input_key, cookie_input_val)
+        if cookie_input_key != 'registry_project_path':
+            check_input_length(cookie_input_key, cookie_input_val)
         if "regex" in cookie_input_val:
             check_input_regex(cookie_input_key, cookie_input_val)
         if "avail" in cookie_input_val:
