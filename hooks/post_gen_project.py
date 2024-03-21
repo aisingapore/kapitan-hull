@@ -4,21 +4,9 @@ import os
 
 def populate_problem(problem_domain: str) -> None:
 
-    SUB_DIRS = ["src", "conf", "notebooks", "aisg-context"]
-
-    for subdir in SUB_DIRS:
-
-        working_dir = os.getcwd()
-        src_dir = os.path.join(working_dir, "problem-templates", problem_domain)
-        shutil.copytree(
-            os.path.join(src_dir, subdir),
-            os.path.join(working_dir, subdir),
-            dirs_exist_ok=True
-        )
-        shutil.copy2(
-            os.path.join(src_dir, "{{cookiecutter.repo_name}}-conda-env.yaml"),
-            os.path.join(working_dir, "{{cookiecutter.repo_name}}-conda-env.yaml")
-        )
+    working_dir = os.getcwd()
+    src_dir = os.path.join(working_dir, "problem-templates", problem_domain)
+    shutil.copytree(src_dir, working_dir, dirs_exist_ok=True)
 
 
 def generate_template_scripts() -> None:
