@@ -326,6 +326,16 @@ and connect to http://localhost:5000.
 We shall build the Docker image from the Docker file 
 `docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
 
+!!! warning "Attention"
+
+    If you're only using CPUs for training, then you can just use
+    `docker/{{cookiecutter.repo_name}}-cpu.Dockerfile` instead for
+    smaller image size.  
+    If you're using AMD GPUs for training, you can copy the components
+    from the [`rocm`][rocm] folder in the Kapitan Hull repository.
+
+[rocm]: https://github.com/aisingapore/kapitan-hull/tree/main/rocm
+
 === "Linux/macOS"
 
     ```bash

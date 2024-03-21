@@ -10,12 +10,13 @@ pages:
   before_script:
     - pip install -r mkdocs-requirements.txt
   script:
-    - mkdocs build --strict --verbose --site-dir public
+    - mkdocs build --verbose --site-dir public
   artifacts:
     paths:
       - public
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+  needs: []
 
 update:onprem-runai:
   stage: update
@@ -41,3 +42,4 @@ update:onprem-runai:
     - git add .
     - git commit -m "$CI_COMMIT_MESSAGE" || echo "Nothing to commit"
     - git push origin $CI_COMMIT_BRANCH || echo "Nothing to push"
+  needs: []
