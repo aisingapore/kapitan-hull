@@ -61,7 +61,8 @@ test:pylint-pytest:
     reports:
       junit: rspec.xml
   needs:
-    - test:conda-build
+    - job: test:conda-build
+      optional: true
 
 pages:
   stage: deploy-docs
@@ -118,7 +119,8 @@ build:data-prep-image:
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_DATAPREP
   needs:
-    - test:pylint-pytest
+    - job: test:pylint-pytest
+      optional: true
 
 build:model-training-image:
   stage: build
@@ -157,7 +159,8 @@ build:model-training-image:
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_MODEL
   needs:
-    - test:pylint-pytest
+    - job: test:pylint-pytest
+      optional: true
 
 build:retag-images:
   stage: build
@@ -185,8 +188,13 @@ build:retag-images:
     - crane tag {{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA} ${CI_COMMIT_TAG}
 {%- elif cookiecutter.platform == 'gcp' %}
     - cat $GCP_SERVICE_ACCOUNT_KEY > /gcp-sa.json
-    - gcloud container images add-tag --quiet "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_TAG}"
-    - gcloud container images add-tag --quiet "{{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_TAG}"
+    - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_TAG}"
+    - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_TAG}"
 {%- endif %}
   rules:
     - if: $CI_COMMIT_TAG && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  needs:
+    - job: build:data-prep-image
+      optional: true
+    - job: build:model-training-image
+      optional: true
