@@ -5,6 +5,10 @@ default:
 {%- elif cookiecutter.platform == 'gcp' %}
     - gcp
 {%- endif %}
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - ./conda
 
 stages:
   - test
@@ -16,18 +20,20 @@ test:conda-build:
   image:
     name: continuumio/miniconda3:23.10.0-1
   script:
-    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p ./conda/{{cookiecutter.repo_name}}
+    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p ./conda/{{cookiecutter.repo_name}} -y
   rules:
     - if: $CI_MERGE_REQUEST_IID
       changes:
         - {{cookiecutter.repo_name}}-conda-env.yaml
     - if: $CI_PIPELINE_SOURCE == "push"
+      changes:
+        - {{cookiecutter.repo_name}}-conda-env.yaml
     - if: $CI_PIPELINE_SOURCE == "web"
+      changes:
+        - {{cookiecutter.repo_name}}-conda-env.yaml
+    - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_CONDA
     - if: $CI_COMMIT_TAG
       when: never
-  artifacts:
-    paths:
-      - ./conda
   needs: []
 
 test:pylint-pytest:
@@ -39,7 +45,7 @@ test:pylint-pytest:
     - pip install -r dev-requirements.txt
   script:
     - pylint src --fail-under=7.0 --ignore=tests --disable=W1202
-    - pytest src/tests
+    - pytest src/tests --junitxml=./rspec.xml
   rules:
     - if: $CI_MERGE_REQUEST_IID
       changes:
@@ -49,8 +55,14 @@ test:pylint-pytest:
     - if: $CI_PIPELINE_SOURCE == "web"
     - if: $CI_COMMIT_TAG
       when: never
+  artifacts:
+    paths:
+      - rspec.xml
+    reports:
+      junit: rspec.xml
   needs:
-    - test:conda-build
+    - job: test:conda-build
+      optional: true
 
 pages:
   stage: deploy-docs
@@ -107,7 +119,8 @@ build:data-prep-image:
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_DATAPREP
   needs:
-    - test:pylint-pytest
+    - job: test:pylint-pytest
+      optional: true
 
 build:model-training-image:
   stage: build
@@ -146,7 +159,8 @@ build:model-training-image:
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_MODEL
   needs:
-    - test:pylint-pytest
+    - job: test:pylint-pytest
+      optional: true
 
 build:retag-images:
   stage: build
@@ -174,8 +188,13 @@ build:retag-images:
     - crane tag {{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA} ${CI_COMMIT_TAG}
 {%- elif cookiecutter.platform == 'gcp' %}
     - cat $GCP_SERVICE_ACCOUNT_KEY > /gcp-sa.json
-    - gcloud container images add-tag --quiet "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_TAG}"
-    - gcloud container images add-tag --quiet "{{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_TAG}"
+    - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_TAG}"
+    - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_TAG}"
 {%- endif %}
   rules:
     - if: $CI_COMMIT_TAG && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  needs:
+    - job: build:data-prep-image
+      optional: true
+    - job: build:model-training-image
+      optional: true
