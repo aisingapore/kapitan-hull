@@ -20,13 +20,18 @@ test:conda-build:
   image:
     name: continuumio/miniconda3:23.10.0-1
   script:
-    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p ./conda/{{cookiecutter.repo_name}}
+    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p ./conda/{{cookiecutter.repo_name}} -y
   rules:
     - if: $CI_MERGE_REQUEST_IID
       changes:
         - {{cookiecutter.repo_name}}-conda-env.yaml
     - if: $CI_PIPELINE_SOURCE == "push"
+      changes:
+        - {{cookiecutter.repo_name}}-conda-env.yaml
     - if: $CI_PIPELINE_SOURCE == "web"
+      changes:
+        - {{cookiecutter.repo_name}}-conda-env.yaml
+    - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_CONDA
     - if: $CI_COMMIT_TAG
       when: never
   needs: []
