@@ -66,12 +66,7 @@ Inputs provided to `cookiecutter` for the generation of this template:
 │   │                      for works within the context of AISG's
 │   │                      development environments.
 │   └── guide-site      <- Files relevant for spinning up the `mkdocs`
-│   │                      site to view the end-to-end guide.
-{% if cookiecutter.orchestrator == 'runai' -%}
-│   └── runai           <- RunAI YAML scripts.
-{% elif cookiecutter.orchestrator == 'polyaxon' -%}
-{% elif cookiecutter.orchestrator == 'noorch' -%}
-{% endif -%}
+│                          site to view the end-to-end guide.
 ├── conf                <- Configuration files associated with the
 │                          various pipelines as well as for logging.
 ├── data                <- Folder to contain any data for the various
@@ -88,10 +83,10 @@ Inputs provided to `cookiecutter` for the generation of this template:
 │                          delimited description, e.g.
 │                          `1.0-jqp-initial-data-exploration`.
 ├── src                 <- Directory containing the source code and
-|   |                       packages for the project repository.
+|   |                      packages for the project repository.
 │   ├── {{cookiecutter.src_package_name}}
-│   │   ^- Package containing modules for all pipelines except
-│   │      deployment of API server.
+│   │                   ^- Package containing modules for all pipelines 
+│   │                      except deployment of API server.
 │   ├── {{cookiecutter.src_package_name}}_fastapi
 │   │   ^- Package for deploying the predictive models within a FastAPI
 │   │      server.
@@ -105,8 +100,8 @@ Inputs provided to `cookiecutter` for the generation of this template:
 │                          pipelines.
 ├── .pylintrc           <- Configurations for `pylint`.
 ├── {{cookiecutter.repo_name}}-conda-env.yaml
-│   ^- The `conda` environment file for reproducing
-│      the project's development environment.
+│                       ^- The `conda` environment file for reproducing
+│                          the project's development environment.
 └── README.md           <- The top-level README containing the basic
                            guide for using the repository.
 ```

@@ -109,13 +109,6 @@ provided in this template:
         -v <pvc-name>:/path/to/pvc/mount
     ```
 
-=== "Run:ai YAML"
-
-    ```bash
-    # Change the values within the file if any before running this
-    kubectl apply -f aisg-context/runai/04-docker-build-dataprep.yml
-    ```
-
 After building the image, you can run the script through Docker:
 
 === "Linux/macOS"
@@ -144,9 +137,8 @@ Docker registry:
 
 !!! warning "Attention"
 
-    If you're following the "VSCode Server Terminal" or "Run:ai YAML"
-    method, you can skip this as you have already pushed to the Docker
-    registry.
+    If you're following the "VSCode Server Terminal" method, you can 
+    skip this as you have already pushed to the Docker registry.
 
 === "Linux/macOS"
 
@@ -205,13 +197,6 @@ a job using that image to Run:ai\:
         --cpu 2 \
         --memory 4G \
         --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
-    ```
-
-=== "Run:ai YAML"
-
-    ```bash
-    # Change the values within the file if any before running this
-    kubectl apply -f aisg-context/runai/05-dataprep.yml
     ```
 
 After some time, the data processing job should conclude and we can
@@ -334,7 +319,7 @@ We shall build the Docker image from the Docker file
     If you're using AMD GPUs for training, you can copy the components
     from the [`rocm`][rocm] folder in the Kapitan Hull repository.
 
-[rocm]: https://github.com/aisingapore/kapitan-hull/tree/main/rocm
+[rocm]: https://github.com/aisingapore/kapitan-hull/tree/main/extras/rocm
 
 === "Linux/macOS"
 
@@ -367,13 +352,6 @@ We shall build the Docker image from the Docker file
 {%- endif %}
         --cred-file /path/to/docker/config.json \
         -v <pvc-name>:/path/to/pvc/mount
-    ```
-
-=== "Run:ai YAML"
-
-    ```bash
-    # Change the values within the file if any before running this
-    kubectl apply -f aisg-context/runai/06-docker-build-modeltraining.yml
     ```
 
 After building the image, you can run the script through Docker:
@@ -435,9 +413,8 @@ Docker registry:
 
 !!! warning "Attention"
 
-    If you're following the "VSCode Server Terminal" or "Run:ai YAML"
-    method, you can skip this as you have already pushed to the Docker
-    registry.
+    If you're following the "VSCode Server Terminal" method, you can 
+    skip this as you have already pushed to the Docker registry.
 
 === "Linux/macOS"
 
@@ -502,13 +479,6 @@ job using it:
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
         --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
-    ```
-
-=== "Run:ai YAML"
-
-    ```bash
-    # Change the values within the file if any before running this
-    kubectl apply -f aisg-context/runai/07-modeltraining.yml
     ```
 
 Once you have successfully run an experiment, you may inspect the run
@@ -730,13 +700,6 @@ by default.
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
         --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
-    ```
-
-=== "Run:ai YAML"
-
-    ```bash
-    # Change the values within the file if any before running this
-    kubectl apply -f aisg-context/runai/08-modeltraining-hp.yml
     ```
 
 ![MLflow Tracking Server - Hyperparameter Tuning Runs](assets/screenshots/mlflow-tracking-hptuning-runs.png)
