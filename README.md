@@ -87,9 +87,9 @@ its usage.
 
 ## Note on AMD GPUs
 
-Those who plan to use AMD GPUs and RoCM can check the `rocm` folder and
-copy the contents into the `{{cookiecutter.repo_name}}` folder before 
-populating your template. This is experimental, so official support for 
-this should not be expected any time soon. This is also not added to
-the main template to reduce the confusion of having multiple file 
-variants for the users.
+Those who plan to use AMD GPUs and RoCM can check the `extras/rocm` 
+folder and copy the contents into the `{{cookiecutter.repo_name}}` 
+folder before populating your template. This is experimental, so 
+official support for this should not be expected any time soon. This is 
+also not added to the main template to reduce the confusion of having 
+multiple file variants for the users.

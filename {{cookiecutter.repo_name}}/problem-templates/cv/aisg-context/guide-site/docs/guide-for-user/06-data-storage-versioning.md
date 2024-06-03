@@ -32,13 +32,6 @@ VSCode server workspace.
     unzip mnist-pngs-data-aisg.zip
     ```
 
-=== "Run:ai YAML"
-
-    ```bash
-    # Change the values within the file if any before running this
-    kubectl apply -f aisg-context/runai/03b-data-download.yml
-    ```
-
 !!! info
     The sample data for this guide's problem statement is made
     accessible to the public. Hence any team or individual can download

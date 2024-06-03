@@ -33,12 +33,5 @@ components of Kapitan Hull.
     echo "Test3" > data3.txt
     ```
 
-=== "Run:ai YAML"
-
-    ```bash
-    # Change the values within the file if any before running this
-    kubectl apply -f aisg-context/runai/03b-data-download.yml
-    ```
-
 In the next section, we will work towards processing this set of raw
 data and eventually 'training' a dummy model.
