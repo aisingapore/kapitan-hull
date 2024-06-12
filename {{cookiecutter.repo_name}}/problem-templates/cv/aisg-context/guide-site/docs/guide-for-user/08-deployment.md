@@ -107,7 +107,7 @@ repository, execute the following commands:
 
 !!! warning "Attention"
     The `mlflow-test` conda environment should have been created while
-    [testing your MLFlow server](./03-mlops-components-platform/#logging-to-tracking-server).
+    [testing your MLFlow server](./03-mlops-components-platform.md/#logging-to-tracking-server).
 
 Executing the commands above will download the artifacts related to the
 experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 
