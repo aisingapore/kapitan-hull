@@ -34,4 +34,4 @@ git push -u origin main
 ```
 
 [ccutter]: https://github.com/cookiecutter/cookiecutter
-[readme]: https://github.com/aisingapore/ml-project-cookiecutter-onprem-runai/blob/main/README.md
+[readme]: https://github.com/aisingapore/kapitan-hull/blob/main/README.md
