@@ -23,10 +23,20 @@ batch inferencing on:
 === "Windows PowerShell"
 
     ```powershell
-    cd data
-    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip
-    Expand-Archive -Path batched-mnist-input-data.zip -DestinationPath .
-    rm batched-mnist-input-data.zip
+    New-Item -ItemType Directory -Force -Path 'data/batch-infer'
+    $currentDirectory = Get-Location
+    Set-Location -Path 'data/batch-infer'
+    
+    New-Item -ItemType File -Force -Name 'in1.txt' | Out-Null
+    Add-Content -Path 'in1.txt' -Value "Output1"
+    
+    New-Item -ItemType File -Force -Name 'in2.txt' | Out-Null
+    Add-Content -Path 'in2.txt' -Value "Output2"
+    
+    New-Item -ItemType File -Force -Name 'in3.txt' | Out-Null
+    Add-Content -Path 'in3.txt' -Value "Output3"
+    
+    Set-Location -Path $currentDirectory
     ```
 
 To execute the batch inferencing script locally:
