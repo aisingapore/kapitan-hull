@@ -42,7 +42,7 @@ with the on-premise GitLab instance.
 [ccutter]: https://github.com/cookiecutter/cookiecutter
 [readme]: https://github.com/aisingapore/kapitan-hull/blob/main/README.md
 [aisg-gitlab]: https://gitlab.aisingapore.net/
-[cr8-proj]: https://gitlab.aisingapore.net/help/user/project/index.md
+[cr8-proj]: https://docs.gitlab.com/ee/user/project/
 [gitlab-page]: ./03-mlops-components-platform.md#gitlab
 
 ## Guide's Problem Statement

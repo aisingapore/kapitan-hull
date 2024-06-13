@@ -333,7 +333,7 @@ a single owner.
 
 ??? info "Reference Link(s)"
 
-    - [GitLab Docs - Use SSH keys to communicate with GitLab](https://gitlab.aisingapore.net/help/user/ssh.md)
+    - [GitLab Docs - Use SSH keys to communicate with GitLab](https://docs.gitlab.com/ee/user/ssh)
 
 {% if cookiecutter.orchestrator == 'runai' -%}
 ## Run:AI
