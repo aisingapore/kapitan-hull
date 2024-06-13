@@ -1,4 +1,4 @@
-name: {{cookiecutter.repo_name}}
+name: {{cookiecutter.repo_name}}-gpu
 channels:
   - defaults
   - pytorch
