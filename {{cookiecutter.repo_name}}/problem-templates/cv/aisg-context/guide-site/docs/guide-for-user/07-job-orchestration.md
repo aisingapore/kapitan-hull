@@ -502,7 +502,7 @@ bucket. You can also compare runs with each other.
 
     ??? info "Reference Link(s)"
 
-        - [Run:ai Docs - Environment Variables inside a Run:ai Workload](https://docs.run.ai/v2.9/Researcher/best-practices/env-variables/)
+        - [Run:ai Docs - Environment Variables inside a Run:ai Workload](https://docs.run.ai/latest/Researcher/best-practices/env-variables/)
         - [MLflow Docs - Search Runs](https://mlflow.org/docs/latest/search-runs.html)
 
 !!! info
@@ -706,7 +706,7 @@ by default.
 
 ??? info "Reference Link(s)"
 
-    - [Run:ai Docs - Environment Variables inside a Run:ai Workload](https://docs.run.ai/v2.9/Researcher/best-practices/env-variables/)
+    - [Run:ai Docs - Environment Variables inside a Run:ai Workload](https://docs.run.ai/latest/Researcher/best-practices/env-variables/)
     - [Hydra Docs - Optuna Sweeper Plugin](https://hydra.cc/docs/plugins/optuna_sweeper/)
     - [MLflow Docs - Search Syntax](https://www.mlflow.org/docs/latest/search-syntax.html)
 
