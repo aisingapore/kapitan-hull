@@ -109,7 +109,7 @@ repository, execute the following commands:
 
 !!! warning "Attention"
     The `mlflow-test` conda environment should have been created while
-    [testing your MLFlow server](./03-mlops-components-platform.md/#logging-to-tracking-server).
+    [testing your MLFlow server](./03-mlops-components-platform.md#logging-to-tracking-server).
 
 Executing the commands above will download the artifacts related to the
 experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 
@@ -121,16 +121,14 @@ that exists within the repository.
 
 [beginner tutorials]: https://fastapi.tiangolo.com/tutorial/
 
-### Local Server
+### Running the API Server
 
 Run the FastAPI server using [Gunicorn](https://gunicorn.org)
-(for Linux/macOS) or [`uvicorn`](https://www.uvicorn.org/)
-(for Windows):
+(for Linux/macOS) or [`uvicorn`][uvicorn] (for Windows):
 
 !!! attention
-    Gunicorn is only executable on UNIX-based or UNIX-like systems,
-    this method would not be possible/applicable for
-    Windows machine.
+    Gunicorn is only executable on UNIX-based or UNIX-like systems; 
+    this method would not be possible/applicable for Windows machines.
 
 === "Linux/macOS/VSCode Server Terminal"
 
@@ -141,9 +139,9 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org)
     ```
 
     See [here][reason] as to why Gunicorn is to be used instead of just
-    [Uvicorn](https://www.uvicorn.org/). TLDR: Gunicorn is needed to 
-    spin up multiple processes/workers to handle more requests i.e. 
-    better for the sake of production needs.
+    [Uvicorn][uvicorn]. TLDR: Gunicorn is needed to spin up multiple 
+    processes/workers to handle more requests i.e. better for the sake 
+    of production needs.
 
 === "Windows PowerShell"
 
@@ -190,6 +188,7 @@ to the FastAPI server and it returned predictions as part of the
 response.
 
 [reason]: https://fastapi.tiangolo.com/deployment/server-workers/
+[uvicorn]: https://www.uvicorn.org/
 
 ### Pydantic Settings
 
@@ -218,6 +217,8 @@ FastAPI automatically generates interactive API documentation for easy
 viewing of all the routers/endpoints you have made available for the
 server. You can view the documentation through
 `<API_SERVER_URL>:<PORT>/docs`. 
+
+### Port Forwarding from VSCode Server
 
 It's optional, but let's view the labour of our hard work:
 
