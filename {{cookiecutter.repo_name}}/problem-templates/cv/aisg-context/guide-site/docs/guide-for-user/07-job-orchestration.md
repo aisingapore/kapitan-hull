@@ -119,7 +119,7 @@ After building the image, you can run the script through Docker:
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
         -w /home/aisg/{{cookiecutter.repo_name}} \
         {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
-        bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py"
+        bash -c "python -u src/process_data.py"
     ```
 
 === "Windows PowerShell"
@@ -129,7 +129,7 @@ After building the image, you can run the script through Docker:
         -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
         -w /home/aisg/{{cookiecutter.repo_name}} `
         {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
-        bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py"
+        bash -c "python -u src/process_data.py"
     ```
 
 Once you are satisfied with the Docker image, you can push it to the 
@@ -165,10 +165,9 @@ a job using that image to Run:ai\:
         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
         -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
-        --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
-        --cpu 2 \
-        --memory 4G \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
+        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+        --command -- '/bin/bash -c "python -u src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
     ```
 
 === "Windows PowerShell"
@@ -179,10 +178,9 @@ a job using that image to Run:ai\:
         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep `
         -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
         --working-dir /home/aisg/{{cookiecutter.repo_name}} `
-        --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> `
-        --cpu 2 `
-        --memory 4G `
-        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed'"
+        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> `
+        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 `
+        --command -- '/bin/bash -c "python -u src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
     ```
 
 === "VSCode Server Terminal"
@@ -193,10 +191,9 @@ a job using that image to Run:ai\:
         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
         -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
-        --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
-        --cpu 2 \
-        --memory 4G \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
+        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+        --command -- '/bin/bash -c "python -u src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
     ```
 
 After some time, the data processing job should conclude and we can
@@ -267,6 +264,7 @@ setup_mlflow: true
 mlflow_autolog: false
 mlflow_tracking_uri: "./mlruns"
 mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
+mlflow_run_name: "train-model"
 data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
 no_cuda: true
 no_mps: true
@@ -369,7 +367,7 @@ After building the image, you can run the script through Docker:
         -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
         -w /home/aisg/{{cookiecutter.repo_name}} \
         {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
-        bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py"
+        bash -c "python -u src/train_model.py"
     ```
 
 === "Windows PowerShell"
@@ -381,7 +379,7 @@ After building the image, you can run the script through Docker:
         -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
         -w /home/aisg/{{cookiecutter.repo_name}} `
         {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
-        bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py"
+        bash -c "python -u src/train_model.py"
     ```
 
 You can run MLFlow in Docker as well with the following command:
@@ -441,12 +439,12 @@ job using it:
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
-        --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
-        --cpu 2 \
-        --memory 4G \
+        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
+        -e OMP_NUM_THREADS=2 \
+        --command -- '/bin/bash -c "python -u src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
     ```
 
 === "Windows PowerShell"
@@ -457,12 +455,12 @@ job using it:
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train `
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
         --working-dir /home/aisg/{{cookiecutter.repo_name}} `
-        --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> `
-        --cpu 2 `
-        --memory 4G `
+        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> `
+        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 `
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> `
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> `
-        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3'"
+        -e OMP_NUM_THREADS=2 `
+        --command -- '/bin/bash -c "python -u src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
     ```
 
 === "VSCode Server Terminal"
@@ -473,12 +471,12 @@ job using it:
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
-        --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
-        --cpu 2 \
-        --memory 4G \
+        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
+        -e OMP_NUM_THREADS=2 \
+        --command -- '/bin/bash -c "python -u src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
     ```
 
 Once you have successfully run an experiment, you may inspect the run
@@ -614,7 +612,7 @@ by default.
 === "Linux/macOS"
 
     ```bash
-    python src/train_model.py
+    python src/train_model.py --multirun
     ```
 
 === "Windows PowerShell"
@@ -634,7 +632,7 @@ by default.
         -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
         -w /home/aisg/{{cookiecutter.repo_name}} \
         {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
-        python src/train_model.py --multirun
+        python -u src/train_model.py --multirun
     ```
 
 === "Windows PowerShell"
@@ -646,7 +644,7 @@ by default.
         -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
         -w /home/aisg/{{cookiecutter.repo_name}} `
         {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
-        python src/train_model.py
+        python -u src/train_model.py --multirun
     ```
     
 #### Run:ai
@@ -656,16 +654,16 @@ by default.
     ```bash
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit \
-        --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
+        --job-name-prefix <YOUR_HYPHENATED_NAME>-train-hp \
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
-        --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
-        --cpu 2 \
-        --memory 4G \
+        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
+        -e OMP_NUM_THREADS=2 \
+        --command -- '/bin/bash -c "python -u src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
     ```
 
 === "Windows PowerShell"
@@ -676,13 +674,13 @@ by default.
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train `
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
         --working-dir /home/aisg/{{cookiecutter.repo_name}} `
-        --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> `
-        --cpu 2 `
-        --memory 4G `
+        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> `
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> `
         -e MLFLOW_HPTUNING_TAG=$(Get-Date -UFormat %s -Millisecond 0) `
-        --command -- "/bin/bash -c 'source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3'"
+        -e OMP_NUM_THREADS=2 `
+        --command -- '/bin/bash -c "python -u src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
     ```
 
 === "VSCode Server Terminal"
@@ -690,16 +688,16 @@ by default.
     ```bash
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit \
-        --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
+        --job-name-prefix <YOUR_HYPHENATED_NAME>-train-hp \
         -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
-        --pvc <NAME_OF_DATA_SOURCE>:/<NAME_OF_DATA_SOURCE> \
-        --cpu 2 \
-        --memory 4G \
+        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
-        --command -- '/bin/bash -c "source activate {{cookiecutter.repo_name}} && python src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
+        -e OMP_NUM_THREADS=2 \
+        --command -- '/bin/bash -c "python -u src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
     ```
 
 ![MLflow Tracking Server - Hyperparameter Tuning Runs](assets/screenshots/mlflow-tracking-hptuning-runs.png)
