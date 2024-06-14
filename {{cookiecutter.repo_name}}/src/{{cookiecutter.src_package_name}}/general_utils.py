@@ -73,9 +73,9 @@ def mlflow_init(args, run_name='train-model', setup_mlflow=False, autolog=False)
             if autolog:
                 mlflow.autolog()
 
+            run_name = args.get('mlflow_run_name', run_name) # conf files take precedence
             if "MLFLOW_HPTUNING_TAG" in os.environ: run_name += "-hp"
 
-            run_name = args.get('mlflow_run_name', run_name) # conf files take precedence
             run_name += "-{:.0f}".format(time.time())
 
             mlflow.start_run(run_name=run_name)
