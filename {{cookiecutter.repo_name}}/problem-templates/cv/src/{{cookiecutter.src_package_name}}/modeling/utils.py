@@ -32,6 +32,8 @@ def train(args, model, device, train_loader, optimiser, epoch, mlflow_init_statu
         Average loss value for the training dataset.
     """
     model.train()
+    correct = 0
+    dataset_len = len(train_loader.dataset)
     for batch_idx, (_, data, target) in enumerate(train_loader):
         data, target = data.to(device), target.to(device)
         optimiser.zero_grad()
@@ -39,14 +41,18 @@ def train(args, model, device, train_loader, optimiser, epoch, mlflow_init_statu
         loss = torch.nn.functional.nll_loss(output, target)
         loss.backward()
         optimiser.step()
-        if batch_idx % args["log_interval"] == 0:
+        pred = output.argmax(dim=1, keepdim=True)
+        correct += pred.eq(target.view_as(pred)).sum().item()
+        if (batch_idx + 1) % args["log_interval"] == 0:
+            curr_progress = (batch_idx + 1) * len(data)
             print(
-                "Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}".format(
+                "Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}\tAccuracy: {:.4f}".format(
                     epoch,
-                    batch_idx * len(data),
-                    len(train_loader.dataset),
-                    100.0 * batch_idx / len(train_loader),
+                    curr_progress,
+                    dataset_len,
+                    100.0 * curr_progress / dataset_len,
                     loss.item(),
+                    correct / curr_progress
                 )
             )
             if args["dry_run"]:
@@ -57,6 +63,13 @@ def train(args, model, device, train_loader, optimiser, epoch, mlflow_init_statu
         "log_metric",
         key="train_loss",
         value=loss.item(),
+        step=epoch,
+    )
+    {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
+        mlflow_init_status,
+        "log_metric",
+        key="train_accuracy",
+        value=correct / dataset_len,
         step=epoch,
     )
 
