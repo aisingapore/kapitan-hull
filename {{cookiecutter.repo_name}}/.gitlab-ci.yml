@@ -170,8 +170,6 @@ build:retag-images:
     entrypoint: [""]
 {%- elif cookiecutter.platform == 'gcp' %}
     name: google/cloud-sdk:debian_component_based
-{%- endif %}
-{%- if cookiecutter.platform == 'gcp' %}
   variables:
     GOOGLE_APPLICATION_CREDENTIALS: /gcp-sa.json
 {%- endif %}

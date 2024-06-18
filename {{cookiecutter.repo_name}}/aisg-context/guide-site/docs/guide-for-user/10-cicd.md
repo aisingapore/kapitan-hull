@@ -52,18 +52,35 @@ pipeline.
 
 Before we can make use of the GitLab CI pipeline, we would have to
 define the following variable(s) for the pipeline beforehand:
+{%- if cookiecutter.platform == 'onprem' %}
 
 - `HARBOR_ROBOT_CREDS_JSON`: A JSON formatted value that contains
   encoded credentials for a robot account on Harbor. This is to allow
-  the pipeline to interact with the Harbor server. See 
-  [here][docker-conf] on how to generate this value/file.
+  the pipeline to interact with the Harbor server. See the next section 
+  on how to generate this value/file.
+{%- elif cookiecutter.platform == 'gcp' %}
+
+- `GCP_SERVICE_ACCOUNT_KEY`: A JSON formatted value that contains 
+  encoded credentials for a service account on your GCP project. This 
+  is to allow the pipeline to interact with the Google Artifact 
+  Registry. See [here][gcp-sa] on how to generate this file.
+{%- endif %}
 
 To define CI/CD variables for a project (repository), follow the steps
-listed [here][cicd-var]. The environment variable 
-`HARBOR_ROBOT_CREDS_JSON` needs to be a `File` type.
+listed [here][cicd-var]. 
+{%- if cookiecutter.platform == 'onprem' %}
+The environment variable `HARBOR_ROBOT_CREDS_JSON` needs to be a `File` 
+type.
+{%- elif cookiecutter.platform == 'gcp' %}
+The environment variable `GCP_SERVICE_ACCOUNT_KEY` needs to be a `File`
+type.
+{%- endif %}
 
-[docker-conf]: #docker-configuration-file-for-accessing-harbor
-[cicd-var]: https://docs.gitlab.com/ee/ci/variables/#add-a-cicd-variable-to-a-project
+[cicd-var]: https://docs.gitlab.com/ee/ci/variables/#define-a-cicd-variable-in-the-ui
+{%- if cookiecutter.platform == 'gcp' %}
+[gcp-sa]: https://cloud.google.com/iam/docs/keys-create-delete
+{%- endif %}
+{%- if cookiecutter.platform == 'onprem' %}
 
 ### Docker Configuration File for Accessing Harbor
 
@@ -108,6 +125,7 @@ into a CI/CD environment variable of type `File`
 
     - [GitLab Docs - GitLab CI/CD variables](https://docs.gitlab.com/ee/ci/variables/)
     - [Docker Docs - Configuration files](https://docs.docker.com/engine/reference/commandline/cli/#configuration-files)
+{%- endif %}
 
 ## Stages & Jobs
 
@@ -116,9 +134,7 @@ In the default pipeline, we have 3 stages defined:
 - `test`: For every push to certain branches, the source code residing
   in `src` will be tested.
 - `deploy-docs`: This stage is for the purpose of deploying a static
-  site through
-  [GitLab Pages](https://docs.gitlab.com/ee/user/project/pages/).
-  More on this stage is covered in
+  site through [GitLab Pages]. More on this stage is covered in 
   ["Documentation"](./11-documentation.md).
 - `build`: Assuming the automated tests are passed, the pipeline
   will build Docker images, making use of the latest source.
@@ -138,19 +154,37 @@ These stages are defined and listed like so:
 
 The jobs for each of the stages are executed using Docker images 
 defined by users. For this, we have to specify in the pipeline the tag
-associated with the GitLab Runner that has the [Docker executor]. The 
-`on-prem` tag calls for runners within our on-premise infrastructure so 
-on-premise services can be accessed within our pipelines.
+associated with the GitLab Runner that has the [Docker executor]. 
+{%- if cookiecutter.platform == 'onprem' %}
+The `on-prem` tag calls for runners within our on-premise 
+infrastructure so on-premise services can be accessed within our 
+pipelines.
+{%- elif cookiecutter.platform == 'gcp' %}
+The `gcp` tag calls for runners on our GCP infrastructure so it can use
+the GCP services within our pipelines.
+{%- endif %}
+
+The `./conda` folder generated from creating the Conda environment is 
+then cached and to be used for other jobs, saving time from rebuilding 
+the environment in every job that requires it. The 
+`$CI_COMMIT_REF_SLUG` key refers to the branch name modified to be 
+code-friendly. In this case, it is used as a namespace to store all the
+files that is cached within this branch.
 
 === "`.gitlab-ci.yml`"
 
     ```yaml
     default:
       tags:
+{%- if cookiecutter.platform == 'onprem' %}
         - on-prem
+{%- elif cookiecutter.platform == 'gcp' %}
+        - gcp
+{%- endif %}
     ...
     ```
 
+[Gitlab Pages]: https://docs.gitlab.com/ee/user/project/pages
 [Docker executor]: https://docs.gitlab.com/runner/executors/docker.html 
 
 ## Building the Conda Environment
@@ -172,12 +206,14 @@ Let's look at the job defined for the `test` stage first:
           changes:
             - {{cookiecutter.repo_name}}-conda-env.yaml
         - if: $CI_PIPELINE_SOURCE == "push"
+          changes:
+            - {{cookiecutter.repo_name}}-conda-env.yaml
         - if: $CI_PIPELINE_SOURCE == "web"
+          changes:
+            - {{cookiecutter.repo_name}}-conda-env.yaml
+        - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_CONDA
         - if: $CI_COMMIT_TAG
           when: never
-      artifacts:
-        paths:
-          - ./conda
       needs: []
     ...
     ```
@@ -197,10 +233,6 @@ the job will only execute for the following cases:
 - For any manual pipeline execution through GitLab's web UI.
 - If the push action is associated with a tag
   (`git push <remote> <tag_name>`), the job will not run.
-
-The `./conda` folder generated from creating the Conda environment is 
-then packaged as an artifact and to be used for other jobs, saving time
-from rebuilding the environment in every job that requires it.
 
 The job does not have any jobs that it needs to wait for, thus the 
 `needs` section is populated with `[]`.
@@ -224,7 +256,7 @@ The next job in the `test` stage is as follows:
         - pip install -r dev-requirements.txt
       script:
         - pylint src --fail-under=7.0 --ignore=tests --disable=W1202
-        - pytest src/tests
+        - pytest src/tests --junitxml=./rspec.xml
       rules:
         - if: $CI_MERGE_REQUEST_IID
           changes:
@@ -234,8 +266,14 @@ The next job in the `test` stage is as follows:
         - if: $CI_PIPELINE_SOURCE == "web"
         - if: $CI_COMMIT_TAG
           when: never
+      artifacts:
+        paths:
+          - rspec.xml
+        reports:
+          junit: rspec.xml
       needs:
-        - test:conda-build
+        - job: test:conda-build
+          optional: true
     ...
     ```
 
@@ -250,8 +288,10 @@ execute for the following cases:
 - If the push action is associated with a tag
   (`git push <remote> <tag_name>`), the job will not run.
 
-The job requires `test:conda-build` to be completed first before this
-job can be executed.
+The job would wait for `test:conda-build` to be completed first before 
+this job can be executed. The `optional: true` option is set so that 
+it would still run if the `conda-build` job doesn't since it has 
+already been cached to be used in this job.
 
 The job defined above fails under any of the following conditions:
 
@@ -263,11 +303,17 @@ The job would have to succeed before moving on to the `build` stage.
 Otherwise, no Docker images will be built. This is so that source
 code that fail tests would never be packaged.
 
+The job would generate a `rspec.xml` file as an artifact so that you 
+can read the test results in the GitLab UI. More information about this 
+can be found [here][unittests].
+
 ??? info "Reference Link(s)"
 
     - [GitLab Docs - Predefined variables reference](https://docs.gitlab.com/ee/ci/variables/predefined_variables.html)
     - [Real Python - Effective Python Testing With Pytest](https://realpython.com/pytest-python-testing/)
     - [VSCode Docs - Linting Python in Visual Studio Code](https://code.visualstudio.com/docs/python/linting)
+
+[unittests]: https://docs.gitlab.com/ee/ci/testing/unit_test_reports.html
 
 ## Automated Builds
 
@@ -290,11 +336,23 @@ that builds a Docker image:
       image:
         name: gcr.io/kaniko-project/executor:debug
         entrypoint: [""]
+{%- if cookiecutter.platform == 'gcp' %}
+        variables:
+          GOOGLE_APPLICATION_CREDENTIALS: /kaniko/.docker/config.json
+{%- endif %}
       before_script:
+{%- if cookiecutter.platform == 'onprem' %}
         - "[[ -z ${HARBOR_ROBOT_CREDS_JSON} ]] && echo 'HARBOR_ROBOT_CREDS_JSON variable is not set.' && exit 1"
+{%- elif cookiecutter.platform == 'gcp' %}
+        - "[[ -z ${GCP_SERVICE_ACCOUNT_KEY} ]] && echo 'GCP_SERVICE_ACCOUNT_KEY variable is not set.' && exit 1"
+{%- endif %}
       script:
         - mkdir -p /kaniko/.docker
+{%- if cookiecutter.platform == 'onprem' %}
         - cat $HARBOR_ROBOT_CREDS_JSON > /kaniko/.docker/config.json
+{%- elif cookiecutter.platform == 'gcp' %}
+        - cat $GCP_SERVICE_ACCOUNT_KEY > /kaniko/.docker/config.json
+{%- endif %}
         - >-
           /kaniko/executor
           --context "${CI_PROJECT_DIR}"
@@ -310,7 +368,8 @@ that builds a Docker image:
         - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
         - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_DATAPREP
       needs:
-        - test:pylint-pytest
+        - job: test:pylint-pytest
+          optional: true
     ...
     ```
 
@@ -325,9 +384,14 @@ that builds a Docker image:
     `build` jobs related to building of Docker images. That being said, 
     the flags used for `kaniko` corresponds well with the flags usually 
     used for `docker` commands.
+{%- if cookiecutter.platform == 'onprem' %}
+  {%- set jsonfile = 'HARBOR_ROBOT_CREDS_JSON' -%}
+{%- elif cookiecutter.platform == 'gcp' %}
+  {%- set jsonfile = 'GCP_SERVICE_ACCOUNT_KEY' -%}
+{%- endif %}
 
 Before it goes through the job, it will check whether 
-`HARBOR_ROBOT_CREDS_JSON` has been set in the CI/CD variables. 
+`{{jsonfile}}` has been set in the CI/CD variables. 
 Otherwise, it will prematurely stop the job with the error, preventing 
 the job from running any further and freeing the CI worker faster to 
 work on other jobs in the organisation.
@@ -388,16 +452,37 @@ the default branch before this.
     build:retag-images:
       stage: build
       image:
+{%- if cookiecutter.platform == 'onprem' %}
         name: gcr.io/go-containerregistry/crane:debug
         entrypoint: [""]
+{%- elif cookiecutter.platform == 'gcp' %}
+        name: google/cloud-sdk:debian_component_based
+      variables:
+        GOOGLE_APPLICATION_CREDENTIALS: /gcp-sa.json
+{%- endif %}
       before_script:
+{%- if cookiecutter.platform == 'onprem' %}
         - "[[ -z ${HARBOR_ROBOT_CREDS_JSON} ]] && echo 'HARBOR_ROBOT_CREDS_JSON variable is not set.' && exit 1"
+{%- elif cookiecutter.platform == 'gcp' %}
+        - "[[ -z ${GCP_SERVICE_ACCOUNT_KEY} ]] && echo 'GCP_SERVICE_ACCOUNT_KEY variable is not set.' && exit 1"
+{%- endif %}
       script:
+{%- if cookiecutter.platform == 'onprem' %}
         - cat $HARBOR_ROBOT_CREDS_JSON > /root/.docker/config.json
         - crane tag {{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
         - crane tag {{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
+{%- elif cookiecutter.platform == 'gcp' %}
+        - cat $GCP_SERVICE_ACCOUNT_KEY > /gcp-sa.json
+        - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_TAG}"
+        - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_TAG}"
+{%- endif %}
       rules:
         - if: $CI_COMMIT_TAG && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      needs:
+        - job: build:data-prep-image
+          optional: true
+        - job: build:model-training-image
+          optional: true
     ...
     ```
 

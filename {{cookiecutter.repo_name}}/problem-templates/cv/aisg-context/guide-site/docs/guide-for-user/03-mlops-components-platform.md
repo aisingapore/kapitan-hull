@@ -173,7 +173,7 @@ Run:AI.
     - [GKE Overview](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview)
 {%- endif -%}
 {%- if cookiecutter.orchestrator == "runai" %}
-    - [Run:ai Docs - System Components](https://docs.run.ai/home/components)
+    - [Run:ai Docs - System Components](https://docs.run.ai/latest/home/components)
 {%- endif %}
 
 [kubeapi]: https://kubernetes.io/docs/concepts/overview/kubernetes-api
@@ -216,10 +216,7 @@ managers__.
 
 ??? info "Reference Link(s)"
 
-{%- if cookiecutter.orchestrator == 'runai' %}
-
-    - [Run:ai Docs - Workspaces Introduction](https://docs.run.ai/v2.13/Researcher/user-interface/workspaces/overview)
-{%- endif %}
+    - [Coder Docs - Workspaces](https://coder.com/docs/workspaces)
 
 [vscode]: https://github.com/coder/code-server
 [jlab]: https://jupyter.org/
@@ -399,7 +396,7 @@ Host gitlab.aisingapore.net
 
 ??? info "Reference Link(s)"
 
-    - [GitLab Docs - Use SSH keys to communicate with GitLab](https://docs.gitlab.com/ee/user/ssh.html)
+    - [GitLab Docs - Use SSH keys to communicate with GitLab](https://docs.gitlab.com/ee/user/ssh)
 
 {% if cookiecutter.orchestrator == 'runai' -%}
 ## Run:AI
@@ -680,8 +677,8 @@ reference links below.
 
 ??? info "Reference Link(s)"
 
-    - [Harbor Docs - Working with Projects](https://goharbor.io/docs/1.10/working-with-projects)
-    - [Harbor Docs - User Permissions By Role](https://goharbor.io/docs/2.0.0/administration/managing-users/user-permissions-by-role)
+    - [Harbor Docs - Working with Projects](https://goharbor.io/docs/latest/working-with-projects)
+    - [Harbor Docs - User Permissions By Role](https://goharbor.io/docs/latest/administration/managing-users/user-permissions-by-role)
 
 ### Robot Accounts
 

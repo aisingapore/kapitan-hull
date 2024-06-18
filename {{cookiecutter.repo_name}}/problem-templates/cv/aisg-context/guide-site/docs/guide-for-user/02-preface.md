@@ -40,9 +40,9 @@ Go to [this section][gitlab-page] for more information on interacting
 with the on-premise GitLab instance.
 
 [ccutter]: https://github.com/cookiecutter/cookiecutter
-[readme]: https://github.com/aisingapore/ml-project-cookiecutter-onprem-runai/blob/main/README.md
+[readme]: https://github.com/aisingapore/kapitan-hull/blob/main/README.md
 [aisg-gitlab]: https://gitlab.aisingapore.net/
-[cr8-proj]: https://docs.gitlab.com/ee/user/project/working_with_projects.html#create-a-project
+[cr8-proj]: https://docs.gitlab.com/ee/user/project/
 [gitlab-page]: ./03-mlops-components-platform.md#gitlab
 
 ## Guide's Problem Statement

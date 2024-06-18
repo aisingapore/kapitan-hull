@@ -2,6 +2,7 @@ setup_mlflow: true
 mlflow_autolog: false
 mlflow_tracking_uri: "./mlruns"
 mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
+mlflow_run_name: "train-model"
 data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
 no_cuda: true
 no_mps: true

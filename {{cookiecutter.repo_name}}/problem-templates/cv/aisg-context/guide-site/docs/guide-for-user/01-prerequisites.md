@@ -25,7 +25,7 @@ follow through with the guide:
           through [Rancher Desktop][rancher].
     - __[miniconda][mcond]:__ for Python virtual environment management.
     - __[`kubectl`][kubectl]:__ CLI for Kubernetes.
-{% if cookiecutter.platform == 'onprem' -%}  
+{%- if cookiecutter.platform == 'onprem' %}  
     - __[AWS CLI][awscli]:__ CLI for AWS services, but we will 
       specifically be using it for interacting with the AI Singapore's 
       Elastic Cloud Storage (ECS) service through the S3 protocol.
@@ -33,26 +33,26 @@ follow through with the guide:
           for AWS instead, to interact with the ECS service within a 
           Python environment. However, this does not fall under the 
           scope of this guide.
-{% elif cookiecutter.platform == 'gcp' -%}
+{%- elif cookiecutter.platform == 'gcp' %}
     - __[`gcloud` CLI][gcloud]:__ CLI for interacting with GCP services.
-{% endif -%}
+{%- endif %}
     - *(Optional)* __[`helm`][helm]:__ CLI for Kubernetes' package 
       manager.
-{% if cookiecutter.orchestrator == 'runai' -%}  
+{%- if cookiecutter.orchestrator == 'runai' %}  
 - Access to a project on AI Singapore's Run:ai cluster.  
   See [here][runai-page] for more information.
-{% elif cookiecutter.orchestrator == 'polyaxon' -%}  
-{% elif cookiecutter.orchestrator == 'noorch' -%}  
-{% endif -%}
-{% if cookiecutter.platform == 'onprem' -%}  
+{%- elif cookiecutter.orchestrator == 'polyaxon' %}  
+{%- elif cookiecutter.orchestrator == 'noorch' %}  
+{%- endif %}
+{%- if cookiecutter.platform == 'onprem' %}  
 - Credentials for AI Singapore's Elastic Cloud Storage (ECS) service.  
   See [here][ecs-page] for more information.
 - Credentials for AI Singapore's Harbor registry.  
   See [here][harbor-page] for more information.
-{% elif cookiecutter.platform == 'gcp' -%}
+{%- elif cookiecutter.platform == 'gcp' %}
 - Access to a project on [Google Cloud Platform][gcp].  
   See [here][gcp-page] for more information.
-{% endif -%}
+{%- endif %}
 - Credentials for an MLflow Tracking server.  
   See [here][mlflow-page] for more information.
 
@@ -96,7 +96,6 @@ follow through with the guide:
 [mcond]: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
 [kubectl]: https://kubernetes.io/docs/tasks/tools/
 [helm]: https://helm.sh/docs/intro/install/
-[runai-page]: ./03-mlops-components-platform.md#runai
 [mlflow-page]: ./03-mlops-components-platform.md#mlflow
 [lf-set]: https://stackoverflow.com/questions/48692741/how-can-i-make-all-line-endings-eols-in-all-files-in-visual-studio-code-unix
 {% if cookiecutter.platform == 'onprem' -%}  

@@ -7,79 +7,11 @@ engineering works instead of your own resources.
 We can make use of [Coder][coder] to spin up VSCode servers with which 
 cluster resources can be dedicated.
 
+Ask your administrator on setting up Coder in your Kubernetes cluster.
+
 [coder]: https://coder.com/
 
 ## VSCode
-
-### Prebuilt VSCode Server
-
-The MLOps team should have spun up a Coder instance in the cluster and 
-handed the URL to you. The only thing you would need to do is to log 
-into Coder with OpenID Connect:
-
-![Coder Login](assets/screenshots/coder-login-vscode.png)
-
-Once you're in, you should be seeing something similar to this:
-
-![Coder Workspace](assets/screenshots/coder-workspace.png)
-
-If you do not see a workspace running, or you could not access the 
-Coder workspace allocated to you, you can contact the MLOps team.
-
-If you have the permissions, you could also create a workspace on your 
-own. The template you have access to will only work for one workspace 
-at a time, so you could switch out workspaces with different CPU and 
-RAM resources, depending on the needs of your team's project 
-requirements.
-
-Recommended settings for your first time are as follows:
-
-- __Workspace Name:__ `<YOUR_HYPHENATED_NAME>-vscode`
-- CPU: 2 Cores
-- Memory: 4GB
-
-![Coder create new workspace](assets/screenshots/coder-create-workspace.png)
-
-If all of it runs normally, you should have two buttons: VS Code 
-Desktop and code-server. Click on the latter to start running the 
-remote VSCode Workspace.
-
-![Coder workspace running](assets/screenshots/coder-workspace-running.png)
-
-You should be directed to the VSCode server welcome tab without 
-password prompt.
-
-![Run:ai - VSCode Server Welcome](assets/screenshots/runai-vscode-server-welcome.png)
-
-### Persistent Workspaces
-
-As mentioned, a PVC should be attached to the workspaces to persist
-changes to the filesystems. You can use the following command to search
-for the PVC:
-
-=== "VSCode Server Terminal"
-
-    ```bash
-    ls -la / | grep "pvc"
-    ```
-
-??? info "Reference Link(s)"
-
-    - [Kubernetes Docs - Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes)
-
-If there's no result, check with the MLOps team about this.
-
-By default, the PVCs would contain a `workspaces` directory with which
-you can create a subdirectory for yourself treat it as your own 
-personal workspace, where all your work and other relevant assets can 
-be persisted.
-
-=== "VSCode Server Terminal"
-
-    ```bash
-    cd /<PVC_LOCATION>/workspaces
-    mkdir <YOUR_HYPHENATED_NAME>
-    ```
 
 ### Git from VSCode
 
