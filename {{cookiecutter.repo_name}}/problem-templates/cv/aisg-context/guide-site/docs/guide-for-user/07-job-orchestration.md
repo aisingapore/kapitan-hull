@@ -38,169 +38,170 @@ values can be overridden through the CLI.
 
 ## Data Preparation & Preprocessing
 
-### Local
+To process the sample raw data, there are 3 main ways to do so:
 
-To process the sample raw data, there are many ways to do so. One way
-is to run it locally. Ensure that you have activated your Conda 
-environment before running the script. More information on this can be
-found [here][venv]. You can also update your configuration variables at
-`conf/process_data.yaml`, specifically this section:
+=== "Local"
 
-```yaml
-raw_data_dir_path: "./data/mnist-pngs-data-aisg"
-processed_data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
-```
+    Ensure that you have activated your Conda 
+    environment before running the script. More information on this can be
+    found [here][venv]. You can also update your configuration variables at
+    `conf/process_data.yaml`, specifically this section:
 
-After that, run the script:
-
-=== "Linux/macOS"
-
-    ```bash
-    # Add no_cuda=False at the end to enable GPU use.
-    # Make sure you have installed CUDA/RoCM before using.
-    # Check that LD_LIBRARY_PATH has been set.
-    # Also set HIP_VISIBLE_DEVICES=0 if RoCM is used.
-    python src/process_data.py
+    ```yaml
+    raw_data_dir_path: "./data/mnist-pngs-data-aisg"
+    processed_data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
     ```
 
-=== "Windows PowerShell"
+    After that, run the script:
 
-    ```powershell
-    python src\process_data.py
-    ```
+    === "Linux/macOS"
 
-### Docker
+        ```bash
+        # Add no_cuda=False at the end to enable GPU use.
+        # Make sure you have installed CUDA/RoCM before using.
+        # Check that LD_LIBRARY_PATH has been set.
+        # Also set HIP_VISIBLE_DEVICES=0 if RoCM is used.
+        python src/process_data.py
+        ```
 
-We can also run through a Docker container. This requires the Docker 
-image to be built from a Dockerfile 
-(`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
-provided in this template:
+    === "Windows PowerShell"
 
-=== "Linux/macOS"
+        ```powershell
+        python src\process_data.py
+        ```
 
-    ```bash
-    docker build \
-        -t {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
-        -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile \
-        --platform linux/amd64 .
-    ```
+=== "Docker"
 
-=== "Windows PowerShell"
+    This requires the Docker 
+    image to be built from a Dockerfile 
+    (`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
+    provided in this template:
 
-    ```powershell
-    docker build `
-        -t {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
-        -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile `
-        --platform linux/amd64 .
-    ```
+    === "Linux/macOS"
 
-=== "VSCode Server Terminal"
+        ```bash
+        docker build \
+            -t {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
+            -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile \
+            --platform linux/amd64 .
+        ```
 
-    ```bash
-    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
-    # Run this in the base of your project repository, and change accordingly
-    khull kaniko --context $(pwd) \
-        --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-cpu.Dockerfile \
-        --destination {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
-{%- if cookiecutter.platform == 'gcp' %}
-        --gcp \
-{%- endif %}
-        --cred-file /path/to/docker/config.json \
-        -v <pvc-name>:/path/to/pvc/mount
-    ```
+    === "Windows PowerShell"
 
-After building the image, you can run the script through Docker:
+        ```powershell
+        docker build `
+            -t {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
+            -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile `
+            --platform linux/amd64 .
+        ```
 
-=== "Linux/macOS"
+    After building the image, you can run the script through Docker:
 
-    ```bash
-    sudo chown 2222:2222 ./data
-    docker run --rm \
-        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
-        -w /home/aisg/{{cookiecutter.repo_name}} \
-        {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
-        bash -c "python -u src/process_data.py"
-    ```
+    === "Linux/macOS"
 
-=== "Windows PowerShell"
+        ```bash
+        sudo chown 2222:2222 ./data
+        docker run --rm \
+            -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+            -w /home/aisg/{{cookiecutter.repo_name}} \
+            {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
+            bash -c "python -u src/process_data.py"
+        ```
 
-    ```powershell
-    docker run --rm `
-        -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
-        -w /home/aisg/{{cookiecutter.repo_name}} `
-        {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
-        bash -c "python -u src/process_data.py"
-    ```
+    === "Windows PowerShell"
 
-Once you are satisfied with the Docker image, you can push it to the 
-Docker registry:
+        ```powershell
+        docker run --rm `
+            -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
+            -w /home/aisg/{{cookiecutter.repo_name}} `
+            {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
+            bash -c "python -u src/process_data.py"
+        ```
 
-!!! warning "Attention"
+    Once you are satisfied with the Docker image, you can push it to the 
+    Docker registry:
 
-    If you're following the "VSCode Server Terminal" method, you can 
-    skip this as you have already pushed to the Docker registry.
+    === "Linux/macOS"
 
-=== "Linux/macOS"
+        ```bash
+        docker push {{cookiecutter.registry_project_path}}/data-prep:0.1.0
+        ```
 
-    ```bash
-    docker push {{cookiecutter.registry_project_path}}/data-prep:0.1.0
-    ```
-    
-=== "Windows PowerShell"
+    === "Windows PowerShell"
 
-    ```powershell
-    docker push {{cookiecutter.registry_project_path}}/data-prep:0.1.0
-    ```
+        ```powershell
+        docker push {{cookiecutter.registry_project_path}}/data-prep:0.1.0
+        ```
 
-### Run:ai
+=== "Run:ai"
 
-Now that we have the Docker image pushed to the registry, we can submit
-a job using that image to Run:ai\:
+    This requires the Docker 
+    image to be built from a Dockerfile 
+    (`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
+    provided in this template:
 
-=== "Linux/macOS"
+    === "VSCode Server Terminal"
 
-    ```bash
-    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
-    runai submit \
-        --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
-        -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
-        --working-dir /home/aisg/{{cookiecutter.repo_name}} \
-        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
-        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
-        --command -- '/bin/bash -c "python -u src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
-    ```
+        ```bash
+        # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
+        # Run this in the base of your project repository, and change accordingly
+        khull kaniko --context $(pwd) \
+            --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-cpu.Dockerfile \
+            --destination {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
+    {%- if cookiecutter.platform == 'gcp' %}
+            --gcp \
+    {%- endif %}
+            --cred-file /path/to/docker/config.json \
+            -v <pvc-name>:/path/to/pvc/mount
+        ```
 
-=== "Windows PowerShell"
+    Now that we have the Docker image built and pushed to the registry, we can submit
+    a job using that image to Run:ai\:
 
-    ```powershell
-    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
-    runai submit `
-        --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep `
-        -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
-        --working-dir /home/aisg/{{cookiecutter.repo_name}} `
-        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> `
-        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 `
-        --command -- '/bin/bash -c "python -u src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
-    ```
+    === "Linux/macOS"
 
-=== "VSCode Server Terminal"
+        ```bash
+        # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
+        runai submit \
+            --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
+            -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
+            --working-dir /home/aisg/{{cookiecutter.repo_name}} \
+            --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+            --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+            --command -- '/bin/bash -c "python -u src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
+        ```
 
-    ```bash
-    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
-    runai submit \
-        --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
-        -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
-        --working-dir /home/aisg/{{cookiecutter.repo_name}} \
-        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
-        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
-        --command -- '/bin/bash -c "python -u src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
-    ```
+    === "Windows PowerShell"
 
-After some time, the data processing job should conclude and we can
-proceed with training the predictive model.
-The processed data is exported to the directory
-`/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed`.
-We will be passing this path to the model training workflows.
+        ```powershell
+        # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
+        runai submit `
+            --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep `
+            -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 `
+            --working-dir /home/aisg/{{cookiecutter.repo_name}} `
+            --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> `
+            --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 `
+            --command -- '/bin/bash -c "python -u src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
+        ```
+
+    === "VSCode Server Terminal"
+
+        ```bash
+        # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
+        runai submit \
+            --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
+            -i {{cookiecutter.registry_project_path}}/data-prep:0.1.0 \
+            --working-dir /home/aisg/{{cookiecutter.repo_name}} \
+            --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+            --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+            --command -- '/bin/bash -c "python -u src/process_data.py raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"'
+        ```
+
+    After some time, the data processing job should conclude and we can
+    proceed with training the predictive model.
+    The processed data is exported to the directory
+    `/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed`.
+    We will be passing this path to the model training workflows.
 
 [venv]: ./05-virtual-env.md#local-virtual-environments
 
@@ -247,269 +248,276 @@ artifacts without explicitly knowing the {{objstg}} credentials.
     - [MLflow Docs - Tracking](https://www.mlflow.org/docs/latest/tracking.html#)
     - [MLflow Docs - Tracking (Artifact Stores)](https://www.mlflow.org/docs/latest/tracking.html#artifact-stores)
 
-### Local
+=== "Local"
 
-The beauty of MLFlow is that it can run locally, within a Docker 
-container or connecting to a remote MLFlow server. In this case, it is
-assumed that you are spinning up an MLFlow instance locally whenever it
-is needed.
+    The beauty of MLFlow is that it can run locally, within a Docker 
+    container or connecting to a remote MLFlow server. In this case, it is
+    assumed that you are spinning up an MLFlow instance locally whenever it
+    is needed.
 
-To run the model training script locally, you should have your Conda 
-environment activated from the data preparation stage, and update your
-configuration variables at `conf/train_model.yaml`, especially this
-section:
+    To run the model training script locally, you should have your Conda 
+    environment activated from the data preparation stage, and update your
+    configuration variables at `conf/train_model.yaml`, especially this
+    section:
 
-```yaml
-setup_mlflow: true
-mlflow_autolog: false
-mlflow_tracking_uri: "./mlruns"
-mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
-mlflow_run_name: "train-model"
-data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
-no_cuda: true
-no_mps: true
-train_bs: 64
-test_bs: 1000
-lr: 1.0
-gamma: 0.7
-seed: 1111
-epochs: 3
-log_interval: 100
-dry_run: false
-model_checkpoint_interval: 2
-model_checkpoint_dir_path: "./models/checkpoint"
-```
+    ```yaml
+    setup_mlflow: true
+    mlflow_autolog: false
+    mlflow_tracking_uri: "./mlruns"
+    mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
+    mlflow_run_name: "train-model"
+    data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
+    no_cuda: true
+    no_mps: true
+    train_bs: 64
+    test_bs: 1000
+    lr: 1.0
+    gamma: 0.7
+    seed: 1111
+    epochs: 3
+    log_interval: 100
+    dry_run: false
+    model_checkpoint_interval: 2
+    model_checkpoint_dir_path: "./models/checkpoint"
+    ```
 
-After that, run the script:
+    After that, run the script:
 
-=== "Linux/macOS"
+    === "Linux/macOS"
+
+        ```bash
+        python src/train_model.py
+        ```
+
+    === "Windows PowerShell"
+
+        ```powershell
+        python src\train_model.py
+        ```
+
+    This will generate the MLFlow logs and artifacts locally, of which you 
+    can parse it with the MLFlow UI with:
 
     ```bash
-    python src/train_model.py
+    conda activate mlflow-test
+    mlflow server
     ```
 
-=== "Windows PowerShell"
+    and connect to http://localhost:5000.
 
-    ```powershell
-    python src\train_model.py
-    ```
+=== "Docker"
 
-This will generate the MLFlow logs and artifacts locally, of which you 
-can parse it with the MLFlow UI with:
+    The beauty of MLFlow is that it can run locally, within a Docker 
+    container or connecting to a remote MLFlow server. In this case, 
+    We shall build the Docker image from the Docker file 
+    `docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
 
-```bash
-conda activate mlflow-test
-mlflow server
-```
+    !!! warning "Attention"
 
-and connect to http://localhost:5000.
+        If you're only using CPUs for training, then you can just use
+        `docker/{{cookiecutter.repo_name}}-cpu.Dockerfile` instead for
+        smaller image size.  
+        If you're using AMD GPUs for training, you can copy the components
+        from the [`rocm`][rocm] folder in the Kapitan Hull repository.
 
-### Docker
+    [rocm]: https://github.com/aisingapore/kapitan-hull/tree/main/extras/rocm
 
-We shall build the Docker image from the Docker file 
-`docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
+    === "Linux/macOS"
 
-!!! warning "Attention"
+        ```bash
+        docker build \
+            -t {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
+            -f docker/{{cookiecutter.repo_name}}-gpu.Dockerfile \
+            --platform linux/amd64 .
+        ```
 
-    If you're only using CPUs for training, then you can just use
-    `docker/{{cookiecutter.repo_name}}-cpu.Dockerfile` instead for
-    smaller image size.  
-    If you're using AMD GPUs for training, you can copy the components
-    from the [`rocm`][rocm] folder in the Kapitan Hull repository.
+    === "Windows PowerShell"
 
-[rocm]: https://github.com/aisingapore/kapitan-hull/tree/main/extras/rocm
+        ```powershell
+        docker build `
+            -t {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
+            -f docker/{{cookiecutter.repo_name}}-gpu.Dockerfile `
+            --platform linux/amd64 .
+        ```
 
-=== "Linux/macOS"
+    After building the image, you can run the script through Docker:
 
-    ```bash
-    docker build \
-        -t {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
-        -f docker/{{cookiecutter.repo_name}}-gpu.Dockerfile \
-        --platform linux/amd64 .
-    ```
+    === "Linux/macOS"
 
-=== "Windows PowerShell"
+        ```bash
+        sudo chown 2222:2222 ./mlruns ./models
+        # Add --gpus=all for Nvidia GPUs in front of the image name
+        # Add --device=/dev/kfd --device=/dev/dri --group-add video for AMD GPUs in front of the image name
+        # Add no_cuda=false to use GPUs behind the image name
+        docker run --rm \
+            -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+            -v ./mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns \
+            -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
+            -w /home/aisg/{{cookiecutter.repo_name}} \
+            {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
+            bash -c "python -u src/train_model.py"
+        ```
 
-    ```powershell
-    docker build `
-        -t {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
-        -f docker/{{cookiecutter.repo_name}}-gpu.Dockerfile `
-        --platform linux/amd64 .
-    ```
+    === "Windows PowerShell"
 
-=== "VSCode Server Terminal"
+        ```powershell
+        docker run --rm \
+            -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
+            -v .\mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns `
+            -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
+            -w /home/aisg/{{cookiecutter.repo_name}} `
+            {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
+            bash -c "python -u src/train_model.py"
+        ```
 
-    ```bash
-    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
-    # Run this in the base of your project repository, and change accordingly
-    khull kaniko --context $(pwd) \
-        --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-gpu.Dockerfile \
-        --destination {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
-{%- if cookiecutter.platform == 'gcp' %}
-        --gcp \
-{%- endif %}
-        --cred-file /path/to/docker/config.json \
-        -v <pvc-name>:/path/to/pvc/mount
-    ```
+    You can run MLFlow in Docker as well with the following command:
 
-After building the image, you can run the script through Docker:
+    === "Linux/macOS"
 
-=== "Linux/macOS"
+        ```bash
+        docker run --rm -d \
+            -p 5000:5000
+            -v ./mlruns:/mlruns \
+            ghcr.io/mlflow/mlflow:v2.9.2 \
+            mlflow server -h 0.0.0.0
+        ```
 
-    ```bash
-    sudo chown 2222:2222 ./mlruns ./models
-    # Add --gpus=all for Nvidia GPUs in front of the image name
-    # Add --device=/dev/kfd --device=/dev/dri --group-add video for AMD GPUs in front of the image name
-    # Add no_cuda=false to use GPUs behind the image name
-    docker run --rm \
-        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
-        -v ./mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns \
-        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
-        -w /home/aisg/{{cookiecutter.repo_name}} \
-        {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
-        bash -c "python -u src/train_model.py"
-    ```
+    === "Windows PowerShell"
 
-=== "Windows PowerShell"
+        ```powershell
+        docker run --rm -d `
+            -p 5000:5000 `
+            -v .\mlruns:/mlruns `
+            ghcr.io/mlflow/mlflow:v2.9.2 `
+            mlflow server -h 0.0.0.0
+        ```
 
-    ```powershell
-    docker run --rm \
-        -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
-        -v .\mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns `
-        -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
-        -w /home/aisg/{{cookiecutter.repo_name}} `
-        {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
-        bash -c "python -u src/train_model.py"
-    ```
+    and connect to http://localhost:5000.
 
-You can run MLFlow in Docker as well with the following command:
+    Once you are satisfied with the Docker image, you can push it to the 
+    Docker registry:
 
-=== "Linux/macOS"
+    !!! warning "Attention"
 
-    ```bash
-    docker run --rm -d \
-        -p 5000:5000
-        -v ./mlruns:/mlruns \
-        ghcr.io/mlflow/mlflow:v2.9.2 \
-        mlflow server -h 0.0.0.0
-    ```
+        If you're following the "VSCode Server Terminal" method, you can 
+        skip this as you have already pushed to the Docker registry.
 
-=== "Windows PowerShell"
+    === "Linux/macOS"
 
-    ```powershell
-    docker run --rm -d `
-        -p 5000:5000 `
-        -v .\mlruns:/mlruns `
-        ghcr.io/mlflow/mlflow:v2.9.2 `
-        mlflow server -h 0.0.0.0
-    ```
+        ```bash
+        docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
+        ```
 
-and connect to http://localhost:5000.
+    === "Windows PowerShell"
 
-Once you are satisfied with the Docker image, you can push it to the 
-Docker registry:
+        ```powershell
+        docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
+        ```
 
-!!! warning "Attention"
+=== "Run:ai"
 
-    If you're following the "VSCode Server Terminal" method, you can 
-    skip this as you have already pushed to the Docker registry.
+    The beauty of MLFlow is that it can run locally, within a Docker 
+    container or connecting to a remote MLFlow server. In this case, 
+    We shall build the Docker image from the Docker file 
+    `docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
 
-=== "Linux/macOS"
+    === "VSCode Server Terminal"
 
-    ```bash
-    docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
-    ```
-    
-=== "Windows PowerShell"
+        ```bash
+        # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
+        # Run this in the base of your project repository, and change accordingly
+        khull kaniko --context $(pwd) \
+            --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-gpu.Dockerfile \
+            --destination {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
+    {%- if cookiecutter.platform == 'gcp' %}
+            --gcp \
+    {%- endif %}
+            --cred-file /path/to/docker/config.json \
+            -v <pvc-name>:/path/to/pvc/mount
+        ```
 
-    ```powershell
-    docker push {{cookiecutter.registry_project_path}}/model-training:0.1.0
-    ```
+    Now that we have the Docker image built and pushed to the registry, 
+    we can run a job using it:
 
-### Run:ai
+    === "Linux/macOS"
 
-Now that we have the Docker image pushed to the registry, we can run a 
-job using it:
+        ```bash
+        # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
+        runai submit \
+            --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
+            -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
+            --working-dir /home/aisg/{{cookiecutter.repo_name}} \
+            --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+            --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+            -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
+            -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
+            -e OMP_NUM_THREADS=2 \
+            --command -- '/bin/bash -c "python -u src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
+        ```
 
-=== "Linux/macOS"
+    === "Windows PowerShell"
 
-    ```bash
-    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
-    runai submit \
-        --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
-        -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
-        --working-dir /home/aisg/{{cookiecutter.repo_name}} \
-        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
-        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
-        -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
-        -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-        -e OMP_NUM_THREADS=2 \
-        --command -- '/bin/bash -c "python -u src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
-    ```
+        ```powershell
+        # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
+        runai submit `
+            --job-name-prefix <YOUR_HYPHENATED_NAME>-train `
+            -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
+            --working-dir /home/aisg/{{cookiecutter.repo_name}} `
+            --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> `
+            --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 `
+            -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> `
+            -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> `
+            -e OMP_NUM_THREADS=2 `
+            --command -- '/bin/bash -c "python -u src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
+        ```
 
-=== "Windows PowerShell"
+    === "VSCode Server Terminal"
 
-    ```powershell
-    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
-    runai submit `
-        --job-name-prefix <YOUR_HYPHENATED_NAME>-train `
-        -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
-        --working-dir /home/aisg/{{cookiecutter.repo_name}} `
-        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> `
-        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 `
-        -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> `
-        -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> `
-        -e OMP_NUM_THREADS=2 `
-        --command -- '/bin/bash -c "python -u src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
-    ```
+        ```bash
+        # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
+        $ runai submit \
+            --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
+            -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
+            --working-dir /home/aisg/{{cookiecutter.repo_name}} \
+            --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+            --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+            -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
+            -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
+            -e OMP_NUM_THREADS=2 \
+            --command -- '/bin/bash -c "python -u src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
+        ```
 
-=== "VSCode Server Terminal"
+    Once you have successfully run an experiment, you may inspect the run
+    on the MLflow Tracking server. Through the MLflow Tracking server
+    interface, you can view the metrics and parameters logged for the run,
+    as well as download the artifacts that have been uploaded to the ECS
+    bucket. You can also compare runs with each other.
 
-    ```bash
-    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
-    $ runai submit \
-        --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
-        -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
-        --working-dir /home/aisg/{{cookiecutter.repo_name}} \
-        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
-        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
-        -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
-        -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-        -e OMP_NUM_THREADS=2 \
-        --command -- '/bin/bash -c "python -u src/train_model.py data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
-    ```
+    ![MLflow Tracking Server - Inspecting Runs](https://storage.googleapis.com/aisg-mlops-pub-data/images/mlflow-tracking-server-inspect.gif)
 
-Once you have successfully run an experiment, you may inspect the run
-on the MLflow Tracking server. Through the MLflow Tracking server
-interface, you can view the metrics and parameters logged for the run,
-as well as download the artifacts that have been uploaded to the ECS
-bucket. You can also compare runs with each other.
+    !!! tip
+        Every job submitted with `runai submit` is assigned a unique ID,
+        and a unique job name if the `--job-name-prefix` is used. The
+        `mlflow_init` function within the `general_utils.py` module tags
+        every experiment name with the job's name and UUID as provided by
+        Run:ai, with the tags `job_uuid` and `job_name`. This allows you to
+        easily identify the MLflow experiment runs that are associated with 
+        each Run:ai job. You can filter for MLflow experiment runs 
+        associated with a specific Run:ai job by using MLflow's search 
+        filter expressions and API.
 
-![MLflow Tracking Server - Inspecting Runs](https://storage.googleapis.com/aisg-mlops-pub-data/images/mlflow-tracking-server-inspect.gif)
+        ??? info "Reference Link(s)"
 
-!!! tip
-    Every job submitted with `runai submit` is assigned a unique ID,
-    and a unique job name if the `--job-name-prefix` is used. The
-    `mlflow_init` function within the `general_utils.py` module tags
-    every experiment name with the job's name and UUID as provided by
-    Run:ai, with the tags `job_uuid` and `job_name`. This allows you to
-    easily identify the MLflow experiment runs that are associated with 
-    each Run:ai job. You can filter for MLflow experiment runs 
-    associated with a specific Run:ai job by using MLflow's search 
-    filter expressions and API.
+            - [Run:ai Docs - Environment Variables inside a Run:ai Workload](https://docs.run.ai/latest/Researcher/best-practices/env-variables/)
+            - [MLflow Docs - Search Runs](https://mlflow.org/docs/latest/search-runs.html)
 
-    ??? info "Reference Link(s)"
-
-        - [Run:ai Docs - Environment Variables inside a Run:ai Workload](https://docs.run.ai/latest/Researcher/best-practices/env-variables/)
-        - [MLflow Docs - Search Runs](https://mlflow.org/docs/latest/search-runs.html)
-
-!!! info
-    If your project has GPU quotas assigned to it, you can make use of
-    it by specifying the `--gpu` flag in the `runai submit` command. As
-    part of Run:ai's unique selling point, you can also specify
-    fractional values, which would allow you to utilise a fraction of a
-    GPU. This is useful for projects that require a GPU for training,
-    but do not require the full capacity of a GPU.
+    !!! info
+        If your project has GPU quotas assigned to it, you can make use of
+        it by specifying the `--gpu` flag in the `runai submit` command. As
+        part of Run:ai's unique selling point, you can also specify
+        fractional values, which would allow you to utilise a fraction of a
+        GPU. This is useful for projects that require a GPU for training,
+        but do not require the full capacity of a GPU.
 
 ### Hyperparameter Tuning
 
@@ -607,98 +615,98 @@ executing the model training job out of the Run:ai platform, as the
 `JOB_NAME` and `JOB_UUID` environment variables would not be available
 by default.
 
-#### Local 
+=== "Local" 
 
-=== "Linux/macOS"
+    === "Linux/macOS"
 
-    ```bash
-    python src/train_model.py --multirun
-    ```
+        ```bash
+        python src/train_model.py --multirun
+        ```
 
-=== "Windows PowerShell"
+    === "Windows PowerShell"
 
-    ```powershell
-    python src\train_model.py --multirun
-    ```
+        ```powershell
+        python src\train_model.py --multirun
+        ```
 
-#### Docker
+=== "Docker"
 
-=== "Linux/macOS"
+    === "Linux/macOS"
 
-    ```bash
-    docker run --rm \
-        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
-        -v ./mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns \
-        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
-        -w /home/aisg/{{cookiecutter.repo_name}} \
-        {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
-        python -u src/train_model.py --multirun
-    ```
+        ```bash
+        docker run --rm \
+            -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+            -v ./mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns \
+            -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
+            -w /home/aisg/{{cookiecutter.repo_name}} \
+            {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
+            python -u src/train_model.py --multirun
+        ```
 
-=== "Windows PowerShell"
+    === "Windows PowerShell"
 
-    ```powershell
-    docker run --rm \
-        -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
-        -v .\mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns `
-        -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
-        -w /home/aisg/{{cookiecutter.repo_name}} `
-        {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
-        python -u src/train_model.py --multirun
-    ```
+        ```powershell
+        docker run --rm \
+            -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
+            -v .\mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns `
+            -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
+            -w /home/aisg/{{cookiecutter.repo_name}} `
+            {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
+            python -u src/train_model.py --multirun
+        ```
     
-#### Run:ai
+=== "Run:ai"
 
-=== "Linux/macOS"
-
-    ```bash
-    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
-    runai submit \
-        --job-name-prefix <YOUR_HYPHENATED_NAME>-train-hp \
-        -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
-        --working-dir /home/aisg/{{cookiecutter.repo_name}} \
-        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
-        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
-        -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
-        -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-        -e MLFLOW_HPTUNING_TAG=$(date +%s) \
-        -e OMP_NUM_THREADS=2 \
-        --command -- '/bin/bash -c "python -u src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
-    ```
-
-=== "Windows PowerShell"
-
-    ```powershell
-    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
-    runai submit `
-        --job-name-prefix <YOUR_HYPHENATED_NAME>-train `
-        -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
-        --working-dir /home/aisg/{{cookiecutter.repo_name}} `
-        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
-        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
-        -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> `
-        -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> `
-        -e MLFLOW_HPTUNING_TAG=$(Get-Date -UFormat %s -Millisecond 0) `
-        -e OMP_NUM_THREADS=2 `
-        --command -- '/bin/bash -c "python -u src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
-    ```
-
-=== "VSCode Server Terminal"
-
-    ```bash
-    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
-    runai submit \
-        --job-name-prefix <YOUR_HYPHENATED_NAME>-train-hp \
-        -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
-        --working-dir /home/aisg/{{cookiecutter.repo_name}} \
-        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
-        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
-        -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
-        -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-        -e MLFLOW_HPTUNING_TAG=$(date +%s) \
-        -e OMP_NUM_THREADS=2 \
-        --command -- '/bin/bash -c "python -u src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
-    ```
+    === "Linux/macOS"
+    
+        ```bash
+        # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
+        runai submit \
+            --job-name-prefix <YOUR_HYPHENATED_NAME>-train-hp \
+            -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
+            --working-dir /home/aisg/{{cookiecutter.repo_name}} \
+            --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+            --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+            -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
+            -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
+            -e MLFLOW_HPTUNING_TAG=$(date +%s) \
+            -e OMP_NUM_THREADS=2 \
+            --command -- '/bin/bash -c "python -u src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
+        ```
+    
+    === "Windows PowerShell"
+    
+        ```powershell
+        # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
+        runai submit `
+            --job-name-prefix <YOUR_HYPHENATED_NAME>-train `
+            -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 `
+            --working-dir /home/aisg/{{cookiecutter.repo_name}} `
+            --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+            --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+            -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> `
+            -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> `
+            -e MLFLOW_HPTUNING_TAG=$(Get-Date -UFormat %s -Millisecond 0) `
+            -e OMP_NUM_THREADS=2 `
+            --command -- '/bin/bash -c "python -u src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
+        ```
+    
+    === "VSCode Server Terminal"
+    
+        ```bash
+        # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
+        runai submit \
+            --job-name-prefix <YOUR_HYPHENATED_NAME>-train-hp \
+            -i {{cookiecutter.registry_project_path}}/model-training:0.1.0 \
+            --working-dir /home/aisg/{{cookiecutter.repo_name}} \
+            --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+            --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+            -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
+            -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
+            -e MLFLOW_HPTUNING_TAG=$(date +%s) \
+            -e OMP_NUM_THREADS=2 \
+            --command -- '/bin/bash -c "python -u src/train_model.py --multirun data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed setup_mlflow=true mlflow_tracking_uri=<MLFLOW_TRACKING_URI> mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models epochs=3"'
+        ```
 
 ![MLflow Tracking Server - Hyperparameter Tuning Runs](assets/screenshots/mlflow-tracking-hptuning-runs.png)
 
