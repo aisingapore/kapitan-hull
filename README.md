@@ -38,6 +38,13 @@ $ pip install "cookiecutter>=2.2"
 $ cookiecutter https://github.com/aisingapore/kapitan-hull
 ```
 
+> For some reason, macOS would not install the `cookiecutter` CLI. If
+> that's the case, you would either need to use `conda install` (if 
+> you're using Conda), or follow the instructions on the
+> [`cookieccutter` guide site][ccutter-inst] using `pipx`.
+
+[ccutter-inst]: https://cookiecutter.readthedocs.io/en/stable/README.html#installation
+
 If you want to run a specific version of Kapitan Hull for compatibility 
 reasons, you can specify the `-c` parameter for the specific tag/branch
 we have:
