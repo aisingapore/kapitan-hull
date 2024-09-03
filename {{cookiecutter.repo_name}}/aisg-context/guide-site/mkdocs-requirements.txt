@@ -1,8 +1,8 @@
-mkdocs==1.5.3
-mkdocs-material==9.5.3
-mkdocs-minify-plugin==0.7.2
+mkdocs==1.6.1
+mkdocs-material==9.5.34
+mkdocs-minify-plugin==0.8.0
 mkdocs-redirects==1.2.1
 mkdocs-ezlinks-plugin==0.1.14
-Pygments==2.17.2
-jinja2==3.1.2
-termynal==0.11.1
+Pygments==2.18.0
+jinja2==3.1.4
+termynal==0.12.1

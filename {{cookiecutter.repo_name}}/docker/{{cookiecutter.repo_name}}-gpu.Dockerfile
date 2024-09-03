@@ -1,6 +1,6 @@
 # Use this if deployed outside RunAI
-#FROM nvcr.io/nvidia/cuda:12.1.0-cudnn8-devel-ubuntu20.04
-FROM python:3.11-slim
+#FROM nvcr.io/nvidia/cuda:12.1.0-cudnn8-devel-ubuntu22.04
+FROM python:3.12-slim
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
