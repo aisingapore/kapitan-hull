@@ -13,11 +13,12 @@ ARG REPO_DIR="."
 
 RUN useradd -l -m -s /bin/bash -u ${NON_ROOT_UID} ${NON_ROOT_USER}
 
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub
-
 RUN apt update && \
     apt -y install curl git && \
     apt clean
+
+# Use this if deployed outside RunAI
+#RUN curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
 
 ENV PYTHONIOENCODING utf8
 ENV LANG "C.UTF-8"
@@ -34,3 +35,9 @@ COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} ${REPO_DIR} {{cookiecutter.repo_na
 
 # Install pip requirements
 RUN pip install -r {{cookiecutter.repo_name}}/requirements.txt
+
+# Use this if deployed outside RunAI
+#RUN micromamba shell init -s bash -p ~/micromamba
+#RUN micromamba install python=3.12.4 -c defaults -n base -y
+#RUN micromamba run -n base pip install -r {{cookiecutter.repo_name}}/requirements.txt
+#RUN echo 'alias python="micromamba run -n base python"' >> "${HOME_DIR}/.bashrc"
