@@ -898,9 +898,9 @@ MLflow Tracking server.
 === "Linux/macOS"
 
     ```bash
-    conda create -n mlflow-test python=3.11.7
+    conda create -n mlflow-test python=3.12.4
     conda activate mlflow-test
-    pip install mlflow==2.9.2
+    pip install mlflow==2.15.1
     # Install boto3 or google-cloud-storage packages if 
     # custom object storage is used
     export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
@@ -911,9 +911,9 @@ MLflow Tracking server.
 === "Windows PowerShell"
 
     ```powershell
-    conda create -n mlflow-test python=3.11.7
+    conda create -n mlflow-test python=3.12.4
     conda activate mlflow-test
-    pip install mlflow==2.9.2
+    pip install mlflow==2.15.1
     # Install boto3 or google-cloud-storage packages if 
     # custom object storage is used
     $MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME>
