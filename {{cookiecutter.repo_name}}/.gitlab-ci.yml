@@ -9,6 +9,8 @@ default:
     key: $CI_COMMIT_REF_SLUG
     paths:
       - ./conda
+  image:
+    name: continuumio/miniconda3:24.7.1-0
 
 stages:
   - test
@@ -17,8 +19,6 @@ stages:
 
 test:conda-build:
   stage: test
-  image:
-    name: continuumio/miniconda3:23.10.0-1
   script:
     - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p ./conda/{{cookiecutter.repo_name}} -y
   rules:
@@ -38,8 +38,6 @@ test:conda-build:
 
 test:pylint-pytest:
   stage: test
-  image:
-    name: continuumio/miniconda3:23.10.0-1
   before_script:
     - source activate ./conda/{{cookiecutter.repo_name}}
     - pip install -r dev-requirements.txt
@@ -66,8 +64,6 @@ test:pylint-pytest:
 
 pages:
   stage: deploy-docs
-  image:
-    name: continuumio/miniconda3:23.10.0-1
   before_script:
     - source activate ./conda/{{cookiecutter.repo_name}}
     - pip install -r docs-requirements.txt
@@ -77,10 +73,14 @@ pages:
   artifacts:
     paths:
     - public
-  only:
-    - main
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - docs/**/*
+        - src/**/*
   needs:
-    - test:conda-build
+    - job: test:conda-build
+      optional: true
 
 build:data-prep-image:
   stage: build
