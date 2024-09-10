@@ -80,10 +80,13 @@ def mlflow_init(args, run_name='train-model', setup_mlflow=False, autolog=False)
 
             mlflow.start_run(run_name=run_name)
 
-            if "MLFLOW_HPTUNING_TAG" in os.environ:
-                mlflow.set_tag("hptuning_tag", os.environ.get("MLFLOW_HPTUNING_TAG"))
-            if "JOB_UUID" in os.environ:
-                mlflow.set_tag("job_uuid", os.environ.get("JOB_UUID"))
+            set_tag = lambda env_var, tag_name='': mlflow.set_tag(
+                tag_name if tag_name != '' else env_var.lower(), 
+                os.environ.get(env_var)
+            ) if env_var in os.environ else None
+            set_tag("MLFLOW_HP_TUNING_TAG", "hptuning_tag")
+            set_tag("JOB_UUID")
+            set_tag("JOB_NAME")
 
             mlflow_run = mlflow.active_run()
             init_success = True
