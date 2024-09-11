@@ -92,8 +92,9 @@ def mlflow_init(args, run_name='train-model', setup_mlflow=False, autolog=False)
             init_success = True
             logger.info("MLflow initialisation has succeeded.")
             logger.info("UUID for MLflow run: %s", mlflow_run.info.run_id)
-        except Exception:
+        except Exception as e:
             logger.error("MLflow initialisation has failed.")
+            logger.error(e)
 
     return init_success, mlflow_run
 
