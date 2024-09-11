@@ -461,7 +461,7 @@ artifacts without explicitly knowing the {{objstg}} credentials.
             --command -- /bin/bash -c "python -u src/train_model.py \
                 data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed \
                 setup_mlflow=true \
-                mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \ 
+                mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
                 mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
                 model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models \
                 epochs=3"
