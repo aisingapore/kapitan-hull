@@ -1,0 +1,66 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/guide-for-user/01-prerequisites.md
++++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/guide-for-user/01-prerequisites.md
+@@ -5,10 +5,14 @@
+ Aside from an internet connection, you would need the following to
+ follow through with the guide:
+ 
++- NUS Staff/Student account.
++- Azure account provisioned by AI Singapore.
+ - PC with the following installed:
+     - If your machine is with a Windows OS, use [__PowerShell__][pshell]
+       instead of the default Command (`cmd.exe`) shell. Best if you
+       resort to [Windows Terminal][winterm].
++    - __Pulse Secure__
++        - Refer to [NUS IT eGuides][nus-it] for installation guides.
+     - __Web browser__
+     - __Terminal__
+     - __[Git][git]__
+@@ -22,7 +26,9 @@
+     - __[miniconda][mcond]:__ for Python virtual environment management.
+     - __[`kubectl`][kubectl]:__ CLI for Kubernetes.
+ {%- if cookiecutter.platform == 'onprem' %}  
+-    - __[AWS CLI][awscli]:__ CLI for AWS services.
++    - __[AWS CLI][awscli]:__ CLI for AWS services, but we will 
++      specifically be using it for interacting with the AI Singapore's 
++      Elastic Cloud Storage (ECS) service through the S3 protocol.
+         - You may choose to just use [`boto3`][boto3], the Python SDK 
+           for AWS instead, to interact with the ECS service within a 
+           Python environment. However, this does not fall under the 
+@@ -33,15 +39,15 @@
+     - *(Optional)* __[`helm`][helm]:__ CLI for Kubernetes' package 
+       manager.
+ {%- if cookiecutter.orchestrator == 'runai' %}  
+-- Access to a project on a Run:ai cluster.  
++- Access to a project on AI Singapore's Run:ai cluster.  
+   See [here][runai-page] for more information.
+ {%- elif cookiecutter.orchestrator == 'polyaxon' %}  
+ {%- elif cookiecutter.orchestrator == 'noorch' %}  
+ {%- endif %}
+ {%- if cookiecutter.platform == 'onprem' %}  
+-- Credentials for an S3-compatible service (MinIO, etc).  
++- Credentials for AI Singapore's Elastic Cloud Storage (ECS) service.  
+   See [here][ecs-page] for more information.
+-- Credentials for a Docker registry.  
++- Credentials for AI Singapore's Harbor registry.  
+   See [here][harbor-page] for more information.
+ {%- elif cookiecutter.platform == 'gcp' %}
+ - Access to a project on [Google Cloud Platform][gcp].  
+@@ -49,6 +55,10 @@
+ {%- endif %}
+ - Credentials for an MLflow Tracking server.  
+   See [here][mlflow-page] for more information.
++
++!!! note
++    If you do not have any of the required credentials, please verify 
++    with or notify the MLOps team at `mlops@aisingapore.org`.
+ 
+ !!! info
+     Wherever relevant, you can toggle between the different commands
+@@ -79,6 +89,7 @@
+ 
+ [pshell]: https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.2
+ [winterm]: https://docs.microsoft.com/en-us/windows/terminal/
++[nus-it]: https://nusit.nus.edu.sg/eguides/
+ [git]: https://git-scm.com/downloads
+ [rancher]: https://rancherdesktop.io
+ [docker]: https://docs.docker.com/engine/install
