@@ -71,6 +71,7 @@ def remove_redundant_files() -> None:
     if ORCH != 'runai':
         shutil.rmtree(RUNAI_YAML_PATH)
 
+
 if __name__ == "__main__":
     generate_template_scripts()
     remove_redundant_files()

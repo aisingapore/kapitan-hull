@@ -1,0 +1,95 @@
+--- {{cookiecutter.repo_name}}/src/{{cookiecutter.src_package_name}}_fastapi/v1/routers/model.py
++++ {{cookiecutter.repo_name}}/problem-templates/cv/src/{{cookiecutter.src_package_name}}_fastapi/v1/routers/model.py
+@@ -2,6 +2,8 @@
+ import os
+ import logging
+ import fastapi
++import torchvision
++from PIL import Image
+ 
+ import {{cookiecutter.src_package_name}}_fastapi as {{cookiecutter.src_package_name_short}}_fapi
+ 
+@@ -11,22 +13,24 @@
+ 
+ ROUTER = fastapi.APIRouter()
+ PRED_MODEL = {{cookiecutter.src_package_name_short}}_fapi.deps.PRED_MODEL
++DEVICE = {{cookiecutter.src_package_name_short}}_fapi.deps.DEVICE
+ 
+ 
+ @ROUTER.post("/predict", status_code=fastapi.status.HTTP_200_OK)
+-def predict(data: str = fastapi.Body()):
+-    """Endpoint that returns the input as-is.
++def classify_image(image_file: fastapi.UploadFile):
++    """Endpoint that returns sentiment classification of movie review
++    texts.
+ 
+     Parameters
+     ----------
+-    data : str
+-        Input text.
++    image_file : fastapi.UploadFile
++        'fastapi.UploadFile' object.
+ 
+     Returns
+     -------
+     result_dict : dict
+-        Dictionary containing the input string.
+-    
++        Dictionary containing the file name and prediction for the image.
++
+     Raises
+     ------
+     fastapi.HTTPException
+@@ -36,28 +40,44 @@
+     result_dict = {"data": []}
+ 
+     try:
+-        logger.info("Copying input...")
++        logger.info("Classifying image...")
+ 
+-        pred_str = PRED_MODEL.predict(data)
++        contents = image_file.file.read()
++        with open(image_file.filename, "wb") as buffer:
++            buffer.write(contents)
++        image = Image.open(image_file.filename)
++        image = torchvision.transforms.functional.to_grayscale(image)
++        image = torchvision.transforms.functional.to_tensor(image)
++        output = PRED_MODEL(image.unsqueeze(0).to(DEVICE))
++        pred = output.argmax(dim=1, keepdim=True)
++        pred_str = str(int(pred[0]))
+ 
+         result_dict["data"].append(
+-            {"input": pred_str}
++            {"image_filename": image_file.filename, "prediction": pred_str}
+         )
+-        logger.info("Input: %s", data)
++        logger.info(
++            "Prediction for image filename %s: %s", image_file.filename, pred_str
++        )
+ 
+     except Exception as error:
+         logger.error(error)
+         raise fastapi.HTTPException(status_code=500, detail="Internal server error.")
+-    
++
++    finally:
++        image_file.file.close()
++        os.remove(image_file.filename)
++
+     return result_dict
++
+ 
+ @ROUTER.get("/version", status_code=fastapi.status.HTTP_200_OK)
+ def model_version():
+-    """Get sample version used for the API.
++    """Get version (UUID) of predictive model used for the API.
+ 
+     Returns
+     -------
+     dict
+-        Dictionary containing the sample version.
++        Dictionary containing the UUID of the predictive model being
++        served.
+     """
+-    return {"data": {"model_uuid": {{cookiecutter.src_package_name_short}}_fapi.config.SETTINGS.MODEL_UUID}}
++    return {"data": {"model_uuid": {{cookiecutter.src_package_name_short}}_fapi.config.SETTINGS.PRED_MODEL_UUID}}

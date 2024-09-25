@@ -1,0 +1,62 @@
+--- {{cookiecutter.repo_name}}/src/{{cookiecutter.src_package_name}}/data_prep/datasets.py
++++ {{cookiecutter.repo_name}}/problem-templates/cv/src/{{cookiecutter.src_package_name}}/data_prep/datasets.py
+@@ -1,21 +1,44 @@
+ """Dataset classes for defining how datasets are to be loaded.
+ """
++import os
++import pandas as pd
++from PIL import Image
++import torch.utils.data as torch_data
++import torchvision
+ 
+-import os
+-import shutil
+ 
+-class DummyDataset():
+-    """Dummy dataset class."""
+-    
+-    def __init__(self, data_dir_path) -> None:
+-        if not os.path.isdir(data_dir_path):
+-            e = "Path is not a directory, or does not exist: {}".format(data_dir_path)
+-            raise ValueError(e)
++class MNISTDataset(torch_data.Dataset):
++    """MNIST dataset class."""
++
++    def __init__(
++        self,
++        data_dir_path,
++        anno_file_name,
++        to_grayscale=False,
++        to_tensor=False,
++        transform=None,
++    ):
+         self.data_dir_path = data_dir_path
++        anno_file_path = os.path.join(data_dir_path, anno_file_name)
++        self.anno_df = pd.read_csv(anno_file_path)
++        self.to_grayscale = to_grayscale
++        self.to_tensor = to_tensor
++        self.transform = transform
+ 
+-    def save_data(self, processed_data_dir_path) -> None:
+-        shutil.copytree(
+-            self.data_dir_path,
+-            processed_data_dir_path,
+-            dirs_exist_ok=True
+-        )
++    def __len__(self):
++        return len(self.anno_df)
++
++    def __getitem__(self, index):
++        image_file_name = self.anno_df["filepath"][index]
++        image_path = os.path.join(self.data_dir_path, self.anno_df["filepath"][index])
++        image = Image.open(image_path)
++        if self.to_grayscale:
++            image = torchvision.transforms.functional.to_grayscale(image)
++        if self.to_tensor:
++            image = torchvision.transforms.functional.to_tensor(image)
++        if self.transform:
++            image = self.transform(image)
++
++        label = self.anno_df["label"][index]
++
++        return image_file_name, image, label

@@ -1,0 +1,16 @@
+--- {{cookiecutter.repo_name}}/{{cookiecutter.repo_name}}-conda-env.yaml
++++ {{cookiecutter.repo_name}}/problem-templates/cv/{{cookiecutter.repo_name}}-conda-env.yaml
+@@ -1,9 +1,13 @@
+ name: {{cookiecutter.repo_name}}
+ channels:
++  - pytorch
+   - defaults
+   - conda-forge
+ dependencies:
++  - pytorch=2.3.1
++  - torchvision=0.18.1
++  - cpuonly=2.0
+   - python=3.12.4
+   - pip=24.2
+   - pip:
+     - -r requirements.txt

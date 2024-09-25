@@ -1,0 +1,73 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/guide-for-user/09-batch-inferencing.md
++++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/guide-for-user/09-batch-inferencing.md
+@@ -14,29 +14,19 @@
+ === "Linux/macOS/VSCode Server Terminal"
+ 
+     ```bash
+-    mkdir -p data/batch-infer && cd $_
+-    echo -n "Output1" > in1.txt
+-    echo -n "Output2" > in2.txt
+-    echo -n "Output3" > in3.txt
++    cd data
++    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip
++    unzip batched-mnist-input-data.zip
++    rm batched-mnist-input-data.zip
+     ```
+ 
+ === "Windows PowerShell"
+ 
+     ```powershell
+-    New-Item -ItemType Directory -Force -Path 'data/batch-infer'
+-    $currentDirectory = Get-Location
+-    Set-Location -Path 'data/batch-infer'
+-    
+-    New-Item -ItemType File -Force -Name 'in1.txt' | Out-Null
+-    Add-Content -Path 'in1.txt' -Value "Output1"
+-    
+-    New-Item -ItemType File -Force -Name 'in2.txt' | Out-Null
+-    Add-Content -Path 'in2.txt' -Value "Output2"
+-    
+-    New-Item -ItemType File -Force -Name 'in3.txt' | Out-Null
+-    Add-Content -Path 'in3.txt' -Value "Output3"
+-    
+-    Set-Location -Path $currentDirectory
++    cd data
++    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip
++    Expand-Archive -Path batched-mnist-input-data.zip -DestinationPath .
++    rm batched-mnist-input-data.zip
+     ```
+ 
+ To execute the batch inferencing script locally:
+@@ -46,6 +36,8 @@
+     ```bash
+     # Navigate back to root directory
+     cd "$(git rev-parse --show-toplevel)"
++    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
++    export PRED_MODEL_PATH="$PWD/models/$PRED_MODEL_UUID/artifacts/model/model.pt"
+     conda activate {{cookiecutter.repo_name}}
+     python src/batch_infer.py
+     ```
+@@ -55,6 +47,8 @@
+     ```powershell
+     # Navigate back to root directory
+     Set-Location -Path (git rev-parse --show-toplevel)
++    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
++    $Env:PRED_MODEL_PATH="$(Get-Location)\models\$PRED_MODEL_UUID\artifacts\model\model.pt"
+     conda activate {{cookiecutter.repo_name}}
+     python src/batch_infer.py
+     ```
+@@ -65,9 +59,11 @@
+ 
+ ```jsonl
+ ...
+-{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in1.txt", "prediction": "Output1"}
+-{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in2.txt", "prediction": "Output2"}
+-{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in3.txt", "prediction": "Output3"}
++{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
++{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
++{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
++{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
++{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
+ ...
+ ```
+ 
