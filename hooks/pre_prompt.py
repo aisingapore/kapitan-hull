@@ -2,10 +2,13 @@ import os
 import shutil
 from unidiff import PatchSet
 
-def apply_patch(patch, src_dir):
+
+def apply_patch(patch: PatchSet, src_dir: str) -> None:
+
     for patched_file in patch:
         source_file_path = os.path.join(src_dir, patched_file.source_file)
         target_file_path = os.path.join(src_dir, patched_file.target_file)
+
         if not os.path.exists(target_file_path):
             os.makedirs(os.path.dirname(target_file_path), exist_ok=True)
             with open(target_file_path, 'w') as f:
@@ -40,7 +43,8 @@ def apply_patch(patch, src_dir):
         with open(target_file_path, 'w') as f:
             f.writelines(modified_lines)
 
-def populate_problem():
+
+def generate_template_scripts() -> None:
     
     working_dir = os.path.join(os.getcwd(), "{{cookiecutter.repo_name}}")
     problem_templates_dir = os.path.join(working_dir, "problem-templates")
@@ -63,5 +67,6 @@ def populate_problem():
                     # Remove the diff file after applying
                     os.remove(diff_file_path)
 
+
 if __name__ == "__main__":
-    populate_problem()
+    generate_template_scripts()

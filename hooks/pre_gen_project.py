@@ -37,7 +37,10 @@ COOKIE_INPUTS = {
 ERROR_MSG_LIST = []
 
 
-def check_input_length(cookie_input_key, cookie_input_val):
+def check_input_length(
+    cookie_input_key: str, 
+    cookie_input_val: str
+) -> None:
 
     global ERROR_MSG_LIST
 
@@ -47,7 +50,10 @@ def check_input_length(cookie_input_key, cookie_input_val):
             % (cookie_input_key, cookie_input_val["user_input"]))
 
 
-def check_input_regex(cookie_input_key, cookie_input_val):
+def check_input_regex(
+    cookie_input_key: str, 
+    cookie_input_val: str
+) -> None:
 
     global ERROR_MSG_LIST
 
@@ -70,7 +76,10 @@ def check_input_regex(cookie_input_key, cookie_input_val):
                     % (cookie_input_key, cookie_input_val["user_input"]))
 
 
-def check_not_implemented(cookie_input_key, cookie_input_val):
+def check_not_implemented(
+    cookie_input_key: str, 
+    cookie_input_val: str
+) -> None:
     
     global ERROR_MSG_LIST
 
@@ -79,7 +88,7 @@ def check_not_implemented(cookie_input_key, cookie_input_val):
             % (cookie_input_key, cookie_input_val["user_input"]))
 
 
-def check_cookiecutter_inputs():
+def check_cookiecutter_inputs() -> None:
 
     global COOKIE_INPUTS
     global ERROR_MSG_LIST
