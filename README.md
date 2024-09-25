@@ -34,7 +34,7 @@ URL of this template as an argument, like such:
 
 ```bash
 # Ensure that python>=3.10
-$ pip install "cookiecutter>=2.2"
+$ pip install "cookiecutter>=2.2" unidiff
 $ cookiecutter https://github.com/aisingapore/kapitan-hull
 ```
 
