@@ -1,5 +1,5 @@
 image:
-  name: python:3.10
+  name: python:3.12
 
 stages:
   - docs
@@ -27,7 +27,7 @@ update:onprem-runai:
   #  REPO_USERNAME_ONPREM_RUNAI: username-in-settings
   #  REPO_PASSWORD_ONPREM_RUNAI: password-in-settings
   before_script:
-    - pip install cookiecutter
+    - pip install cookiecutter unidiff
     - mkdir -p /tmp/kapitan-hull && cd $_
     - git config --global user.name "Kapitan Hull Bot"
     - git config --global user.email "mlops@aisingapore.org"
