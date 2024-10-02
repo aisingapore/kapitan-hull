@@ -7,7 +7,7 @@
 +RUN pip install -r {{cookiecutter.repo_name}}/pytorch-gpu-requirements.txt
  
  # Use this if deployed outside RunAI
- #RUN micromamba shell init -s bash -p ~/micromamba
+ #RUN micromamba shell init -s bash -r ${HOME_DIR}/micromamba
  #RUN micromamba install python=3.12.4 -c defaults -n base -y
  #RUN micromamba run -n base pip install -r {{cookiecutter.repo_name}}/requirements.txt
 +#RUN micromamba run -n base pip install -r {{cookiecutter.repo_name}}/pytorch-gpu-requirements.txt
