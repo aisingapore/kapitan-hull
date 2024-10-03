@@ -46,17 +46,17 @@ Inputs provided to `cookiecutter` for the generation of this template:
 
 ## Overview For User Guide
 
-1.  [Prerequisites](./guide-for-user/01-prerequisites.md)
-2.  [Preface](./guide-for-user/02-preface.md)
-3.  [MLOps Components & Platform](./guide-for-user/03-mlops-components-platform.md)
-4.  [Developer Workspace](guide-for-user/04-dev-wksp.md)
-5.  [Virtual Environment](./guide-for-user/05-virtual-env.md)
-6.  [Data Storage & Versioning](./guide-for-user/06-data-storage-versioning.md)
-7.  [Job Orchestration](./guide-for-user/07-job-orchestration.md)
-8.  [Deployment](./guide-for-user/08-deployment.md)
-9.  [Batch Inferencing](./guide-for-user/09-batch-inferencing.md)
-10. [Continuous Integration & Deployment](./guide-for-user/10-cicd.md)
-11. [Documentation](./guide-for-user/11-documentation.md)
+1.  [Prerequisites](./setting-up/01-prerequisites.md)
+2.  [Preface](./setting-up/02-preface.md)
+3.  [MLOps Components & Platform](./setting-up/03-mlops-components-platform.md)
+4.  [Developer Workspace](setting-up/04-dev-wksp.md)
+5.  [Virtual Environment](./setting-up/05-virtual-env.md)
+6.  [Data Storage & Versioning](./setting-up/06-data-storage-versioning.md)
+7.  [Job Orchestration](./setting-up/07-job-orchestration.md)
+8.  [Deployment](./setting-up/08-deployment.md)
+9.  [Batch Inferencing](./setting-up/09-batch-inferencing.md)
+10. [Continuous Integration & Deployment](./setting-up/10-cicd.md)
+11. [Documentation](./setting-up/11-documentation.md)
 
 ## Directory Tree
 

@@ -1,5 +1,5 @@
---- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/guide-for-user/09-batch-inferencing.md
-+++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/guide-for-user/09-batch-inferencing.md
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/setting-up/09-batch-inferencing.md
++++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/setting-up/09-batch-inferencing.md
 @@ -14,29 +14,19 @@
  === "Linux/macOS/VSCode Server Terminal"
  

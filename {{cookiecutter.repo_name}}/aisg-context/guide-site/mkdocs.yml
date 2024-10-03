@@ -20,11 +20,16 @@ theme:
   logo: aisg-logo.png
   language: en
   features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
     - navigation.footer
     - navigation.tabs
     - navigation.top
     - toc.follow
     - content.tabs.link
+    - search.suggest
+    - search.highlight
   palette:
     - scheme: aisg
       primary: red
@@ -43,19 +48,19 @@ theme:
 
 # Page Tree
 nav:
-  - User Guide:
+  - Settting Up:
     - Overview: index.md
-    - Prerequisites: guide-for-user/01-prerequisites.md
-    - Preface: guide-for-user/02-preface.md
-    - MLOps Components & Platform: guide-for-user/03-mlops-components-platform.md
-    - Developer Workspace: guide-for-user/04-dev-wksp.md
-    - Virtual Environment: guide-for-user/05-virtual-env.md
-    - Data Storage & Versioning: guide-for-user/06-data-storage-versioning.md
-    - Job Orchestration: guide-for-user/07-job-orchestration.md
-    - Deployment: guide-for-user/08-deployment.md
-    - Batch Inferencing: guide-for-user/09-batch-inferencing.md
-    - CI/CD: guide-for-user/10-cicd.md
-    - Documentation: guide-for-user/11-documentation.md
+    - Prerequisites: setting-up/01-prerequisites.md
+    - Preface: setting-up/02-preface.md
+    - MLOps Components & Platform: setting-up/03-mlops-components-platform.md
+    - Developer Workspace: setting-up/04-dev-wksp.md
+    - Virtual Environment: setting-up/05-virtual-env.md
+    - Data Storage & Versioning: setting-up/06-data-storage-versioning.md
+    - Job Orchestration: setting-up/07-job-orchestration.md
+    - Deployment: setting-up/08-deployment.md
+    - Batch Inferencing: setting-up/09-batch-inferencing.md
+    - CI/CD: setting-up/10-cicd.md
+    - Documentation: setting-up/11-documentation.md
 
 # Plugins
 plugins:

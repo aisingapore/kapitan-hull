@@ -40,7 +40,7 @@ def remove_redundant_files() -> None:
         'kapitan-hull-eptg-onprem-runai-banner.png'
     ]
     WORKFLOW_HTML_PATH = os.path.join(
-        BANNER_PATH, 'guide-for-user', 'assets'
+        BANNER_PATH, 'setting-up', 'assets'
     )
     WORKFLOWS_HTML = [
         'aisg-e2e-mlops-gcp-runai-workflow-components_jul2023.html',
