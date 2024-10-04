@@ -5,10 +5,10 @@
     "src_package_name": "{{ cookiecutter.repo_name.replace('-', '_') }}",
     "src_package_name_short": "{{ cookiecutter.src_package_name }}",
     "platform": ["onprem", "gcp"],
-    "orchestrator": ["runai", "polyaxon", "none"],
+    "orchestrator": ["runai", "none"],
     "proj_name": "sample-project",
     "registry_project_path": "registry.domain.tld/sample-project/my-project",
-	"problem_template": ["base", "cv", "nlp", "tabular"],
+	"problem_template": ["base", "cv"],
     "author_name": "AISG",
     "__prompts__": {
         "project_name": "project_name - Name of project that will be the header for the README.md. Input to start with alphabet. Only whitespace as separators.",
@@ -24,7 +24,6 @@
         "orchestrator": {
             "__prompt__": "orchestrator - The orchestrator the project is using.",
             "runai": "runai - Run:AI",
-            "polyaxon": "polyaxon - Polyaxon (for legacy purposes, not implemented yet)",
             "noorch": "noorch - No orchestrator (not implemented yet)"
         },
         "proj_name": "proj_name - The project name used in by the repository. If you're using Run:AI, this will be the Run:AI project name used by the repository.",
@@ -32,9 +31,7 @@
 		"problem_template": {
             "__prompt__": "problem_template - Initialise the repository with a default problem statement.",
             "base": "base - Base template with no model packages",
-            "cv": "cv - Computer Vision (MNIST with Pytorch)",
-            "nlp": "nlp - Natural Language Processing (not implemented yet)",
-            "tabular": "tabular - Tabular data (not implemented yet)"
+            "cv": "cv - Computer Vision (MNIST with Pytorch)"
         },
         "author_name": "author_name - Your alias or project team's name. Relatively arbitrary. No hyphens are allowed."
     }

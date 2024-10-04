@@ -18,10 +18,6 @@ def generate_template_scripts() -> None:
             pass
         case "cv":
             populate_problem("cv")
-        case "nlp":
-            populate_problem("nlp")
-        case "tabular":
-            populate_problem("tabular")
         case _:
             raise ValueError(f"{PROBLEM_TEMPLATE} is not a valid problem template.")
     shutil.rmtree(os.path.join(os.getcwd(), "problem-templates"))
