@@ -56,7 +56,13 @@ nav:
     - Developer Workspace: setting-up/04-dev-wksp.md
     - Virtual Environment: setting-up/05-virtual-env.md
     - Data Storage & Versioning: setting-up/06-data-storage-versioning.md
-    - Job Orchestration: setting-up/07-job-orchestration.md
+  - Running Locally:
+    - Job Orchestration: local/07-job-orchestration.md
+  - Using Docker:
+    - Job Orchestration: docker/07-job-orchestration.md
+  - Using RunAI:
+    - Job Orchestration: runai/07-job-orchestration.md
+  - Sorting Out the Rest:
     - Deployment: setting-up/08-deployment.md
     - Batch Inferencing: setting-up/09-batch-inferencing.md
     - CI/CD: setting-up/10-cicd.md
