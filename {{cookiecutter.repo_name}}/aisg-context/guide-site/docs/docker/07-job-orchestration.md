@@ -41,6 +41,14 @@ This requires the Docker image to be built from a Dockerfile
 (`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
 provided in this template:
 
+!!! warning "You may have built the Docker image before"
+
+    If you have followed the section on [virtual environments][venv],
+    you would have already built your image. If you have not modified 
+    the configuration variables, you can safely skip this step.
+
+[venv]: 05-virtual-env.md
+
 === "Linux/macOS"
 
     ```bash
@@ -61,10 +69,20 @@ provided in this template:
 
 After building the image, you can run the script through Docker:
 
-=== "Linux/macOS"
+=== "Linux"
 
     ```bash
     sudo chown 2222:2222 ./data
+    docker run --rm \
+        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+        -w /home/aisg/{{cookiecutter.repo_name}} \
+        {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
+        bash -c "python -u src/process_data.py"
+    ```
+
+=== "macOS"
+
+    ```bash
     docker run --rm \
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
         -w /home/aisg/{{cookiecutter.repo_name}} \
@@ -140,6 +158,12 @@ dummy_param2: 0.8
 After that, we build the Docker image from the Docker file 
 `docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
 
+!!! warning "You may have built the Docker image before"
+
+    If you have followed the section on [virtual environments][venv],
+    you would have already built your image. If you have not modified 
+    the configuration variables, you can safely skip this step.
+
 !!! warning "Attention"
 
     If you're only using CPUs for training, then you can just reuse
@@ -170,13 +194,24 @@ After that, we build the Docker image from the Docker file
 
 After building the image, you can run the script through Docker:
 
-=== "Linux/macOS"
+=== "Linux"
 
     ```bash
     sudo chown 2222:2222 ./mlruns ./models
     # Add --gpus=all for Nvidia GPUs in front of the image name
     # Add --device=/dev/kfd --device=/dev/dri --group-add video for AMD GPUs in front of the image name
-    # Add no_cuda=false to use GPUs behind the image name
+    docker run --rm \
+        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+        -v ./mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns \
+        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
+        -w /home/aisg/{{cookiecutter.repo_name}} \
+        {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+        bash -c "python -u src/train_model.py"
+    ```
+
+=== "macOS"
+
+    ```bash
     docker run --rm \
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
         -v ./mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns \
@@ -188,6 +223,13 @@ After building the image, you can run the script through Docker:
 
 === "Windows PowerShell"
 
+    !!! warning
+        GPU passthrough only works with Docker Desktop at the time this
+        section is written.  
+        For Nvidia GPUs, you would need to add `--gpus=all` in front of
+        the image name.
+        For AMD GPUs, you can follow this [guide][rocm-wsl].
+
     ```powershell
     docker run --rm \
         -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
@@ -197,6 +239,8 @@ After building the image, you can run the script through Docker:
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
         bash -c "python -u src/train_model.py"
     ```
+
+[rocm-wsl]: https://rocm.docs.amd.com/projects/radeon/en/latest/docs/install/wsl/howto_wsl.html
 
 You can run MLFlow in Docker as well with the following command:
 
