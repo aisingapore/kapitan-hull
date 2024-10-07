@@ -18,12 +18,12 @@
         "src_package_name_short": "src_package_name_short - The alias for the source code's package. Input to start with alphabet characters. No whitespaces or hyphens are allowed.",
         "platform": {
             "__prompt__": "platform - The platform the project is running on.",
-            "onprem": "onprem - On premise",
+            "onprem": "onprem - On premise (AISG)",
             "gcp": "gcp - Google Cloud Platform"
         },
         "orchestrator": {
             "__prompt__": "orchestrator - The orchestrator the project is using.",
-            "runai": "runai - Run:AI",
+            "runai": "runai - Run:AI (and other AISG Resources)",
             "noorch": "noorch - No orchestrator (not implemented yet)"
         },
         "proj_name": "proj_name - The project name used in by the repository. If you're using Run:AI, this will be the Run:AI project name used by the repository.",
