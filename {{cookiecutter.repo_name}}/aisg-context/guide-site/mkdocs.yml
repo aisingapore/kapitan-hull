@@ -63,6 +63,7 @@ nav:
     - Data Storage & Versioning: docker/06-data-storage-versioning.md
     - Job Orchestration: docker/07-job-orchestration.md
   - Using RunAI:
+    - Virtual Environments: runai/05-virtual-env.md
     - Data Storage & Versioning: runai/06-data-storage-versioning.md
     - Job Orchestration: runai/07-job-orchestration.md
   - Sorting Out the Rest:
