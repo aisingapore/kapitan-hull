@@ -54,8 +54,8 @@ nav:
     - Preface: setting-up/02-preface.md
     - MLOps Components & Platform: setting-up/03-mlops-components-platform.md
     - Developer Workspace: setting-up/04-dev-wksp.md
-    - Virtual Environment: setting-up/05-virtual-env.md
   - Running Locally:
+    - Virtual Environments: local/05-virtual-env.md
     - Data Storage & Versioning: local/06-data-storage-versioning.md
     - Job Orchestration: local/07-job-orchestration.md
   - Using Docker:
