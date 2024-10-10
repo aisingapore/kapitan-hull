@@ -88,13 +88,15 @@ server to detect the `conda` environments that you would have created.
 
 - Ensure that you have [`ipykernel`][ipyk] installed in the `conda` 
   environment that you intend to use. This template by default lists 
-  the library as a dependency under 
-  `{{cookiecutter.repo_name}}-conda-env.yaml`. You can check for the
-  library like so:
+  the library as a dependency under `requirements.txt`. You can check
+  for the library like so:
 
 === "VSCode Server Terminal"
 
     ```bash
+    # Usually this is fine
+    conda activate {{cookiecutter.repo_name}}
+    # If you're using the 2nd option
     conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}
     conda list | grep "ipykernel"
     ```

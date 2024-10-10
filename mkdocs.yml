@@ -48,21 +48,23 @@ theme:
 
 # Page Tree
 nav:
+  - Overview: index.md
   - User Guide:
-    - Overview: index.md
     - Prerequisites: setting-up/01-prerequisites.md
     - Preface: setting-up/02-preface.md
     - MLOps Components & Platform: setting-up/03-mlops-components-platform.md
-    - Developer Workspace: setting-up/04-dev-wksp.md
   - Running Locally:
+    - Developer Workspace: local/04-dev-wksp.md
     - Virtual Environments: local/05-virtual-env.md
     - Data Storage & Versioning: local/06-data-storage-versioning.md
     - Job Orchestration: local/07-job-orchestration.md
   - Using Docker:
+    - Developer Workspace: docker/04-dev-wksp.md
     - Virtual Environments: docker/05-virtual-env.md
     - Data Storage & Versioning: docker/06-data-storage-versioning.md
     - Job Orchestration: docker/07-job-orchestration.md
   - Using RunAI:
+    - Developer Workspace: runai/04-dev-wksp.md
     - Virtual Environments: runai/05-virtual-env.md
     - Data Storage & Versioning: runai/06-data-storage-versioning.md
     - Job Orchestration: runai/07-job-orchestration.md

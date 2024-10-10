@@ -1,6 +1,6 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/05-virtual-env.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/05-virtual-env.md
-@@ -14,2 +14,5 @@
+@@ -22,2 +22,5 @@
 -We would need to build a Docker image to create a virtual environment
 -that will contain all the dependencies required for this guide. This
 +While we will be making use of AI Singapore's remote infrastructure
