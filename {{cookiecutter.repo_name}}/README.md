@@ -10,7 +10,7 @@
 
 _{{cookiecutter.description}}_
 
-__A project generated using AI Singpaore's Kapitan Hull, an end-to-end 
+__A project generated using AI Singapore's Kapitan Hull, an end-to-end 
 ML project template.__
 
 This template that is also accompanied with an end-to-end guide was
