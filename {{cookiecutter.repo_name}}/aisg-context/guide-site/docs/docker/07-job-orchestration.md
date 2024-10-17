@@ -384,6 +384,7 @@ container. This tag is defined using the environment value
         -v ./mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns \
         -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
         -w /home/aisg/{{cookiecutter.repo_name}} \
+        -e MLFLOW_HPTUNING_TAG=$(date +%s) \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
         python -u src/train_model.py --multirun
     ```
@@ -391,11 +392,14 @@ container. This tag is defined using the environment value
 === "Windows PowerShell"
 
     ```powershell
+    $MLFLOW_HPTUNING_TAG = [int][double]::Parse((Get-Date).ToUniversalTime().Subtract([datetime]::UnixEpoch).TotalSeconds)
+    [System.Environment]::SetEnvironmentVariable("MLFLOW_HPTUNING_TAG", $MLFLOW_HPTUNING_TAG.ToString())
     docker run --rm \
         -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
         -v .\mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns `
         -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
         -w /home/aisg/{{cookiecutter.repo_name}} `
+        -e MLFLOW_HPTUNING_TAG=$($env:MLFLOW_HPTUNING_TAG) `
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
         python -u src/train_model.py --multirun
     ```
