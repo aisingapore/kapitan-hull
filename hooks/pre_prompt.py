@@ -26,7 +26,11 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
             while line_index < hunk.source_start - 1:
                 modified_lines.append(original_lines[line_index])
                 line_index += 1
-                
+
+            if hunk.removed == 0:
+                modified_lines.append(original_lines[line_index])
+                line_index += 1
+             
             for line in hunk:
                 if line.is_removed or line.is_context:
                     # Skip original lines (those that are removed)
@@ -47,10 +51,10 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
 
 def generate_template_scripts() -> None:
     
-    working_dir = os.path.join(os.getcwd(), "{{cookiecutter.repo_name}}")
-    problem_templates_dir = os.path.join(working_dir, "problem-templates")
+    base_dir = os.path.join(os.getcwd(), "{{cookiecutter.repo_name}}")
+    problem_templates_dir = os.path.join(base_dir, "problem-templates")
     for problem_domain in os.listdir(problem_templates_dir):
-        src_dir = os.path.join(working_dir, "problem-templates", problem_domain)
+        src_dir = os.path.join(problem_templates_dir, problem_domain)
         
         if not os.path.isdir(src_dir):
             continue
