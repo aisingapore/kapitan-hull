@@ -92,6 +92,23 @@ Following the creation of your repository, initialise it with Git, push
 it to a remote, and follow its `README.md` document for a full guide on 
 its usage.
 
+## Development
+
+To reduce the size and check the explicit changes between the base
+template and the various problem templates, we opt for the use of diff
+files within Kapitan Hull to store the differences within the 
+repository. As such it is essential that developers would know how to 
+apply patches for development, and regenerate the diff files to commit 
+those changes.
+
+### Applying Diff Patch
+
+You can apply a specific patch as such:
+
+```bash
+python hooks/pre_prompt.py apply <diff_file>
+```
+
 ## Note on AMD GPUs
 
 Those who plan to use AMD GPUs and RoCM can check the `extras/rocm` 

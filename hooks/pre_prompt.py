@@ -1,6 +1,7 @@
 import os
 import shutil
 from unidiff import PatchSet
+import argparse
 
 
 def apply_patch(patch: PatchSet, src_dir: str) -> None:
@@ -69,4 +70,17 @@ def generate_template_scripts() -> None:
 
 
 if __name__ == "__main__":
-    generate_template_scripts()
+    parser = argparse.ArgumentParser(description='Apply patches or generate template scripts.')
+    subparsers = parser.add_subparsers()
+
+    apply_parser = subparsers.add_parser('apply', help='Apply a diff file')
+    apply_parser.add_argument('diff_file', help='Path to the diff file')
+    
+    args = parser.parse_args()
+
+    if hasattr(args, 'diff_file'): 
+        with open(args.diff_file, 'r') as diff_file:
+            patch_set = PatchSet(diff_file.read())
+        apply_patch(patch_set, os.getcwd())
+    else:
+        generate_template_scripts()
