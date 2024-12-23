@@ -109,6 +109,17 @@ You can apply a specific patch as such:
 python hooks/pre_prompt.py apply <diff_file>
 ```
 
+### Creating Diff Patch
+
+You can create a specific patch as such:
+
+```bash
+python extras/generate_diffs.py create <alt_file>
+```
+
+This `<alt_file>` refers to the file that is to be committed as a diff
+file in the `problem-templates/<template>` folder.
+
 ## Note on AMD GPUs
 
 Those who plan to use AMD GPUs and RoCM can check the `extras/rocm` 
