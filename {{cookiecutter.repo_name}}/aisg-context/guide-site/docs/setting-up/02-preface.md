@@ -14,12 +14,12 @@ repository using `cookiecutter`.
 
 !!! info
     You can begin by following along the guide as it brings you through
-    a simple problem statement and once you've grasp what this template
-    has to offer, you can deviate from it as much as you wish and
-    customise it to your needs.
+    a simple problem statement and once you've grasped what this
+    template has to offer, you can deviate from it as much as you wish
+    and customise it to your needs.
 
 Since we will be making use of this repository in multiple environments, 
-__ensure that this repository is pushed to a remote__. 
+__ensure that this repository is pushed to a remote__.  
 After creating the remote repository, retrieve the remote URL and push
 the local repository to remote:
 

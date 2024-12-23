@@ -1,9 +1,6 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/setting-up/03-mlops-components-platform.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/setting-up/03-mlops-components-platform.md
-@@ -8,12 +8,33 @@
- - A summary of the service(s) and tool(s) of choice for some components,
-   and an access quickstart for each of them.
- 
+@@ -10,0 +11,15 @@
 +## NUS VPN
 +
 +Your credentials for your NUS Staff/Student account is needed to
@@ -19,9 +16,7 @@
 +{% endif -%}
 +- Other miscellaneous NUS resources
 +
- {% if cookiecutter.platform == 'gcp' -%}
- ## Google Cloud Platform (GCP) Projects
- 
+@@ -14,3 +29,9 @@
 -A [GCP project][gcp-proj] is required to access GCP resources for this
 -project. Such projects are accessible through the 
 -[GCP console][gcp-csl].
@@ -34,34 +29,21 @@
 +    Projects are managed and provisioned by AI Singapore's Platforms 
 +    team. If you'd like to request for a project to be created (or for 
 +    any other enquiries as well), please contact `mlops@aisingapore.org`.
- 
- [gcp-proj]: https://cloud.google.com/docs/overview#projects
- [gcp-csl]: https://console.cloud.google.com/home
-@@ -22,7 +43,11 @@
- 
- You can use GCP's [Cloud SDK][gcp-sdk] to interact with the varying GCP 
- services. When you're using the SDK for the first time, you are to 
+@@ -25 +46,5 @@
 -provide authorisation using a user or service account.  
 +provide authorisation using a user or service account. In AI Singapore's 
 +context, unless your use case concerns some automation or CI/CD 
 +pipelines, you will probably be using your user account (i.e. Google 
 +accounts with AI Singapore domains such as `@aisingapore.org` or 
 +`@aiap.sg`).  
- See [here][sdk-auth] for more information on authorising your SDK.
- 
- A simple command to authorise access:
-@@ -84,10 +109,22 @@
- {% if cookiecutter.platform == 'onprem' -%}
- ### Rancher
- 
+@@ -86,0 +112,6 @@
 +Upon one's assignment to a project, any relevant clusters that one has
 +access to would be viewable on 
 +[AI Singapore's Rancher dashboard][aisg-rke].
 +
 +![AISG's Rancher Dashboard - Home Dashboard](assets/screenshots/rancher-home-dashboard.png)
 +
- [Rancher][rancher] is a Kubernetes management platform that provides 
- cluster administrators or users to manage Kubernetes clusters or 
+@@ -89,2 +120,8 @@
 -facilitate Kubernetes workflows. 
 -
 +facilitate Kubernetes workflows. To login, use your Azure account i.e. 
@@ -72,32 +54,16 @@
 +    MLOps team at `mlops@aisingapore.org`.
 +
 +[aisg-rke]: https://rancher.aisingapore.net
- [rancher]: https://www.rancher.com
- {%- set kubeplat = 'Rancher' %}
- 
-@@ -187,15 +224,14 @@
- ### Version Control
- 
- Within a developer workspace and environment, developers can interact
+@@ -190,3 +227,3 @@
 -(pull, push, etc.) with a Git registry, whether it would be 
 -[__GitHub__][github], [__GitLab__][gitlab] or other Git registries.  
 -This guide will reference GitLab as the preferred Git registry.
 +(pull, push, etc.) with AI Singapore’s [__GitLab__][gitlab] instance,
 +which serves as __the organisation’s default version control (Git)
 +remote server__.
- 
- ??? info "Reference Link(s)"
- 
-     - [Atlassian Tutorials - What is Git?](https://www.atlassian.com/git/tutorials/what-is-git)
- 
+@@ -198 +234,0 @@
 -[github]: https://github.com
- [gitlab]: https://about.gitlab.com
- 
- ### Continuous X
-@@ -233,8 +269,11 @@
- 
- ### Container Image Registry
- 
+@@ -236,2 +272,5 @@
 -Images built through CI/CD workflows or manual builds can be pushed to 
 -container image registries.
 +AI Singapore has a strong __emphasis on containerising pipelines for the
@@ -105,13 +71,7 @@
 +CI/CD workflows or manual builds can be pushed to container image 
 +registries, be it Google Cloud’s [Artifact Registry][gcp-ar] or AI 
 +Singapore’s on-premise [Harbor][harbor] registry.
- 
- {% if cookiecutter.platform == 'onprem' -%}
- ![Harbor Registry - Sample Screenshot](assets/screenshots/external/goharbor-blog-harbor-2.0-artifacts.png)
-@@ -321,16 +360,40 @@
- 
- [fapi]: https://fastapi.tiangolo.com
- 
+@@ -323,0 +363,14 @@
 +## GitLab
 +
 +We at AI Singapore host our own GitLab server:
@@ -126,17 +86,10 @@
 +outside of NUS' network or GCP (regions `asia-southeast1` and
 +`us-central1`), you would need to login to NUS' VPN.
 +
- ### Push & Pull with HTTPS VS SSH
- 
- The usage of either the HTTPS or SSH protocol for communicating with 
+@@ -327 +380 @@
 -a Git-based server depends on the environment in question. If an 
 +the GitLab server depends on the environment in question. If an 
- environment is made accessible by multiple developers, then HTTPS-based
- access where passwords are prompted for would be better fitting.
- SSH-based access would be more fitting for clients that are more
- isolated like a single Linux user or local machines made accessible by
- a single owner.
- 
+@@ -333,0 +387,10 @@
 +If you would like to configure SSH access for accessing AI Singapore's
 +GitLab instance, you can add the following lines to your SSH
 +configuration file (`~/.ssh/config`):
@@ -147,13 +100,7 @@
 +    IdentityFile ~/.ssh/<PATH_TO_PRIVATE_KEY>
 +```
 +
- ??? info "Reference Link(s)"
- 
-     - [GitLab Docs - Use SSH keys to communicate with GitLab](https://docs.gitlab.com/ee/user/ssh)
-@@ -339,11 +402,11 @@
- ## Run:AI
- 
- Run:AI is an enterprise orchestration and cluster management platform
+@@ -342,5 +405,5 @@
 -that works as an abstraction layer on top of the infrastructure to 
 -maximise the usage of such resources. The platform utilises 
 -[Kubernetes][k8s] in the backend. Orchestration platforms such as 
@@ -164,13 +111,7 @@
 +utilises [Kubernetes][k8s] in the backend. Orchestration platforms such 
 +as Run:AI allows end-users to easily spin up workloads, execute jobs, 
 +set up services or carry out any interaction with relevant resources.
- 
- The video below provides a quick and high-level overview of that the
- platform's unique selling point.
-@@ -351,7 +414,19 @@
- <iframe width="1280" height="315" src="https://www.youtube.com/embed/Ss7PYTYbEWw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
- 
- The entry point for accessing the platform's front-end UI is through the
+@@ -354 +417,13 @@
 -login page given to you by your organisation.
 +login page at the following link:
 +
@@ -185,54 +126,24 @@
 +to the platform's home (`Overview`) page.
 +
 +![AISG's Run:AI Home Page](assets/screenshots/runai-home-page.png)
- 
- ### Authentication
- 
-@@ -389,7 +464,7 @@
-     clusters:
-     - cluster:
-         insecure-skip-tls-verify: true
+@@ -392 +467 @@
 -        server: https://runai-cluster.yourcompany.tld:6443
 +        server: https://runai-cluster.aisingapore.net:6443
-       name: runai-cluster-fqdn
-     contexts:
-     - context:
-@@ -406,10 +481,10 @@
-           config:
-             airgapped: "true"
-             auth-flow: remote-browser
+@@ -409 +484 @@
 -            realm: yourcompany
 +            realm: aisingapore
-             client-id: runai-cli
+@@ -411,2 +486,2 @@
 -            idp-issuer-url: https://app.run.ai/auth/realms/yourcompany
 -            redirect-uri: https://yourcompany.run.ai/oauth-code
 +            idp-issuer-url: https://app.run.ai/auth/realms/aisingapore
 +            redirect-uri: https://aisingapore.run.ai/oauth-code
-           name: oidc
-     ```
- 
-@@ -494,7 +569,7 @@
- 
-     ```
-     Go to the following link in your browser:
+@@ -497 +572 @@
 -            https://app.run.ai/auth/realms/yourcompany/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Fyourcompany.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
 +            https://app.run.ai/auth/realms/aisingapore/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Faisingapore.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
-     Enter verification code:
-     INFO[0068] Logged in successfully
-     ```
-@@ -510,7 +585,7 @@
- 
-     ```
-     Go to the following link in your browser:
+@@ -513 +588 @@
 -            https://app.run.ai/auth/realms/yourcompany/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Fyourcompany.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
 +            https://app.run.ai/auth/realms/aisingapore/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Faisingapore.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
-     Enter verification code:
-     INFO[0068] Logged in successfully
-     ```
-@@ -531,13 +606,31 @@
- {%- elif cookiecutter.orchestrator == 'none' -%}
- {% endif %}
- {% if cookiecutter.platform == 'onprem' %}
+@@ -534 +609,19 @@
 -## Docker CLI Authentication
 +## Harbor
 +
@@ -253,20 +164,10 @@
 +![AI Singapore's Harbor Registry - Projects Page](assets/screenshots/harbor-projects-page.png)
 +
 +### Docker CLI Authentication
- 
- While Harbor has its own front-end interface, one may use the Docker CLI
- to interact with the registry.
- 
- ```bash
+@@ -540 +633 @@
 -docker login registry.yourgitregistry.tld
 +docker login registry.aisingapore.net
- ```
- 
- You should have an interactive prompt similar to this:
-@@ -549,14 +642,81 @@
- ```
- 
- Upon a successful login through the Docker CLI, you can push or pull
+@@ -552,8 +645,75 @@
 -images to/from the Docker registry you've logged into.
 -
 -## AWS CLI for S3 Protocol
@@ -350,33 +251,15 @@
 +AI Singapore's ECS makes use of the S3 protocol and so we can make use
 +of the AWS CLI's S3 commands to interact with the storage system.
 +Instructions for installing the AWS CLI (v2) can be found [here][awscli].
- 
- Following installation of the CLI, you would need to configure the
- settings to be used. The settings can be populated within separate
-@@ -565,6 +725,10 @@
- An example of a `credentials` file containing credentials for multiple
- profiles would look like the following:
- 
+@@ -567,0 +728,4 @@
 +!!! note inline end
 +    The `aws_access_key_id` and `aws_secret_access_key` are provided by
 +    the DataOps team. The team is reachable at `dataops@aisingapore.org`.
 +
- ```config
- [profile-1]
- aws_access_key_id = project-1-user
-@@ -582,7 +746,7 @@
- similar to the following:
- 
- ```bash
+@@ -585 +749 @@
 -aws --profile profile-1 --endpoint-url="https://minio.yourcompany.tld" s3 ls
 +aws --profile profile-1 --endpoint-url="https://necs.nus.edu.sg" s3 ls
- ```
- 
- With a similar output to this:
-@@ -608,6 +772,14 @@
-     - [AWS CLI Command Reference - s3](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3/index.html)
- 
- [awscli]: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+@@ -610,0 +775,8 @@
 +
 +### ECS Robot/Service Accounts
 +
@@ -385,25 +268,14 @@
 +created by administrators. These accounts are usually created for 
 +automated workflows that require access to ECS. Configuring them for the
 +CLI works the same as configuring a regular user account.
- 
- {%- elif cookiecutter.platform == 'gcp' %}
- ## Google Artifact Registry
-@@ -653,10 +825,17 @@
- 2. Google Cloud Storage (GCS) for object storage
- 
- The usage of NFS storage is mainly observable through Persistent
+@@ -656 +828,4 @@
 -Volumes (PVs) or virtual machine disks.  
 +Volumes (PVs) or virtual machine disks. There is however little to
 +nothing for end-users to configure the NFS storage as most of the setup
 +will be done by AI Singapore's Platforms team.
 +
- As for GCS, one would be provided with access to one or more GCS buckets
- through the provided user or service account. Upon authorisation, one
- may list the contents of a bucket like so:
+@@ -659,0 +835,4 @@
 +
 +!!! note inline end
 +    `GCP_PROJECT_ID` and `GCP_PROJECT_ID` are provided by the MLOps
 +    team. The team is reachable at `mlops@aisingapore.org`.
- 
- ```bash
- gsutil ls -p <GCP_PROJECT_ID> gs://<GCS_BUCKET_NAME>
