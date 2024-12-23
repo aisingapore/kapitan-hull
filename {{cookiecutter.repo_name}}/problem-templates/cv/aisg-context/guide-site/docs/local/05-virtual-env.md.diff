@@ -28,5 +28,3 @@
 +
 +    - AMD GPUs: https://pytorch.org/
 +    - Intel ARC GPUs: https://intel.github.io/intel-extension-for-pytorch/index.html#installation?request=platform
-@@ -35 +47,0 @@
--

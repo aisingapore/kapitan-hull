@@ -120,6 +120,10 @@ python extras/generate_diffs.py create <alt_file>
 This `<alt_file>` refers to the file that is to be committed as a diff
 file in the `problem-templates/<template>` folder.
 
+> Note: When creating a diff patch, ensure that the base file and the
+>       other file have an extra newline at the end to avoid patching
+>       issues using the scripts.
+
 ## Note on AMD GPUs
 
 Those who plan to use AMD GPUs and RoCM can check the `extras/rocm` 

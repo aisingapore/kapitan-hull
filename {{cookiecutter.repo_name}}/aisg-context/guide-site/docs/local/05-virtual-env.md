@@ -32,7 +32,6 @@ conda install ipython
 ```
 
 !!! info "Why use IPython when there is the Python interpreter?"
-
     There are a number of things IPython does that the Python 
     interpreter lacks:
 
