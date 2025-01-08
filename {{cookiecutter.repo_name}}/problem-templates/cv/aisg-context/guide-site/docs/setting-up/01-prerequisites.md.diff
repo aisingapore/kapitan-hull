@@ -20,8 +20,6 @@
 @@ -44 +50 @@
 -- Credentials for a Docker registry.  
 +- Credentials for AI Singapore's Harbor registry.  
-@@ -49,0 +56 @@
-+{%- endif %}
 @@ -51,0 +59,4 @@
 +
 +!!! note

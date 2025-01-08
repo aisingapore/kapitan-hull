@@ -28,13 +28,13 @@
 +    Invoke-WebRequest -Uri "https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/mnist-pngs-data-aisg.zip" -OutFile "mnist-pngs-data-aisg.zip"
 +    Expand-Archive -Path "mnist-pngs-data-aisg.zip" -DestinationPath "."
 @@ -26,0 +29,7 @@
-+
 +!!! info
 +    The sample data for this guide's problem statement is made
 +    accessible to the public. Hence any team or individual can download
 +    it. It is highly likely that your project's data is not publicly
 +    accessible and neither should it be, especially if it is a 100E
 +    project.
++
 @@ -28 +37 @@
 -data and eventually 'training' a dummy model.
 +data and eventually training an image classification model.
