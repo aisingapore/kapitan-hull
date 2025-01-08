@@ -1,5 +1,5 @@
---- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/setting-up/08-deployment.md
-+++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/setting-up/08-deployment.md
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/08-deployment.md
++++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/runai/08-deployment.md
 @@ -46,8 +46,6 @@
        into a mounted volume when we run the Docker image for the REST 
        APIs. __We will be recommending this method in this guide.__

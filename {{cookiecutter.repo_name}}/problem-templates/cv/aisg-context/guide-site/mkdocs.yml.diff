@@ -1,14 +1,14 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/mkdocs.yml
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/mkdocs.yml
-@@ -14 +14 @@
+@@ -16 +16 @@
 -copyright: ""
 +copyright: Copyright &copy; 2023-2024 - AI Singapore
-@@ -91 +91 @@
+@@ -93 +93 @@
 -      link: https://twitter.com/
 +      link: https://twitter.com/aisingapore
-@@ -93 +93 @@
+@@ -95 +95 @@
 -      link: https://www.linkedin.com/
 +      link: https://www.linkedin.com/company/aisingapore
-@@ -95 +95 @@
+@@ -97 +97 @@
 -      link: https://www.instagram.com/
 +      link: https://www.instagram.com/ai_singapore/
