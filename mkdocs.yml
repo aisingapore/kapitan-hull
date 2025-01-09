@@ -25,6 +25,7 @@ theme:
     - navigation.tracking
     - navigation.footer
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.top
     - toc.follow
     - content.tabs.link
