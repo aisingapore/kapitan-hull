@@ -90,8 +90,8 @@ follow through with the guide:
 {% if cookiecutter.platform == 'onprem' -%}  
 [awscli]: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 [boto3]: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html
-[ecs-page]: ./03-mlops-components-platform.md#elastic-cloud-storage-ecs
-[harbor-page]: ./03-mlops-components-platform.md#harbor
+[ecs-page]: ./03-mlops-components-platform.md#aws-cli-for-s3-protocol
+[harbor-page]: ./03-mlops-components-platform.md#docker-cli-authentication
 {% elif cookiecutter.platform == 'gcp' -%}
 [gcloud]: https://cloud.google.com/sdk/docs/install
 [gcp]: https://console.cloud.google.com

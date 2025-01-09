@@ -34,7 +34,7 @@ environment before running the script. More information on this can be
 found [here][venv]. You can also update your configuration variables at
 `conf/process_data.yaml`, specifically this section:
 
-[venv]: ../setting-up/05-virtual-env.md#local-virtual-environments
+[venv]: ./05-virtual-env.md
 
 ```yaml
 raw_data_dir_path: "./data/raw"
