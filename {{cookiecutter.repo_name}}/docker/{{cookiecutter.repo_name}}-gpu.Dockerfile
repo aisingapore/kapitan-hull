@@ -20,13 +20,13 @@ RUN apt update && \
 # Use this if deployed outside RunAI
 #RUN curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
 
-ENV PYTHONIOENCODING utf8
-ENV LANG "C.UTF-8"
-ENV LC_ALL "C.UTF-8"
-ENV NVIDIA_VISIBLE_DEVICES all
-ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
-ENV LD_LIBRARY_PATH /usr/local/cuda/lib64:$LD_LIBRARY_PATH
-ENV PATH "${HOME_DIR}/.local/bin:${PATH}"
+ENV PYTHONIOENCODING=utf8
+ENV LANG="C.UTF-8"
+ENV LC_ALL="C.UTF-8"
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
+ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+ENV PATH="${HOME_DIR}/.local/bin:${PATH}"
 
 USER ${NON_ROOT_USER}
 WORKDIR ${HOME_DIR}
