@@ -248,9 +248,9 @@ You can run MLFlow in Docker as well with the following command:
 
     ```bash
     docker run --rm -d \
-        -p 5000:5000
+        -p 5000:5000 \
         -v ./mlruns:/mlruns \
-        ghcr.io/mlflow/mlflow:v2.9.2 \
+        ghcr.io/mlflow/mlflow:v2.16.0 \
         mlflow server -h 0.0.0.0
     ```
 
@@ -260,7 +260,7 @@ You can run MLFlow in Docker as well with the following command:
     docker run --rm -d `
         -p 5000:5000 `
         -v .\mlruns:/mlruns `
-        ghcr.io/mlflow/mlflow:v2.9.2 `
+        ghcr.io/mlflow/mlflow:v2.16.0 `
         mlflow server -h 0.0.0.0
     ```
 
