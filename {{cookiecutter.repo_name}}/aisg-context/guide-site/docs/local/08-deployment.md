@@ -25,7 +25,7 @@ through the MLflow Tracking server (done through autolog). With that,
 we have the following pointers to take note of:
 
 - By default, each MLflow experiment run is given a unique ID.
-- When artifacts are saved through MLflow, the artifacts are located
+- When artifacts are saved through MLFlow, the artifacts are located
   within directories named after the unique IDs of the runs.
 - There are two ways to download the artifacts:
     - In the directory that MLFlow has been spun up, artifacts are
