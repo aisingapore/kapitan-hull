@@ -20,26 +20,17 @@ our REST API. Popular examples include [Flask], [Django] and
 
 ## Model Artifacts
 
-{% if cookiecutter.platform == 'onprem' -%}
-    {%- set objstg = 'ECS' -%}
-    {%- set cli = 'AWS' -%}
-{% elif cookiecutter.platform == 'gcp' -%}
-    {%- set objstg = 'GCS' -%}
-    {%- set cli = 'gCloud' -%}
-{% endif -%}
-
-Seen in ["Model Training"][train], we have the trained models uploaded
-to {{objstg}} through the MLflow Tracking server (done through 
-autolog). With that, we have the following pointers to take note of:
+Seen in ["Model Training"][train], we have the trained models saved
+through the MLflow Tracking server (done through autolog). With that,
+we have the following pointers to take note of:
 
 - By default, each MLflow experiment run is given a unique ID.
-- When artifacts are uploaded to {{objstg}} through MLflow, the 
-  artifacts are located within directories named after the unique IDs 
-  of the runs.
+- When artifacts are saved through MLFlow, the artifacts are located
+  within directories named after the unique IDs of the runs.
 - There are two ways to download the artifacts:
-    - We can use the {{cli}} CLI to download the predictive model from 
-      {{objstg}}. Artifacts for specific runs will be uploaded to a 
-      directory with a convention similar to the following:
+    - In the directory that MLFlow has been spun up, artifacts are
+      stored in the `mlruns` folder. Artifacts for specific runs are
+      saved to a directory with a convention similar to the following:
       `<MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/<MLFLOW_RUN_UUID>/artifacts`.
     - Alternatively, we can utilise the MLFlow Client library to 
       retrieve the predictive model. This model can then be propagated 
@@ -91,8 +82,6 @@ repository, execute the following commands:
     conda activate mlflow-test
     export MODEL_UUID=<MLFLOW_RUN_UUID>
     export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
-    export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME> # If applicable
-    export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD> # If applicable
     python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
     ```
 
@@ -102,14 +91,12 @@ repository, execute the following commands:
     conda activate mlflow-test
     $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
     $Env:MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
-    $Env:MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME> # If applicable
-    $Env:MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD> # If applicable
     python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
     ```
 
 !!! warning "Attention"
     The `mlflow-test` conda environment should have been created while
-    [testing your MLFlow server](./03-mlops-components-platform.md#logging-to-tracking-server).
+    [testing your MLFlow server](setting-up/03-mlops-components-platform.md#logging-to-tracking-server).
 
 Executing the commands above will download the artifacts related to the
 experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 
@@ -134,21 +121,22 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org)
 
     ```bash
     conda activate {{cookiecutter.repo_name}}
-    cd src
-    gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP -b 0.0.0.0:8080 -w 2 -k uvicorn.workers.UvicornWorker -t 90
+    gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+        -k uvicorn.workers.UvicornWorker \
+        -b 0.0.0.0:8080 -w 2 -t 90 --chdir src
     ```
 
-    See [here][reason] as to why Gunicorn is to be used instead of just
-    [Uvicorn][uvicorn]. TLDR: Gunicorn is needed to spin up multiple 
-    processes/workers to handle more requests i.e. better for the sake 
-    of production needs.
+    !!! info
+        See [here][reason] as to why Gunicorn is to be used instead of
+        just [Uvicorn][uvicorn]. TLDR: Gunicorn is needed to spin up 
+        multiple processes/workers to handle more requests i.e. better 
+        for the sake of production needs.
 
 === "Windows PowerShell"
 
     ```powershell
     conda activate {{cookiecutter.repo_name}}
-    cd src
-    uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP
+    uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP --app-dir src
     ```
 
 In another terminal, use the `curl` command to submit a request to the API:
