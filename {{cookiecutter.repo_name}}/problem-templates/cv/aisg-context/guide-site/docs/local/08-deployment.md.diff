@@ -39,20 +39,17 @@
 -        -d '"string"'
 +        -H 'Content-Type: multipart/form-data' \
 +        -F "image_file=@/path/to/image/file"
-@@ -160 +175 @@
--    {"data":[{"input":"string"}]}
-+    {"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
-@@ -169 +184 @@
+@@ -163 +178 @@
 -        '-d', '"string"',
 +        '-F', '"image_file=@\path\to\image\file"',
-@@ -175 +190 @@
--    {"data":[{"input":"string"}]}
-+    {"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
-@@ -193 +208,2 @@
+@@ -169 +184 @@
+-{"data":[{"input":"string"}]}
++{"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
+@@ -187 +202,2 @@
 -field `MODEL_UUID` inherit their values from the environment variables.
 +fields `PRED_MODEL_UUID` and `PRED_MODEL_PATH` inherit their values 
 +from the environment variables.
-@@ -204 +220,4 @@
+@@ -198 +214,4 @@
 -    MODEL_UUID: str
 +    USE_CUDA: bool = False
 +    USE_MPS: bool = False

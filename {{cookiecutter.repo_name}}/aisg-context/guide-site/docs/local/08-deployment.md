@@ -154,12 +154,6 @@ In another terminal, use the `curl` command to submit a request to the API:
         -d '"string"'
     ```
     
-    Output sample:
-
-    ```
-    {"data":[{"input":"string"}]}
-    ```
-
 === "Windows PowerShell"
 
     ```powershell
@@ -169,11 +163,11 @@ In another terminal, use the `curl` command to submit a request to the API:
         '-d', '"string"',
     ```
     
-    Output sample:
+Output sample:
 
-    ```
-    {"data":[{"input":"string"}]}
-    ```
+```
+{"data":[{"input":"string"}]}
+```
 
 With the returned JSON object, we have successfully submitted a request
 to the FastAPI server and it returned predictions as part of the
