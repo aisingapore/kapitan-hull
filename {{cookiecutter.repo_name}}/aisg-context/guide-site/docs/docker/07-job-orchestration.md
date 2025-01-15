@@ -192,7 +192,40 @@ After that, we build the Docker image from the Docker file
         --platform linux/amd64 .
     ```
 
-After building the image, you can run the script through Docker:
+Before we run the model training image, you can run MLFlow in Docker as
+well with the following command:
+
+=== "Linux/macOS"
+
+    ```bash
+    docker run --rm \
+        -p 5000:5000 \
+        -v ./mlruns:/mlruns \
+        ghcr.io/mlflow/mlflow:v2.16.0 \
+        mlflow server -h 0.0.0.0
+    ```
+
+=== "Windows PowerShell"
+
+    ```powershell
+    docker run --rm `
+        -p 5000:5000 `
+        -v .\mlruns:/mlruns `
+        ghcr.io/mlflow/mlflow:v2.16.0 `
+        mlflow server -h 0.0.0.0
+    ```
+
+and connect to http://localhost:5000.
+
+!!! info "Running MLFlow in the background"
+
+    You can run MLFlow in the background by appending `-d` after
+    `docker run`, but before the image name. You can also append
+    `--restart always` so that it runs every time you boot up your
+    machine.
+
+After that, you can run the script through Docker while connecting to
+the running MLFlow server:
 
 === "Linux"
 
@@ -202,11 +235,12 @@ After building the image, you can run the script through Docker:
     # Add --device=/dev/kfd --device=/dev/dri --group-add video for AMD GPUs in front of the image name
     docker run --rm \
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
-        -v ./mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns \
-        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
         -w /home/aisg/{{cookiecutter.repo_name}} \
+        -e MLFLOW_TRACKING_URI=http://localhost:5000 \
+        -e MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING=true \
+        --network=host \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
-        bash -c "python -u src/train_model.py"
+        python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
     ```
 
 === "macOS"
@@ -214,11 +248,12 @@ After building the image, you can run the script through Docker:
     ```bash
     docker run --rm \
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
-        -v ./mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns \
-        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
         -w /home/aisg/{{cookiecutter.repo_name}} \
+        -e MLFLOW_TRACKING_URI=http://localhost:5000 \
+        -e MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING=true \
+        --network=host \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
-        bash -c "python -u src/train_model.py"
+        python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
     ```
 
 === "Windows PowerShell"
@@ -233,38 +268,15 @@ After building the image, you can run the script through Docker:
     ```powershell
     docker run --rm \
         -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
-        -v .\mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns `
-        -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
         -w /home/aisg/{{cookiecutter.repo_name}} `
+        -e MLFLOW_TRACKING_URI=http://localhost:5000 `
+        -e MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING=true `
+        --network=host `
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
-        bash -c "python -u src/train_model.py"
+        python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
     ```
 
 [rocm-wsl]: https://rocm.docs.amd.com/projects/radeon/en/latest/docs/install/wsl/howto_wsl.html
-
-You can run MLFlow in Docker as well with the following command:
-
-=== "Linux/macOS"
-
-    ```bash
-    docker run --rm -d \
-        -p 5000:5000 \
-        -v ./mlruns:/mlruns \
-        ghcr.io/mlflow/mlflow:v2.16.0 \
-        mlflow server -h 0.0.0.0
-    ```
-
-=== "Windows PowerShell"
-
-    ```powershell
-    docker run --rm -d `
-        -p 5000:5000 `
-        -v .\mlruns:/mlruns `
-        ghcr.io/mlflow/mlflow:v2.16.0 `
-        mlflow server -h 0.0.0.0
-    ```
-
-and connect to http://localhost:5000.
 
 Once you are satisfied with the Docker image, you can push it to the 
 Docker registry:
@@ -381,12 +393,13 @@ container. This tag is defined using the environment value
     ```bash
     docker run --rm \
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
-        -v ./mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns \
-        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
         -w /home/aisg/{{cookiecutter.repo_name}} \
         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
+        -e MLFLOW_TRACKING_URI=http://localhost:5000 \
+        -e MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING=true \
+        --network=host \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
-        python -u src/train_model.py --multirun
+        python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
     ```
 
 === "Windows PowerShell"
@@ -396,12 +409,13 @@ container. This tag is defined using the environment value
     [System.Environment]::SetEnvironmentVariable("MLFLOW_HPTUNING_TAG", $MLFLOW_HPTUNING_TAG.ToString())
     docker run --rm \
         -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
-        -v .\mlruns:/home/aisg/{{cookiecutter.repo_name}}/mlruns `
-        -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
         -w /home/aisg/{{cookiecutter.repo_name}} `
         -e MLFLOW_HPTUNING_TAG=$($env:MLFLOW_HPTUNING_TAG) `
+        -e MLFLOW_TRACKING_URI=http://localhost:5000 `
+        -e MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING=true `
+        --network=host `
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
-        python -u src/train_model.py --multirun
+        python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
     ```
     
 ![MLflow Tracking Server - Hyperparameter Tuning Runs](assets/screenshots/mlflow-tracking-hptuning-runs.png)
