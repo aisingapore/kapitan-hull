@@ -1,133 +1,57 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/08-deployment.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/08-deployment.md
-@@ -46,8 +46,6 @@
-       into a mounted volume when we run the Docker image for the REST 
-       APIs. __We will be recommending this method in this guide.__
- 
--[train]: ./07-job-orchestration.md#model-training
--
- ## Model Serving (FastAPI)
- 
- FastAPI is a web framework that has garnered much popularity in recent
-@@ -89,22 +87,22 @@
- 
-     ```bash
-     conda activate mlflow-test
+@@ -83 +83 @@
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-     export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
-     export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME> # If applicable
-     export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD> # If applicable
--    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
-+    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
-     ```
- 
- === "Windows PowerShell"
- 
-     ```powershell
-     conda activate mlflow-test
--    $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
+@@ -89 +89 @@
+-        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
++        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
+@@ -95 +95 @@
+-    export MODEL_UUID=<MLFLOW_RUN_UUID>
++    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+@@ -101 +101 @@
+-        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
++        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
+@@ -106,0 +107 @@
 +    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-     $Env:MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
-     $Env:MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME> # If applicable
-     $Env:MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD> # If applicable
--    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
-+    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
-     ```
- 
- !!! warning "Attention"
-@@ -114,10 +112,25 @@
- Executing the commands above will download the artifacts related to the
- experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 
- `models`. However, the specific subdirectory that is relevant for our 
+@@ -109 +109,0 @@
+-        -e MODEL_UUID=<MLFLOW_RUN_UUID> `
+@@ -113 +113 @@
+-        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
++        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
+@@ -119,4 +119 @@
 -modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
 -
 -Now, let's proceed and spin up an inference server using the package 
 -that exists within the repository.
 +modules to load will be `./models/<MLFLOW_RUN_UUID>/model/model.pt`.
-+Let's export this path to an environment variable:
-+
-+=== "Linux/macOS/VSCode Server Terminal"
-+
-+    ```bash
-+    export PRED_MODEL_PATH="$PWD/models/$PRED_MODEL_UUID/model/model.pt"
-+    ```
-+
-+=== "Windows PowerShell"
-+
-+    ```powershell
-+    $Env:PRED_MODEL_PATH="$(Get-Location)\models\$Env:PRED_MODEL_UUID\artifacts\model\model.pt"
-+    ```
-+
-+The variables exported above (`PRED_MODEL_UUID` and `PRED_MODEL_PATH`)
-+will be used by the FastAPI server to load the model for prediction. We
-+will get back to this in a bit. For now, let's proceed and spin up an
-+inference server using the package that exists within the repository.
- 
- [beginner tutorials]: https://fastapi.tiangolo.com/tutorial/
- 
-@@ -127,7 +140,7 @@
- (for Linux/macOS) or [`uvicorn`][uvicorn] (for Windows):
- 
- !!! attention
--    Gunicorn is only executable on UNIX-based or UNIX-like systems; 
-+    Gunicorn is only executable on UNIX-based or UNIX-like systems;
-     this method would not be possible/applicable for Windows machines.
- 
- === "Linux/macOS/VSCode Server Terminal"
-@@ -158,14 +171,14 @@
-     ```bash
-     curl -X POST \
-         localhost:8080/api/v1/model/predict \
--        -H 'Content-Type: application/json' \
--        -d '"string"'
-+        -H 'Content-Type: multipart/form-data' \
-+        -F "image_file=@/path/to/image/file"
-     ```
-     
-     Output sample:
- 
-     ```
--    {"data":[{"input":"string"}]}
-+    {"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
-     ```
- 
- === "Windows PowerShell"
-@@ -174,13 +187,13 @@
-     curl.exe '-X', 'POST', `
-         'localhost:8080/api/v1/model/predict', `
-         '-H', 'Content-Type: multipart/form-data', `
--        '-d', '"string"',
-+        '-F', '"image_file=@\path\to\image\file"',
-     ```
-     
-     Output sample:
- 
-     ```
--    {"data":[{"input":"string"}]}
-+    {"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
-     ```
- 
- With the returned JSON object, we have successfully submitted a request
-@@ -198,7 +211,8 @@
- class called `Settings` under the module
- `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
- contains several fields: some are defined and some others not. The 
+@@ -148,0 +146 @@
++        -e PRED_MODEL_PATH="../models/$PRED_MODEL_UUID/model/model.pt" \
+@@ -203,2 +201,2 @@
+-            -H 'Content-Type: application/json' \
+-            -d '"string"'
++            -H 'Content-Type: multipart/form-data' \
++            -F "image_file=@/path/to/image/file"
+@@ -213,2 +211,2 @@
+-            -H 'Content-Type: application/json' \
+-            -d '"string"'
++            -H 'Content-Type: multipart/form-data' \
++            -F "image_file=@/path/to/image/file"
+@@ -223,2 +221,2 @@
+-            -H 'Content-Type: application/json' `
+-            -d '"string"'
++            -H 'Content-Type: multipart/form-data' `
++            -F "image_file=@/path/to/image/file"
+@@ -230 +228 @@
+-{"data":[{"input":"string"}]}
++{"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
+@@ -248 +246,2 @@
 -field `MODEL_UUID` inherit their values from the environment variables.
 +fields `PRED_MODEL_UUID` and `PRED_MODEL_PATH` inherit their values 
 +from the environment variables.
- 
- `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
- ```python
-@@ -209,7 +223,10 @@
-     API_V1_STR: str = "/api/v1"
-     LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"
- 
+@@ -259 +258,4 @@
 -    MODEL_UUID: str
 +    USE_CUDA: bool = False
 +    USE_MPS: bool = False
 +    PRED_MODEL_UUID: str
 +    PRED_MODEL_PATH: str
- ...
- ```
- 

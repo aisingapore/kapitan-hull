@@ -76,27 +76,42 @@ the MLflow run has been obtained, let's download the model that we
 intend to serve. Assuming you're in the root of this template's 
 repository, execute the following commands:
 
-=== "Linux/macOS/VSCode Server Terminal"
+=== "Linux"
 
     ```bash
-    conda activate mlflow-test
+    sudo chown 2222:2222 ./models
     export MODEL_UUID=<MLFLOW_RUN_UUID>
-    export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
-    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
+    docker run --rm \
+        -v ./models:/models \
+        -e MLFLOW_TRACKING_URI=http://localhost:5000 \
+        --network host \
+        registry.aisingapore.net/mlops/khtest/cpu:0.1.0 \
+        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
+    ```
+
+=== "macOS"
+
+    ```bash
+    export MODEL_UUID=<MLFLOW_RUN_UUID>
+    docker run --rm \
+        -v ./models:/models \
+        -e MLFLOW_TRACKING_URI=http://localhost:5000 \
+        --network host \
+        registry.aisingapore.net/mlops/khtest/cpu:0.1.0 \
+        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
     ```
 
 === "Windows PowerShell"
 
     ```powershell
-    conda activate mlflow-test
-    $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
-    $Env:MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
-    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
+    docker run --rm `
+        -v .\models:/models `
+        -e MODEL_UUID=<MLFLOW_RUN_UUID> `
+        -e MLFLOW_TRACKING_URI=http://localhost:5000 `
+        --network host `
+        registry.aisingapore.net/mlops/khtest/cpu:0.1.0 `
+        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
     ```
-
-!!! warning "Attention"
-    The `mlflow-test` conda environment should have been created while
-    [testing your MLFlow server](setting-up/03-mlops-components-platform.md#logging-to-tracking-server).
 
 Executing the commands above will download the artifacts related to the
 experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 
@@ -114,62 +129,106 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org)
 (for Linux/macOS) or [`uvicorn`][uvicorn] (for Windows):
 
 !!! attention
-    Gunicorn is only executable on UNIX-based or UNIX-like systems; 
+    Gunicorn is only executable on UNIX-based or UNIX-like systems;
     this method would not be possible/applicable for Windows machines.
 
-=== "Linux/macOS/VSCode Server Terminal"
-
-    ```bash
-    conda activate {{cookiecutter.repo_name}}
-    gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
-        -k uvicorn.workers.UvicornWorker \
-        -b 0.0.0.0:8080 -w 2 -t 90 --chdir src
-    ```
+=== "Linux"
 
     !!! info
-        See [here][reason] as to why Gunicorn is to be used instead of
-        just [Uvicorn][uvicorn]. TLDR: Gunicorn is needed to spin up 
-        multiple processes/workers to handle more requests i.e. better 
-        for the sake of production needs.
+        Add `--gpus=all` for Nvidia GPUs in front of the image name.  
+        Add `--device=nvidia.com/gpu=all` for Nvidia GPUs using Podman
+        instead of Docker.  
+        Add `--device=/dev/kfd --device=/dev/dri --group-add` video for
+        AMD GPUs in front of the image name.
+
+    ```bash
+    docker run --rm \
+        -p 8080:8080 \
+        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
+        -w /home/aisg/{{cookiecutter.repo_name}}/src \
+        {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+        gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+            -k uvicorn.workers.UvicornWorker \
+            -b 0.0.0.0:8080 -w 2 -t 90
+    ```
+
+=== "macOS"
+
+    ```bash
+    docker run --rm \
+        -p 8080:8080 \
+        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
+        -w /home/aisg/{{cookiecutter.repo_name}}/src \
+        {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+        gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+            -k uvicorn.workers.UvicornWorker \
+            -b 0.0.0.0:8080 -w 2 -t 90
+    ```
 
 === "Windows PowerShell"
 
+    !!! warning
+        GPU passthrough only works with Docker Desktop or Podman 
+        Desktop at the time this section is written.  
+        For Nvidia GPUs, you would need to add `--gpus=all` in front of
+        the image name, or `--device=nvidia.com/gpu=all` if Podman is
+        used.  
+        For AMD GPUs, you can follow this [guide][rocm-wsl].
+
     ```powershell
-    conda activate {{cookiecutter.repo_name}}
-    uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP --app-dir src
+    docker run --rm `
+        -p 8080:8080 `
+        -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
+        -w /home/aisg/{{cookiecutter.repo_name}}/src `
+        {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
+        gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP `
+            -k uvicorn.workers.UvicornWorker `
+            -b 0.0.0.0:8080 -w 2 -t 90
     ```
+
+And with that, our document site for our server is viewable through
+[`localhost:8080/docs`](http://localhost:8080/docs) and will look as
+such:
+
+![FastAPI - OpenAPI Docs](assets/screenshots/fastapi-openapi-docs.png)
 
 In another terminal, use the `curl` command to submit a request to the API:
 
-=== "Linux/macOS/VSCode Server Terminal"
+=== "Linux"
 
     ```bash
-    curl -X POST \
-        localhost:8080/api/v1/model/predict \
-        -H 'Content-Type: application/json' \
-        -d '"string"'
+    docker run --rm --network=host \
+        curlimages/curl -X POST \
+            localhost:8080/api/v1/model/predict \
+            -H 'Content-Type: application/json' \
+            -d '"string"'
     ```
-    
-    Output sample:
 
-    ```
-    {"data":[{"input":"string"}]}
+=== "macOS"
+
+    ```bash
+    docker run --rm --network=host \
+        curlimages/curl -X POST \
+            localhost:8080/api/v1/model/predict \
+            -H 'Content-Type: application/json' \
+            -d '"string"'
     ```
 
 === "Windows PowerShell"
 
     ```powershell
-    curl.exe '-X', 'POST', `
-        'localhost:8080/api/v1/model/predict', `
-        '-H', 'Content-Type: multipart/form-data', `
-        '-d', '"string"',
+    docker run --rm --network=host `
+        curlimages/curl -X POST `
+            localhost:8080/api/v1/model/predict `
+            -H 'Content-Type: application/json' `
+            -d '"string"'
     ```
     
-    Output sample:
+Output sample:
 
-    ```
-    {"data":[{"input":"string"}]}
-    ```
+```
+{"data":[{"input":"string"}]}
+```
 
 With the returned JSON object, we have successfully submitted a request
 to the FastAPI server and it returned predictions as part of the
@@ -205,33 +264,6 @@ FastAPI automatically generates interactive API documentation for easy
 viewing of all the routers/endpoints you have made available for the
 server. You can view the documentation through
 `<API_SERVER_URL>:<PORT>/docs`. 
-
-### Port Forwarding from VSCode Server
-
-It's optional, but let's view the labour of our hard work:
-
-> The following steps assumes you have installed `coder` on your machine.
-> Else, follow the installation steps [here](https://coder.com/docs/v2/latest/install#install-coder)
-> and login via `coder login <CODER_URL>`
-
-=== "Linux/macOS/VSCode Server Terminal"
-    
-    ```bash
-    coder port-forward <WORKSPACE_NAME> --tcp 8080:8080
-    ```
-
-=== "Windows PowerShell"
-
-    ```powershell
-
-    coder port-forward <WORKSPACE_NAME> --tcp 8080:8080
-    ```
-    
-And with that, our document site for our server is viewable through
-[`localhost:8080/docs`](http://localhost:8080/docs) and will look as
-such:
-
-![FastAPI - OpenAPI Docs](assets/screenshots/fastapi-openapi-docs.png)
 
 ??? info "Reference Link(s)"
 
