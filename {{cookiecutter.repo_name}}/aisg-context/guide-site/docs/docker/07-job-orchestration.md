@@ -49,7 +49,15 @@ provided in this template:
 
 [venv]: 05-virtual-env.md
 
-=== "Linux/macOS"
+=== "Linux"
+
+    ```bash
+    docker build \
+        -t {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
+        -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile .
+    ```
+
+=== "macOS"
 
     ```bash
     docker build \
@@ -63,8 +71,7 @@ provided in this template:
     ```powershell
     docker build `
         -t {{cookiecutter.registry_project_path}}/cpu:0.1.0 `
-        -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile `
-        --platform linux/amd64 .
+        -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile .
     ```
 
 After building the image, you can run the script through Docker:
@@ -103,17 +110,9 @@ After building the image, you can run the script through Docker:
 Once you are satisfied with the Docker image, you can push it to the 
 Docker registry:
 
-=== "Linux/macOS"
-
-    ```bash
-    docker push {{cookiecutter.registry_project_path}}/cpu:0.1.0
-    ```
-
-=== "Windows PowerShell"
-
-    ```powershell
-    docker push {{cookiecutter.registry_project_path}}/cpu:0.1.0
-    ```
+```bash
+docker push {{cookiecutter.registry_project_path}}/cpu:0.1.0
+```
 
 ## Model Training
 
@@ -174,7 +173,15 @@ After that, we build the Docker image from the Docker file
 
 [rocm]: https://github.com/aisingapore/kapitan-hull/tree/main/extras/rocm
 
-=== "Linux/macOS"
+=== "Linux"
+
+    ```bash
+    docker build \
+        -t {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+        -f docker/{{cookiecutter.repo_name}}-gpu.Dockerfile .
+    ```
+
+=== "macOS"
 
     ```bash
     docker build \
@@ -188,19 +195,29 @@ After that, we build the Docker image from the Docker file
     ```powershell
     docker build `
         -t {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
-        -f docker/{{cookiecutter.repo_name}}-gpu.Dockerfile `
-        --platform linux/amd64 .
+        -f docker/{{cookiecutter.repo_name}}-gpu.Dockerfile .
     ```
 
 Before we run the model training image, you can run MLFlow in Docker as
 well with the following command:
 
-=== "Linux/macOS"
+=== "Linux"
 
     ```bash
     docker run --rm \
         -p 5000:5000 \
         -v ./mlruns:/mlruns \
+        ghcr.io/mlflow/mlflow:v2.16.0 \
+        mlflow server -h 0.0.0.0
+    ```
+
+=== "macOS"
+
+    ```bash
+    docker run --rm \
+        -p 5000:5000 \
+        -v ./mlruns:/mlruns \
+        --platform linux/amd64 \
         ghcr.io/mlflow/mlflow:v2.16.0 \
         mlflow server -h 0.0.0.0
     ```
@@ -229,9 +246,14 @@ the running MLFlow server:
 
 === "Linux"
 
+    !!! info
+        Add `--gpus=all` for Nvidia GPUs in front of the image name.  
+        Add `--device=nvidia.com/gpu=all` for Nvidia GPUs using Podman
+        instead of Docker.  
+        Add `--device=/dev/kfd --device=/dev/dri --group-add` video for
+        AMD GPUs in front of the image name.
+
     ```bash
-    # Add --gpus=all for Nvidia GPUs in front of the image name
-    # Add --device=/dev/kfd --device=/dev/dri --group-add video for AMD GPUs in front of the image name
     docker run --rm \
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
         -w /home/aisg/{{cookiecutter.repo_name}} \
@@ -258,10 +280,11 @@ the running MLFlow server:
 === "Windows PowerShell"
 
     !!! warning
-        GPU passthrough only works with Docker Desktop at the time this
-        section is written.  
+        GPU passthrough only works with Docker Desktop or Podman 
+        Desktop at the time this section is written.  
         For Nvidia GPUs, you would need to add `--gpus=all` in front of
-        the image name.
+        the image name, or `--device=nvidia.com/gpu=all` if Podman is
+        used.  
         For AMD GPUs, you can follow this [guide][rocm-wsl].
 
     ```powershell
@@ -280,17 +303,9 @@ the running MLFlow server:
 Once you are satisfied with the Docker image, you can push it to the 
 Docker registry:
 
-=== "Linux/macOS"
-
-    ```bash
-    docker push {{cookiecutter.registry_project_path}}/gpu:0.1.0
-    ```
-
-=== "Windows PowerShell"
-
-    ```powershell
-    docker push {{cookiecutter.registry_project_path}}/gpu:0.1.0
-    ```
+```bash
+docker push {{cookiecutter.registry_project_path}}/gpu:0.1.0
+```
 
 ![MLflow Tracking Server - Inspecting Runs](https://storage.googleapis.com/aisg-mlops-pub-data/images/mlflow-tracking-server-inspect.gif)
 
@@ -387,7 +402,28 @@ essentially be the date epoch value of the moment you run the Docker
 container. This tag is defined using the environment value
 `MLFLOW_HPTUNING_TAG`.
 
-=== "Linux/macOS"
+=== "Linux"
+
+    !!! info
+        Add `--gpus=all` for Nvidia GPUs in front of the image name.  
+        Add `--device=nvidia.com/gpu=all` for Nvidia GPUs using Podman
+        instead of Docker.  
+        Add `--device=/dev/kfd --device=/dev/dri --group-add` video for
+        AMD GPUs in front of the image name.
+
+    ```bash
+    docker run --rm \
+        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+        -w /home/aisg/{{cookiecutter.repo_name}} \
+        -e MLFLOW_HPTUNING_TAG=$(date +%s) \
+        -e MLFLOW_TRACKING_URI=http://localhost:5000 \
+        -e MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING=true \
+        --network=host \
+        {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+        python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
+    ```
+
+=== "macOS"
 
     ```bash
     docker run --rm \
@@ -402,6 +438,14 @@ container. This tag is defined using the environment value
     ```
 
 === "Windows PowerShell"
+
+    !!! warning
+        GPU passthrough only works with Docker Desktop or Podman 
+        Desktop at the time this section is written.  
+        For Nvidia GPUs, you would need to add `--gpus=all` in front of
+        the image name, or `--device=nvidia.com/gpu=all` if Podman is
+        used.  
+        For AMD GPUs, you can follow this [guide][rocm-wsl].
 
     ```powershell
     $MLFLOW_HPTUNING_TAG = [int][double]::Parse((Get-Date).ToUniversalTime().Subtract([datetime]::UnixEpoch).TotalSeconds)
