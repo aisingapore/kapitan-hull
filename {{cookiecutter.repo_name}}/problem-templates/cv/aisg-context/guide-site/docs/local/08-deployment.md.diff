@@ -34,25 +34,25 @@
 +will be used by the FastAPI server to load the model for prediction. We
 +will get back to this in a bit. For now, let's proceed and spin up an
 +inference server using the package that exists within the repository.
-@@ -147,2 +162,2 @@
+@@ -153,2 +168,2 @@
 -        -H 'Content-Type: application/json' \
 -        -d '"string"'
 +        -H 'Content-Type: multipart/form-data' \
 +        -F "image_file=@/path/to/image/file"
-@@ -154 +169 @@
+@@ -160 +175 @@
 -    {"data":[{"input":"string"}]}
 +    {"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
-@@ -163 +178 @@
+@@ -169 +184 @@
 -        '-d', '"string"',
 +        '-F', '"image_file=@\path\to\image\file"',
-@@ -169 +184 @@
+@@ -175 +190 @@
 -    {"data":[{"input":"string"}]}
 +    {"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
-@@ -187 +202,2 @@
+@@ -193 +208,2 @@
 -field `MODEL_UUID` inherit their values from the environment variables.
 +fields `PRED_MODEL_UUID` and `PRED_MODEL_PATH` inherit their values 
 +from the environment variables.
-@@ -198 +214,4 @@
+@@ -204 +220,4 @@
 -    MODEL_UUID: str
 +    USE_CUDA: bool = False
 +    USE_MPS: bool = False

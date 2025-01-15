@@ -137,6 +137,12 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org)
     uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP --app-dir src
     ```
 
+And with that, our document site for our server is viewable through
+[`localhost:8080/docs`](http://localhost:8080/docs) and will look as
+such:
+
+![FastAPI - OpenAPI Docs](assets/screenshots/fastapi-openapi-docs.png)
+
 In another terminal, use the `curl` command to submit a request to the API:
 
 === "Linux/macOS"
@@ -203,12 +209,6 @@ FastAPI automatically generates interactive API documentation for easy
 viewing of all the routers/endpoints you have made available for the
 server. You can view the documentation through
 `<API_SERVER_URL>:<PORT>/docs`. 
-
-And with that, our document site for our server is viewable through
-[`localhost:8080/docs`](http://localhost:8080/docs) and will look as
-such:
-
-![FastAPI - OpenAPI Docs](assets/screenshots/fastapi-openapi-docs.png)
 
 ??? info "Reference Link(s)"
 
