@@ -230,7 +230,6 @@ the running MLFlow server:
 === "Linux"
 
     ```bash
-    sudo chown 2222:2222 ./mlruns ./models
     # Add --gpus=all for Nvidia GPUs in front of the image name
     # Add --device=/dev/kfd --device=/dev/dri --group-add video for AMD GPUs in front of the image name
     docker run --rm \
