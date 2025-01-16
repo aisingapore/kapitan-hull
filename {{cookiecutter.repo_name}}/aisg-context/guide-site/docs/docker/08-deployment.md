@@ -85,7 +85,7 @@ repository, execute the following commands:
         -v ./models:/models \
         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
         --network host \
-        registry.aisingapore.net/mlops/khtest/cpu:0.1.0 \
+        {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
         python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
     ```
 
@@ -97,7 +97,7 @@ repository, execute the following commands:
         -v ./models:/models \
         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
         --network host \
-        registry.aisingapore.net/mlops/khtest/cpu:0.1.0 \
+        {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
         python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
     ```
 
@@ -109,7 +109,7 @@ repository, execute the following commands:
         -e MODEL_UUID=<MLFLOW_RUN_UUID> `
         -e MLFLOW_TRACKING_URI=http://localhost:5000 `
         --network host `
-        registry.aisingapore.net/mlops/khtest/cpu:0.1.0 `
+        {{cookiecutter.registry_project_path}}/cpu:0.1.0 `
         python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
     ```
 
