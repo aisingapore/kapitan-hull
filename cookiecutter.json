@@ -23,10 +23,10 @@
         },
         "orchestrator": {
             "__prompt__": "orchestrator - The orchestrator the project is using.",
-            "runai": "runai - Run:AI (and other AISG Resources)",
+            "runai": "runai - Run:ai (and other AISG Resources)",
             "noorch": "noorch - No orchestrator (not implemented yet)"
         },
-        "proj_name": "proj_name - The project name used in by the repository. If you're using Run:AI, this will be the Run:AI project name used by the repository.",
+        "proj_name": "proj_name - The project name used in by the repository. If you're using Run:ai, this will be the Run:ai project name used by the repository.",
         "registry_project_path": "registry_project_path - Path of the registry repository for your container images to be located under. Cannot end with a slash character.",
 		"problem_template": {
             "__prompt__": "problem_template - Initialise the repository with a default problem statement.",

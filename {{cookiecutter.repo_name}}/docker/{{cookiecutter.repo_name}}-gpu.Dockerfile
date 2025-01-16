@@ -1,4 +1,4 @@
-# Use this if deployed outside RunAI
+# Use this if deployed outside Run:ai
 #FROM nvcr.io/nvidia/cuda:12.1.0-cudnn8-devel-ubuntu22.04
 FROM python:3.12-slim
 
@@ -17,7 +17,7 @@ RUN apt update && \
     apt -y install curl git && \
     apt clean
 
-# Use this if deployed outside RunAI
+# Use this if deployed outside Run:ai
 #RUN curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
 
 ENV PYTHONIOENCODING=utf8
@@ -36,7 +36,7 @@ COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} ${REPO_DIR} {{cookiecutter.repo_na
 # Install pip requirements
 RUN pip install -r {{cookiecutter.repo_name}}/requirements.txt
 
-# Use this if deployed outside RunAI
+# Use this if deployed outside Run:ai
 #RUN micromamba shell init -s bash -r ${HOME_DIR}/micromamba
 #RUN micromamba install python=3.12.4 -c defaults -n base -y
 #RUN micromamba run -n base pip install -r {{cookiecutter.repo_name}}/requirements.txt

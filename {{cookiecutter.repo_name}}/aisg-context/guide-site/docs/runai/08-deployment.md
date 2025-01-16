@@ -96,7 +96,7 @@ repository, execute the following commands:
     python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
     ```
 
-=== "Using RunAI"
+=== "Using Run:ai"
 
     ```bash
     export MODEL_UUID=<MLFLOW_RUN_UUID>
@@ -146,7 +146,7 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org):
     Ports tab right beside the Terminal tab. The link should look
     similar to this:
 
-=== "Using RunAI"
+=== "Using Run:ai"
 
     ```bash
     export MODEL_UUID=<MLFLOW_RUN_UUID>
@@ -163,7 +163,7 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org):
     ```
 
     And with that, the link to our document site for our server would
-    be given by RunAI. The link should look similar to this:
+    be given by Run:ai. The link should look similar to this:
 
 ![FastAPI - OpenAPI Docs](../common/assets/screenshots/fastapi-openapi-docs.png)
 

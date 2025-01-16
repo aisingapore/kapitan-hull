@@ -35,7 +35,6 @@ follow through with the guide:
 {%- if cookiecutter.orchestrator == 'runai' %}  
 - Access to a project on a Run:ai cluster.  
   See [here][runai-page] for more information.
-{%- elif cookiecutter.orchestrator == 'polyaxon' %}  
 {%- elif cookiecutter.orchestrator == 'noorch' %}  
 {%- endif %}
 {%- if cookiecutter.platform == 'onprem' %}  
@@ -99,7 +98,6 @@ follow through with the guide:
 {% endif %}
 {%- if cookiecutter.orchestrator == 'runai' -%}  
 [runai-page]: ./03-mlops-components-platform.md#runai
-{%- elif cookiecutter.orchestrator == 'polyaxon' -%}  
 {%- elif cookiecutter.orchestrator == 'noorch' -%}  
 {% endif %}
 

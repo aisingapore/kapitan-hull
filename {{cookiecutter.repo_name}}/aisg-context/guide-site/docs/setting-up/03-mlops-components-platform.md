@@ -94,11 +94,7 @@ facilitate Kubernetes workflows.
 {% endif -%}
 
 {% if cookiecutter.orchestrator == 'runai' -%}
-    {%- set orch = 'Run:AI' -%}
-    {%- set vs_orch = " VS " + orch -%}
-    {%- set and_orch = " and " + orch -%}
-{% elif cookiecutter.orchestrator == 'polyaxon' -%}
-    {%- set orch = 'Polyaxon' -%}
+    {%- set orch = 'Run:ai' -%}
     {%- set vs_orch = " VS " + orch -%}
     {%- set and_orch = " and " + orch -%}
 {% elif cookiecutter.orchestrator == "noorch" -%}
@@ -117,16 +113,16 @@ they both essentially communicate with the
 workloads through each of their own interface.
 
 {% if cookiecutter.orchestrator == "runai" -%}
-Developers can use {{kubeplat ~ "\'s"}} interface or Run:AI\'s 
+Developers can use {{kubeplat ~ "\'s"}} interface or Run:ai\'s 
 interface/CLI to spin up workspaces, jobs or deploy applications. 
 However, the latter can better serve machine learning engineers in 
 carrying out their machine learning workflows as that was the intended 
-usage of the platform. Moreover, Run:AI\'s unique selling point is its 
+usage of the platform. Moreover, Run:ai\'s unique selling point is its 
 better utilisation of GPU resources (through fractionalisation and other 
 features) so when it comes to workloads that require GPU, like model 
-training and evaluation, the usage of Run:AI is recommended. Also, on 
+training and evaluation, the usage of Run:ai is recommended. Also, on 
 the surface, it is easier for one to spin up developer workspaces on 
-Run:AI.
+Run:ai.
 {%- endif %}
 
 ??? info "Reference Link(s)"
@@ -527,7 +523,6 @@ verification code and paste it into the terminal.
     the necessary authentication details, specifically the `id-token`
     and `refresh-token` fields, which are then used by the `kubectl`
     CLI tool to communicate with the Run:ai cluster.
-{%- elif cookiecutter.orchestrator == 'polyaxon' -%}
 {%- elif cookiecutter.orchestrator == 'none' -%}
 {% endif %}
 {% if cookiecutter.platform == 'onprem' %}

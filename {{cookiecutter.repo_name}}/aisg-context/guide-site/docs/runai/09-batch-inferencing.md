@@ -20,7 +20,7 @@ batch inferencing on:
     echo -n "Output3" > in3.txt
     ```
 
-=== "Using RunAI"
+=== "Using Run:ai"
 
     ```bash
     runai submit \
@@ -45,7 +45,7 @@ To execute the batch inferencing script:
     python src/batch_infer.py
     ```
 
-=== "Using RunAI"
+=== "Using Run:ai"
 
     ```bash
     runai submit \
