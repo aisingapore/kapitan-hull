@@ -1,5 +1,5 @@
---- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/setting-up/09-batch-inferencing.md
-+++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/setting-up/09-batch-inferencing.md
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/09-batch-inferencing.md
++++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/local/09-batch-inferencing.md
 @@ -17,4 +17,4 @@
 -    mkdir -p data/batch-infer && cd $_
 -    echo -n "Output1" > in1.txt

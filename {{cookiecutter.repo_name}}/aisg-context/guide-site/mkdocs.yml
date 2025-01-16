@@ -60,6 +60,7 @@ nav:
     - Data Storage & Versioning: local/06-data-storage-versioning.md
     - Job Orchestration: local/07-job-orchestration.md
     - Deployment: local/08-deployment.md
+    - Batch Inferencing: local/09-batch-inferencing.md
   - Using Docker:
     - Developer Workspace: docker/04-dev-wksp.md
     - Virtual Environments: docker/05-virtual-env.md
@@ -73,9 +74,8 @@ nav:
     - Job Orchestration: runai/07-job-orchestration.md
     - Deployment: runai/08-deployment.md
   - Sorting Out the Rest:
-    - Batch Inferencing: setting-up/09-batch-inferencing.md
-    - CI/CD: setting-up/10-cicd.md
-    - Documentation: setting-up/11-documentation.md
+    - CI/CD: appendix/10-cicd.md
+    - Documentation: appendix/11-documentation.md
 
 # Plugins
 plugins:
