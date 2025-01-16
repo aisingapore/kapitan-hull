@@ -68,7 +68,7 @@ nav:
     - Job Orchestration: docker/07-job-orchestration.md
     - Deployment: docker/08-deployment.md
     - Batch Inferencing: docker/09-batch-inferencing.md
-  - Using Run\:ai:
+  - Using Run:ai:
     - Developer Workspace: runai/04-dev-wksp.md
     - Virtual Environments: runai/05-virtual-env.md
     - Data Storage & Versioning: runai/06-data-storage-versioning.md
