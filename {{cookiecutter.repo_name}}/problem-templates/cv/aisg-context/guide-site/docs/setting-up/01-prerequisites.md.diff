@@ -14,16 +14,16 @@
 @@ -36 +42 @@
 -- Access to a project on a Run:ai cluster.  
 +- Access to a project on AI Singapore's Run:ai cluster.  
-@@ -42 +48 @@
+@@ -41 +47 @@
 -- Credentials for an S3-compatible service (MinIO, etc).  
 +- Credentials for AI Singapore's Elastic Cloud Storage (ECS) service.  
-@@ -44 +50 @@
+@@ -43 +49 @@
 -- Credentials for a Docker registry.  
 +- Credentials for AI Singapore's Harbor registry.  
-@@ -51,0 +59,4 @@
+@@ -50,0 +57,4 @@
 +
 +!!! note
 +    If you do not have any of the required credentials, please verify 
 +    with or notify the MLOps team at `mlops@aisingapore.org`.
-@@ -81,0 +93 @@
+@@ -80,0 +91 @@
 +[nus-it]: https://nusit.nus.edu.sg/eguides/

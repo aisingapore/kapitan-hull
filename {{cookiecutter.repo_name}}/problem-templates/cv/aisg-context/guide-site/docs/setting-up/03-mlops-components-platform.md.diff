@@ -54,16 +54,16 @@
 +    MLOps team at `mlops@aisingapore.org`.
 +
 +[aisg-rke]: https://rancher.aisingapore.net
-@@ -190,3 +227,3 @@
+@@ -186,3 +186,3 @@
 -(pull, push, etc.) with a Git registry, whether it would be 
 -[__GitHub__][github], [__GitLab__][gitlab] or other Git registries.  
 -This guide will reference GitLab as the preferred Git registry.
 +(pull, push, etc.) with AI Singapore’s [__GitLab__][gitlab] instance,
 +which serves as __the organisation’s default version control (Git)
 +remote server__.
-@@ -198 +234,0 @@
+@@ -194 +193,0 @@
 -[github]: https://github.com
-@@ -236,2 +272,5 @@
+@@ -232,2 +231,5 @@
 -Images built through CI/CD workflows or manual builds can be pushed to 
 -container image registries.
 +AI Singapore has a strong __emphasis on containerising pipelines for the
@@ -71,7 +71,7 @@
 +CI/CD workflows or manual builds can be pushed to container image 
 +registries, be it Google Cloud’s [Artifact Registry][gcp-ar] or AI 
 +Singapore’s on-premise [Harbor][harbor] registry.
-@@ -323,0 +363,14 @@
+@@ -319,0 +322,14 @@
 +## GitLab
 +
 +We at AI Singapore host our own GitLab server:
@@ -86,10 +86,10 @@
 +outside of NUS' network or GCP (regions `asia-southeast1` and
 +`us-central1`), you would need to login to NUS' VPN.
 +
-@@ -327 +380 @@
+@@ -323 +339 @@
 -a Git-based server depends on the environment in question. If an 
 +the GitLab server depends on the environment in question. If an 
-@@ -333,0 +387,10 @@
+@@ -329,0 +346,10 @@
 +If you would like to configure SSH access for accessing AI Singapore's
 +GitLab instance, you can add the following lines to your SSH
 +configuration file (`~/.ssh/config`):
@@ -100,7 +100,7 @@
 +    IdentityFile ~/.ssh/<PATH_TO_PRIVATE_KEY>
 +```
 +
-@@ -342,5 +405,5 @@
+@@ -338,5 +364,5 @@
 -that works as an abstraction layer on top of the infrastructure to 
 -maximise the usage of such resources. The platform utilises 
 -[Kubernetes][k8s] in the backend. Orchestration platforms such as 
@@ -111,7 +111,7 @@
 +utilises [Kubernetes][k8s] in the backend. Orchestration platforms such 
 +as Run:AI allows end-users to easily spin up workloads, execute jobs, 
 +set up services or carry out any interaction with relevant resources.
-@@ -354 +417,13 @@
+@@ -350 +376,13 @@
 -login page given to you by your organisation.
 +login page at the following link:
 +
@@ -126,24 +126,21 @@
 +to the platform's home (`Overview`) page.
 +
 +![AISG's Run:AI Home Page](assets/screenshots/runai-home-page.png)
-@@ -392 +467 @@
+@@ -388 +426 @@
 -        server: https://runai-cluster.yourcompany.tld:6443
 +        server: https://runai-cluster.aisingapore.net:6443
-@@ -409 +484 @@
+@@ -405 +443 @@
 -            realm: yourcompany
 +            realm: aisingapore
-@@ -411,2 +486,2 @@
+@@ -407,2 +445,2 @@
 -            idp-issuer-url: https://app.run.ai/auth/realms/yourcompany
 -            redirect-uri: https://yourcompany.run.ai/oauth-code
 +            idp-issuer-url: https://app.run.ai/auth/realms/aisingapore
 +            redirect-uri: https://aisingapore.run.ai/oauth-code
-@@ -497 +572 @@
--            https://app.run.ai/auth/realms/yourcompany/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Fyourcompany.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
-+            https://app.run.ai/auth/realms/aisingapore/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Faisingapore.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
-@@ -513 +588 @@
--            https://app.run.ai/auth/realms/yourcompany/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Fyourcompany.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
-+            https://app.run.ai/auth/realms/aisingapore/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Faisingapore.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
-@@ -534 +609,19 @@
+@@ -500 +538 @@
+-        https://app.run.ai/auth/realms/yourcompany/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Fyourcompany.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
++        https://app.run.ai/auth/realms/aisingapore/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Faisingapore.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
+@@ -520 +558,19 @@
 -## Docker CLI Authentication
 +## Harbor
 +
@@ -164,10 +161,10 @@
 +![AI Singapore's Harbor Registry - Projects Page](assets/screenshots/harbor-projects-page.png)
 +
 +### Docker CLI Authentication
-@@ -540 +633 @@
+@@ -526 +582 @@
 -docker login registry.yourgitregistry.tld
 +docker login registry.aisingapore.net
-@@ -552,8 +645,75 @@
+@@ -538,8 +594,75 @@
 -images to/from the Docker registry you've logged into.
 -
 -## AWS CLI for S3 Protocol
@@ -251,15 +248,15 @@
 +AI Singapore's ECS makes use of the S3 protocol and so we can make use
 +of the AWS CLI's S3 commands to interact with the storage system.
 +Instructions for installing the AWS CLI (v2) can be found [here][awscli].
-@@ -567,0 +728,4 @@
+@@ -553,0 +677,4 @@
 +!!! note inline end
 +    The `aws_access_key_id` and `aws_secret_access_key` are provided by
 +    the DataOps team. The team is reachable at `dataops@aisingapore.org`.
 +
-@@ -585 +749 @@
+@@ -571 +698 @@
 -aws --profile profile-1 --endpoint-url="https://minio.yourcompany.tld" s3 ls
 +aws --profile profile-1 --endpoint-url="https://necs.nus.edu.sg" s3 ls
-@@ -610,0 +775,8 @@
+@@ -596,0 +724,8 @@
 +
 +### ECS Robot/Service Accounts
 +
@@ -268,13 +265,13 @@
 +created by administrators. These accounts are usually created for 
 +automated workflows that require access to ECS. Configuring them for the
 +CLI works the same as configuring a regular user account.
-@@ -656 +828,4 @@
+@@ -642 +777,4 @@
 -Volumes (PVs) or virtual machine disks.  
 +Volumes (PVs) or virtual machine disks. There is however little to
 +nothing for end-users to configure the NFS storage as most of the setup
 +will be done by AI Singapore's Platforms team.
 +
-@@ -659,0 +835,4 @@
+@@ -645,0 +783,4 @@
 +
 +!!! note inline end
 +    `GCP_PROJECT_ID` and `GCP_PROJECT_ID` are provided by the MLOps

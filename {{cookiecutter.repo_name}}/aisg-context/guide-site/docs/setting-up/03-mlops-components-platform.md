@@ -486,15 +486,6 @@ authenticate with the Run:ai cluster.
     runai login
     ```
 
-    You should see an interactive prompt similar to this:
-
-    ```
-    Go to the following link in your browser:
-            https://app.run.ai/auth/realms/yourcompany/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Fyourcompany.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
-    Enter verification code:
-    INFO[0068] Logged in successfully
-    ```
-
 === "Windows PowerShell"
 
     ```powershell
@@ -502,14 +493,14 @@ authenticate with the Run:ai cluster.
     runai login
     ```
 
-    You should see an interactive prompt similar to this:
+You should see an interactive prompt similar to this:
 
-    ```
-    Go to the following link in your browser:
-            https://app.run.ai/auth/realms/yourcompany/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Fyourcompany.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
-    Enter verification code:
-    INFO[0068] Logged in successfully
-    ```
+```
+Go to the following link in your browser:
+        https://app.run.ai/auth/realms/yourcompany/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Fyourcompany.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
+Enter verification code:
+INFO[0068] Logged in successfully
+```
 
 As you can see from above, you would be required to use a browser to
 access the link provided by the CLI. Upon accessing the link, you would
