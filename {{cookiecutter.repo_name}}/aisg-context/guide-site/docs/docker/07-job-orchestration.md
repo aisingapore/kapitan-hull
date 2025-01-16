@@ -258,7 +258,6 @@ the running MLFlow server:
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
         -w /home/aisg/{{cookiecutter.repo_name}} \
         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
-        -e MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING=true \
         --network=host \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
         python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
@@ -271,7 +270,6 @@ the running MLFlow server:
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
         -w /home/aisg/{{cookiecutter.repo_name}} \
         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
-        -e MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING=true \
         --network=host \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
         python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
@@ -292,7 +290,6 @@ the running MLFlow server:
         -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
         -w /home/aisg/{{cookiecutter.repo_name}} `
         -e MLFLOW_TRACKING_URI=http://localhost:5000 `
-        -e MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING=true `
         --network=host `
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
         python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
@@ -417,7 +414,6 @@ container. This tag is defined using the environment value
         -w /home/aisg/{{cookiecutter.repo_name}} \
         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
-        -e MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING=true \
         --network=host \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
         python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
@@ -431,7 +427,6 @@ container. This tag is defined using the environment value
         -w /home/aisg/{{cookiecutter.repo_name}} \
         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
-        -e MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING=true \
         --network=host \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
         python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
@@ -455,7 +450,6 @@ container. This tag is defined using the environment value
         -w /home/aisg/{{cookiecutter.repo_name}} `
         -e MLFLOW_HPTUNING_TAG=$($env:MLFLOW_HPTUNING_TAG) `
         -e MLFLOW_TRACKING_URI=http://localhost:5000 `
-        -e MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING=true `
         --network=host `
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
         python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI

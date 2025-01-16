@@ -69,6 +69,7 @@ def mlflow_init(args, run_name='train-model', setup_mlflow=False, autolog=False)
         try:
             mlflow.set_tracking_uri(args["mlflow_tracking_uri"])
             mlflow.set_experiment(args["mlflow_exp_name"])
+            mlflow.enable_system_metrics_logging()
 
             if autolog:
                 mlflow.autolog()

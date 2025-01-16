@@ -24,11 +24,11 @@
 +model_checkpoint_dir_path: "./models/checkpoint"
 @@ -249,0 +260 @@
 +        Add `no_cuda=false` to use GPUs behind the image name.  
-@@ -350,2 +361,2 @@
+@@ -347,2 +358,2 @@
 -      dummy_param1: range(0.9,1.7,step=0.1)
 -      dummy_param2: choice(0.7,0.8,0.9)
 +      train_model.lr: range(0.9,1.7,step=0.1)
 +      train_model.gamma: choice(0.7,0.8,0.9)
-@@ -378 +389 @@
+@@ -375 +386 @@
 -    return args["dummy_param1"], args["dummy_param2"]
 +    return curr_test_loss, curr_test_accuracy
