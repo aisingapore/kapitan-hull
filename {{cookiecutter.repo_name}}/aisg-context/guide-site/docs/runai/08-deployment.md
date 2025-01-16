@@ -85,7 +85,7 @@ the MLflow run has been obtained, let's download the model that we
 intend to serve. Assuming you're in the root of this template's 
 repository, execute the following commands:
 
-=== "Linux/macOS/VSCode Server Terminal"
+=== "VSCode Server Terminal"
 
     ```bash
     conda activate mlflow-test
@@ -96,15 +96,20 @@ repository, execute the following commands:
     python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
     ```
 
-=== "Windows PowerShell"
+=== "Using RunAI"
 
-    ```powershell
-    conda activate mlflow-test
-    $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
-    $Env:MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
-    $Env:MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME> # If applicable
-    $Env:MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD> # If applicable
-    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
+    ```bash
+    export MODEL_UUID=<MLFLOW_RUN_UUID>
+    runai submit \
+        --job-name-prefix <YOUR_HYPHENATED_NAME>-download-artifacts \
+        -i {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
+        --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPENATED_NAME> \
+        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+        -e MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI> \
+        -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
+        -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
+        --command -- python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
     ```
 
 !!! warning "Attention"
@@ -123,37 +128,48 @@ that exists within the repository.
 
 ### Running the API Server
 
-Run the FastAPI server using [Gunicorn](https://gunicorn.org)
-(for Linux/macOS) or [`uvicorn`][uvicorn] (for Windows):
+Run the FastAPI server using [Gunicorn](https://gunicorn.org):
 
-!!! attention
-    Gunicorn is only executable on UNIX-based or UNIX-like systems; 
-    this method would not be possible/applicable for Windows machines.
-
-=== "Linux/macOS/VSCode Server Terminal"
+=== "VSCode Server Terminal"
 
     ```bash
+    # Running in a working `{{cookiecutter.repo_name}}` repository
     conda activate {{cookiecutter.repo_name}}
-    cd src
-    gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP -b 0.0.0.0:8080 -w 2 -k uvicorn.workers.UvicornWorker -t 90
+    export MODEL_UUID=<MLFLOW_RUN_UUID>
+    gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+        -k uvicorn.workers.UvicornWorker \
+        -b 0.0.0.0:8080 -w 2 -t 90 --chdir src
     ```
 
-    See [here][reason] as to why Gunicorn is to be used instead of just
-    [Uvicorn][uvicorn]. TLDR: Gunicorn is needed to spin up multiple 
-    processes/workers to handle more requests i.e. better for the sake 
-    of production needs.
+    And with that, the link to our document site for our server would
+    be given by Coder at the bottom right notification, or under the 
+    Ports tab right beside the Terminal tab. The link should look
+    similar to this:
 
-=== "Windows PowerShell"
+=== "Using RunAI"
 
-    ```powershell
-    conda activate {{cookiecutter.repo_name}}
-    cd src
-    uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP
+    ```bash
+    export MODEL_UUID=<MLFLOW_RUN_UUID>
+    runai submit \
+        --job-name-prefix <YOUR_HYPHENATED_NAME>-inference \
+        -i {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+        --working-dir /home/aisg/{{cookiecutter.repo_name}}/src \
+        --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+        --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+        --service-type external-url,port=8080:8080 \
+        --command -- gunicorn khull_test_fastapi.main:APP \
+            -k uvicorn.workers.UvicornWorker \
+            -b 0.0.0.0:8080 -w 2 -t 90
     ```
+
+    And with that, the link to our document site for our server would
+    be given by RunAI. The link should look similar to this:
+
+![FastAPI - OpenAPI Docs](assets/screenshots/fastapi-openapi-docs.png)
 
 In another terminal, use the `curl` command to submit a request to the API:
 
-=== "Linux/macOS/VSCode Server Terminal"
+=== "VSCode Server Terminal"
 
     ```bash
     curl -X POST \
@@ -161,27 +177,12 @@ In another terminal, use the `curl` command to submit a request to the API:
         -H 'Content-Type: application/json' \
         -d '"string"'
     ```
-    
-    Output sample:
+  
+Output sample:
 
-    ```
-    {"data":[{"input":"string"}]}
-    ```
-
-=== "Windows PowerShell"
-
-    ```powershell
-    curl.exe '-X', 'POST', `
-        'localhost:8080/api/v1/model/predict', `
-        '-H', 'Content-Type: multipart/form-data', `
-        '-d', '"string"',
-    ```
-    
-    Output sample:
-
-    ```
-    {"data":[{"input":"string"}]}
-    ```
+```
+{"data":[{"input":"string"}]}
+```
 
 With the returned JSON object, we have successfully submitted a request
 to the FastAPI server and it returned predictions as part of the
@@ -217,33 +218,6 @@ FastAPI automatically generates interactive API documentation for easy
 viewing of all the routers/endpoints you have made available for the
 server. You can view the documentation through
 `<API_SERVER_URL>:<PORT>/docs`. 
-
-### Port Forwarding from VSCode Server
-
-It's optional, but let's view the labour of our hard work:
-
-> The following steps assumes you have installed `coder` on your machine.
-> Else, follow the installation steps [here](https://coder.com/docs/v2/latest/install#install-coder)
-> and login via `coder login <CODER_URL>`
-
-=== "Linux/macOS/VSCode Server Terminal"
-    
-    ```bash
-    coder port-forward <WORKSPACE_NAME> --tcp 8080:8080
-    ```
-
-=== "Windows PowerShell"
-
-    ```powershell
-
-    coder port-forward <WORKSPACE_NAME> --tcp 8080:8080
-    ```
-    
-And with that, our document site for our server is viewable through
-[`localhost:8080/docs`](http://localhost:8080/docs) and will look as
-such:
-
-![FastAPI - OpenAPI Docs](assets/screenshots/fastapi-openapi-docs.png)
 
 ??? info "Reference Link(s)"
 
