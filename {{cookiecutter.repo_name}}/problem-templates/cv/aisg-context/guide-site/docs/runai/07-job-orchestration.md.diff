@@ -53,7 +53,9 @@
 @@ -293 +310 @@
 -    return args["dummy_param1"], args["dummy_param2"]
 +    return curr_test_loss, curr_test_accuracy
-@@ -338,3 +355,6 @@
+@@ -335,0 +353 @@
++        -e OMP_NUM_THREADS=2 \
+@@ -337,3 +355,6 @@
 -            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
 -            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
 -            mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"
