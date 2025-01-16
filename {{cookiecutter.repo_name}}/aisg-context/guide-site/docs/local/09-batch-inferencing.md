@@ -11,7 +11,7 @@ configuration file (`conf/batch_infer.yaml`) for this purpose.
 Let's first download some data on our local machine for us to conduct
 batch inferencing on:
 
-=== "Linux/macOS/VSCode Server Terminal"
+=== "Linux/macOS"
 
     ```bash
     mkdir -p data/batch-infer && cd $_
@@ -41,7 +41,7 @@ batch inferencing on:
 
 To execute the batch inferencing script locally:
 
-=== "Linux/macOS/VSCode Server Terminal"
+=== "Linux/macOS"
 
     ```bash
     # Navigate back to root directory
