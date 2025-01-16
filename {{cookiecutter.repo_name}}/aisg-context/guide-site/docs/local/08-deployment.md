@@ -141,7 +141,7 @@ And with that, our document site for our server is viewable through
 [`localhost:8080/docs`](http://localhost:8080/docs) and will look as
 such:
 
-![FastAPI - OpenAPI Docs](assets/screenshots/fastapi-openapi-docs.png)
+![MLflow - Dashboard Run View](../common/assets/screenshots/mlflow-dashboard-run-view.png)
 
 In another terminal, use the `curl` command to submit a request to the API:
 

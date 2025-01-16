@@ -454,8 +454,8 @@ container. This tag is defined using the environment value
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
         python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
     ```
-    
-![MLflow Tracking Server - Hyperparameter Tuning Runs](assets/screenshots/mlflow-tracking-hptuning-runs.png)
+
+![MLflow Tracking Server - Hyperparameter Tuning Runs](../common/assets/screenshots/mlflow-tracking-hptuning-runs.png)
 
 ??? info "Reference Link(s)"
 

@@ -165,7 +165,7 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org):
     And with that, the link to our document site for our server would
     be given by RunAI. The link should look similar to this:
 
-![FastAPI - OpenAPI Docs](assets/screenshots/fastapi-openapi-docs.png)
+![FastAPI - OpenAPI Docs](../common/assets/screenshots/fastapi-openapi-docs.png)
 
 In another terminal, use the `curl` command to submit a request to the API:
 

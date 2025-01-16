@@ -227,7 +227,7 @@ This tag is defined using the environment value `MLFLOW_HPTUNING_TAG`.
     python src\train_model.py --multirun
     ```
 
-![MLflow Tracking Server - Hyperparameter Tuning Runs](assets/screenshots/mlflow-tracking-hptuning-runs.png)
+![MLflow Tracking Server - Hyperparameter Tuning Runs](../common/assets/screenshots/mlflow-tracking-hptuning-runs.png)
 
 ??? info "Reference Link(s)"
 
