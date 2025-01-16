@@ -67,12 +67,14 @@ nav:
     - Data Storage & Versioning: docker/06-data-storage-versioning.md
     - Job Orchestration: docker/07-job-orchestration.md
     - Deployment: docker/08-deployment.md
+    - Batch Inferencing: docker/09-batch-inferencing.md
   - Using RunAI:
     - Developer Workspace: runai/04-dev-wksp.md
     - Virtual Environments: runai/05-virtual-env.md
     - Data Storage & Versioning: runai/06-data-storage-versioning.md
     - Job Orchestration: runai/07-job-orchestration.md
     - Deployment: runai/08-deployment.md
+    - Batch Inferencing: runai/09-batch-inferencing.md
   - Sorting Out the Rest:
     - CI/CD: appendix/10-cicd.md
     - Documentation: appendix/11-documentation.md
