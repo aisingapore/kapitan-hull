@@ -1,0 +1,57 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/08-deployment.md
++++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/08-deployment.md
+@@ -83 +83 @@
+-    export MODEL_UUID=<MLFLOW_RUN_UUID>
++    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+@@ -89 +89 @@
+-        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
++        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
+@@ -95 +95 @@
+-    export MODEL_UUID=<MLFLOW_RUN_UUID>
++    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+@@ -101 +101 @@
+-        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
++        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
+@@ -106,0 +107 @@
++    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+@@ -109 +109,0 @@
+-        -e MODEL_UUID=<MLFLOW_RUN_UUID> `
+@@ -113 +113 @@
+-        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
++        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
+@@ -119,4 +119 @@
+-modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
+-
+-Now, let's proceed and spin up an inference server using the package 
+-that exists within the repository.
++modules to load will be `./models/<MLFLOW_RUN_UUID>/model/model.pt`.
+@@ -148,0 +146 @@
++        -e PRED_MODEL_PATH="../models/$PRED_MODEL_UUID/model/model.pt" \
+@@ -203,2 +201,2 @@
+-            -H 'Content-Type: application/json' \
+-            -d '"string"'
++            -H 'Content-Type: multipart/form-data' \
++            -F "image_file=@/path/to/image/file"
+@@ -213,2 +211,2 @@
+-            -H 'Content-Type: application/json' \
+-            -d '"string"'
++            -H 'Content-Type: multipart/form-data' \
++            -F "image_file=@/path/to/image/file"
+@@ -223,2 +221,2 @@
+-            -H 'Content-Type: application/json' `
+-            -d '"string"'
++            -H 'Content-Type: multipart/form-data' `
++            -F "image_file=@/path/to/image/file"
+@@ -230 +228 @@
+-{"data":[{"input":"string"}]}
++{"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
+@@ -248 +246,2 @@
+-field `MODEL_UUID` inherit their values from the environment variables.
++fields `PRED_MODEL_UUID` and `PRED_MODEL_PATH` inherit their values 
++from the environment variables.
+@@ -259 +258,4 @@
+-    MODEL_UUID: str
++    USE_CUDA: bool = False
++    USE_MPS: bool = False
++    PRED_MODEL_UUID: str
++    PRED_MODEL_PATH: str

@@ -18,10 +18,6 @@ def generate_template_scripts() -> None:
             pass
         case "cv":
             populate_problem("cv")
-        case "nlp":
-            populate_problem("nlp")
-        case "tabular":
-            populate_problem("tabular")
         case _:
             raise ValueError(f"{PROBLEM_TEMPLATE} is not a valid problem template.")
     shutil.rmtree(os.path.join(os.getcwd(), "problem-templates"))
@@ -40,7 +36,7 @@ def remove_redundant_files() -> None:
         'kapitan-hull-eptg-onprem-runai-banner.png'
     ]
     WORKFLOW_HTML_PATH = os.path.join(
-        BANNER_PATH, 'guide-for-user', 'assets'
+        BANNER_PATH, 'setting-up', 'assets'
     )
     WORKFLOWS_HTML = [
         'aisg-e2e-mlops-gcp-runai-workflow-components_jul2023.html',

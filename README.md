@@ -80,10 +80,10 @@ $ cookiecutter --replay-file cookiecutter.json \
 | `src_package_name`       | Name of the source code's package under `src`. Input to start with alphabet characters. No whitespaces or hyphens are allowed.   | `repo_name` where hyphens are replaced with underscores.                    | [Link](https://github.com/aisingapore/kapitan-hull/blob/main/hooks/pre_gen_project.py#L16) 	|
 | `src_package_name_short` | The alias for the source code's package. Input to start with alphabet characters. No whitespaces or hyphens are allowed.         | `src_package_name`                                                          | [Link](https://github.com/aisingapore/kapitan-hull/blob/main/hooks/pre_gen_project.py#L19) 	|
 | `platform`               | The platform the project is running on. (Choose between "on-premise" or "Google Cloud Platform")                                 | `onprem` or `gcp`                                                           | NIL                                                                                         |
-| `orchestrator`           | The orchestrator the project is using. (Choose between "Run:AI", "Polyaxon" or "No orchestrator")                                | `runai`, `polyaxon` or `none`                                               | NIL                                                                                         |
-| `proj_name`              | The project name used in by the repository. If you're using Run:AI, this will be the Run:AI project name used by the repository. | `sample-project`                                                            | NIL                                                                                         |
+| `orchestrator`           | The orchestrator the project is using. (Choose between "Run:ai" or "No orchestrator")                                            | `runai` or `none`                                                           | NIL                                                                                         |
+| `proj_name`              | The project name used in by the repository. If you're using Run:ai, this will be the Run:ai project name used by the repository. | `sample-project`                                                            | NIL                                                                                         |
 | `registry_project_path`  | Path of the registry repository for your container images to be located under. Cannot end with a slash character.                | `registry.domain.tld/sample-project/my-project`                             | [Link](https://github.com/aisingapore/kapitan-hull/blob/main/hooks/pre_gen_project.py#L22) 	|
-| `problem_template`       | Initialise the repository with a default problem statement                                                                       | `base`, `cv`, `nlp` or `tabular`                                            | NIL                                                                                         |
+| `problem_template`       | Initialise the repository with a default problem statement                                                                       | `base` or `cv`                                                              | NIL                                                                                         |
 | `author_name`            | Your alias or project team's name. Relatively arbitrary. No hyphens are allowed.                                                 | `AISG`                                  	                                  | [Link](https://github.com/aisingapore/kapitan-hull/blob/main/hooks/pre_gen_project.py#L25) 	|
 
 ### Version Control
@@ -91,6 +91,38 @@ $ cookiecutter --replay-file cookiecutter.json \
 Following the creation of your repository, initialise it with Git, push 
 it to a remote, and follow its `README.md` document for a full guide on 
 its usage.
+
+## Development
+
+To reduce the size and check the explicit changes between the base
+template and the various problem templates, we opt for the use of diff
+files within Kapitan Hull to store the differences within the 
+repository. As such it is essential that developers would know how to 
+apply patches for development, and regenerate the diff files to commit 
+those changes.
+
+### Applying Diff Patch
+
+You can apply a specific patch as such:
+
+```bash
+python hooks/pre_prompt.py apply <diff_file>
+```
+
+### Creating Diff Patch
+
+You can create a specific patch as such:
+
+```bash
+python extras/generate_diffs.py create <alt_file>
+```
+
+This `<alt_file>` refers to the file that is to be committed as a diff
+file in the `problem-templates/<template>` folder.
+
+> Note: When creating a diff patch, ensure that the base file and the
+>       other file have an extra newline at the end to avoid patching
+>       issues using the scripts.
 
 ## Note on AMD GPUs
 

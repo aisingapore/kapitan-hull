@@ -1,0 +1,45 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/09-batch-inferencing.md
++++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/local/09-batch-inferencing.md
+@@ -17,4 +17,4 @@
+-    mkdir -p data/batch-infer && cd $_
+-    echo -n "Output1" > in1.txt
+-    echo -n "Output2" > in2.txt
+-    echo -n "Output3" > in3.txt
++    cd data
++    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip
++    unzip batched-mnist-input-data.zip
++    rm batched-mnist-input-data.zip
+@@ -26,14 +26,4 @@
+-    New-Item -ItemType Directory -Force -Path 'data/batch-infer'
+-    $currentDirectory = Get-Location
+-    Set-Location -Path 'data/batch-infer'
+-    
+-    New-Item -ItemType File -Force -Name 'in1.txt' | Out-Null
+-    Add-Content -Path 'in1.txt' -Value "Output1"
+-    
+-    New-Item -ItemType File -Force -Name 'in2.txt' | Out-Null
+-    Add-Content -Path 'in2.txt' -Value "Output2"
+-    
+-    New-Item -ItemType File -Force -Name 'in3.txt' | Out-Null
+-    Add-Content -Path 'in3.txt' -Value "Output3"
+-    
+-    Set-Location -Path $currentDirectory
++    cd data
++    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip
++    Expand-Archive -Path batched-mnist-input-data.zip -DestinationPath .
++    rm batched-mnist-input-data.zip
+@@ -48,0 +39,2 @@
++    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
++    export PRED_MODEL_PATH="$PWD/models/$PRED_MODEL_UUID/artifacts/model/model.pt"
+@@ -57,0 +50,2 @@
++    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
++    $Env:PRED_MODEL_PATH="$(Get-Location)\models\$PRED_MODEL_UUID\artifacts\model\model.pt"
+@@ -68,3 +62,5 @@
+-{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in1.txt", "prediction": "Output1"}
+-{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in2.txt", "prediction": "Output2"}
+-{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in3.txt", "prediction": "Output3"}
++{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
++{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
++{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
++{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
++{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}

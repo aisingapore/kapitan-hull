@@ -1,43 +1,21 @@
 --- {{cookiecutter.repo_name}}/src/train_model.py
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/src/train_model.py
-@@ -1,11 +1,12 @@
- """
+@@ -2 +2 @@
 -This script is for training a dummy model on a dummy dataset.
 +This script is for training a model on the MNIST dataset.
- """
- import os
- import logging
- import omegaconf
- import hydra
- import mlflow
+@@ -8,0 +9 @@
 +import torch
- 
- import {{cookiecutter.src_package_name}} as {{cookiecutter.src_package_name_short}}
- 
-@@ -13,8 +14,8 @@
- # pylint: disable = no-value-for-parameter
- @hydra.main(version_base=None, config_path="../conf", config_name="train_model.yaml")
- def main(args):
+@@ -16 +17 @@
 -    """This is the main function for 'training' the model.
--    
 +    """This is the main function for training the model.
-+
-     Parameters
-     ----------
-     args : omegaconf.DictConfig
-@@ -36,31 +37,83 @@
-         mlflow_init_status,
-         "log_params",
-         params={
+@@ -39,2 +40,4 @@
 -            "dummy_param1": args["dummy_param1"],
 -            "dummy_param2": args["dummy_param2"],
 +            "learning_rate": args["lr"],
 +            "gamma": args["gamma"],
 +            "seed": args["seed"],
 +            "epochs": args["epochs"],
-         },
-     )
- 
+@@ -44 +47,64 @@
 -    model = {{cookiecutter.src_package_name_short}}.modeling.models.DummyModel()
 +    torch.manual_seed(args["seed"])
 +
@@ -103,12 +81,7 @@
 +            )
 +
 +        scheduler.step()
- 
-     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
-         mlflow_init_status,
-         "log_dict",
-         dictionary=omegaconf.OmegaConf.to_container(args, resolve=True),
-         artifact_file="train_model_config.json",
+@@ -51,13 +116,0 @@
 -    )
 -
 -    os.makedirs(args["artifact_dir_path"], exist_ok=True)
@@ -122,15 +95,6 @@
 -        "log_artifact",
 -        local_path=artifact_path,
 -        artifact_path="outputs"
-     )
- 
-     if mlflow_init_status:
-@@ -78,7 +131,7 @@
-         logger.info("Model training has completed.")
- 
-     # Outputs for conf/train_model.yaml for hydra.sweeper.direction
+@@ -81 +134 @@
 -    return args["dummy_param1"], args["dummy_param2"]
 +    return curr_test_loss, curr_test_accuracy
- 
- 
- if __name__ == "__main__":

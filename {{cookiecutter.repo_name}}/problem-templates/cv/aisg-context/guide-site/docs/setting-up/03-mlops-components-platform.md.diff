@@ -1,0 +1,278 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/setting-up/03-mlops-components-platform.md
++++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/setting-up/03-mlops-components-platform.md
+@@ -10,0 +11,15 @@
++## NUS VPN
++
++Your credentials for your NUS Staff/Student account is needed to
++login to NUS' VPN for access to the following:
++
++- [AI Singapore's GitLab instance](#gitlab)
++{% if cookiecutter.platform == 'onprem' -%}
++- [AI Singapore's Kubernetes clusters](#kubernetes)
++- [AI Singapore's Run:ai platform](#runai)
++- [AI Singapore's Harbor registry](#harbor)
++- [AI Singapore's Elastic Cloud Storage (ECS)](#elastic-cloud-storage-ecs)
++- [Your project's on-premise MLflow Tracking server](#mlflow)
++{% endif -%}
++- Other miscellaneous NUS resources
++
+@@ -14,3 +29,9 @@
+-A [GCP project][gcp-proj] is required to access GCP resources for this
+-project. Such projects are accessible through the 
+-[GCP console][gcp-csl].
++Each project in AI Singapore that requires the usage of GCP resources
++would be provided with a [GCP project][gcp-proj]. Such projects are 
++accessible through the [GCP console][gcp-csl] once you've logged into 
++your AI Singapore Google account.
++
++!!! info
++    Projects are managed and provisioned by AI Singapore's Platforms 
++    team. If you'd like to request for a project to be created (or for 
++    any other enquiries as well), please contact `mlops@aisingapore.org`.
+@@ -25 +46,5 @@
+-provide authorisation using a user or service account.  
++provide authorisation using a user or service account. In AI Singapore's 
++context, unless your use case concerns some automation or CI/CD 
++pipelines, you will probably be using your user account (i.e. Google 
++accounts with AI Singapore domains such as `@aisingapore.org` or 
++`@aiap.sg`).  
+@@ -86,0 +112,6 @@
++Upon one's assignment to a project, any relevant clusters that one has
++access to would be viewable on 
++[AI Singapore's Rancher dashboard][aisg-rke].
++
++![AISG's Rancher Dashboard - Home Dashboard](assets/screenshots/rancher-home-dashboard.png)
++
+@@ -89,2 +120,8 @@
+-facilitate Kubernetes workflows. 
+-
++facilitate Kubernetes workflows. To login, use your Azure account i.e. 
++the same set of credentials that you use for your GitLab account.
++
++!!! note
++    If you do not have rightful access to a cluster, please notify the
++    MLOps team at `mlops@aisingapore.org`.
++
++[aisg-rke]: https://rancher.aisingapore.net
+@@ -186,3 +186,3 @@
+-(pull, push, etc.) with a Git registry, whether it would be 
+-[__GitHub__][github], [__GitLab__][gitlab] or other Git registries.  
+-This guide will reference GitLab as the preferred Git registry.
++(pull, push, etc.) with AI Singapore’s [__GitLab__][gitlab] instance,
++which serves as __the organisation’s default version control (Git)
++remote server__.
+@@ -194 +193,0 @@
+-[github]: https://github.com
+@@ -232,2 +231,5 @@
+-Images built through CI/CD workflows or manual builds can be pushed to 
+-container image registries.
++AI Singapore has a strong __emphasis on containerising pipelines for the
++purpose of reproducibility and ease of delivery__. Images built through
++CI/CD workflows or manual builds can be pushed to container image 
++registries, be it Google Cloud’s [Artifact Registry][gcp-ar] or AI 
++Singapore’s on-premise [Harbor][harbor] registry.
+@@ -319,0 +322,14 @@
++## GitLab
++
++We at AI Singapore host our own GitLab server:
++
++> https://gitlab.aisingapore.net
++
++You should be provided with a set of credentials during onboarding for 
++access to the server.
++
++In order to interact with remote Git repositories situated on
++AI Singapore's GitLab instance (clone, push, fetch, etc.)
++outside of NUS' network or GCP (regions `asia-southeast1` and
++`us-central1`), you would need to login to NUS' VPN.
++
+@@ -323 +339 @@
+-a Git-based server depends on the environment in question. If an 
++the GitLab server depends on the environment in question. If an 
+@@ -329,0 +346,10 @@
++If you would like to configure SSH access for accessing AI Singapore's
++GitLab instance, you can add the following lines to your SSH
++configuration file (`~/.ssh/config`):
++
++```config
++Host gitlab.aisingapore.net
++    Port 2222
++    IdentityFile ~/.ssh/<PATH_TO_PRIVATE_KEY>
++```
++
+@@ -338,5 +364,5 @@
+-that works as an abstraction layer on top of the infrastructure to 
+-maximise the usage of such resources. The platform utilises 
+-[Kubernetes][k8s] in the backend. Orchestration platforms such as 
+-Run:AI allows end-users to easily spin up workloads, execute jobs, set 
+-up services or carry out any interaction with relevant resources.
++that works as an abstraction layer on top of AI Singapore's hybrid
++infrastructure to maximise the usage of such resources. The platform
++utilises [Kubernetes][k8s] in the backend. Orchestration platforms such 
++as Run:AI allows end-users to easily spin up workloads, execute jobs, 
++set up services or carry out any interaction with relevant resources.
+@@ -350 +376,13 @@
+-login page given to you by your organisation.
++login page at the following link:
++
++> https://aisingapore.run.ai
++
++The link above will bring you to the login page:
++
++![AISG's Run:AI Login Page](assets/screenshots/runai-login-page.png)
++
++To login, click on `CONTINUE WITH SSO`. You will be redirected to login
++with your Azure account. After a successful login, you will be brought 
++to the platform's home (`Overview`) page.
++
++![AISG's Run:AI Home Page](assets/screenshots/runai-home-page.png)
+@@ -388 +426 @@
+-        server: https://runai-cluster.yourcompany.tld:6443
++        server: https://runai-cluster.aisingapore.net:6443
+@@ -405 +443 @@
+-            realm: yourcompany
++            realm: aisingapore
+@@ -407,2 +445,2 @@
+-            idp-issuer-url: https://app.run.ai/auth/realms/yourcompany
+-            redirect-uri: https://yourcompany.run.ai/oauth-code
++            idp-issuer-url: https://app.run.ai/auth/realms/aisingapore
++            redirect-uri: https://aisingapore.run.ai/oauth-code
+@@ -500 +538 @@
+-        https://app.run.ai/auth/realms/yourcompany/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Fyourcompany.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
++        https://app.run.ai/auth/realms/aisingapore/protocol/openid-connect/auth?access_type=offline&client_id=runai-cli&redirect_uri=https%3A%2F%2Faisingapore.run.ai%2Foauth-code&response_type=code&scope=email+openid+offline_access&state=xxxxxxx
+@@ -520 +558,19 @@
+-## Docker CLI Authentication
++## Harbor
++
++AI Singapore uses a self-hosted Harbor as the on-premise container image
++registry.
++
++> https://registry.aisingapore.net
++
++![AI Singapore's Harbor Registry - Login Page](assets/screenshots/harbor-login-page.png)
++
++To login, use your Azure account username without the domain (if your 
++username is `user@aisingapore.org`, your username in this context will 
++just be `user`) and the same password as your Azure account.
++
++On a successful login, you should be able to see a list of Harbor
++projects that you have access to.
++
++![AI Singapore's Harbor Registry - Projects Page](assets/screenshots/harbor-projects-page.png)
++
++### Docker CLI Authentication
+@@ -526 +582 @@
+-docker login registry.yourgitregistry.tld
++docker login registry.aisingapore.net
+@@ -538,8 +594,75 @@
+-images to/from the Docker registry you've logged into.
+-
+-## AWS CLI for S3 Protocol
+-
+-The S3 protocol may be used in the project to access S3-compatible 
+-buckets such as MinIO. We can make use of the AWS CLI's S3 commands to 
+-interact with the storage system.Instructions for installing the AWS 
+-CLI (v2) can be found [here][awscli].
++images to/from the Harbor registry.
++
++### Harbor Projects, Membership & Roles
++
++For you to push any image to Harbor, you would need authorised access
++to projects i.e. membership in a project. Projects can be public or
++private. From the docs:
++
++> *There are two types of project in Harbor:*
++>
++> - *Public: Any user can pull images from this project. This is a*
++> *convenient way for you to share repositories with others.*
++> - *Private: Only users who are members of the project can pull images.*
++
++Hence, do ensure that you have rightful access to your project team's
++Harbor project in order for you to push any relevant images that you
++have built. Do contact the MLOps team (`mlops@aisingapore.org`) for
++access matters.
++
++!!! note
++    On your first ever login to Harbor, you would not have any
++    membership access to any projects. This is because projects can
++    only add users who have logged into Harbor at least once. Should
++    you want to be added to a project on Harbor, do notify the MLOps
++    team following your first login.
++
++With that said, not all membership is equal i.e. one would need to be
++assigned the membership roles of either `Project Admin`, `Master`, or
++`Developer` for pushing permissions.
++
++For more information on the aforementioned concepts, do refer to the
++reference links below.
++
++??? info "Reference Link(s)"
++
++    - [Harbor Docs - Working with Projects](https://goharbor.io/docs/latest/working-with-projects)
++    - [Harbor Docs - User Permissions By Role](https://goharbor.io/docs/latest/administration/managing-users/user-permissions-by-role)
++
++### Robot Accounts
++
++Aside from using your own credentials to interact with the registry,
++Harbor project admins can create robot accounts to be used for
++automated workflows. Robot accounts can be provided with customised
++permissions, configurable according to the needs of the workflows
++that will be using such accounts.
++
++Each project team would be provided with the credentials of a default
++robot account (contained in a `.json` file) by the MLOps team.
++
++## Elastic Cloud Storage (ECS)
++
++In the context of AI Singapore's infrastructure, there are two main
++storage mediums:
++
++1. AI Singapore's on-premise Network File Storage (NFS)
++2. AI Singapore's on-premise object storage, Elastic Cloud Storage (ECS)
++
++The usage of NFS storage is mainly observable through Persistent
++Volumes (PVs) or virtual machine disks. There is however little to
++nothing for end-users to configure the usage of NFS storage as most of
++the setup will be done by AI Singapore's Platforms team.
++
++However, to access ECS, there are a number of things that are required
++of the end-users.
++
++??? info "Reference Link(s)"
++
++    - [Dell Technologies Learning Center - Elastic Cloud Storage](https://www.dell.com/en-sg/dt/learn/data-storage/ecs.htm)
++    - [IBM Blog - Object vs. File vs. Block Storage: What’s the Difference?](https://www.ibm.com/blog/object-vs-file-vs-block-storage)
++
++### AWS CLI for S3 Protocol
++
++AI Singapore's ECS makes use of the S3 protocol and so we can make use
++of the AWS CLI's S3 commands to interact with the storage system.
++Instructions for installing the AWS CLI (v2) can be found [here][awscli].
+@@ -553,0 +677,4 @@
++!!! note inline end
++    The `aws_access_key_id` and `aws_secret_access_key` are provided by
++    the DataOps team. The team is reachable at `dataops@aisingapore.org`.
++
+@@ -571 +698 @@
+-aws --profile profile-1 --endpoint-url="https://minio.yourcompany.tld" s3 ls
++aws --profile profile-1 --endpoint-url="https://necs.nus.edu.sg" s3 ls
+@@ -596,0 +724,8 @@
++
++### ECS Robot/Service Accounts
++
++Project teams may also make use of robot/service accounts to interact
++with ECS. Robot/service accounts are essentially IAM users that are
++created by administrators. These accounts are usually created for 
++automated workflows that require access to ECS. Configuring them for the
++CLI works the same as configuring a regular user account.
+@@ -642 +777,4 @@
+-Volumes (PVs) or virtual machine disks.  
++Volumes (PVs) or virtual machine disks. There is however little to
++nothing for end-users to configure the NFS storage as most of the setup
++will be done by AI Singapore's Platforms team.
++
+@@ -645,0 +783,4 @@
++
++!!! note inline end
++    `GCP_PROJECT_ID` and `GCP_PROJECT_ID` are provided by the MLOps
++    team. The team is reachable at `mlops@aisingapore.org`.

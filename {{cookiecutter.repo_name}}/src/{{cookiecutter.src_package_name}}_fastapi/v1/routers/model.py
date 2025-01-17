@@ -1,4 +1,5 @@
 """Module containing definitions and workflows for FastAPI's application endpoints."""
+
 import os
 import logging
 import fastapi
@@ -26,7 +27,7 @@ def predict(data: str = fastapi.Body()):
     -------
     result_dict : dict
         Dictionary containing the input string.
-    
+
     Raises
     ------
     fastapi.HTTPException
@@ -48,8 +49,9 @@ def predict(data: str = fastapi.Body()):
     except Exception as error:
         logger.error(error)
         raise fastapi.HTTPException(status_code=500, detail="Internal server error.")
-    
+
     return result_dict
+
 
 @ROUTER.get("/version", status_code=fastapi.status.HTTP_200_OK)
 def model_version():
