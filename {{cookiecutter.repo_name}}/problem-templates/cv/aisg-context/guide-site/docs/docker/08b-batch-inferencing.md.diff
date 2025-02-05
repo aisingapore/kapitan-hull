@@ -1,5 +1,5 @@
---- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/09-batch-inferencing.md
-+++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/09-batch-inferencing.md
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/08b-batch-inferencing.md
++++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/08b-batch-inferencing.md
 @@ -18,3 +18,3 @@
 -        -u $(id -u):$(id -g) \
 -        -w /batch-infer \

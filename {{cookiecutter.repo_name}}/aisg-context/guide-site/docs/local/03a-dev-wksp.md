@@ -26,4 +26,4 @@ if you intend to use Jupyter notebooks within the VSCode environment.
 
 [vsx-python]: https://marketplace.visualstudio.com/items?itemName=ms-python.python
 [vsx-jy]: https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter
-[jy-vscode]: ./05-virtual-env.md#using-virtual-conda-environments-within-vscode
+[jy-vscode]: ./04a-virtual-env.md#using-virtual-conda-environments-within-vscode

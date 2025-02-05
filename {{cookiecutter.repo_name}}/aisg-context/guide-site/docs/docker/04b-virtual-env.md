@@ -9,12 +9,12 @@
     possibility, especially should you require debugging within the
     Docker container.
 
-[local-env]: ../local/05-virtual-env.md
+[local-env]: ../local/04a-virtual-env.md
 
 !!! info "Creating Virtual Environments"
 
     If you're planning to use the `code-server` development workspace
-    written in the [previous section](04-dev-wksp.md), you should start
+    written in the [previous section](03b-dev-wksp.md), you should start
     reading [here](#using-vscode) instead.
 
 ## Docker Image Debugging

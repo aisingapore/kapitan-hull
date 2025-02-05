@@ -1,5 +1,5 @@
---- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/08-deployment.md
-+++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/08-deployment.md
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/07b-deployment.md
++++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/07b-deployment.md
 @@ -83 +83 @@
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>

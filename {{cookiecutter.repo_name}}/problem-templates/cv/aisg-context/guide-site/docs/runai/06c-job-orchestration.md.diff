@@ -1,5 +1,5 @@
---- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/07-job-orchestration.md
-+++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/runai/07-job-orchestration.md
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/06c-job-orchestration.md
++++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/runai/06c-job-orchestration.md
 @@ -46,2 +46,2 @@
 -raw_data_dir_path: "./data/raw"
 -processed_data_dir_path: "./data/processed"

@@ -1,5 +1,5 @@
---- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/09-batch-inferencing.md
-+++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/runai/09-batch-inferencing.md
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/08c-batch-inferencing.md
++++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/runai/08c-batch-inferencing.md
 @@ -17,4 +17,5 @@
 -    mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/data/batch-infer && cd $_
 -    echo -n "Output1" > in1.txt

@@ -135,7 +135,7 @@ In the default pipeline, we have 3 stages defined:
   in `src` will be tested.
 - `deploy-docs`: This stage is for the purpose of deploying a static
   site through [GitLab Pages]. More on this stage is covered in 
-  ["Documentation"](./11-documentation.md).
+  ["Documentation"](./10-documentation.md).
 - `build`: Assuming the automated tests are passed, the pipeline
   will build Docker images, making use of the latest source.
 

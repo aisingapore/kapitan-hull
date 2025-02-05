@@ -47,7 +47,7 @@ provided in this template:
     you would have already built your image. If you have not modified 
     the configuration variables, you can safely skip this step.
 
-[venv]: 05-virtual-env.md
+[venv]: 04b-virtual-env.md
 
 === "Linux"
 

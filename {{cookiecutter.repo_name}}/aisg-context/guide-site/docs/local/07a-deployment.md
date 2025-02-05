@@ -37,7 +37,7 @@ we have the following pointers to take note of:
       into a mounted volume when we run the Docker image for the REST 
       APIs. __We will be recommending this method in this guide.__
 
-[train]: ./07-job-orchestration.md#model-training
+[train]: ./06a-job-orchestration.md#model-training
 
 ## Model Serving (FastAPI)
 

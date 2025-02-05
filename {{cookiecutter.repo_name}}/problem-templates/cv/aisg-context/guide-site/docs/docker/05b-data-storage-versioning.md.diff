@@ -1,5 +1,5 @@
---- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/06-data-storage-versioning.md
-+++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/local/06-data-storage-versioning.md
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/05b-data-storage-versioning.md
++++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/05b-data-storage-versioning.md
 @@ -5,2 +5,6 @@
 -We can generate some sample data to use to test the different 
 -components of Kapitan Hull.
