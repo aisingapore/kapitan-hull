@@ -10,7 +10,7 @@
 -    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
 +    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
 +    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
-@@ -102,4 +102,19 @@
+@@ -98,4 +98,19 @@
 -modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
 -
 -Now, let's proceed and spin up an inference server using the package 
@@ -34,22 +34,22 @@
 +will be used by the FastAPI server to load the model for prediction. We
 +will get back to this in a bit. For now, let's proceed and spin up an
 +inference server using the package that exists within the repository.
-@@ -153,2 +168,2 @@
+@@ -149,2 +164,2 @@
 -        -H 'Content-Type: application/json' \
 -        -d '"string"'
 +        -H 'Content-Type: multipart/form-data' \
 +        -F "image_file=@/path/to/image/file"
-@@ -163 +178 @@
+@@ -159 +174 @@
 -        '-d', '"string"',
 +        '-F', '"image_file=@\path\to\image\file"',
-@@ -169 +184 @@
+@@ -165 +180 @@
 -{"data":[{"input":"string"}]}
 +{"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
-@@ -187 +202,2 @@
+@@ -183 +198,2 @@
 -field `MODEL_UUID` inherit their values from the environment variables.
 +fields `PRED_MODEL_UUID` and `PRED_MODEL_PATH` inherit their values 
 +from the environment variables.
-@@ -198 +214,4 @@
+@@ -194 +210,4 @@
 -    MODEL_UUID: str
 +    USE_CUDA: bool = False
 +    USE_MPS: bool = False

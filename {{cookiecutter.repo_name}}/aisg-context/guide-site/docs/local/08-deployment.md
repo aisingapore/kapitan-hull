@@ -79,7 +79,7 @@ repository, execute the following commands:
 === "Linux/macOS"
 
     ```bash
-    conda activate mlflow-test
+    conda activate {{cookiecutter.repo_name}}
     export MODEL_UUID=<MLFLOW_RUN_UUID>
     python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
     ```
@@ -87,14 +87,10 @@ repository, execute the following commands:
 === "Windows PowerShell"
 
     ```powershell
-    conda activate mlflow-test
+    conda activate {{cookiecutter.repo_name}}
     $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
     python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
     ```
-
-!!! warning "Attention"
-    The `mlflow-test` conda environment should have been created while
-    [testing your MLFlow server](setting-up/03-mlops-components-platform.md#logging-to-tracking-server).
 
 Executing the commands above will download the artifacts related to the
 experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 

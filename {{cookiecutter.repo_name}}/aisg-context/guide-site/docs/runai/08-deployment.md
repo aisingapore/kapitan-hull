@@ -88,7 +88,7 @@ repository, execute the following commands:
 === "VSCode Server Terminal"
 
     ```bash
-    conda activate mlflow-test
+    conda activate {{cookiecutter.repo_name}}
     export MODEL_UUID=<MLFLOW_RUN_UUID>
     export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
     export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME> # If applicable
@@ -111,10 +111,6 @@ repository, execute the following commands:
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
         --command -- python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
     ```
-
-!!! warning "Attention"
-    The `mlflow-test` conda environment should have been created while
-    [testing your MLFlow server](./03-mlops-components-platform.md#logging-to-tracking-server).
 
 Executing the commands above will download the artifacts related to the
 experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 

@@ -53,7 +53,6 @@ nav:
   - Settting Up:
     - Prerequisites: setting-up/01-prerequisites.md
     - Preface: setting-up/02-preface.md
-    - MLOps Components & Platform: setting-up/03-mlops-components-platform.md
   - Running Locally:
     - Developer Workspace: local/04-dev-wksp.md
     - Virtual Environments: local/05-virtual-env.md

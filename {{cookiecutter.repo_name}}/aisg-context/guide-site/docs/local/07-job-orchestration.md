@@ -115,9 +115,17 @@ This will generate the MLFlow logs and artifacts locally, of which you
 can parse it with the MLFlow UI with:
 
 ```bash
+conda create -n mlflow-test mlflow
 conda activate mlflow-test
 mlflow server
 ```
+
+!!! warning "You may not use the `{{cookiecutter.repo_name}}` Conda environment"
+
+    You would most likely not able to use the `{{cookiecutter.repo_name}}`
+    Conda environment to run `mlflow server` as the package installed
+    within that environment is `mlflow-skinny`, not the fully-featured
+    `mlflow` that contains the server components.
 
 and connect to http://localhost:5000.
 

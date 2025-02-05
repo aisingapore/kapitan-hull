@@ -12,7 +12,7 @@
 @@ -112 +112 @@
 -        --command -- python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
 +        --command -- python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
-@@ -122,4 +122,7 @@
+@@ -118,4 +118,7 @@
 -modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
 -
 -Now, let's proceed and spin up an inference server using the package 
@@ -24,28 +24,28 @@
 +for prediction. We will get back to this in a bit. For now, let's 
 +proceed and spin up an inference server using the package that exists 
 +within the repository.
-@@ -138 +141,2 @@
+@@ -134 +137,2 @@
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_PATH="<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPENATED_NAME>/models/$PRED_MODEL_UUID/model/model.pt"
-@@ -152 +156 @@
+@@ -148 +152 @@
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-@@ -158,0 +163 @@
+@@ -154,0 +159 @@
 +        -e PRED_MODEL_PATH=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPENATED_NAME>/models/$PRED_MODEL_UUID/model/model.pt \
-@@ -177,2 +182,2 @@
+@@ -173,2 +178,2 @@
 -        -H 'Content-Type: application/json' \
 -        -d '"string"'
 +        -H 'Content-Type: multipart/form-data' \
 +        -F "image_file=@/path/to/image/file"
-@@ -184 +189 @@
+@@ -180 +185 @@
 -{"data":[{"input":"string"}]}
 +{"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
-@@ -202 +207,2 @@
+@@ -198 +203,2 @@
 -field `MODEL_UUID` inherit their values from the environment variables.
 +fields `PRED_MODEL_UUID` and `PRED_MODEL_PATH` inherit their values 
 +from the environment variables.
-@@ -213 +219,4 @@
+@@ -209 +215,4 @@
 -    MODEL_UUID: str
 +    USE_CUDA: bool = False
 +    USE_MPS: bool = False
