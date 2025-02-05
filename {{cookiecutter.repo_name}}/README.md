@@ -72,8 +72,22 @@ the contents are optimised for viewing through [`mkdocs`][mkdocs] (or
 [`mkdocs-material`][mkdocs-material] specifically).  
 A demo of the site for the guide can be viewed [here][kh-site].
 
-To spin up the site on your local machine, you can create a virtual
-environment to install the dependencies first:
+### Through GitLab Pages
+
+If this project has been pushed to a GitLab repository and CI/CD is
+enabled, you can head to your GitLab repository site and look for
+`Builds > Jobs` and see if the `pages` job has been completed. Then,
+look at `Deploy > Pages` to get the URL of the deployed documentation.
+You can access the generated guide site by appending `/guide` to the
+URL.
+
+Should `Use unique domain` is enabled, you can disable it so that it
+has a human-readable URL you can refer to.
+
+### Running the Guide Locally
+
+Alternatively, you can spin up the site on your local machine by 
+creating a virtual environment to install the dependencies first:
 
 ```bash
 $ conda create -n aisg-kh-guide python=3.12.8
