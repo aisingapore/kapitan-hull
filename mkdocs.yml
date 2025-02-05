@@ -53,31 +53,30 @@ nav:
   - User Guide:
     - Prerequisites: setting-up/01-prerequisites.md
     - Preface: setting-up/02-preface.md
-    - MLOps Components & Platform: setting-up/03-mlops-components-platform.md
   - Running Locally:
-    - Developer Workspace: local/04-dev-wksp.md
-    - Virtual Environments: local/05-virtual-env.md
-    - Data Storage & Versioning: local/06-data-storage-versioning.md
-    - Job Orchestration: local/07-job-orchestration.md
-    - Deployment: local/08-deployment.md
-    - Batch Inferencing: local/09-batch-inferencing.md
+    - Developer Workspace: local/03a-dev-wksp.md
+    - Virtual Environments: local/04a-virtual-env.md
+    - Data Storage & Versioning: local/05a-data-storage-versioning.md
+    - Job Orchestration: local/06a-job-orchestration.md
+    - Deployment: local/07a-deployment.md
+    - Batch Inferencing: local/08a-batch-inferencing.md
   - Using Docker:
-    - Developer Workspace: docker/04-dev-wksp.md
-    - Virtual Environments: docker/05-virtual-env.md
-    - Data Storage & Versioning: docker/06-data-storage-versioning.md
-    - Job Orchestration: docker/07-job-orchestration.md
-    - Deployment: docker/08-deployment.md
-    - Batch Inferencing: docker/09-batch-inferencing.md
-  - Using Run:AI:
-    - Developer Workspace: runai/04-dev-wksp.md
-    - Virtual Environments: runai/05-virtual-env.md
-    - Data Storage & Versioning: runai/06-data-storage-versioning.md
-    - Job Orchestration: runai/07-job-orchestration.md
-    - Deployment: runai/08-deployment.md
-    - Batch Inferencing: runai/09-batch-inferencing.md
+    - Developer Workspace: docker/03b-dev-wksp.md
+    - Virtual Environments: docker/04b-virtual-env.md
+    - Data Storage & Versioning: docker/05b-data-storage-versioning.md
+    - Job Orchestration: docker/06b-job-orchestration.md
+    - Deployment: docker/07b-deployment.md
+    - Batch Inferencing: docker/08b-batch-inferencing.md
+  - Using Run:ai:
+    - Developer Workspace: runai/03c-dev-wksp.md
+    - Virtual Environments: runai/04c-virtual-env.md
+    - Data Storage & Versioning: runai/05c-data-storage-versioning.md
+    - Job Orchestration: runai/06c-job-orchestration.md
+    - Deployment: runai/07c-deployment.md
+    - Batch Inferencing: runai/08c-batch-inferencing.md
   - Sorting Out the Rest:
-    - CI/CD: appendix/10-cicd.md
-    - Documentation: appendix/11-documentation.md
+    - CI/CD: appendix/09-cicd.md
+    - Documentation: appendix/10-documentation.md
 
 # Plugins
 plugins:

@@ -84,20 +84,20 @@ follow through with the guide:
 [mcond]: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
 [kubectl]: https://kubernetes.io/docs/tasks/tools/
 [helm]: https://helm.sh/docs/intro/install/
-[mlflow-page]: ./03-mlops-components-platform.md#mlflow
+[mlflow-page]: https://lighthouse.aisingapore.net/Platforms/MLOps&LLMOps/HelmCharts/MLflow
 [lf-set]: https://stackoverflow.com/questions/48692741/how-can-i-make-all-line-endings-eols-in-all-files-in-visual-studio-code-unix
 {% if cookiecutter.platform == 'onprem' -%}  
 [awscli]: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 [boto3]: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html
-[ecs-page]: ./03-mlops-components-platform.md#aws-cli-for-s3-protocol
-[harbor-page]: ./03-mlops-components-platform.md#docker-cli-authentication
+[ecs-page]: https://lighthouse.aisingapore.net/Platforms/InfraOps/ECS
+[harbor-page]: https://lighthouse.aisingapore.net/Platforms/InfraOps/Harbor
 {% elif cookiecutter.platform == 'gcp' -%}
 [gcloud]: https://cloud.google.com/sdk/docs/install
 [gcp]: https://console.cloud.google.com
 [gcp-page]: ./02-preface.md#google-cloud-platform-gcp-projects
 {% endif %}
 {%- if cookiecutter.orchestrator == 'runai' -%}  
-[runai-page]: ./03-mlops-components-platform.md#runai
+[runai-page]: https://lighthouse.aisingapore.net/tools-and-tech/runai
 {%- elif cookiecutter.orchestrator == 'noorch' -%}  
 {% endif %}
 

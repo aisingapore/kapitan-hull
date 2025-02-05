@@ -1,0 +1,67 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/08b-batch-inferencing.md
++++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/08b-batch-inferencing.md
+@@ -18,3 +18,3 @@
+-        -u $(id -u):$(id -g) \
+-        -w /batch-infer \
+-        -v ./data/batch-infer:/batch-infer \
++        -u $(id -u): $(id -g) \
++        -w /data \
++        -v ./data:/data \
+@@ -22,3 +22,3 @@
+-            bash -c "echo -n 'Output1' > in1.txt && \
+-                echo -n 'Output2' > in2.txt && \
+-                echo -n 'Output3' > in3.txt"
++            bash -c "wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip && \
++                unzip batched-mnist-input-data.zip && \
++                rm batched-mnist-input-data.zip"
+@@ -31,2 +31,2 @@
+-        -w /batch-infer \
+-        -v ./data/batch-infer:/batch-infer \
++        -w /data \
++        -v ./data:/data \
+@@ -34,3 +34,3 @@
+-            bash -c "echo -n 'Output1' > in1.txt && \
+-                echo -n 'Output2' > in2.txt && \
+-                echo -n 'Output3' > in3.txt"
++            bash -c "wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip && \
++                unzip batched-mnist-input-data.zip && \
++                rm batched-mnist-input-data.zip"
+@@ -43,2 +43,2 @@
+-        -w /batch-infer `
+-        -v .\data\batch-infer:/batch-infer `
++        -w /data `
++        -v .\data:/data `
+@@ -46,3 +46,3 @@
+-            bash -c "echo -n 'Output1' > in1.txt && `
+-                echo -n 'Output2' > in2.txt && `
+-                echo -n 'Output3' > in3.txt"
++            bash -c "wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip && `
++                unzip batched-mnist-input-data.zip && `
++                rm batched-mnist-input-data.zip"
+@@ -55,0 +56 @@
++    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+@@ -57,0 +59 @@
++        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
+@@ -58,0 +61 @@
++        -e PRED_MODEL_PATH="./models/$PRED_MODEL_UUID/model/model.pt" \
+@@ -66,0 +70 @@
++    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+@@ -68,0 +73 @@
++        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
+@@ -69,0 +75 @@
++        -e PRED_MODEL_PATH="./models/$PRED_MODEL_UUID/model/model.pt" \
+@@ -76,0 +83 @@
++    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+@@ -78,0 +86 @@
++        -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
+@@ -79,0 +88 @@
++        -e PRED_MODEL_PATH="./models/$PRED_MODEL_UUID/model/model.pt" `
+@@ -90,3 +99,5 @@
+-{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in1.txt", "prediction": "Output1"}
+-{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in2.txt", "prediction": "Output2"}
+-{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in3.txt", "prediction": "Output3"}
++{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
++{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
++{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
++{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
++{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}

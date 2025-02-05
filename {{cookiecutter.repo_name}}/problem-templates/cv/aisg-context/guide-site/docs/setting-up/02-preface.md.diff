@@ -22,7 +22,7 @@
 @@ -37,0 +44,24 @@
 +[aisg-gitlab]: https://gitlab.aisingapore.net/
 +[cr8-proj]: https://docs.gitlab.com/ee/user/project/
-+[gitlab-page]: ./03-mlops-components-platform.md#gitlab
++[gitlab-page]: https://lighthouse.aisingapore.net/Platforms/InfraOps/Gitlab
 +
 +## Guide's Problem Statement
 +
@@ -41,6 +41,6 @@
 +    dataset. MNIST dataset is made available under the terms of the
 +    [Creative Commons Attribution-Share Alike 3.0 license][cc-sa3.0].
 +
-+[local-data]: ../local/06-data-storage-versioning.md
-+[docker-data]: ../docker/06-data-storage-versioning.md
++[local-data]: ../local/05a-data-storage-versioning.md
++[docker-data]: ../docker/05b-data-storage-versioning.md
 +[cc-sa3.0]: https://creativecommons.org/licenses/by-sa/3.0/
