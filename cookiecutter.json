@@ -8,7 +8,7 @@
     "orchestrator": ["runai", "none"],
     "proj_name": "sample-project",
     "registry_project_path": "registry.domain.tld/sample-project/my-project",
-	"problem_template": ["base", "cv"],
+	"problem_template": ["base", "cv", "hdb"],
     "author_name": "AISG",
     "__prompts__": {
         "project_name": "project_name - Name of project that will be the header for the README.md. Input to start with alphabet. Only whitespace as separators.",
