@@ -31,7 +31,8 @@
 		"problem_template": {
             "__prompt__": "problem_template - Initialise the repository with a default problem statement.",
             "base": "base - Base template with no model packages",
-            "cv": "cv - Computer Vision (MNIST with Pytorch)"
+            "cv": "cv - Computer Vision (MNIST with Pytorch)",
+            "hdb": "hdb - Problem template for HDB resale price prediction"
         },
         "author_name": "author_name - Your alias or project team's name. Relatively arbitrary. No hyphens are allowed."
     }
