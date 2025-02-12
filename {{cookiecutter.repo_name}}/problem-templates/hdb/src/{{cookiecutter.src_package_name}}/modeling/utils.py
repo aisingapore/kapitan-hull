@@ -1,18 +1,20 @@
 """Utilities for model training and experimentation workflows.
 """
 import {{cookiecutter.src_package_name}} as {{cookiecutter.src_package_name_short}}
+import xgboost as xgb
 
 
-def load_model(path_to_model: str):
-    """Load dummy model.
-
-    A sample utility function to be used.
+def load_model(path_to_model: str) -> xgb.XGBRegressor:
+    """Load trained model.
+    In this example, we are using XGBoost, modify this method to suit your
+    models.
 
     Returns
     -------
     loaded_model : 
-        Object containing dummy model.
+        Object containing loaded model.
     """
-    loaded_model = {{cookiecutter.src_package_name_short}}.modeling.models.Model()
+    loaded_model = xgb.XGBRegressor()
+    loaded_model.load_model(path_to_model)
 
     return loaded_model
