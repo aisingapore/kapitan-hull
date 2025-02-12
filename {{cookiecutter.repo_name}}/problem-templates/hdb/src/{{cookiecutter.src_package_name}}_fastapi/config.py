@@ -11,9 +11,8 @@ class Settings(pydantic_settings.BaseSettings):
     LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"
 
     USE_CUDA: bool = False
-    USE_MPS: bool = False
     PRED_MODEL_UUID: str = "test"
-    PRED_MODEL_PATH: str = 
+    PRED_MODEL_PATH: str = "../models/"
 
 
 SETTINGS = Settings()
