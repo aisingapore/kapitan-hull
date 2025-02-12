@@ -10,6 +10,7 @@ no_mps: true
 n_estimators: 100
 lr: 0.5
 gamma: 1
+max_depth: 5
 seed: 1111
 epochs: 3
 log_interval: 100
