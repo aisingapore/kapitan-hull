@@ -51,6 +51,7 @@ def main(args):
     ### Insert your model code
     # train_score = model.train(params, X_train, y_train, mlflow_init_status)
     # test_rmse = model.evaluate()
+    # model.save_model(os.path.join(args["artifact_dir_path"], "xgbreg.json"))
 
     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
         mlflow_init_status,
