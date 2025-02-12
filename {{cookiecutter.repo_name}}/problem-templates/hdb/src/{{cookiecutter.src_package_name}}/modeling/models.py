@@ -43,6 +43,12 @@ class Model:
         self.train_score = self.pipeline.score(X_train, y_train)
 
         return self.train_score
+    
+    def save_model(self, path_to_model: str):
+        ## Save only the XGBoost part using its save_model() method
+        ## path_to_model e.g. "./models/xgbreg.json" or .bin
+        xgb_model = self.pipeline.named_steps["XGBR"]
+        xgb_model.save_model(path_to_model)
 
     def evaluate(self, X_test, y_test):
         ## Create your own evaluation function
