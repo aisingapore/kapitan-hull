@@ -1,6 +1,5 @@
-"""Utilities for model training and experimentation workflows.
-"""
-import {{cookiecutter.src_package_name}} as {{cookiecutter.src_package_name_short}}
+"""Utilities for model training and experimentation workflows."""
+
 import xgboost as xgb
 
 
@@ -11,7 +10,7 @@ def load_model(path_to_model: str, use_cuda: bool) -> xgb.XGBRegressor:
 
     Returns
     -------
-    loaded_model : 
+    loaded_model :
         Object containing loaded model.
     """
     loaded_model = xgb.XGBRegressor()
