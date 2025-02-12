@@ -3,6 +3,7 @@
 import os
 import logging
 import fastapi
+import pandas as pd
 
 import {{cookiecutter.src_package_name}}_fastapi as {{cookiecutter.src_package_name_short}}_fapi
 
@@ -15,42 +16,50 @@ PRED_MODEL = {{cookiecutter.src_package_name_short}}_fapi.deps.PRED_MODEL
 
 
 @ROUTER.post("/predict", status_code=fastapi.status.HTTP_200_OK)
-def predict(data: str = fastapi.Body()):
+def predict(csv_file: fastapi.UploadFile):
     """Endpoint that returns the input as-is.
 
-    Parameters
-    ----------
-    data : str
-        Input text.
+    Args: 
+    csv_file : fastapi.UploadFile
+        An uploaded CSV file containing the feature columns required by the model.
+            Must match the features used during model training.
 
-    Returns
-    -------
-    result_dict : dict
-        Dictionary containing the input string.
+    Returns:
+        FileResponse containing a CSV file with all original columns plus a 
+        prediction' column
 
-    Raises
-    ------
-    fastapi.HTTPException
-        A 500 status error is returned if the prediction steps
-        encounters any errors.
+
+    Raises:
+        HTTPException(400): If the uploaded file is not a CSV file.
+        HTTPException(500): If there's an error preventing prediction.
     """
-    result_dict = {"data": []}
+    
+    if not csv_file.filename.endswith('.csv'):
+        raise fastapi.HTTPException(400, detail="Only CSV files are supported")
 
     try:
-        logger.info("Copying input...")
+        logger.info("Producing prediction")
+        
+        contents = csv_file.file.read()
+        with open(csv_file.filename, "wb") as buffer:
+            buffer.write(contents)
+            
+        dataframe = pd.read_csv(csv_file.filename)
 
-        pred_str = PRED_MODEL.predict(data)
+        predictions = PRED_MODEL.predict(dataframe)
+        dataframe['prediction'] = predictions
+        
+        dataframe.to_csv("./predictions.csv", index=False)
 
-        result_dict["data"].append(
-            {"input": pred_str}
-        )
-        logger.info("Input: %s", data)
+        return fastapi.FileResponse(
+                "./predictions.csv",
+                media_type="text/csv",
+                filename="predictions.csv"
+            )
 
     except Exception as error:
         logger.error(error)
         raise fastapi.HTTPException(status_code=500, detail="Internal server error.")
-
-    return result_dict
 
 
 @ROUTER.get("/version", status_code=fastapi.status.HTTP_200_OK)
