@@ -1,5 +1,1 @@
-"""This `modeling` module includes module(s) relevant for the model
-training pipeline."""
-
-from . import models
-from . import utils
+"""This package contains the v1 endpoints for the FastAPI application."""
