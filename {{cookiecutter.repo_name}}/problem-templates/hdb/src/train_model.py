@@ -1,5 +1,5 @@
 """
-This script is for training a dummy model on a dummy dataset.
+This script is for training a XGBRegressor model on the HDB dataset.
 """
 import os
 import logging
