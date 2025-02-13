@@ -47,12 +47,27 @@ with the on-premise GitLab instance.
 
 ## Guide's Problem Statement
 
-For this guide, we will work towards building a neural network that is
-able to classify handwritten digits, widely known as the MNIST use-case.
-The model is then to be deployed through a REST API and used for batch
-inferencing as well.  
-The raw dataset to be used is obtainable through a Google Cloud Storage
-bucket; instructions for downloading the data into your development
+For this guide, we will work towards building a model to that is
+able to predict the resale price of a HDB flat upon receipt of inputs 
+(e.g. flat type,floor area sqm, area)..  
+
+Here are some criterias that you should strive towards:
+
+- carry out all your EDA and early experimentation work within the Coder 
+workspace.
+- create unit tests for your data processing steps
+- use Run:ai jobs to train your predictive model
+- log your experiments on MLflow
+- **build Docker images for serving the predictive model through a REST
+API server (FastAPI or alternative frameworks)**
+- document the aforementioned works within the repository
+
+The list above is not exhaustive but do whatever you can. More than the
+completion of this optional exercise, deeper understanding of the
+concepts would be of better use for the journey ahead.
+
+The raw dataset to be used is obtainable from Singapore's
+open data portal; instructions for downloading the data into your development
 environment are detailed under "Data Storage & Versioning" in their
 respective sections ([running locally][local-data], with 
 [Docker][docker-data], etc.), to be referred to later on.
