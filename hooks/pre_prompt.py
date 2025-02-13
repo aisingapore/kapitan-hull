@@ -62,13 +62,15 @@ def generate_template_scripts() -> None:
                 if file_name.endswith(".diff"):
                     diff_file_path = os.path.join(root, file_name)
 
-                    with open(diff_file_path, "r") as diff_file:
-                        patch_set = PatchSet(diff_file.read())
+                    try:
+                        with open(diff_file_path, "r") as diff_file:
+                            patch_set = PatchSet(diff_file.read())
+                        apply_patch(patch_set, os.getcwd())
 
-                    apply_patch(patch_set, os.getcwd())
-
-                    # Remove the diff file after applying
-                    os.remove(diff_file_path)
+                        # Remove the diff file after applying
+                        os.remove(diff_file_path)
+                    except Exception as e:
+                        print(f"Patch failed for {root}/{file_name}: {e}")
 
 
 if __name__ == "__main__":
