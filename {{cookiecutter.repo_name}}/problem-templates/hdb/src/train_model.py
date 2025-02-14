@@ -1,5 +1,6 @@
 """
-This script is for training a XGBRegressor model on the HDB dataset.
+This script is for training a XGBRegressor model on the HDB dataset. Note that
+the script is incomplete and requires you to modify it accordingly to your solution.
 """
 import os
 import logging
