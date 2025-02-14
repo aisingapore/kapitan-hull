@@ -1,0 +1,8 @@
+--- {{cookiecutter.repo_name}}/src/{{cookiecutter.src_package_name}}_fastapi/deps.py
++++ {{cookiecutter.repo_name}}/problem-templates/hdb/src/{{cookiecutter.src_package_name}}_fastapi/deps.py
+@@ -5 +5,4 @@
+-PRED_MODEL  = {{cookiecutter.src_package_name_short}}.modeling.utils.load_model()
++PRED_MODEL = {{cookiecutter.src_package_name_short}}.modeling.utils.load_model(
++    {{cookiecutter.src_package_name_short}}_fapi.config.SETTINGS.PRED_MODEL_PATH,
++    {{cookiecutter.src_package_name_short}}_fapi.config.SETTINGS.USE_CUDA,
++)

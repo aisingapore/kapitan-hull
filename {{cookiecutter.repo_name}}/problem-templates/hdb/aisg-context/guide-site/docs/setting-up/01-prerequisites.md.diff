@@ -1,0 +1,29 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/setting-up/01-prerequisites.md
++++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/setting-up/01-prerequisites.md
+@@ -7,0 +8,2 @@
++- NUS Staff/Student account.
++- Azure account provisioned by AI Singapore.
+@@ -11,0 +14,2 @@
++    - __Pulse Secure__
++        - Refer to [NUS IT eGuides][nus-it] for installation guides.
+@@ -25 +29,3 @@
+-    - __[AWS CLI][awscli]:__ CLI for AWS services.
++    - __[AWS CLI][awscli]:__ CLI for AWS services, but we will 
++      specifically be using it for interacting with the AI Singapore's 
++      Elastic Cloud Storage (ECS) service through the S3 protocol.
+@@ -36 +42 @@
+-- Access to a project on a Run:ai cluster.  
++- Access to a project on AI Singapore's Run:ai cluster.  
+@@ -41 +47 @@
+-- Credentials for an S3-compatible service (MinIO, etc).  
++- Credentials for AI Singapore's Elastic Cloud Storage (ECS) service. 
+@@ -43 +49 @@
+-- Credentials for a Docker registry.  
++- Credentials for AI Singapore's Harbor registry. 
+@@ -50,0 +57,4 @@
++
++!!! note
++    If you do not have any of the required credentials, please verify 
++    with or notify the MLOps team at `mlops@aisingapore.org`.
+@@ -80,0 +91 @@
++[nus-it]: https://nusit.nus.edu.sg/eguides/

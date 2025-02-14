@@ -1,0 +1,42 @@
+--- {{cookiecutter.repo_name}}/conf/process_data.yaml
++++ {{cookiecutter.repo_name}}/problem-templates/hdb/conf/process_data.yaml
+@@ -2,0 +3,39 @@
++
++test_size: 0.2
++
++num_cols: [
++            "floor_area_sqm",
++            "lease_commence_date",
++            "remaining_lease_year",
++            "year",
++          ]
++cat_cols: ["town", "flat_model", "flat_type"]
++
++ord_cols: ["storey_range"]
++storey_order: [
++            "01 TO 03",
++            "01 TO 05",
++            "04 TO 06",
++            "06 TO 10",
++            "07 TO 09",
++            "10 TO 12",
++            "11 TO 15",
++            "13 TO 15",
++            "16 TO 18",
++            "16 TO 20",
++            "19 TO 21",
++            "21 TO 25",
++            "22 TO 24",
++            "25 TO 27",
++            "26 TO 30",
++            "28 TO 30",
++            "31 TO 33",
++            "31 TO 35",
++            "34 TO 36",
++            "36 TO 40",
++            "37 TO 39",
++            "40 TO 42",
++            "43 TO 45",
++            "46 TO 48",
++            "49 TO 51",
++        ]
