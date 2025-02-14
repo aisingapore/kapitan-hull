@@ -8,7 +8,7 @@
     "orchestrator": ["runai", "none"],
     "proj_name": "sample-project",
     "registry_project_path": "registry.domain.tld/sample-project/my-project",
-	"problem_template": ["base", "cv"],
+    "problem_template": ["base", "cv"],
     "author_name": "AISG",
     "__prompts__": {
         "project_name": "project_name - Name of project that will be the header for the README.md. Input to start with alphabet. Only whitespace as separators.",
@@ -28,7 +28,7 @@
         },
         "proj_name": "proj_name - The project name used in by the repository. If you're using Run:ai, this will be the Run:ai project name used by the repository.",
         "registry_project_path": "registry_project_path - Path of the registry repository for your container images to be located under. Cannot end with a slash character.",
-		"problem_template": {
+        "problem_template": {
             "__prompt__": "problem_template - Initialise the repository with a default problem statement.",
             "base": "base - Base template with no model packages",
             "cv": "cv - Computer Vision (MNIST with Pytorch)"
