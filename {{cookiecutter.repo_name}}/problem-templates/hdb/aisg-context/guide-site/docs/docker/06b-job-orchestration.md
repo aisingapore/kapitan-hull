@@ -150,8 +150,19 @@ mlflow_tracking_uri: "./mlruns"
 mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
 mlflow_run_name: "train-model"
 data_dir_path: "./data/processed"
-dummy_param1: 1.3
-dummy_param2: 0.8
+artifact_dir_path: "./models"
+no_cuda: true
+no_mps: true
+n_estimators: 100
+lr: 0.5
+gamma: 1
+max_depth: 5
+seed: 1111
+epochs: 3
+log_interval: 100
+dry_run: false
+model_checkpoint_interval: 2
+model_checkpoint_dir_path: "./models"
 ```
 
 After that, we build the Docker image from the Docker file 
@@ -338,14 +349,16 @@ hydra:
   sweeper:
     sampler:
       seed: 55
-    direction: ["minimize", "maximize"]
-    study_name: "image-classification"
+    direction: ["minimize"]
+    study_name: "hdb-resale-process"
     storage: null
     n_trials: 3
     n_jobs: 1
     params:
-      dummy_param1: range(0.9,1.7,step=0.1)
-      dummy_param2: choice(0.7,0.8,0.9)
+      n_estimators: range(50, 200, step=10)
+      lr: tag(log, interval(0.1, 0.6))
+      gamma: choice(0,0.1,0.2,0.3,0.4,0.5)
+      max_depth: range(2,20,step=1)
 ```
 
 These fields are used by the Optuna Sweeper plugin to configure the
@@ -372,19 +385,19 @@ different files that we have to pay attention to.
 `src/train_model.py`
 ```python
 ...
-    return args["dummy_param1"], args["dummy_param2"]
+    return test_rmse ## or any other metrics
 ...
 ```
 
 `conf/train_model.yaml`
 ```yaml
 ...
-    direction: ["minimize", "maximize"]
+    direction: ["minimize"] ## or ["minimize", "maximise"]
 ...
 ```
 
-In the training script the returned variables are to contain values
-that we seek to optimise for. In this case, we seek to minimise the 
+In the training script the returned variables are to contain **values
+that we seek to optimise for**. In this case, we seek to minimise the 
 loss and maximise the accuracy. The `hydra.sweeper.direction` field in 
 the YAML config is used to specify the direction that those variables 
 are to optimise towards, defined in a positional manner within a list.

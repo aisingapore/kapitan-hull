@@ -8,6 +8,7 @@ HDB esale prices data for the [problem statement][prob] at hand within our
 Coder workspace.
 
 [prob]: ../setting-up/02-preface.md#guides-problem-statement
+
 === "Linux/macOS"
 
     ```bash

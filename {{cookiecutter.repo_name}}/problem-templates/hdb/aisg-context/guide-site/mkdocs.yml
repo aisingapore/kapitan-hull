@@ -11,7 +11,7 @@ repo_url: ""
 edit_uri: ""
 
 # Copyright
-copyright: ""
+copyright: Copyright &copy; 2023-2024 - AI Singapore
 
 # Configuration
 docs_dir: docs
@@ -92,11 +92,11 @@ extra:
     provider: mike
   social:
     - icon: fontawesome/brands/twitter
-      link: https://twitter.com/
+      link: https://twitter.com/aisingapore
     - icon: fontawesome/brands/linkedin
-      link: https://www.linkedin.com/
+      link: https://www.linkedin.com/company/aisingapore
     - icon: fontawesome/brands/instagram
-      link: https://www.instagram.com/
+      link: https://www.instagram.com/ai_singapore/
 
 # Extensions
 markdown_extensions:

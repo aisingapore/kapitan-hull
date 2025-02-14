@@ -80,25 +80,41 @@ repository, execute the following commands:
 
     ```bash
     conda activate {{cookiecutter.repo_name}}
-    export MODEL_UUID=<MLFLOW_RUN_UUID>
-    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
+    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
     ```
 
 === "Windows PowerShell"
 
     ```powershell
     conda activate {{cookiecutter.repo_name}}
-    $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
-    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
+    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
     ```
 
 Executing the commands above will download the artifacts related to the
 experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 
 `models`. However, the specific subdirectory that is relevant for our 
-modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
+modules to load will be `./models/<MLFLOW_RUN_UUID>/model/xgbreg.json`.
 
-Now, let's proceed and spin up an inference server using the package 
-that exists within the repository.
+Let's export this path to an environment variable:
+
+=== "Linux/macOS"
+
+    ```bash
+    export PRED_MODEL_PATH="$PWD/models/$PRED_MODEL_UUID/model/xgbreg.json"
+    ```
+
+=== "Windows PowerShell"
+
+    ```powershell
+    $Env:PRED_MODEL_PATH="$(Get-Location)\models\$Env:PRED_MODEL_UUID\artifacts\model\xgbreg.json"
+    ```
+
+The variables exported above (`PRED_MODEL_UUID` and `PRED_MODEL_PATH`)
+will be used by the FastAPI server to load the model for prediction. We
+will get back to this in a bit. For now, let's proceed and spin up an
+inference server using the package that exists within the repository.
 
 [beginner tutorials]: https://fastapi.tiangolo.com/tutorial/
 
@@ -146,8 +162,8 @@ In another terminal, use the `curl` command to submit a request to the API:
     ```bash
     curl -X POST \
         localhost:8080/api/v1/model/predict \
-        -H 'Content-Type: application/json' \
-        -d '"string"'
+        -H 'Content-Type: multipart/form-data' \
+        -F "csv_file=@/path/to/csv/file"
     ```
     
 === "Windows PowerShell"
@@ -156,14 +172,10 @@ In another terminal, use the `curl` command to submit a request to the API:
     curl.exe '-X', 'POST', `
         'localhost:8080/api/v1/model/predict', `
         '-H', 'Content-Type: multipart/form-data', `
-        '-d', '"string"',
+        '-F', "csv_file=@/path/to/csv/file"
     ```
     
-Output sample:
-
-```
-{"data":[{"input":"string"}]}
-```
+Output sample: The output will be a CSV file with the original columns plus a predictions column.
 
 With the returned JSON object, we have successfully submitted a request
 to the FastAPI server and it returned predictions as part of the
@@ -180,7 +192,8 @@ data and schema validation, as well as [settings management]. There's a
 class called `Settings` under the module
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
 contains several fields: some are defined and some others not. The 
-field `MODEL_UUID` inherit their values from the environment variables.
+`PRED_MODEL_UUID` and `PRED_MODEL_PATH` fields inherit their values 
+from the environment variables.
 
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
 ```python
@@ -191,7 +204,9 @@ class Settings(pydantic_settings.BaseSettings):
     API_V1_STR: str = "/api/v1"
     LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"
 
-    MODEL_UUID: str
+    USE_CUDA: bool = False
+    PRED_MODEL_UUID: str = "test"
+    PRED_MODEL_PATH: str
 ...
 ```
 

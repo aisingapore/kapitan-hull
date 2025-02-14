@@ -1,28 +1,28 @@
 # Data Storage & Versioning
 
-## Sample Data
+## HDB Resale Price Data
 
-We can generate some sample data to use to test the different 
-components of Kapitan Hull.
+While you may have your own project data to work with, for the purpose
+of following through with this template guide, let's download the 
+HDB esale prices data for the [problem statement][prob] at hand within our 
+Coder workspace.
+
+[prob]: ../setting-up/02-preface.md#guides-problem-statement
 
 === "Linux/macOS"
 
     ```bash
     mkdir -p ./data/raw && cd "$_"
-    echo "Test1" > data1.txt
-    echo "Test2" > data2.txt
-    echo "Test3" > data3.txt
+    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv
     ```
 
 === "Windows Powershell"
 
-    ```powershell
-    New-Item -ItemType Directory -Path .\data\raw -Force | Out-Null
-    Set-Location -Path .\data\raw
-    Set-Content -Path .\data1.txt -Value "Test1"
-    Set-Content -Path .\data2.txt -Value "Test2"
-    Set-Content -Path .\data3.txt -Value "Test3"
+    ```powershell 
+    New-Item -ItemType Directory -Force -Path "data/raw" | Out-Null
+    Set-Location -Path "data/raw"
+    Invoke-WebRequest -Uri "https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv" -OutFile "ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv"
     ```
 
 In the next section, we will work towards processing this set of raw
-data and eventually 'training' a dummy model.
+data and eventually 'training' a resale price prediction model.

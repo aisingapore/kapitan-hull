@@ -80,46 +80,43 @@ repository, execute the following commands:
 
     ```bash
     sudo chown 2222:2222 ./models
-    export MODEL_UUID=<MLFLOW_RUN_UUID>
+    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
     docker run --rm \
         -v ./models:/models \
         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
         --network host \
         {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
-        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
+        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
     ```
 
 === "macOS"
 
     ```bash
-    export MODEL_UUID=<MLFLOW_RUN_UUID>
+    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
     docker run --rm \
         -v ./models:/models \
         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
         --network host \
         {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
-        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
+        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
     ```
 
 === "Windows PowerShell"
 
     ```powershell
+    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
     docker run --rm `
         -v .\models:/models `
-        -e MODEL_UUID=<MLFLOW_RUN_UUID> `
         -e MLFLOW_TRACKING_URI=http://localhost:5000 `
         --network host `
         {{cookiecutter.registry_project_path}}/cpu:0.1.0 `
-        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
+        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
     ```
 
 Executing the commands above will download the artifacts related to the
 experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 
 `models`. However, the specific subdirectory that is relevant for our 
-modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
-
-Now, let's proceed and spin up an inference server using the package 
-that exists within the repository.
+modules to load will be `./models/<MLFLOW_RUN_UUID>/model/xgbreg.json`.
 
 [beginner tutorials]: https://fastapi.tiangolo.com/tutorial/
 
@@ -146,6 +143,7 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org)
         -p 8080:8080 \
         -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
         -w /home/aisg/{{cookiecutter.repo_name}}/src \
+        -e PRED_MODEL_PATH="../models/$MLFLOW_RUN_UUID/model/xgbreg.json" \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
         gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
             -k uvicorn.workers.UvicornWorker \
@@ -200,8 +198,8 @@ In another terminal, use the `curl` command to submit a request to the API:
     docker run --rm --network=host \
         curlimages/curl -X POST \
             localhost:8080/api/v1/model/predict \
-            -H 'Content-Type: application/json' \
-            -d '"string"'
+            -H 'Content-Type: multipart/form-data' \
+            -F "csv_file=@/path/to/csv/file"
     ```
 
 === "macOS"
@@ -210,8 +208,8 @@ In another terminal, use the `curl` command to submit a request to the API:
     docker run --rm --network=host \
         curlimages/curl -X POST \
             localhost:8080/api/v1/model/predict \
-            -H 'Content-Type: application/json' \
-            -d '"string"'
+            -H 'Content-Type: multipart/form-data' \
+            -F "csv_file=@/path/to/csv/file"
     ```
 
 === "Windows PowerShell"
@@ -220,17 +218,13 @@ In another terminal, use the `curl` command to submit a request to the API:
     docker run --rm --network=host `
         curlimages/curl -X POST `
             localhost:8080/api/v1/model/predict `
-            -H 'Content-Type: application/json' `
-            -d '"string"'
+            -H 'Content-Type: multipart/form-data' `
+            -F "csv_file=@/path/to/csv/file"
     ```
     
-Output sample:
+Output sample: The output will be a CSV file with the original columns plus a predictions column.
 
-```
-{"data":[{"input":"string"}]}
-```
-
-With the returned JSON object, we have successfully submitted a request
+With the returned CSV file, we have successfully submitted a request
 to the FastAPI server and it returned predictions as part of the
 response.
 
@@ -245,7 +239,8 @@ data and schema validation, as well as [settings management]. There's a
 class called `Settings` under the module
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
 contains several fields: some are defined and some others not. The 
-field `MODEL_UUID` inherit their values from the environment variables.
+`PRED_MODEL_UUID` and `PRED_MODEL_PATH` fields inherit their values 
+from the environment variables.
 
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
 ```python
@@ -256,7 +251,9 @@ class Settings(pydantic_settings.BaseSettings):
     API_V1_STR: str = "/api/v1"
     LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"
 
-    MODEL_UUID: str
+    USE_CUDA: bool = False
+    PRED_MODEL_UUID: str = "test"
+    PRED_MODEL_PATH: str
 ...
 ```
 
