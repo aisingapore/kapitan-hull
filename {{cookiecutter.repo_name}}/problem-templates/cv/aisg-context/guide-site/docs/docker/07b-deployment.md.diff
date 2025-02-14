@@ -26,7 +26,7 @@
 -that exists within the repository.
 +modules to load will be `./models/<MLFLOW_RUN_UUID>/model/model.pt`.
 @@ -148,0 +146 @@
-+        -e PRED_MODEL_PATH="../models/$PRED_MODEL_UUID/model/model.pt" \
++        -e PRED_MODEL_PATH="../models/$MLFLOW_RUN_UUID/model/model.pt" \
 @@ -203,2 +201,2 @@
 -            -H 'Content-Type: application/json' \
 -            -d '"string"'
