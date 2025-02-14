@@ -51,7 +51,7 @@ This requires the Docker image to be built from a Dockerfile
 (`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
 provided in this template:
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
@@ -70,7 +70,7 @@ provided in this template:
 Now that we have the Docker image built and pushed to the registry, we 
 can submit a job using that image to Run:ai\:
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
@@ -141,8 +141,19 @@ mlflow_tracking_uri: "./mlruns"
 mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
 mlflow_run_name: "train-model"
 data_dir_path: "./data/processed"
-dummy_param1: 1.3
-dummy_param2: 0.8
+artifact_dir_path: "./models"
+no_cuda: true
+no_mps: true
+n_estimators: 100
+lr: 0.5
+gamma: 1
+max_depth: 5
+seed: 1111
+epochs: 3
+log_interval: 100
+dry_run: false
+model_checkpoint_interval: 2
+model_checkpoint_dir_path: "./models"
 ```
 
 After that, we build the Docker image from the Docker file 
@@ -154,7 +165,7 @@ After that, we build the Docker image from the Docker file
     the `{{cookiecutter.repo_name}}/cpu` Docker image instead that was
     built during the previous step.  
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
@@ -173,7 +184,7 @@ After that, we build the Docker image from the Docker file
 Now that we have the Docker image built and pushed to the registry, 
 we can run a job using it:
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
@@ -188,8 +199,11 @@ we can run a job using it:
         -e OMP_NUM_THREADS=2 \
         --command -- /bin/bash -c "python -u src/train_model.py \
             data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
-            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
-            mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"
+            setup_mlflow=true \
+            mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
+            mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
+            model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models \
+            epochs=3"
     ```
 
 Once you have successfully run an experiment, you may inspect the run
@@ -256,14 +270,16 @@ hydra:
   sweeper:
     sampler:
       seed: 55
-    direction: ["minimize", "maximize"]
-    study_name: "image-classification"
+    direction: ["minimize"]
+    study_name: "hdb-resale-process"
     storage: null
     n_trials: 3
     n_jobs: 1
     params:
-      dummy_param1: range(0.9,1.7,step=0.1)
-      dummy_param2: choice(0.7,0.8,0.9)
+      n_estimators: range(50, 200, step=10)
+      lr: tag(log, interval(0.1, 0.6))
+      gamma: choice(0,0.1,0.2,0.3,0.4,0.5)
+      max_depth: range(2,20,step=1)
 ```
 
 These fields are used by the Optuna Sweeper plugin to configure the
@@ -290,14 +306,14 @@ different files that we have to pay attention to.
 `src/train_model.py`
 ```python
 ...
-    return args["dummy_param1"], args["dummy_param2"]
+    return test_rmse ## or any other metrics
 ...
 ```
 
 `conf/train_model.yaml`
 ```yaml
 ...
-    direction: ["minimize", "maximize"]
+    direction: ["minimize"] ## or ["minimize", "maximise"]
 ...
 ```
 
@@ -320,7 +336,7 @@ executing the model training job out of the Run:ai platform, as the
 `JOB_NAME` and `JOB_UUID` environment variables would not be available
 by default.
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
@@ -333,10 +349,14 @@ by default.
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
+        -e OMP_NUM_THREADS=2 \
         --command -- /bin/bash -c "python -u src/train_model.py --multirun \
             data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
-            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
-            mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"
+            setup_mlflow=true \
+            mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
+            mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
+            model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models \
+            epochs=3"
     ```
 
 ![MLflow Tracking Server - Hyperparameter Tuning Runs](../common/assets/screenshots/mlflow-tracking-hptuning-runs.png)

@@ -85,21 +85,21 @@ the MLflow run has been obtained, let's download the model that we
 intend to serve. Assuming you're in the root of this template's 
 repository, execute the following commands:
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     conda activate {{cookiecutter.repo_name}}
-    export MODEL_UUID=<MLFLOW_RUN_UUID>
+    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
     export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
     export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME> # If applicable
     export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD> # If applicable
-    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
+    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
     ```
 
 === "Using Run:ai"
 
     ```bash
-    export MODEL_UUID=<MLFLOW_RUN_UUID>
+    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
     runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-download-artifacts \
         -i {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
@@ -109,13 +109,19 @@ repository, execute the following commands:
         -e MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI> \
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-        --command -- python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
+        --command -- python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
     ```
 
 Executing the commands above will download the artifacts related to the
 experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 
 `models`. However, the specific subdirectory that is relevant for our 
-modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
+modules to load will be `./models/<MLFLOW_RUN_UUID>/model/xgbreg.json`.
+
+The variables (`PRED_MODEL_UUID` and `PRED_MODEL_PATH`) would be 
+exported as they will be used by the FastAPI server to load the model 
+for prediction. We will get back to this in a bit. For now, let's 
+proceed and spin up an inference server using the package that exists 
+within the repository.
 
 Now, let's proceed and spin up an inference server using the package 
 that exists within the repository.
@@ -126,12 +132,13 @@ that exists within the repository.
 
 Run the FastAPI server using [Gunicorn](https://gunicorn.org):
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     # Running in a working `{{cookiecutter.repo_name}}` repository
     conda activate {{cookiecutter.repo_name}}
-    export MODEL_UUID=<MLFLOW_RUN_UUID>
+    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+    export PRED_MODEL_PATH="<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPENATED_NAME>/models/$PRED_MODEL_UUID/model/xgbreg.json"
     gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
         -k uvicorn.workers.UvicornWorker \
         -b 0.0.0.0:8080 -w 2 -t 90 --chdir src
@@ -145,13 +152,14 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org):
 === "Using Run:ai"
 
     ```bash
-    export MODEL_UUID=<MLFLOW_RUN_UUID>
+    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
     runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-inference \
         -i {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
         --working-dir /home/aisg/{{cookiecutter.repo_name}}/src \
         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+        -e PRED_MODEL_PATH=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPENATED_NAME>/models/$PRED_MODEL_UUID/model/xgbreg.json \
         --service-type external-url,port=8080:8080 \
         --command -- gunicorn {{cookiecutter.repo_name}}_fastapi.main:APP \
             -k uvicorn.workers.UvicornWorker \
@@ -165,22 +173,18 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org):
 
 In another terminal, use the `curl` command to submit a request to the API:
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     curl -X POST \
         localhost:8080/api/v1/model/predict \
-        -H 'Content-Type: application/json' \
-        -d '"string"'
+        -H 'Content-Type: multipart/form-data' \
+        -F "csv_file=@/path/to/csv/file"
     ```
   
-Output sample:
+Output sample: The output will be a CSV file with the original columns plus a predictions column.
 
-```
-{"data":[{"input":"string"}]}
-```
-
-With the returned JSON object, we have successfully submitted a request
+With the returned CSV file, we have successfully submitted a request
 to the FastAPI server and it returned predictions as part of the
 response.
 
@@ -195,7 +199,8 @@ data and schema validation, as well as [settings management]. There's a
 class called `Settings` under the module
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
 contains several fields: some are defined and some others not. The 
-field `MODEL_UUID` inherit their values from the environment variables.
+`PRED_MODEL_UUID` and `PRED_MODEL_PATH` fields inherit their values 
+from the environment variables.
 
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
 ```python
@@ -206,7 +211,9 @@ class Settings(pydantic_settings.BaseSettings):
     API_V1_STR: str = "/api/v1"
     LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"
 
-    MODEL_UUID: str
+    USE_CUDA: bool = False
+    PRED_MODEL_UUID: str = "test"
+    PRED_MODEL_PATH: str
 ...
 ```
 

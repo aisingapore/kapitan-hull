@@ -1,7 +1,10 @@
 # Virtual Environments
 
-We can create a virtual environment that will contain all the 
-dependencies required for this guide.
+While we will be making use of AI Singapore's remote infrastructure
+to carry out some workflows, we can still make use of our local
+machine to execute some of the steps of the end-to-end machine learning
+workflow. Hence, we can begin by creating a virtual environment that
+will contain all the dependencies required for this guide.
 
 ```bash
 conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml
@@ -12,11 +15,21 @@ a Conda environment. This is so that there is parity between the
 development and deployment environment as the Docker image would use 
 `requirements.txt` as the list of packages to be installed.
 
+If you have an Nvidia GPU, you can make use of the YAML configuration
+that make use of that GPU:
+
+```bash
+conda env create -f {{cookiecutter.repo_name}}-conda-env-gpu.yaml
+```
+
 !!! info "On the use of GPUs"
-    Conda environment configured using the YAML file does not take into
-    account whether you need extra requirements to use your GPU for
-    training/inference. Check the instructions on your ML/AI framework
-    of choice to configure your Conda environment to suit your needs.
+    If you're using an AMD or an Intel ARC GPU, we do not provide 
+    support for them at the moment. In the meantime, you can check the
+    following sites to see what you would need to modify to run on 
+    those GPUS:
+
+    - AMD GPUs: https://pytorch.org/
+    - Intel ARC GPUs: https://intel.github.io/intel-extension-for-pytorch/index. html#installation?request=platform
 
 Activate your environment by running:
 
