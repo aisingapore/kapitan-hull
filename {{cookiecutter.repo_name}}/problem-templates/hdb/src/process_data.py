@@ -41,7 +41,8 @@ def main(args) -> None:
 
     ## Example code, adjust or use your own code
     logger.info("Processing raw data")
-    X_train, X_test, y_train, y_test = {{cookiecutter.src_package_name_short}}.data_prep.transforms.transform(
+    data_processor = {{cookiecutter.src_package_name_short}}.data_prep.transforms.Transform()
+    X_train, X_test, y_train, y_test = data_processor.transform(
        raw_data, args["test_size"], args["seed"]
     )
     X_train.to_csv(os.path.join(processed_data_dir_path, "X_train.csv"), index=False)

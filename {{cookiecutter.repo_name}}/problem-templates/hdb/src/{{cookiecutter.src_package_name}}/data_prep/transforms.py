@@ -18,7 +18,8 @@ class Transform:
         pass
 
     def clean_data(self, raw_data: pd.DataFrame):
-        pass
+        ## Placeholder function, change accordingly
+        return raw_data
 
     def split_data(
         self, cleaned_data: pd.DataFrame, test_size: float, seed: int
