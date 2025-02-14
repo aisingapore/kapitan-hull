@@ -51,7 +51,7 @@ def main(args):
     ### Insert your model code
     # train_score = model.train(params, X_train, y_train, mlflow_init_status)
     # test_rmse = model.evaluate()
-    # model.save_model(os.path.join(args["artifact_dir_path"], "xgbreg.json"))
+    
 
     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
         mlflow_init_status,
@@ -62,15 +62,18 @@ def main(args):
 
     os.makedirs(args["artifact_dir_path"], exist_ok=True)
     artifact_path = os.path.join(
-        args["artifact_dir_path"], "output.txt"
+        args["artifact_dir_path"], "xgbreg.json"
     )
+    
+    # model.save_model(os.path.join(args["artifact_dir_path"], "xgbreg.json"))
+    
     with open(artifact_path, "w") as f:
         f.write('\n'.join([f'{x}: {args[x]}' for x in args]))
     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
         mlflow_init_status,
         "log_artifact",
         local_path=artifact_path,
-        artifact_path="outputs"
+        artifact_path="model"
     )
 
     if mlflow_init_status:
