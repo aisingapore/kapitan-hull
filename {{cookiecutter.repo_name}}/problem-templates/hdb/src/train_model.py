@@ -52,7 +52,6 @@ def main(args):
     # train_score = model.train(params, X_train, y_train, mlflow_init_status)
     # test_rmse = model.evaluate()
     
-
     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
         mlflow_init_status,
         "log_dict",
