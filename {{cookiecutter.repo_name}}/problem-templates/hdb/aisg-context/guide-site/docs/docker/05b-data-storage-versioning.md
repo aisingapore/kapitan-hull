@@ -12,7 +12,7 @@ Coder workspace.
 
     ```bash
     mkdir -p ./data/raw && cd "$_"
-    wget https://tinyurl.com/hdbresalecsv -O ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv
+    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv
     ```
 
 === "Windows Powershell"
@@ -20,7 +20,7 @@ Coder workspace.
     ```powershell 
     New-Item -ItemType Directory -Force -Path "data/raw" | Out-Null
     Set-Location -Path "data/raw"
-    Invoke-WebRequest -Uri "https://tinyurl.com/hdbresalecsv" -OutFile "ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv"
+    Invoke-WebRequest -Uri "https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv" -OutFile "ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv"
     ```
 
 In the next section, we will work towards processing this set of raw
