@@ -1,5 +1,5 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/07b-deployment.md
-+++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/07b-deployment.md
++++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/docker/07b-deployment.md
 @@ -83 +83 @@
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
@@ -24,34 +24,41 @@
 -
 -Now, let's proceed and spin up an inference server using the package 
 -that exists within the repository.
-+modules to load will be `./models/<MLFLOW_RUN_UUID>/model/model.pt`.
++modules to load will be `./models/<MLFLOW_RUN_UUID>/model/xgbreg.json`.
 @@ -148,0 +146 @@
-+        -e PRED_MODEL_PATH="../models/$MLFLOW_RUN_UUID/model/model.pt" \
++        -e PRED_MODEL_PATH="../models/$MLFLOW_RUN_UUID/model/xgbreg.json" \
 @@ -203,2 +201,2 @@
 -            -H 'Content-Type: application/json' \
 -            -d '"string"'
 +            -H 'Content-Type: multipart/form-data' \
-+            -F "image_file=@/path/to/image/file"
++            -F "csv_file=@/path/to/csv/file"
 @@ -213,2 +211,2 @@
 -            -H 'Content-Type: application/json' \
 -            -d '"string"'
 +            -H 'Content-Type: multipart/form-data' \
-+            -F "image_file=@/path/to/image/file"
++            -F "csv_file=@/path/to/csv/file"
 @@ -223,2 +221,2 @@
 -            -H 'Content-Type: application/json' `
 -            -d '"string"'
 +            -H 'Content-Type: multipart/form-data' `
-+            -F "image_file=@/path/to/image/file"
-@@ -230 +228 @@
++            -F "csv_file=@/path/to/csv/file"
+@@ -227,7 +225,3 @@
+-Output sample:
+-
+-```
 -{"data":[{"input":"string"}]}
-+{"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
-@@ -248 +246,2 @@
+-```
+-
+-With the returned JSON object, we have successfully submitted a request
++Output sample: The output will be a CSV file with the original columns plus a predictions column.
++
++With the returned CSV file, we have successfully submitted a request
+@@ -248 +242,2 @@
 -field `MODEL_UUID` inherit their values from the environment variables.
-+fields `PRED_MODEL_UUID` and `PRED_MODEL_PATH` inherit their values 
++`PRED_MODEL_UUID` and `PRED_MODEL_PATH` fields inherit their values 
 +from the environment variables.
-@@ -259 +258,4 @@
+@@ -259 +254,3 @@
 -    MODEL_UUID: str
 +    USE_CUDA: bool = False
-+    USE_MPS: bool = False
-+    PRED_MODEL_UUID: str
++    PRED_MODEL_UUID: str = "test"
 +    PRED_MODEL_PATH: str

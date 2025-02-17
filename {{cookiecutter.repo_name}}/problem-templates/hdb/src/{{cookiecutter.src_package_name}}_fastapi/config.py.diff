@@ -1,0 +1,9 @@
+--- {{cookiecutter.repo_name}}/src/{{cookiecutter.src_package_name}}_fastapi/config.py
++++ {{cookiecutter.repo_name}}/problem-templates/hdb/src/{{cookiecutter.src_package_name}}_fastapi/config.py
+@@ -1,0 +2 @@
++
+@@ -12 +13,3 @@
+-    MODEL_UUID: str = "change-this"
++    USE_CUDA: bool = False
++    PRED_MODEL_UUID: str = "test"
++    PRED_MODEL_PATH: str

@@ -1,0 +1,5 @@
+month,town,flat_type,block,street_name,storey_range,floor_area_sqm,flat_model,lease_commence_date,remaining_lease,resale_price
+2025-02,YISHUN,EXECUTIVE,364,YISHUN RING RD,01 TO 03,145.00,Maisonette,1988,62 years 03 months,860000
+2025-01,YISHUN,EXECUTIVE,614,YISHUN ST 61,04 TO 06,146.00,Maisonette,1987,61 years 05 months,800000
+2025-02,YISHUN,EXECUTIVE,723,YISHUN ST 71,07 TO 09,146.00,Maisonette,1986,60 years 05 months,818888
+2025-01,YISHUN,EXECUTIVE,836,YISHUN ST 81,01 TO 03,146.00,Maisonette,1988,62 years 02 months,960000
