@@ -30,4 +30,4 @@
 +
 @@ -18 +28 @@
 -data and eventually 'training' a dummy model.
-+data and eventually 'training' a resale price prediction model.
++data and eventually training a resale price prediction model.
