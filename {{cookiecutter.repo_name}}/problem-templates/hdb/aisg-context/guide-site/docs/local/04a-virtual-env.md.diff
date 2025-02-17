@@ -8,13 +8,11 @@
 +machine to execute some of the steps of the end-to-end machine learning
 +workflow. Hence, we can begin by creating a virtual environment that
 +will contain all the dependencies required for this guide.
-@@ -14,0 +18,7 @@
-+If you have an Nvidia GPU, you can make use of the YAML configuration
-+that make use of that GPU:
-+
-+```bash
-+conda env create -f {{cookiecutter.repo_name}}-conda-env-gpu.yaml
-+```
+@@ -14,0 +18,5 @@
++In this exercise, the template includes training with a XGBoost Regressor model.
++The XGBoost binary packages support the GPU algorithm (device=cuda:0) on 
++machines with NVIDIA GPUs, hence no extra packages are needed (unlike Pytorch 
++in Exercise 1). We do need to create a GPU specific conda environment.
 +
 @@ -16,4 +26,7 @@
 -    Conda environment configured using the YAML file does not take into
