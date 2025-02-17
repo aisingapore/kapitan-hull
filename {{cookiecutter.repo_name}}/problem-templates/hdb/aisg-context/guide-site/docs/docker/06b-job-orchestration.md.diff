@@ -32,7 +32,7 @@
 +    return test_rmse ## or any other metrics
 @@ -382 +395 @@
 -    direction: ["minimize", "maximize"]
-+    direction: ["minimize"] ## or ["minimize", "maximise"]
++    direction: ["minimize"] ## or ["maximise"], if you're looking to maximise the test_rmse value
 @@ -386,2 +399,2 @@
 -In the training script the returned variables are to contain values
 -that we seek to optimise for. In this case, we seek to minimise the 

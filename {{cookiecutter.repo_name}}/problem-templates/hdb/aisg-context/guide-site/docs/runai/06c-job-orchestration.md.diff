@@ -52,7 +52,7 @@
 +    return test_rmse ## or any other metrics
 @@ -300 +316 @@
 -    direction: ["minimize", "maximize"]
-+    direction: ["minimize"] ## or ["minimize", "maximise"]
++    direction: ["minimize"] ## or ["maximise"], if you're looking to maximise the test_rmse value
 @@ -323 +339 @@
 -=== "VSCode Server Terminal"
 +=== "Coder Workspace Terminal"
