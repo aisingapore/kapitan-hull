@@ -1,5 +1,9 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/06a-job-orchestration.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/local/06a-job-orchestration.md
+@@ -43,0 +43,3 @@
++There are other configurables in the `conf/process_data.yaml` which are used
++in data preparation scripts found in `src/{{cookiecutter.src_package_name}}/data_prep`.
++
 @@ -49,4 +49,0 @@
 -# Add no_cuda=False at the end to enable GPU use.
 -# Make sure you have installed CUDA/RoCM before using.

@@ -1,5 +1,9 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/06b-job-orchestration.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/docker/06b-job-orchestration.md
+@@ -39,0 +39,3 @@
++There are other configurables in the `conf/process_data.yaml` which are used
++in data preparation scripts found in `src/{{cookiecutter.src_package_name}}/data_prep`.
++
 @@ -153,2 +153,7 @@
 -dummy_param1: 1.3
 -dummy_param2: 0.8
