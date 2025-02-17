@@ -8,6 +8,7 @@ def populate_problem(problem_domain: str) -> None:
     shutil.copytree(src_dir, working_dir, dirs_exist_ok=True)
     if problem_domain == "hdb":
         os.remove(os.path.join(working_dir, "src", "batch_infer.py"))
+        os.remove(os.path.join(working_dir, "conf", "batch_infer.yaml"))
 
 
 def generate_template_scripts() -> None:
