@@ -5,8 +5,8 @@
 -components of Kapitan Hull.
 +While you may have your own project data to work with, for the purpose
 +of following through with this template guide, let's download the 
-+sample data for the [sample problem statement][prob] at hand within our 
-+VSCode server workspace.
++HDB resale prices data for the [sample problem statement][prob] at hand within 
++our Coder workspace.
 @@ -8 +10,3 @@
 -=== "VSCode Server Terminal"
 +[prob]: ../setting-up/02-preface.md#guides-problem-statement
