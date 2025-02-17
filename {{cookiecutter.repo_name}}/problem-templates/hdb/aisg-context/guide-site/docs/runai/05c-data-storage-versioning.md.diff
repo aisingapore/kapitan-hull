@@ -17,7 +17,7 @@
 -    echo "Test1" > data1.txt
 -    echo "Test2" > data2.txt
 -    echo "Test3" > data3.txt
-+    mkdir -p ./data/raw && cd "$_"
++    mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw && cd "$_"
 +    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv
 @@ -16,0 +19,7 @@
 +!!! info
