@@ -46,6 +46,10 @@ After that, run the script:
 === "Linux/macOS"
 
     ```bash
+    # Add no_cuda=False at the end to enable GPU use.
+    # Make sure you have installed CUDA/RoCM before using.
+    # Check that LD_LIBRARY_PATH has been set.
+    # Also set HIP_VISIBLE_DEVICES=0 if RoCM is used.
     python src/process_data.py
     ```
 
