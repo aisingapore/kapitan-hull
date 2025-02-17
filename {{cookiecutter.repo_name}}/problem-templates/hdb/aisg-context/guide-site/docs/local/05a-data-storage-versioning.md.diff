@@ -12,11 +12,12 @@
 +Coder workspace.
 +
 +[prob]: ../setting-up/02-preface.md#guides-problem-statement
-@@ -12,3 +16 @@
+@@ -12,3 +16,2 @@
 -    echo "Test1" > data1.txt
 -    echo "Test2" > data2.txt
 -    echo "Test3" > data3.txt
 +    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv
++    cd ../..
 @@ -19,6 +21,4 @@
 -    ```powershell
 -    New-Item -ItemType Directory -Path .\data\raw -Force | Out-Null
