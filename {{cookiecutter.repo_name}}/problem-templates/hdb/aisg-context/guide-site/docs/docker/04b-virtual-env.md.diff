@@ -8,6 +8,3 @@
 +machine to execute some of the steps of the end-to-end machine learning
 +workflow. Hence, we can begin by creating a virtual environment that
 +will contain all the dependencies required for this guide. This
-@@ -27 +30 @@
--
-+/path/to/src_dir
