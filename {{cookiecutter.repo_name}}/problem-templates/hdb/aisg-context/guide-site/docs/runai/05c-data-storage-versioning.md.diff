@@ -19,14 +19,13 @@
 -    echo "Test3" > data3.txt
 +    mkdir -p ./data/raw && cd "$_"
 +    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv
-@@ -16,0 +19,8 @@
+@@ -16,0 +19,7 @@
 +!!! info
 +    The sample data for this guide's problem statement is made
 +    accessible to the public. Hence any team or individual can download
 +    it. It is highly likely that your project's data is not publicly
 +    accessible and neither should it be, especially if it is a 100E
 +    project.
-+
 +
 @@ -18 +28 @@
 -data and eventually 'training' a dummy model.
