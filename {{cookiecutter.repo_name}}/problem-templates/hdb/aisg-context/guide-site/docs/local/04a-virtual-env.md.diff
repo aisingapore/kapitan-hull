@@ -16,7 +16,7 @@
 +conda env create -f {{cookiecutter.repo_name}}-conda-env-gpu.yaml
 +```
 +
-@@ -16,4 +26,6 @@
+@@ -16,4 +26,7 @@
 -    Conda environment configured using the YAML file does not take into
 -    account whether you need extra requirements to use your GPU for
 -    training/inference. Check the instructions on your ML/AI framework
@@ -25,5 +25,6 @@
 +    support for them at the moment. In the meantime, you can check the
 +    following sites to see what you would need to modify to run on 
 +    those GPUS:
-+    - AMD GPUs: https://pytorch.org/
-+    - Intel ARC GPUs: https://intel.github.io/intel-extension-for-pytorch/index. html#installation?request=platform
++    
++    - AMD GPUs: https://github.com/ROCm/xgboost
++    - Intel ARC GPUs: There is no known support for XGboost on Intel GPUs.
