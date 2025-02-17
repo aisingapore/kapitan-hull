@@ -52,7 +52,9 @@
 @@ -300 +313 @@
 -    direction: ["minimize", "maximize"]
 +    direction: ["minimize"] ## or ["maximise"], if you're looking to maximise the test_rmse value
-@@ -323 +339 @@
+@@ -306 +319 @@
+-loss and maximise the accuracy. The `hydra.sweeper.direction` field in
++root mean square error. The `hydra.sweeper.direction` field in 
 @@ -323 +336 @@
 -=== "VSCode Server Terminal"
 +=== "Coder Workspace Terminal"

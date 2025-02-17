@@ -35,5 +35,7 @@
 @@ -386,3 +396,3 @@
 -In the training script the returned variables are to contain values
 -that we seek to optimise for. In this case, we seek to minimise the 
+-loss and maximise the accuracy. The `hydra.sweeper.direction` field in 
 +In the training script the returned variables are to contain **values
 +that we seek to optimise for**. In this case, we seek to minimise the 
++root mean square error. The `hydra.sweeper.direction` field in 

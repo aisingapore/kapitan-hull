@@ -37,3 +37,6 @@
 @@ -207 +213 @@
 -    direction: ["minimize", "maximize"]
 +    direction: ["minimize"] ## or ["maximise"], if you're looking to maximise the test_rmse value
+@@ -213 +219 @@
+-loss and maximise the accuracy. The `hydra.sweeper.direction` field in 
++root mean square error. The `hydra.sweeper.direction` field in 
