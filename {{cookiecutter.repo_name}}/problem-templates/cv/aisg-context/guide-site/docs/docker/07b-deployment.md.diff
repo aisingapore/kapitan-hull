@@ -46,8 +46,8 @@
 -{"data":[{"input":"string"}]}
 +{"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
 @@ -248 +246,2 @@
--field `MODEL_UUID` inherit their values from the environment variables.
-+fields `PRED_MODEL_UUID` and `PRED_MODEL_PATH` inherit their values 
+-`MODEL_UUID` field inherits their values from the environment variables.
++`PRED_MODEL_UUID` and `PRED_MODEL_PATH` fields inherit their values 
 +from the environment variables.
 @@ -259 +258,4 @@
 -    MODEL_UUID: str

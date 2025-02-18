@@ -245,7 +245,7 @@ data and schema validation, as well as [settings management]. There's a
 class called `Settings` under the module
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
 contains several fields: some are defined and some others not. The 
-field `MODEL_UUID` inherit their values from the environment variables.
+`MODEL_UUID` field inherits their values from the environment variables.
 
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
 ```python

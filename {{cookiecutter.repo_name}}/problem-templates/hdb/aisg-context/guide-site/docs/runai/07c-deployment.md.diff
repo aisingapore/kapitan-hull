@@ -47,7 +47,7 @@
 +
 +With the returned CSV file, we have successfully submitted a request
 @@ -198 +202,2 @@
--field `MODEL_UUID` inherit their values from the environment variables.
+-`MODEL_UUID` field inherits their values from the environment variables.
 +`PRED_MODEL_UUID` and `PRED_MODEL_PATH` fields inherit their values 
 +from the environment variables.
 @@ -209 +214,3 @@
