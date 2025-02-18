@@ -23,10 +23,10 @@ ENV PATH="${HOME_DIR}/.local/bin:${PATH}"
 USER ${NON_ROOT_USER}
 WORKDIR ${HOME_DIR}
 
-COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} ${REPO_DIR} aiap-hdb-mlops
+COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} ${REPO_DIR} {{cookiecutter.repo_name}}
 
 # Install pip requirements
-RUN pip install --prefer-binary -r aiap-hdb-mlops/requirements.txt
+RUN pip install --prefer-binary -r {{cookiecutter.repo_name}}/requirements.txt
 
 FROM python:3.12-slim
 
@@ -55,6 +55,6 @@ WORKDIR ${HOME_DIR}
 
 COPY --from=compile-image ${HOME_DIR}/.local ${HOME_DIR}/.local
 
-COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} ${REPO_DIR} aiap-hdb-mlops
+COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} ${REPO_DIR} {{cookiecutter.repo_name}}
 
-WORKDIR ${HOME_DIR}/aiap-hdb-mlops
+WORKDIR ${HOME_DIR}/{{cookiecutter.repo_name}}
