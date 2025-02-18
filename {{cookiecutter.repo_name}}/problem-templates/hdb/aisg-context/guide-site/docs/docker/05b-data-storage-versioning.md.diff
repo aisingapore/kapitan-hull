@@ -16,8 +16,8 @@
 +!!! info "Volume Mounts"
 +
 +    We will be mounting the entire repository as a volume in the docker 
-+    container, hence the following commands can be executed locally in your 
-+    repository and it will be made available in the container.
++    container. Hence the following commands can be executed locally in your 
++    repository to download the data and it will mounted into the container.
 +
 @@ -12,3 +22,2 @@
 -    echo "Test1" > data1.txt
