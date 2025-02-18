@@ -17,7 +17,7 @@ workspace directory:
   the virtual environment specified in
   `{{cookiecutter.repo_name}}-conda-env.yaml`.
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     # Usually this is fine
@@ -33,7 +33,7 @@ workspace directory:
     After creating the `conda` environment, you can create a permanent 
     alias for easy activation.
 
-    === "VSCode Server Terminal"
+    === "Coder Workspace Terminal"
 
         ```bash
         echo 'alias {{cookiecutter.repo_name}}-conda="conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}"' >> ~/.bashrc
@@ -91,7 +91,7 @@ server to detect the `conda` environments that you would have created.
   the library as a dependency under `requirements.txt`. You can check
   for the library like so:
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     # Usually this is fine

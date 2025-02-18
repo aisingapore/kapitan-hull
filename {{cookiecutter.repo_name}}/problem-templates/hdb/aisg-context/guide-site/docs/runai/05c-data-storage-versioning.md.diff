@@ -1,18 +1,15 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/05c-data-storage-versioning.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/runai/05c-data-storage-versioning.md
-@@ -5,2 +5,4 @@
+@@ -5,2 +5,6 @@
 -We can generate some sample data to use to test the different 
 -components of Kapitan Hull.
 +While you may have your own project data to work with, for the purpose
 +of following through with this template guide, let's download the 
 +HDB resale prices data for the [sample problem statement][prob] at hand within 
 +our Coder workspace.
-@@ -8 +10,3 @@
--=== "VSCode Server Terminal"
-+[prob]: ../setting-up/02-preface.md#guides-problem-statement
 +
-+=== "Coder Workspace Terminal"
-@@ -11,4 +16,3 @@
++[prob]: ../setting-up/02-preface.md#guides-problem-statement
+@@ -11,4 +15,3 @@
 -    mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw && cd "$_"
 -    echo "Test1" > data1.txt
 -    echo "Test2" > data2.txt
@@ -20,7 +17,7 @@
 +    mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw && cd "$_"
 +    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv
 +    cd ../..
-@@ -16,0 +20,7 @@
+@@ -16,0 +18,7 @@
 +!!! info
 +    The sample data for this guide's problem statement is made
 +    accessible to the public. Hence any team or individual can download
@@ -28,6 +25,6 @@
 +    accessible and neither should it be, especially if it is a 100E
 +    project.
 +
-@@ -18 +29 @@
+@@ -18 +27 @@
 -data and eventually 'training' a dummy model.
 +data and eventually training a resale price prediction model.

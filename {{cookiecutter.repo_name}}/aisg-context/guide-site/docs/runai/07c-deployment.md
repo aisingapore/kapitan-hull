@@ -85,7 +85,7 @@ the MLflow run has been obtained, let's download the model that we
 intend to serve. Assuming you're in the root of this template's 
 repository, execute the following commands:
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     conda activate {{cookiecutter.repo_name}}
@@ -126,7 +126,7 @@ that exists within the repository.
 
 Run the FastAPI server using [Gunicorn](https://gunicorn.org):
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     # Running in a working `{{cookiecutter.repo_name}}` repository
@@ -165,7 +165,7 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org):
 
 In another terminal, use the `curl` command to submit a request to the API:
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     curl -X POST \
