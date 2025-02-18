@@ -33,7 +33,7 @@
 +    export PRED_MODEL_PATH="$PWD/models/$PRED_MODEL_UUID/artifacts/model/model.pt"
 @@ -57,0 +50,2 @@
 +    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-+    $Env:PRED_MODEL_PATH="$(Get-Location)\models\$PRED_MODEL_UUID\artifacts\model\model.pt"
++    $Env:PRED_MODEL_PATH="$(Get-Location)\models\$Env:PRED_MODEL_UUID\artifacts\model\model.pt"
 @@ -68,3 +62,5 @@
 -{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in1.txt", "prediction": "Output1"}
 -{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in2.txt", "prediction": "Output2"}

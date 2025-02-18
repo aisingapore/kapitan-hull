@@ -12,10 +12,9 @@
 @@ -101 +101 @@
 -        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
 +        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
-@@ -106,0 +107 @@
+@@ -107 +107 @@
+-    $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
 +    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-@@ -109 +109,0 @@
--        -e MODEL_UUID=<MLFLOW_RUN_UUID> `
 @@ -113 +113 @@
 -        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
 +        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"

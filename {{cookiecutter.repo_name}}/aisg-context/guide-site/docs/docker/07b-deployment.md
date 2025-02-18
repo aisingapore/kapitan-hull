@@ -104,9 +104,9 @@ repository, execute the following commands:
 === "Windows PowerShell"
 
     ```powershell
+    $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
     docker run --rm `
         -v .\models:/models `
-        -e MODEL_UUID=<MLFLOW_RUN_UUID> `
         -e MLFLOW_TRACKING_URI=http://localhost:5000 `
         --network host `
         {{cookiecutter.registry_project_path}}/cpu:0.1.0 `

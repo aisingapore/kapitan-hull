@@ -443,12 +443,12 @@ container. This tag is defined using the environment value
         For AMD GPUs, you can follow this [guide][rocm-wsl].
 
     ```powershell
-    $MLFLOW_HPTUNING_TAG = [int][double]::Parse((Get-Date).ToUniversalTime().Subtract([datetime]::UnixEpoch).TotalSeconds)
-    [System.Environment]::SetEnvironmentVariable("MLFLOW_HPTUNING_TAG", $MLFLOW_HPTUNING_TAG.ToString())
+    $Env:MLFLOW_HPTUNING_TAG = [int][double]::Parse((Get-Date).ToUniversalTime().Subtract([datetime]::UnixEpoch).TotalSeconds)
+    [System.Environment]::SetEnvironmentVariable("MLFLOW_HPTUNING_TAG", $Env:MLFLOW_HPTUNING_TAG.ToString())
     docker run --rm \
         -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
         -w /home/aisg/{{cookiecutter.repo_name}} `
-        -e MLFLOW_HPTUNING_TAG=$($env:MLFLOW_HPTUNING_TAG) `
+        -e MLFLOW_HPTUNING_TAG=$Env:MLFLOW_HPTUNING_TAG `
         -e MLFLOW_TRACKING_URI=http://localhost:5000 `
         --network=host `
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 `

@@ -38,7 +38,7 @@ You can spin the Docker container up as such:
 
     ```powershell
     docker run -it --name code-server -p 127.0.0.1:8080:8080 `
-      -v "${Env:USERPROFILE}:/home/coder" `
+      -v "$Env:USERPROFILE:/home/coder" `
       -e "DOCKER_USER=$Env:USERNAME" `
       asia-southeast1-docker.pkg.dev/machine-learning-ops/pub-images/code-server:latest
     ```
