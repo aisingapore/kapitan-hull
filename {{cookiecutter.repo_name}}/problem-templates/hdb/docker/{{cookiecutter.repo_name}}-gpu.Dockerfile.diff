@@ -1,6 +1,8 @@
---- {{cookiecutter.repo_name}}/docker/{{cookiecutter.repo_name}}-cpu.Dockerfile
-+++ {{cookiecutter.repo_name}}/problem-templates/hdb/docker/{{cookiecutter.repo_name}}-cpu.Dockerfile
-@@ -0,0 +1,30 @@
+--- {{cookiecutter.repo_name}}/docker/{{cookiecutter.repo_name}}-gpu.Dockerfile
++++ {{cookiecutter.repo_name}}/problem-templates/hdb/docker/{{cookiecutter.repo_name}}-gpu.Dockerfile
+@@ -0,0 +1,35 @@
++# Use this if deployed outside Run:ai
++#FROM nvcr.io/nvidia/cuda:12.1.0-cudnn8-devel-ubuntu22.04 AS compile-image
 +FROM python:3.12-slim AS compile-image
 +
 +ARG DEBIAN_FRONTEND="noninteractive"
@@ -21,6 +23,9 @@
 +ENV PYTHONIOENCODING=utf8
 +ENV LANG="C.UTF-8"
 +ENV LC_ALL="C.UTF-8"
++ENV NVIDIA_VISIBLE_DEVICES=all
++ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
++ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 +ENV PATH="${HOME_DIR}/.local/bin:${PATH}"
 +
 +USER ${NON_ROOT_USER}
@@ -29,12 +34,12 @@
 +COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} ${REPO_DIR} {{cookiecutter.repo_name}}
 +
 +# Install pip requirements
-+RUN pip install --prefer-binary -r {{cookiecutter.repo_name}}/requirements.txt
++RUN pip install -r {{cookiecutter.repo_name}}/requirements.txt
 +
-@@ -25,0 +56,2 @@
+@@ -33,0 +69,2 @@
 +COPY --from=compile-image ${HOME_DIR}/.local ${HOME_DIR}/.local
 +
-@@ -28,2 +60 @@
+@@ -36,2 +73 @@
 -# Install pip requirements
 -RUN pip install -r {{cookiecutter.repo_name}}/requirements.txt
 +WORKDIR ${HOME_DIR}/{{cookiecutter.repo_name}}
