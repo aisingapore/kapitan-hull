@@ -14,7 +14,7 @@ import {{cookiecutter.src_package_name}} as {{cookiecutter.src_package_name_shor
 @hydra.main(version_base=None, config_path="../conf", config_name="train_model.yaml")
 def main(args):
     """This is the main function for 'training' the model.
-    
+
     Parameters
     ----------
     args : omegaconf.DictConfig

@@ -1,0 +1,20 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/mkdocs.yml
++++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/mkdocs.yml
+@@ -14 +14 @@
+-copyright: ""
++copyright: Copyright &copy; 2023-2024 - AI Singapore
+@@ -62 +62,0 @@
+-    - Batch Inferencing: local/08a-batch-inferencing.md
+@@ -69 +69,0 @@
+-    - Batch Inferencing: docker/08b-batch-inferencing.md
+@@ -76 +76,0 @@
+-    - Batch Inferencing: runai/08c-batch-inferencing.md
+@@ -95 +95 @@
+-      link: https://twitter.com/
++      link: https://twitter.com/aisingapore
+@@ -97 +97 @@
+-      link: https://www.linkedin.com/
++      link: https://www.linkedin.com/company/aisingapore
+@@ -99 +99 @@
+-      link: https://www.instagram.com/
++      link: https://www.instagram.com/ai_singapore/

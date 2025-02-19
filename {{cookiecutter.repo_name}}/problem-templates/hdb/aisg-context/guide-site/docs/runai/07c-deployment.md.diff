@@ -1,0 +1,66 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/07c-deployment.md
++++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/runai/07c-deployment.md
+@@ -88 +88 @@
+-=== "VSCode Server Terminal"
++=== "Coder Workspace Terminal"
+@@ -92 +92 @@
+-    export MODEL_UUID=<MLFLOW_RUN_UUID>
++    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+@@ -96 +96 @@
+-    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
++    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
+@@ -102 +102 @@
+-    export MODEL_UUID=<MLFLOW_RUN_UUID>
++    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+@@ -112 +112 @@
+-        --command -- python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
++        --command -- python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
+@@ -118 +118,7 @@
+-modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
++modules to load will be `./models/<MLFLOW_RUN_UUID>/model/xgbreg.json`.
++
++The variables (`PRED_MODEL_UUID` and `PRED_MODEL_PATH`) would be 
++exported as they will be used by the FastAPI server to load the model 
++for prediction. We will get back to this in a bit. For now, let's 
++proceed and spin up an inference server using the package that exists 
++within the repository.
+@@ -129 +135 @@
+-=== "VSCode Server Terminal"
++=== "Coder Workspace Terminal"
+@@ -134 +140,2 @@
+-    export MODEL_UUID=<MLFLOW_RUN_UUID>
++    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
++    export PRED_MODEL_PATH="<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPENATED_NAME>/models/$PRED_MODEL_UUID/model/xgbreg.json"
+@@ -148 +155 @@
+-    export MODEL_UUID=<MLFLOW_RUN_UUID>
++    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
+@@ -154,0 +162 @@
++        -e PRED_MODEL_PATH=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPENATED_NAME>/models/$PRED_MODEL_UUID/model/xgbreg.json \
+@@ -168 +176 @@
+-=== "VSCode Server Terminal"
++=== "Coder Workspace Terminal"
+@@ -173,2 +181,2 @@
+-        -H 'Content-Type: application/json' \
+-        -d '"string"'
++        -H 'Content-Type: multipart/form-data' \
++        -F "csv_file=@/path/to/csv/file"
+@@ -177,7 +185,3 @@
+-Output sample:
+-
+-```
+-{"data":[{"input":"string"}]}
+-```
+-
+-With the returned JSON object, we have successfully submitted a request
++Output sample: The output will be a CSV file with the original columns plus a predictions column.
++
++With the returned CSV file, we have successfully submitted a request
+@@ -198 +202,2 @@
+-field `MODEL_UUID` inherit their values from the environment variables.
++`PRED_MODEL_UUID` and `PRED_MODEL_PATH` fields inherit their values 
++from the environment variables.
+@@ -209 +214,3 @@
+-    MODEL_UUID: str
++    USE_CUDA: bool = False
++    PRED_MODEL_UUID: str = "test"
++    PRED_MODEL_PATH: str

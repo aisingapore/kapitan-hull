@@ -86,9 +86,11 @@ pages:
   before_script:
     - source activate ./conda/{{cookiecutter.repo_name}}
     - pip install -r docs-requirements.txt
+    - pip install -r aisg-context/guide-site/mkdocs-requirements.txt
   script:
     - sphinx-apidoc -f -o docs src
     - sphinx-build -b html docs public
+    - mkdocs build -v -f aisg-context/guide-site/mkdocs.yml -d $PWD/public/guide
   artifacts:
     paths:
     - public
@@ -97,6 +99,7 @@ pages:
       changes:
         - docs/**/*
         - src/**/*
+        - aisg-context/guide-site/**/*
   needs:
     - job: test:conda-build
       optional: true

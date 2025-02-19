@@ -1,0 +1,57 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/07a-deployment.md
++++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/local/07a-deployment.md
+@@ -83,2 +83,2 @@
+-    export MODEL_UUID=<MLFLOW_RUN_UUID>
+-    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
++    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
++    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
+@@ -91,2 +91,2 @@
+-    $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
+-    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
++    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
++    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
+@@ -98,4 +98,19 @@
+-modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
+-
+-Now, let's proceed and spin up an inference server using the package 
+-that exists within the repository.
++modules to load will be `./models/<MLFLOW_RUN_UUID>/model/model.pt`.
++Let's export this path to an environment variable:
++
++=== "Linux/macOS"
++
++    ```bash
++    export PRED_MODEL_PATH="$PWD/models/$PRED_MODEL_UUID/model/model.pt"
++    ```
++
++=== "Windows PowerShell"
++
++    ```powershell
++    $Env:PRED_MODEL_PATH="$(Get-Location)\models\$Env:PRED_MODEL_UUID\artifacts\model\model.pt"
++    ```
++
++The variables exported above (`PRED_MODEL_UUID` and `PRED_MODEL_PATH`)
++will be used by the FastAPI server to load the model for prediction. We
++will get back to this in a bit. For now, let's proceed and spin up an
++inference server using the package that exists within the repository.
+@@ -149,2 +164,2 @@
+-        -H 'Content-Type: application/json' \
+-        -d '"string"'
++        -H 'Content-Type: multipart/form-data' \
++        -F "image_file=@/path/to/image/file"
+@@ -159 +174 @@
+-        '-d', '"string"',
++        '-F', '"image_file=@\path\to\image\file"',
+@@ -165 +180 @@
+-{"data":[{"input":"string"}]}
++{"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
+@@ -183 +198,2 @@
+-field `MODEL_UUID` inherit their values from the environment variables.
++fields `PRED_MODEL_UUID` and `PRED_MODEL_PATH` inherit their values 
++from the environment variables.
+@@ -194 +210,4 @@
+-    MODEL_UUID: str
++    USE_CUDA: bool = False
++    USE_MPS: bool = False
++    PRED_MODEL_UUID: str
++    PRED_MODEL_PATH: str

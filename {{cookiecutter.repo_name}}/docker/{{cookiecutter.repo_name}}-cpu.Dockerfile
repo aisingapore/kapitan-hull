@@ -15,10 +15,10 @@ RUN apt update && \
     apt -y install curl git && \
     apt clean
 
-ENV PYTHONIOENCODING utf8
-ENV LANG "C.UTF-8"
-ENV LC_ALL "C.UTF-8"
-ENV PATH "${HOME_DIR}/.local/bin:${PATH}"
+ENV PYTHONIOENCODING=utf8
+ENV LANG="C.UTF-8"
+ENV LC_ALL="C.UTF-8"
+ENV PATH="${HOME_DIR}/.local/bin:${PATH}"
 
 USER ${NON_ROOT_USER}
 WORKDIR ${HOME_DIR}

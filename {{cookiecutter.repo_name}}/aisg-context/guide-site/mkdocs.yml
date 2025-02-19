@@ -20,11 +20,17 @@ theme:
   logo: aisg-logo.png
   language: en
   features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
     - navigation.footer
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.top
     - toc.follow
     - content.tabs.link
+    - search.suggest
+    - search.highlight
   palette:
     - scheme: aisg
       primary: red
@@ -43,19 +49,34 @@ theme:
 
 # Page Tree
 nav:
-  - User Guide:
-    - Overview: index.md
-    - Prerequisites: guide-for-user/01-prerequisites.md
-    - Preface: guide-for-user/02-preface.md
-    - MLOps Components & Platform: guide-for-user/03-mlops-components-platform.md
-    - Developer Workspace: guide-for-user/04-dev-wksp.md
-    - Virtual Environment: guide-for-user/05-virtual-env.md
-    - Data Storage & Versioning: guide-for-user/06-data-storage-versioning.md
-    - Job Orchestration: guide-for-user/07-job-orchestration.md
-    - Deployment: guide-for-user/08-deployment.md
-    - Batch Inferencing: guide-for-user/09-batch-inferencing.md
-    - CI/CD: guide-for-user/10-cicd.md
-    - Documentation: guide-for-user/11-documentation.md
+  - Overview: index.md
+  - Settting Up:
+    - Prerequisites: setting-up/01-prerequisites.md
+    - Preface: setting-up/02-preface.md
+  - Running Locally:
+    - Developer Workspace: local/03a-dev-wksp.md
+    - Virtual Environments: local/04a-virtual-env.md
+    - Data Storage & Versioning: local/05a-data-storage-versioning.md
+    - Job Orchestration: local/06a-job-orchestration.md
+    - Deployment: local/07a-deployment.md
+    - Batch Inferencing: local/08a-batch-inferencing.md
+  - Using Docker:
+    - Developer Workspace: docker/03b-dev-wksp.md
+    - Virtual Environments: docker/04b-virtual-env.md
+    - Data Storage & Versioning: docker/05b-data-storage-versioning.md
+    - Job Orchestration: docker/06b-job-orchestration.md
+    - Deployment: docker/07b-deployment.md
+    - Batch Inferencing: docker/08b-batch-inferencing.md
+  - Using Run:ai:
+    - Developer Workspace: runai/03c-dev-wksp.md
+    - Virtual Environments: runai/04c-virtual-env.md
+    - Data Storage & Versioning: runai/05c-data-storage-versioning.md
+    - Job Orchestration: runai/06c-job-orchestration.md
+    - Deployment: runai/07c-deployment.md
+    - Batch Inferencing: runai/08c-batch-inferencing.md
+  - Sorting Out the Rest:
+    - CI/CD: appendix/09-cicd.md
+    - Documentation: appendix/10-documentation.md
 
 # Plugins
 plugins:

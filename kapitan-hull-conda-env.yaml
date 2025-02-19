@@ -1,0 +1,8 @@
+name: kapitan-hull
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - cookiecutter>=2.2
+  - unidiff

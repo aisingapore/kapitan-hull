@@ -1,0 +1,46 @@
+--- {{cookiecutter.repo_name}}/src/{{cookiecutter.src_package_name}}/data_prep/datasets.py
++++ {{cookiecutter.repo_name}}/problem-templates/hdb/src/{{cookiecutter.src_package_name}}/data_prep/datasets.py
+@@ -1,2 +1 @@
+-"""Dataset classes for defining how datasets are to be loaded.
+-"""
++"""Dataset classes for defining how datasets are to be loaded."""
+@@ -3,0 +3 @@
++import glob
+@@ -5 +5,2 @@
+-import shutil
++
++import pandas as pd
+@@ -8,4 +9,4 @@
+-class DummyDataset():
+-    """Dummy dataset class."""
+-    
+-    def __init__(self, data_dir_path) -> None:
++class HdbDataset:
++    """HDB Dataset class."""
++
++    def __init__(self, data_dir_path: str) -> None:
+@@ -17,6 +18,18 @@
+-    def save_data(self, processed_data_dir_path) -> None:
+-        shutil.copytree(
+-            self.data_dir_path,
+-            processed_data_dir_path,
+-            dirs_exist_ok=True
+-        )
++    def load_data(self) -> pd.DataFrame:
++        """
++        Import .csv as DataFrame. Print error if unable to.
++
++        Returns:
++            df (pd.DataFrame): A concatenated DataFrame
++        """
++        try:
++            csv_files = glob.glob(self.data_dir_path + "/*.csv")
++            if not csv_files:
++                raise ValueError(f"No CSV files found in {self.data_dir_path}")
++            df_list = (pd.read_csv(file) for file in csv_files)
++            self.df = pd.concat(df_list, ignore_index=True)
++            return self.df
++        except Exception as err:
++            raise Exception(f"Failed to load data: {str(err)}") from err
++
++    ## Create any other functions that you need in the Dataset class

@@ -1,0 +1,30 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/04a-virtual-env.md
++++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/local/04a-virtual-env.md
+@@ -3,2 +3,5 @@
+-We can create a virtual environment that will contain all the 
+-dependencies required for this guide.
++While we will be making use of AI Singapore's remote infrastructure
++to carry out some workflows, we can still make use of our local
++machine to execute some of the steps of the end-to-end machine learning
++workflow. Hence, we can begin by creating a virtual environment that
++will contain all the dependencies required for this guide.
+@@ -14,0 +18,7 @@
++If you have an Nvidia GPU, you can make use of the YAML configuration
++that make use of that GPU:
++
++```bash
++conda env create -f {{cookiecutter.repo_name}}-conda-env-gpu.yaml
++```
++
+@@ -16,4 +26,7 @@
+-    Conda environment configured using the YAML file does not take into
+-    account whether you need extra requirements to use your GPU for
+-    training/inference. Check the instructions on your ML/AI framework
+-    of choice to configure your Conda environment to suit your needs.
++    If you're using an AMD or an Intel ARC GPU, we do not provide 
++    support for them at the moment. In the meantime, you can check the
++    following sites to see what you would need to modify to run on 
++    those GPUS:
++    
++    - AMD GPUs: https://github.com/ROCm/xgboost
++    - Intel ARC GPUs: There is no known support for XGboost on Intel GPUs.
