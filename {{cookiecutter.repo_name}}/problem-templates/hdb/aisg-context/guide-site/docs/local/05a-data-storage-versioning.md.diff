@@ -12,12 +12,13 @@
 +Coder workspace.
 +
 +[prob]: ../setting-up/02-preface.md#guides-problem-statement
-@@ -12,3 +16 @@
+@@ -12,3 +16,2 @@
 -    echo "Test1" > data1.txt
 -    echo "Test2" > data2.txt
 -    echo "Test3" > data3.txt
 +    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv
-@@ -19,6 +21,4 @@
++    cd ../..
+@@ -19,6 +22,4 @@
 -    ```powershell
 -    New-Item -ItemType Directory -Path .\data\raw -Force | Out-Null
 -    Set-Location -Path .\data\raw
@@ -28,6 +29,6 @@
 +    New-Item -ItemType Directory -Force -Path "data/raw" | Out-Null
 +    Set-Location -Path "data/raw"
 +    Invoke-WebRequest -Uri "https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv" -OutFile "ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv"
-@@ -28 +28 @@
+@@ -28 +29 @@
 -data and eventually 'training' a dummy model.
 +data and eventually training a resale price prediction model.

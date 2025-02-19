@@ -1,8 +1,9 @@
 --- {{cookiecutter.repo_name}}/conf/process_data.yaml
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/conf/process_data.yaml
-@@ -2,0 +3,39 @@
+@@ -2,0 +3,40 @@
 +
 +test_size: 0.2
++seed: 1111
 +
 +num_cols: [
 +            "floor_area_sqm",
