@@ -26,26 +26,16 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
                 modified_lines.append(original_lines[line_index])
                 line_index += 1
 
-            # if hunk.removed == 0:
-            #     modified_lines.append(original_lines[line_index])
-            #     line_index += 1
+            if hunk.removed == 0:
+                modified_lines.append(original_lines[line_index])
+                line_index += 1
 
-            # for line in hunk:
-            #     if line.is_removed or line.is_context:
-            #         # Skip original lines (those that are removed)
-            #         line_index += 1
-            #     if line.is_added or line.is_context:
-            #         # Add new lines (those that are added)
-            #         modified_lines.append(line.value)
-
-            # Apply the hunk
             for line in hunk:
-                if line.is_removed:
+                if line.is_removed or line.is_context:
+                    # Skip original lines (those that are removed)
                     line_index += 1
-                elif line.is_context:
-                    modified_lines.append(line.value)
-                    line_index += 1
-                elif line.is_added:
+                if line.is_added or line.is_context:
+                    # Add new lines (those that are added)
                     modified_lines.append(line.value)
 
         # Append any remaining lines after the last hunk
