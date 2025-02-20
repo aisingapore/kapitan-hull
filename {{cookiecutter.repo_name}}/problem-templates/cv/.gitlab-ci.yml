@@ -10,7 +10,7 @@ stages:
 
 variables:
   PYTHON_IMAGE: continuumio/miniconda3:24.7.1-0
-  VENV_DIRECTORY: ./conda/{{cookiecuttter.repo_name}}
+  VENV_DIRECTORY: ./conda/{{cookiecutter.repo_name}}
   IMAGE_TAG: latest
 
 include:
@@ -52,8 +52,8 @@ include:
       job_name: build:cpu-push
       stage: deploy
       docker_image_name: cpu
-      registry: asia-southeast1-docker.pkg.dev
-      destination: ${{cookiecuttter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA}
+      registry: ${{cookiecutter.registry_project_path.split('/')[0]}}     
+      destination: ${{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA}
 
   - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-deployment/docker-build@0.1.1
     inputs:
@@ -70,8 +70,8 @@ include:
       job_name: build:gpu-push
       stage: deploy
       docker_image_name: gpu
-      registry: asia-southeast1-docker.pkg.dev
-      destination: ${{cookiecuttter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA} 
+      registry: ${{cookiecutter.registry_project_path.split('/')[0]}}
+      destination: ${{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA} 
 
 build:
   script:
