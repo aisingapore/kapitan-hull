@@ -1,86 +1,120 @@
 default:
   tags:
     - gcp
-  cache:
-    key: $CI_COMMIT_REF_SLUG
-    paths:
-      - ./conda
-  image:
-    name: continuumio/miniconda3:24.7.1-0
 
-stages:
-  - test
-  - deploy-docs
+stages: 
   - build
+  - test
+  - deploy
+  - deploy-docs
 
-test:conda-build:
-  stage: test
-  script:
-    - conda env create -f aiap-dsp-mlops-conda-env.yaml -p ./conda/aiap-dsp-mlops -y
-  rules:
-    - if: $CI_MERGE_REQUEST_IID
-      changes:
-        - aiap-dsp-mlops-conda-env.yaml
-    - if: $CI_PIPELINE_SOURCE == "push"
-      changes:
-        - aiap-dsp-mlops-conda-env.yaml
-    - if: $CI_PIPELINE_SOURCE == "web"
-      changes:
-        - aiap-dsp-mlops-conda-env.yaml
-    - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_CONDA
-    - if: $CI_COMMIT_TAG
-      when: never
-  needs: []
+variables:
+  PYTHON_IMAGE: continuumio/miniconda3:24.7.1-0
+  VENV_DIRECTORY: .conda/venv
+  IMAGE_TAG: latest
 
-test:pylint:
-  stage: test
-  before_script:
-    - source activate ./conda/aiap-dsp-mlops
-    - pip install -r dev-requirements.txt
+include:
+  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-integration/build-conda@0.1.1
+    inputs:
+      job_name: build
+      stage: build
+      image: ${PYTHON_IMAGE}
+      requirements_file: aiap-dsp-mlops-conda-env.yaml
+      python_version: "3.13"
+      venv_directory: ${VENV_DIRECTORY}
+
+  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-integration/ruff-lint@0.1.1
+    inputs:
+      job_name: test:lint
+      stage: test
+      image: ${PYTHON_IMAGE}
+      venv_directory: ${VENV_DIRECTORY}
+
+  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-integration/pytest@0.1.1
+    inputs:
+      job_name: test:pytest
+      stage: test
+      image: ${PYTHON_IMAGE}
+      venv_directory: ${VENV_DIRECTORY}
+
+  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-deployment/docker-build@0.1.1
+    inputs:
+      job_name: build:cpu-build
+      stage: deploy
+      context: .
+      dockerfile: docker/aiap-dsp-mlops-cpu.Dockerfile
+      docker_image_name: cpu
+      image_tag: ${CI_COMMIT_SHORT_SHA}
+      expiry_time: "30"
+
+  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-deployment/docker-push@0.1.1
+    inputs:
+      job_name: build:cpu-push
+      stage: deploy
+      docker_image_name: cpu
+      registry: asia-southeast1-docker.pkg.dev
+      destination: ${{cookiecuttter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA}
+
+  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-deployment/docker-build@0.1.1
+    inputs:
+      job_name: build:gpu-build
+      stage: deploy
+      context: .
+      dockerfile: docker/aiap-dsp-mlops-gpu.Dockerfile
+      docker_image_name: gpu
+      image_tag: ${CI_COMMIT_SHORT_SHA}
+      expiry_time: "30"
+
+  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-deployment/docker-push@0.1.1
+    inputs:
+      job_name: build:gpu-push
+      stage: deploy
+      docker_image_name: gpu
+      registry: asia-southeast1-docker.pkg.dev
+      destination: ${{cookiecuttter.registry_project_path}}/gpu:${CI_COMMIT_SHORT_SHA}
+
+build:
   script:
-    - pylint src --fail-under=7.0 --ignore=tests --disable=W1202
+    - conda env create -f aiap-dsp-mlops-conda-env.yaml -p $VENV_DIRECTORY -y
   rules:
-    - if: $CI_MERGE_REQUEST_IID
-      changes:
-        - src/**/*
-        - conf/**/*
     - if: $CI_PIPELINE_SOURCE == "push"
-    - if: $CI_PIPELINE_SOURCE == "web"
-    - if: $CI_COMMIT_TAG
-      when: never
-  needs:
-    - job: test:conda-build
-      optional: true
+
+test:lint:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
 
 test:pytest:
-  stage: test
-  before_script: 
-    - source activate ./conda/aiap-dsp-mlops
-    - pip install -r dev-requirements.txt
-  script:
-    - pytest src/tests --junitxml=./rspec.xml
   rules:
-    - if: $CI_MERGE_REQUEST_IID
-      changes:
-        - src/**/*
-        - conf/**/*
     - if: $CI_PIPELINE_SOURCE == "push"
-    - if: $CI_PIPELINE_SOURCE == "web"
-    - if: $CI_COMMIT_TAG
-      when: never
-  artifacts:
-    paths:
-      - rspec.xml
-    reports:
-      junit: rspec.xml
+
+build:cpu-build:
+
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+build:cpu-push:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   needs:
-    - job: test:conda-build
-      optional: true
+    - job: build:cpu-build
+      artifacts: true
+
+build:gpu-build:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+build:gpu-push:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  needs:
+    - job: build:gpu-build
+      artifacts: true
+
 
 pages:
   stage: deploy-docs
   before_script:
-    - source activate ./conda/aiap-dsp-mlops
+    - source activate $VENV_DIRECTORY
     - pip install -r docs-requirements.txt
     - pip install -r aisg-context/guide-site/mkdocs-requirements.txt
   script:
@@ -97,89 +131,5 @@ pages:
         - src/**/*
         - aisg-context/guide-site/**/*
   needs:
-    - job: test:conda-build
-      optional: true
+    - job: build
 
-build:cpu-image:
-  stage: build
-  image:
-    name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [""]
-  variables:
-    GOOGLE_APPLICATION_CREDENTIALS: /kaniko/.docker/config.json
-  before_script:
-    - "[[ -z ${GCP_SERVICE_ACCOUNT_KEY} ]] && echo 'GCP_SERVICE_ACCOUNT_KEY variable is not set.' && exit 1"
-  script:
-    - mkdir -p /kaniko/.docker
-    - cat $GCP_SERVICE_ACCOUNT_KEY > /kaniko/.docker/config.json
-    - >-
-      /kaniko/executor
-      --context "${CI_PROJECT_DIR}"
-      --dockerfile "${CI_PROJECT_DIR}/docker/aiap-dsp-mlops-cpu.Dockerfile"
-      --destination "asia-southeast1-docker.pkg.dev/aiap-18-ds-aut0/aiap-18-ds/andyong/cpu:${CI_COMMIT_SHORT_SHA}"
-  rules:
-    - if: $CI_MERGE_REQUEST_IID
-      changes:
-        - docker/aiap-dsp-mlops-cpu.Dockerfile
-        - src/**/*
-        - conf/**/*
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
-    - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_DATAPREP
-  needs:
-    - job: test:pytest
-      optional: true
-    - job: test:pylint
-      optional: true
-
-build:gpu-image:
-  stage: build
-  image:
-    name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [""]
-  variables:
-    GOOGLE_APPLICATION_CREDENTIALS: /kaniko/.docker/config.json
-  before_script:
-    - "[[ -z ${GCP_SERVICE_ACCOUNT_KEY} ]] && echo 'GCP_SERVICE_ACCOUNT_KEY variable is not set.' && exit 1"
-  script:
-    - mkdir -p /kaniko/.docker
-    - cat $GCP_SERVICE_ACCOUNT_KEY > /kaniko/.docker/config.json
-    - >-
-      /kaniko/executor
-      --context "${CI_PROJECT_DIR}"
-      --dockerfile "${CI_PROJECT_DIR}/docker/aiap-dsp-mlops-gpu.Dockerfile"
-      --destination "asia-southeast1-docker.pkg.dev/aiap-18-ds-aut0/aiap-18-ds/andyong/gpu:${CI_COMMIT_SHORT_SHA}"
-  rules:
-    - if: $CI_MERGE_REQUEST_IID
-      changes:
-        - docker/aiap-dsp-mlops-gpu.Dockerfile
-        - src/**/*
-        - conf/**/*
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
-    - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_MODEL
-  needs:
-    - job: test:pytest
-      optional: true
-    - job: test:pylint
-      optional: true
-
-build:retag-images:
-  stage: build
-  image:
-    name: google/cloud-sdk:debian_component_based
-  variables:
-    GOOGLE_APPLICATION_CREDENTIALS: /gcp-sa.json
-  before_script:
-    - "[[ -z ${GCP_SERVICE_ACCOUNT_KEY} ]] && echo 'GCP_SERVICE_ACCOUNT_KEY variable is not set.' && exit 1"
-  script:
-    - cat $GCP_SERVICE_ACCOUNT_KEY > /gcp-sa.json
-    - gcloud container images add-tag "asia-southeast1-docker.pkg.dev/aiap-18-ds-aut0/aiap-18-ds/andyong/cpu:${CI_COMMIT_SHORT_SHA}" "asia-southeast1-docker.pkg.dev/aiap-18-ds-aut0/aiap-18-ds/andyong/data-prep:${CI_COMMIT_TAG}"
-    - gcloud container images add-tag "asia-southeast1-docker.pkg.dev/aiap-18-ds-aut0/aiap-18-ds/andyong/gpu:${CI_COMMIT_SHORT_SHA}" "asia-southeast1-docker.pkg.dev/aiap-18-ds-aut0/aiap-18-ds/andyong/model-training:${CI_COMMIT_TAG}"
-  rules:
-    - if: $CI_COMMIT_TAG && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-  needs:
-    - job: build:cpu-image
-      optional: true
-    - job: build:gpu-image
-      optional: true
