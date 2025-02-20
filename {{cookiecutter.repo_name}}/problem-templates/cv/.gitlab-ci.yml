@@ -75,7 +75,7 @@ include:
 
 build:
   script:
-    - conda env create -f aiap-dsp-mlops-conda-env.yaml -p $VENV_DIRECTORY -y
+    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p $VENV_DIRECTORY -y
   rules:
     - if: $CI_PIPELINE_SOURCE == "push"
 
