@@ -10,7 +10,7 @@ stages:
 
 variables:
   PYTHON_IMAGE: continuumio/miniconda3:24.7.1-0
-  VENV_DIRECTORY: .conda/venv
+  VENV_DIRECTORY: ./conda/{{cookiecuttter.repo_name}}
   IMAGE_TAG: latest
 
 include:
