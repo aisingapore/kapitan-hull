@@ -44,9 +44,10 @@ With reference to the diagram above, we have the following pointers:
   branch, it's recommended that they are kept minimal, at least for 
   GitHub flow _(other workflows might not heed such practices)_.
 
-For more information on Gitlab CI pipeline, you can refer [here][lighthouse].
+For more information on Gitlab CI pipeline, you can refer 
+[here][lighthouse].
 
-[lighthouse]: (https://lighthouse.aisingapore.net/tools-and-tech/Gitlab-CICD)
+[lighthouse]: https://lighthouse.aisingapore.net/tools-and-tech/Gitlab-CICD
 
 
 ## Environment Variables
@@ -57,26 +58,27 @@ define the following variable(s) for the pipeline beforehand:
 
 - `HARBOR_ROBOT_CREDS_JSON`: A JSON formatted value that contains
   encoded credentials for a robot account on Harbor. This is to allow
-the pipeline to interact with the Harbor server. See the next section 
+  the pipeline to interact with the Harbor server. See the next section 
   on how to generate this value/file.
 {%- elif cookiecutter.platform == 'gcp' %}
 
 - `GCP_SERVICE_ACCOUNT_KEY`: A JSON formatted value that contains 
   encoded credentials for a service account on your GCP project. This 
   is to allow the pipeline to interact with the Google Artifact 
-  Registry. See [here][gcp-sa] on how to generate this file.
-
-  After you've generated the json file, please encode the file content using `base64 -i <file>`. Afterwhich, copy paste the encoded value and define it as a CI/CD variable. 
+  Registry. See [here][gcp-sa] on how to generate this file.  
+  After you've generated the JSON file, please encode the file content 
+  using `base64 -i <file>`. Afterwhich, copy paste the encoded value 
+  and define it as a CI/CD variable. 
 {%- endif %}
 
 To define CI/CD variables for a project (repository), follow the steps
 listed [here][cicd-var]. 
 {%- if cookiecutter.platform == 'onprem' %}
-The environment variable `HARBOR_ROBOT_CREDS_JSON` needs to be a `variable` 
-type.
+The environment variable `HARBOR_ROBOT_CREDS_JSON` needs to be a
+`variable` type.
 {%- elif cookiecutter.platform == 'gcp' %}
-The environment variable `GCP_SERVICE_ACCOUNT_KEY` needs to be a `variable`
-type.
+The environment variable `GCP_SERVICE_ACCOUNT_KEY` needs to be a 
+`variable` type.
 {%- endif %}
 
 [cicd-var]: https://docs.gitlab.com/ee/ci/variables/#define-a-cicd-variable-in-the-ui
@@ -130,7 +132,8 @@ into a CI/CD environment variable of type `File`
     - [Docker Docs - Configuration files](https://docs.docker.com/engine/reference/commandline/cli/#configuration-files)
 {%- endif %}
 
-After defining the Ci/CD Variables for the project, your pipeline should be able to pass. If not, re-run the pipeline. 
+After defining the CI/CD Variables for the project, your pipeline 
+should be able to pass. If not, re-run the pipeline. 
 
 ## Moving Forward
 
@@ -147,6 +150,9 @@ examples off the top:
 There's much more that can be done but whatever has been shared thus 
 far is hopefully enough for one to get started with CI/CD. 
 
-Maintaining Ci/Cd pipelines requires extensive effort from developers. To reduce the effort required from developers, MLOps team has written a set of templates in which dev teams can implement - plug and play with [CICD Components][cicd components].
+Maintaining CI/CD pipelines requires extensive effort from developers. 
+To reduce the effort required from developers, MLOps team has written a
+set of templates in which users can implement - plug and play with 
+[CI/CD Components][cicd components].
 
 [cicd components]: (https://lighthouse.aisingapore.net/Platforms/MLOps&LLMOps/CICD-Components)
