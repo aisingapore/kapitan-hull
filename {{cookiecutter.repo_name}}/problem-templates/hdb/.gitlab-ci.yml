@@ -1,6 +1,12 @@
 default:
   tags:
     - gcp
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - ./conda
+  image:
+    name: ${PYTHON_IMAGE}
 
 stages: 
   - build
@@ -132,4 +138,4 @@ pages:
         - aisg-context/guide-site/**/*
   needs:
     - job: build
-
+      optional: true

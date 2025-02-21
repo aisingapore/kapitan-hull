@@ -1,8 +1,5 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/07c-deployment.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/runai/07c-deployment.md
-@@ -88 +88 @@
--=== "VSCode Server Terminal"
-+=== "Coder Workspace Terminal"
 @@ -92 +92 @@
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
@@ -24,9 +21,6 @@
 +for prediction. We will get back to this in a bit. For now, let's 
 +proceed and spin up an inference server using the package that exists 
 +within the repository.
-@@ -129 +135 @@
--=== "VSCode Server Terminal"
-+=== "Coder Workspace Terminal"
 @@ -134 +140,2 @@
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
@@ -36,9 +30,6 @@
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
 @@ -154,0 +162 @@
 +        -e PRED_MODEL_PATH=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPENATED_NAME>/models/$PRED_MODEL_UUID/model/xgbreg.json \
-@@ -168 +176 @@
--=== "VSCode Server Terminal"
-+=== "Coder Workspace Terminal"
 @@ -173,2 +181,2 @@
 -        -H 'Content-Type: application/json' \
 -        -d '"string"'
@@ -56,7 +47,7 @@
 +
 +With the returned CSV file, we have successfully submitted a request
 @@ -198 +202,2 @@
--field `MODEL_UUID` inherit their values from the environment variables.
+-`MODEL_UUID` field inherits their values from the environment variables.
 +`PRED_MODEL_UUID` and `PRED_MODEL_PATH` fields inherit their values 
 +from the environment variables.
 @@ -209 +214,3 @@

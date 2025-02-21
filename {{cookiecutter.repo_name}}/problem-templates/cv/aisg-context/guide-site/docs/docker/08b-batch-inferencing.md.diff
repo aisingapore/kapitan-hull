@@ -55,7 +55,7 @@
 @@ -78,0 +86 @@
 +        -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
 @@ -79,0 +88 @@
-+        -e PRED_MODEL_PATH="./models/$PRED_MODEL_UUID/model/model.pt" `
++        -e PRED_MODEL_PATH="./models/$Env:PRED_MODEL_UUID/model/model.pt" `
 @@ -90,3 +99,5 @@
 -{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in1.txt", "prediction": "Output1"}
 -{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in2.txt", "prediction": "Output2"}

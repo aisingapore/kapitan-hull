@@ -15,7 +15,8 @@
 
     If you're planning to use the `code-server` development workspace
     written in the [previous section](03b-dev-wksp.md), you should start
-    reading [here](#using-vscode) instead.
+    reading [here](#using-virtual-conda-environments-within-vscode) 
+    instead.
 
 ## Docker Image Debugging
 
@@ -125,3 +126,61 @@ pip install ipython
       that make coding easier and faster
     - Enhanced debugging tools and interactive exception handling
     - Able to use hooks and plugins to enhance the IPython experience
+
+### Using Virtual Conda Environments Within VSCode
+
+While it is possible for VSCode to make use of different virtual Python
+environments, some other additional steps are required for the VSCode
+server to detect the `conda` environments that you would have created.
+
+- Ensure that you are in a project folder which you intend to work
+  on. You can open a folder through `File > Open Folder...`.
+
+- Install the VSCode extensions [`ms-python.python`][py-ext] and
+  [`ms-toolsai.jupyter`][jy-ext]. After installation of these 
+  extensions, restart VSCode. If you wish to restart VSCode in-place,
+  you can do so by using the shortcut `Ctrl + Shift + P`, entering 
+  `Developer: Reload Window` in the prompt and pressing `Enter` 
+  following that.
+
+- Ensure that you have [`ipykernel`][ipyk] installed in the `conda` 
+  environment that you intend to use. This template by default lists 
+  the library as a dependency under  `requirements.txt`. You can check
+  for the library like so:
+
+    === "Linux/macOS"
+
+        ```bash
+        conda activate {{cookiecutter.repo_name}}
+        conda list | grep "ipykernel"
+        ```
+  
+    === "Windows PowerShell"
+
+        ```powershell
+        conda activate {{cookiecutter.repo_name}}
+        conda list | Select-String "ipykernel"
+        ```
+
+Output should look similar to:
+
+```
+ipykernel  X.XX.XX  pypi_0  pypi
+```
+
+- Now enter `Ctrl + Shift + P` again and execute 
+  `Python: Select Interpreter`. Provide the path to the Python 
+  executable within the `conda` environment that you intend to use, 
+  something like so: `path/to/conda_env/bin/python`.
+
+- Open up any Jupyter notebook and click on the button that says
+  `Select Kernel` on the top right hand corner. You will be presented
+  with a selection of Python interpreters. Select the one that
+  corresponds to the environment you intend to use.
+
+- Test out the kernel by running the cells in the sample notebook
+  provided under `notebooks/sample-pytorch-notebook.ipynb`.
+
+[py-ext]: https://marketplace.visualstudio.com/items?itemName=ms-python.python
+[jy-ext]: https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter
+[ipyk]: https://ipython.readthedocs.io/en/stable/install/kernel_install.html

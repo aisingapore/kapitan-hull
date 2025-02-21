@@ -1,15 +1,15 @@
 {
     "cookiecutter": {
-      "project_name": "Kapitan Hull GCP RunAI Test",
-      "description": "Testing Grounds for Kapitan Hull on GCP using RunAI.",
-      "repo_name": "kapitan-hull-gcp-runai-test",
-      "src_package_name": "kapitan_hull_gcp_runai_test",
-      "src_package_name_short": "khgr_test",
-      "platform": "gcp",
-      "orchestrator": "runai",
-      "proj_name": "test-proj",
-      "registry_project_path": "asia-southeast1-docker.pkg.dev/infratest-311303/mlops",
-      "problem_template": "base",
-      "author_name": "mlops"
+        "project_name": "Kapitan Hull GCP RunAI Test",
+        "description": "Testing Grounds for Kapitan Hull on GCP using RunAI.",
+        "repo_name": "kapitan-hull-gcp-runai-test",
+        "src_package_name": "kapitan_hull_gcp_runai_test",
+        "src_package_name_short": "khgr_test",
+        "platform": "gcp",
+        "orchestrator": "runai",
+        "proj_name": "test-proj",
+        "registry_project_path": "asia-southeast1-docker.pkg.dev/infratest-311303/mlops",
+        "problem_template": "base",
+        "author_name": "mlops"
     }
-  }
+}

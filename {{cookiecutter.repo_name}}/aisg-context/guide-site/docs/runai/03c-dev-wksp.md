@@ -57,7 +57,7 @@ As mentioned, a PVC should be attached to the workspaces to persist
 changes to the filesystems. You can use the following command to search
 for the PVC:
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     ls -la / | grep "pvc"
@@ -74,7 +74,7 @@ you can create a subdirectory for yourself treat it as your own
 personal workspace, where all your work and other relevant assets can 
 be persisted.
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     cd /<PVC_LOCATION>/workspaces
@@ -91,7 +91,7 @@ protocol to clone the repository__ as opposed to creating and using an
 
 Now, let's clone your repository from the remote:
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     cd /<PVC_LOCATION>/workspaces/<YOUR_HYPHENATED_NAME>
