@@ -12,10 +12,9 @@
 @@ -101 +101 @@
 -        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
 +        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
-@@ -106,0 +107 @@
+@@ -107 +107 @@
+-    $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
 +    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-@@ -109 +109,0 @@
--        -e MODEL_UUID=<MLFLOW_RUN_UUID> `
 @@ -113 +113 @@
 -        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
 +        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
@@ -26,23 +25,27 @@
 -that exists within the repository.
 +modules to load will be `./models/<MLFLOW_RUN_UUID>/model/xgbreg.json`.
 @@ -148,0 +146 @@
-+        -e PRED_MODEL_PATH="../models/$MLFLOW_RUN_UUID/model/xgbreg.json" \
-@@ -203,2 +201,2 @@
++        -e PRED_MODEL_PATH="../models/$PRED_MODEL_UUID/model/xgbreg.json" \
+@@ -161,0 +160 @@
++        -e PRED_MODEL_PATH="../models/$PRED_MODEL_UUID/model/xgbreg.json" \
+@@ -182,0 +182 @@
++        -e PRED_MODEL_PATH="../models/$Env:PRED_MODEL_UUID/model/xgbreg.json" `
+@@ -203,2 +203,2 @@
 -            -H 'Content-Type: application/json' \
 -            -d '"string"'
 +            -H 'Content-Type: multipart/form-data' \
 +            -F "csv_file=@/path/to/csv/file"
-@@ -213,2 +211,2 @@
+@@ -213,2 +213,2 @@
 -            -H 'Content-Type: application/json' \
 -            -d '"string"'
 +            -H 'Content-Type: multipart/form-data' \
 +            -F "csv_file=@/path/to/csv/file"
-@@ -223,2 +221,2 @@
+@@ -223,2 +223,2 @@
 -            -H 'Content-Type: application/json' `
 -            -d '"string"'
 +            -H 'Content-Type: multipart/form-data' `
 +            -F "csv_file=@/path/to/csv/file"
-@@ -227,7 +225,3 @@
+@@ -227,7 +227,3 @@
 -Output sample:
 -
 -```
@@ -53,11 +56,11 @@
 +Output sample: The output will be a CSV file with the original columns plus a predictions column.
 +
 +With the returned CSV file, we have successfully submitted a request
-@@ -248 +242,2 @@
--field `MODEL_UUID` inherit their values from the environment variables.
+@@ -248 +244,2 @@
+-`MODEL_UUID` field inherits their values from the environment variables.
 +`PRED_MODEL_UUID` and `PRED_MODEL_PATH` fields inherit their values 
 +from the environment variables.
-@@ -259 +254,3 @@
+@@ -259 +256,3 @@
 -    MODEL_UUID: str
 +    USE_CUDA: bool = False
 +    PRED_MODEL_UUID: str = "test"

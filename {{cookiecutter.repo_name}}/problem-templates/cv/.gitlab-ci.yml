@@ -1,0 +1,141 @@
+default:
+  tags:
+    - gcp
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - ./conda
+  image:
+    name: ${PYTHON_IMAGE}
+
+stages: 
+  - build
+  - test
+  - deploy
+  - deploy-docs
+
+variables:
+  PYTHON_IMAGE: continuumio/miniconda3:24.7.1-0
+  VENV_DIRECTORY: ./conda/{{cookiecutter.repo_name}}
+  IMAGE_TAG: latest
+
+include:
+  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-integration/build-conda@0.1.1
+    inputs:
+      job_name: build
+      stage: build
+      image: ${PYTHON_IMAGE}
+      requirements_file: aiap-dsp-mlops-conda-env.yaml
+      python_version: "3.13"
+      venv_directory: ${VENV_DIRECTORY}
+
+  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-integration/ruff-lint@0.1.1
+    inputs:
+      job_name: test:lint
+      stage: test
+      image: ${PYTHON_IMAGE}
+      venv_directory: ${VENV_DIRECTORY}
+
+  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-integration/pytest@0.1.1
+    inputs:
+      job_name: test:pytest
+      stage: test
+      image: ${PYTHON_IMAGE}
+      venv_directory: ${VENV_DIRECTORY}
+
+  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-deployment/docker-build@0.1.1
+    inputs:
+      job_name: build:cpu-build
+      stage: deploy
+      context: .
+      dockerfile: docker/aiap-dsp-mlops-cpu.Dockerfile
+      docker_image_name: cpu
+      image_tag: ${CI_COMMIT_SHORT_SHA}
+      expiry_time: "30"
+
+  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-deployment/docker-push@0.1.1
+    inputs:
+      job_name: build:cpu-push
+      stage: deploy
+      docker_image_name: cpu
+      registry: {{cookiecutter.registry_project_path.split('/')[0]}}     
+      destination: {{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA}
+
+  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-deployment/docker-build@0.1.1
+    inputs:
+      job_name: build:gpu-build
+      stage: deploy
+      context: .
+      dockerfile: docker/aiap-dsp-mlops-gpu.Dockerfile
+      docker_image_name: gpu
+      image_tag: ${CI_COMMIT_SHORT_SHA}
+      expiry_time: "30"
+
+  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-deployment/docker-push@0.1.1
+    inputs:
+      job_name: build:gpu-push
+      stage: deploy
+      docker_image_name: gpu
+      registry: {{cookiecutter.registry_project_path.split('/')[0]}}
+      destination: {{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA} 
+
+build:
+  script:
+    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p $VENV_DIRECTORY -y
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+
+test:lint:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+
+test:pytest:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+
+build:cpu-build:
+
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+build:cpu-push:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  needs:
+    - job: build:cpu-build
+      artifacts: true
+
+build:gpu-build:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+build:gpu-push:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  needs:
+    - job: build:gpu-build
+      artifacts: true
+
+
+pages:
+  stage: deploy-docs
+  before_script:
+    - source activate $VENV_DIRECTORY
+    - pip install -r docs-requirements.txt
+    - pip install -r aisg-context/guide-site/mkdocs-requirements.txt
+  script:
+    - sphinx-apidoc -f -o docs src
+    - sphinx-build -b html docs public
+    - mkdocs build -v -f aisg-context/guide-site/mkdocs.yml -d $PWD/public/guide
+  artifacts:
+    paths:
+    - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - docs/**/*
+        - src/**/*
+        - aisg-context/guide-site/**/*
+  needs:
+    - job: build
+      optional: true

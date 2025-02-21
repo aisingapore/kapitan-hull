@@ -5,7 +5,7 @@
 We can generate some sample data to use to test the different 
 components of Kapitan Hull.
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw && cd "$_"

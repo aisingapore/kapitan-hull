@@ -51,7 +51,7 @@ This requires the Docker image to be built from a Dockerfile
 (`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
 provided in this template:
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
@@ -70,7 +70,7 @@ provided in this template:
 Now that we have the Docker image built and pushed to the registry, we 
 can submit a job using that image to Run:ai\:
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
@@ -154,7 +154,7 @@ After that, we build the Docker image from the Docker file
     the `{{cookiecutter.repo_name}}/cpu` Docker image instead that was
     built during the previous step.  
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
@@ -173,7 +173,7 @@ After that, we build the Docker image from the Docker file
 Now that we have the Docker image built and pushed to the registry, 
 we can run a job using it:
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
@@ -320,7 +320,7 @@ executing the model training job out of the Run:ai platform, as the
 `JOB_NAME` and `JOB_UUID` environment variables would not be available
 by default.
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC

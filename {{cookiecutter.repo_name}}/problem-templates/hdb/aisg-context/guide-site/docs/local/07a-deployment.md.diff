@@ -62,7 +62,7 @@
 -```
 +Output sample: The output will be a CSV file with the original columns plus a predictions column.
 @@ -183 +195,2 @@
--field `MODEL_UUID` inherit their values from the environment variables.
+-`MODEL_UUID` field inherits their values from the environment variables.
 +`PRED_MODEL_UUID` and `PRED_MODEL_PATH` fields inherit their values 
 +from the environment variables.
 @@ -194 +207,3 @@

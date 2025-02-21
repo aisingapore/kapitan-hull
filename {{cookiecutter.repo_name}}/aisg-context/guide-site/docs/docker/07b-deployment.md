@@ -104,9 +104,9 @@ repository, execute the following commands:
 === "Windows PowerShell"
 
     ```powershell
+    $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
     docker run --rm `
         -v .\models:/models `
-        -e MODEL_UUID=<MLFLOW_RUN_UUID> `
         -e MLFLOW_TRACKING_URI=http://localhost:5000 `
         --network host `
         {{cookiecutter.registry_project_path}}/cpu:0.1.0 `
@@ -245,7 +245,7 @@ data and schema validation, as well as [settings management]. There's a
 class called `Settings` under the module
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
 contains several fields: some are defined and some others not. The 
-field `MODEL_UUID` inherit their values from the environment variables.
+`MODEL_UUID` field inherits their values from the environment variables.
 
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
 ```python

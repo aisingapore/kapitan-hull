@@ -11,7 +11,7 @@ configuration file (`conf/batch_infer.yaml`) for this purpose.
 Let's first download some data on our Coder workspace for us to conduct
 batch inferencing on:
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/data/batch-infer && cd $_
@@ -36,7 +36,7 @@ batch inferencing on:
 
 To execute the batch inferencing script:
 
-=== "VSCode Server Terminal"
+=== "Coder Workspace Terminal"
 
     ```bash
     # Navigate back to root directory
