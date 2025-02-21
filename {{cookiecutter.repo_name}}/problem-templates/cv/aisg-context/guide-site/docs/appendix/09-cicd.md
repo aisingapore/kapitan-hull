@@ -155,4 +155,4 @@ To reduce the effort required from developers, MLOps team has written a
 set of templates in which users can implement - plug and play with 
 [CI/CD Components][cicd components].
 
-[cicd components]: (https://lighthouse.aisingapore.net/Platforms/MLOps&LLMOps/CICD-Components)
+[cicd components]: https://lighthouse.aisingapore.net/Platforms/MLOps&LLMOps/CICD-Components

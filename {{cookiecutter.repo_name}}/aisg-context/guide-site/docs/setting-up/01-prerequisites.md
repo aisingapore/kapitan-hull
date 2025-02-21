@@ -94,7 +94,7 @@ follow through with the guide:
 {% elif cookiecutter.platform == 'gcp' -%}
 [gcloud]: https://cloud.google.com/sdk/docs/install
 [gcp]: https://console.cloud.google.com
-[gcp-page]: ./02-preface.md#google-cloud-platform-gcp-projects
+[gcp-page]: https://lighthouse.aisingapore.net/tools-and-tech/gcp#gcp-project
 {% endif %}
 {%- if cookiecutter.orchestrator == 'runai' -%}  
 [runai-page]: https://lighthouse.aisingapore.net/tools-and-tech/runai
