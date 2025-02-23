@@ -127,15 +127,3 @@ if you intend to use Jupyter notebooks within the VSCode environment.
 [vsx-python]: https://marketplace.visualstudio.com/items?itemName=ms-python.python
 [vsx-jy]: https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter
 [jy-vscode]: ./04c-virtual-env.md#jupyter-kernel-for-vscode
-
-## Using Docker within Kubernetes
-
-!!! caution
-    Since these development environments are essentially pods deployed
-    within a Kubernetes cluster, using Docker within the pods
-    themselves is not feasible by default and while possible, should
-    be avoided.
-
-??? info "Reference Link(s)"
-
-    - [Using Docker-in-Docker for your CI or testing environment? Think twice. - jpetazzo](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)

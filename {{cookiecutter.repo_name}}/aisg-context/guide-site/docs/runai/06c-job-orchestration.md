@@ -38,9 +38,10 @@ values can be overridden through the CLI.
 
 ## Data Preparation & Preprocessing
 
-To process the sample raw data, there are many ways to do so. One way
-is to submit the job through Run:ai. You can first your configuration 
-variables at `conf/process_data.yaml`, specifically this section:
+To process the sample raw data, there are many ways to do so. We can 
+either build within the Coder workspace, or to submit the job through 
+Run:ai. You can first your configuration variables at 
+`conf/process_data.yaml`, specifically this section:
 
 ```yaml
 raw_data_dir_path: "./data/raw"
@@ -52,6 +53,23 @@ This requires the Docker image to be built from a Dockerfile
 provided in this template:
 
 === "Coder Workspace Terminal"
+
+    ```bash
+    docker build \
+        -t {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
+        -f $(pwd)/docker/{{cookiecutter.repo_name}}-cpu.Dockerfile \
+        $(pwd)
+{%- if cookiecutter.platform == 'gcp' %}
+    # Run `gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS` 
+    # and `gcloud auth configure-docker {{cookiecutter.registry_project_path.split('/')[0]}}`
+{%- elif cookiecutter.platform == 'onprem' %}
+    # Run `docker login {{cookiecutter.registry_project_path.split('/')[0]}}`
+{%- endif %}
+    # to authenticate if you have not done so
+    docker push {{cookiecutter.registry_project_path}}/cpu:0.1.0
+    ```
+
+=== "Using Run:ai"
 
     ```bash
     # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
@@ -70,7 +88,7 @@ provided in this template:
 Now that we have the Docker image built and pushed to the registry, we 
 can submit a job using that image to Run:ai\:
 
-=== "Coder Workspace Terminal"
+=== "Coder Workspace Terminal using Run:ai"
 
     ```bash
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
@@ -157,6 +175,23 @@ After that, we build the Docker image from the Docker file
 === "Coder Workspace Terminal"
 
     ```bash
+    docker build \
+        -t {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+        -f $(pwd)/docker/{{cookiecutter.repo_name}}-gpu.Dockerfile \
+        $(pwd)
+{%- if cookiecutter.platform == 'gcp' %}
+    # Run `gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS` 
+    # and `gcloud auth configure-docker {{cookiecutter.registry_project_path.split('/')[0]}}`
+{%- elif cookiecutter.platform == 'onprem' %}
+    # Run `docker login {{cookiecutter.registry_project_path.split('/')[0]}}`
+{%- endif %}
+    # to authenticate if you have not done so
+    docker push {{cookiecutter.registry_project_path}}/gpu:0.1.0
+    ```
+
+=== "Using Run:ai"
+
+    ```bash
     # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
     # Run this in the base of your project repository, and change accordingly
     khull kaniko --context $(pwd) \
@@ -173,7 +208,7 @@ After that, we build the Docker image from the Docker file
 Now that we have the Docker image built and pushed to the registry, 
 we can run a job using it:
 
-=== "Coder Workspace Terminal"
+=== "Coder Workspace Terminal using Run:ai"
 
     ```bash
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
@@ -320,7 +355,7 @@ executing the model training job out of the Run:ai platform, as the
 `JOB_NAME` and `JOB_UUID` environment variables would not be available
 by default.
 
-=== "Coder Workspace Terminal"
+=== "Coder Workspace Terminal using Run:ai"
 
     ```bash
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
