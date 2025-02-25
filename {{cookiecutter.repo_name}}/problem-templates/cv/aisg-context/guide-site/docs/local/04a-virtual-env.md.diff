@@ -14,16 +14,21 @@
  ```bash
  conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml
  ```
-@@ -11,13 +14,23 @@
+@@ -11,13 +14,28 @@
  a Conda environment. This is so that there is parity between the 
  development and deployment environment as the Docker image would use 
  `requirements.txt` as the list of packages to be installed.
  
-+If you have an Nvidia GPU, you can make use of the YAML configuration
-+that make use of that GPU:
++You will have to do an extra pip installation, depending on whether you
++rely on the CPU-only or GPU-enabled variant. You can make use of these
++requirements files:
 +
 +```bash
-+conda env create -f {{cookiecutter.repo_name}}-conda-env-gpu.yaml
++# CPU-only
++pip install -r pytorch-cpu-requirements.txt
++
++# GPU-enabled
++pip install -r pytorch-gpu-requirements.txt
 +```
 +
  !!! info "On the use of GPUs"

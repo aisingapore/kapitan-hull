@@ -90,7 +90,7 @@ Alternatively, you can spin up the site on your local machine by
 creating a virtual environment to install the dependencies first:
 
 ```bash
-$ conda create -n aisg-kh-guide python=3.12.8
+$ conda create -n aisg-kh-guide python=3.12.9
 $ conda activate aisg-kh-guide
 $ pip install -r aisg-context/guide-site/mkdocs-requirements.txt
 ```
