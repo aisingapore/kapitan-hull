@@ -91,6 +91,8 @@ can submit a job using that image to Run:ai\:
 === "Coder Workspace Terminal using Run:ai"
 
     ```bash
+    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
+    # Run this in the base of your project repository, and change accordingly
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
@@ -211,6 +213,8 @@ we can run a job using it:
 === "Coder Workspace Terminal using Run:ai"
 
     ```bash
+    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
+    # Run this in the base of your project repository, and change accordingly
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     $ runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
@@ -358,6 +362,8 @@ by default.
 === "Coder Workspace Terminal using Run:ai"
 
     ```bash
+    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
+    # Run this in the base of your project repository, and change accordingly
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train-hp \
