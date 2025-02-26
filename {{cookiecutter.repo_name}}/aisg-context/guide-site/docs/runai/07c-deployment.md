@@ -153,7 +153,7 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org):
         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
         --service-type external-url,port=8080:8080 \
-        --command -- gunicorn {{cookiecutter.repo_name}}_fastapi.main:APP \
+        --command -- gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
             -k uvicorn.workers.UvicornWorker \
             -b 0.0.0.0:8080 -w 2 -t 90
     ```
