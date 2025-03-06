@@ -168,4 +168,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# aider
+.aider*
+
 ####################
