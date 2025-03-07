@@ -1,29 +1,55 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/setting-up/01-prerequisites.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/setting-up/01-prerequisites.md
-@@ -7,0 +8,2 @@
+@@ -6,8 +6,12 @@
+ follow through with the guide:
+ 
 +- NUS Staff/Student account.
 +- Azure account provisioned by AI Singapore.
-@@ -11,0 +14,2 @@
+ - PC with the following installed:
+     - If your machine is with a Windows OS, use [__PowerShell__][pshell]
+       instead of the default Command (`cmd.exe`) shell. Best if you
+       resort to [Windows Terminal][winterm].
 +    - __Pulse Secure__
 +        - Refer to [NUS IT eGuides][nus-it] for installation guides.
-@@ -25 +29,3 @@
+     - __Web browser__
+     - __Terminal__
+@@ -23,5 +27,7 @@
+     - __[`kubectl`][kubectl]:__ CLI for Kubernetes.
+ {%- if cookiecutter.platform == 'onprem' %}  
 -    - __[AWS CLI][awscli]:__ CLI for AWS services.
 +    - __[AWS CLI][awscli]:__ CLI for AWS services, but we will 
 +      specifically be using it for interacting with the AI Singapore's 
 +      Elastic Cloud Storage (ECS) service through the S3 protocol.
-@@ -36 +42 @@
+         - You may choose to just use [`boto3`][boto3], the Python SDK 
+           for AWS instead, to interact with the ECS service within a 
+@@ -34,12 +40,12 @@
+       manager.
+ {%- if cookiecutter.orchestrator == 'runai' %}  
 -- Access to a project on a Run:ai cluster.  
 +- Access to a project on AI Singapore's Run:ai cluster.  
-@@ -41 +47 @@
+   See [here][runai-page] for more information.
+ {%- elif cookiecutter.orchestrator == 'noorch' %}  
+ {%- endif %}
+ {%- if cookiecutter.platform == 'onprem' %}  
 -- Credentials for an S3-compatible service (MinIO, etc).  
 +- Credentials for AI Singapore's Elastic Cloud Storage (ECS) service.  
-@@ -43 +49 @@
+   See [here][ecs-page] for more information.
 -- Credentials for a Docker registry.  
 +- Credentials for AI Singapore's Harbor registry.  
-@@ -50,0 +57,4 @@
+   See [here][harbor-page] for more information.
+ {%- elif cookiecutter.platform == 'gcp' %}
+@@ -49,4 +55,8 @@
+ - Credentials for an MLflow Tracking server.  
+   See [here][mlflow-page] for more information.
 +
 +!!! note
 +    If you do not have any of the required credentials, please verify 
 +    with or notify the MLOps team at `mlops@aisingapore.org`.
-@@ -80,0 +91 @@
+ 
+ !!! info
+@@ -79,4 +89,5 @@
+ [pshell]: https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.2
+ [winterm]: https://docs.microsoft.com/en-us/windows/terminal/
 +[nus-it]: https://nusit.nus.edu.sg/eguides/
+ [git]: https://git-scm.com/downloads
+ [rancher]: https://rancherdesktop.io

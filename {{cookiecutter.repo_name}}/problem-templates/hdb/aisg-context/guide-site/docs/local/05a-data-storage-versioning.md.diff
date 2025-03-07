@@ -1,9 +1,11 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/05a-data-storage-versioning.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/local/05a-data-storage-versioning.md
-@@ -3 +3 @@
+@@ -1,8 +1,12 @@
+ # Data Storage & Versioning
+ 
 -## Sample Data
 +## HDB Resale Price Data
-@@ -5,2 +5,6 @@
+ 
 -We can generate some sample data to use to test the different 
 -components of Kapitan Hull.
 +While you may have your own project data to work with, for the purpose
@@ -12,13 +14,20 @@
 +Coder workspace.
 +
 +[prob]: ../setting-up/02-preface.md#guides-problem-statement
-@@ -12,3 +16,2 @@
+ 
+ === "Linux/macOS"
+@@ -10,19 +14,16 @@
+     ```bash
+     mkdir -p ./data/raw && cd "$_"
 -    echo "Test1" > data1.txt
 -    echo "Test2" > data2.txt
 -    echo "Test3" > data3.txt
 +    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv
 +    cd ../..
-@@ -19,6 +22,4 @@
+     ```
+ 
+ === "Windows Powershell"
+ 
 -    ```powershell
 -    New-Item -ItemType Directory -Path .\data\raw -Force | Out-Null
 -    Set-Location -Path .\data\raw
@@ -29,6 +38,8 @@
 +    New-Item -ItemType Directory -Force -Path "data/raw" | Out-Null
 +    Set-Location -Path "data/raw"
 +    Invoke-WebRequest -Uri "https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv" -OutFile "ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv"
-@@ -28 +29 @@
+     ```
+ 
+ In the next section, we will work towards processing this set of raw
 -data and eventually 'training' a dummy model.
 +data and eventually training a resale price prediction model.

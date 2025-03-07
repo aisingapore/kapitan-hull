@@ -1,51 +1,102 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/07b-deployment.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/docker/07b-deployment.md
-@@ -83 +83 @@
+@@ -81,5 +81,5 @@
+     ```bash
+     sudo chown 2222:2222 ./models
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-@@ -89 +89 @@
+     docker run --rm \
+         -v ./models:/models \
+@@ -87,5 +87,5 @@
+         --network host \
+         {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
 -        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
 +        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
-@@ -95 +95 @@
+     ```
+ 
+@@ -93,5 +93,5 @@
+ 
+     ```bash
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-@@ -101 +101 @@
+     docker run --rm \
+         -v ./models:/models \
+@@ -99,5 +99,5 @@
+         --network host \
+         {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
 -        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
 +        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
-@@ -107 +107 @@
+     ```
+ 
+@@ -105,5 +105,5 @@
+ 
+     ```powershell
 -    $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
 +    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-@@ -113 +113 @@
+     docker run --rm `
+         -v .\models:/models `
+@@ -111,5 +111,5 @@
+         --network host `
+         {{cookiecutter.registry_project_path}}/cpu:0.1.0 `
 -        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
 +        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
-@@ -119,4 +119 @@
+     ```
+ 
+@@ -117,8 +117,5 @@
+ experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 
+ `models`. However, the specific subdirectory that is relevant for our 
 -modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
 -
 -Now, let's proceed and spin up an inference server using the package 
 -that exists within the repository.
 +modules to load will be `./models/<MLFLOW_RUN_UUID>/model/xgbreg.json`.
-@@ -148,0 +146 @@
+ 
+ [beginner tutorials]: https://fastapi.tiangolo.com/tutorial/
+@@ -147,4 +144,5 @@
+         -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
+         -w /home/aisg/{{cookiecutter.repo_name}}/src \
 +        -e PRED_MODEL_PATH="../models/$PRED_MODEL_UUID/model/xgbreg.json" \
-@@ -161,0 +160 @@
+         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+         gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+@@ -160,4 +158,5 @@
+         -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
+         -w /home/aisg/{{cookiecutter.repo_name}}/src \
 +        -e PRED_MODEL_PATH="../models/$PRED_MODEL_UUID/model/xgbreg.json" \
-@@ -182,0 +182 @@
+         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+         gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+@@ -181,4 +180,5 @@
+         -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
+         -w /home/aisg/{{cookiecutter.repo_name}}/src `
 +        -e PRED_MODEL_PATH="../models/$Env:PRED_MODEL_UUID/model/xgbreg.json" `
-@@ -203,2 +203,2 @@
+         {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
+         gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP `
+@@ -201,6 +201,6 @@
+         curlimages/curl -X POST \
+             localhost:8080/api/v1/model/predict \
 -            -H 'Content-Type: application/json' \
 -            -d '"string"'
 +            -H 'Content-Type: multipart/form-data' \
 +            -F "csv_file=@/path/to/csv/file"
-@@ -213,2 +213,2 @@
+     ```
+ 
+@@ -211,6 +211,6 @@
+         curlimages/curl -X POST \
+             localhost:8080/api/v1/model/predict \
 -            -H 'Content-Type: application/json' \
 -            -d '"string"'
 +            -H 'Content-Type: multipart/form-data' \
 +            -F "csv_file=@/path/to/csv/file"
-@@ -223,2 +223,2 @@
+     ```
+ 
+@@ -221,15 +221,11 @@
+         curlimages/curl -X POST `
+             localhost:8080/api/v1/model/predict `
 -            -H 'Content-Type: application/json' `
 -            -d '"string"'
 +            -H 'Content-Type: multipart/form-data' `
 +            -F "csv_file=@/path/to/csv/file"
-@@ -227,7 +227,3 @@
+     ```
+     
 -Output sample:
 -
 -```
@@ -56,12 +107,22 @@
 +Output sample: The output will be a CSV file with the original columns plus a predictions column.
 +
 +With the returned CSV file, we have successfully submitted a request
-@@ -248 +244,2 @@
+ to the FastAPI server and it returned predictions as part of the
+ response.
+@@ -246,5 +242,6 @@
+ `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
+ contains several fields: some are defined and some others not. The 
 -`MODEL_UUID` field inherits their values from the environment variables.
 +`PRED_MODEL_UUID` and `PRED_MODEL_PATH` fields inherit their values 
 +from the environment variables.
-@@ -259 +256,3 @@
+ 
+ `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
+@@ -257,5 +254,7 @@
+     LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"
+ 
 -    MODEL_UUID: str
 +    USE_CUDA: bool = False
 +    PRED_MODEL_UUID: str = "test"
 +    PRED_MODEL_PATH: str
+ ...
+ ```

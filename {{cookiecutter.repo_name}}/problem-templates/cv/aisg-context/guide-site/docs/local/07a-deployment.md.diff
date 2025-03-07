@@ -1,18 +1,33 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/07a-deployment.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/local/07a-deployment.md
-@@ -83,2 +83,2 @@
+@@ -81,14 +81,14 @@
+     ```bash
+     conda activate {{cookiecutter.repo_name}}
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 -    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
-+    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-+    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
-@@ -90,3 +90,3 @@
+-    ```
+-
+-=== "Windows PowerShell"
+-
+-    ```powershell
 -    conda activate {{cookiecutter.repo_name}}
 -    $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
 -    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
++    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
++    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
++    ```
++
++=== "Windows PowerShell"
++
++    ```powershell
 +    conda activate {{cookiecutter.repo_name}}
 +    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
 +    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
-@@ -98,4 +98,19 @@
+     ```
+ 
+@@ -96,8 +96,23 @@
+ experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 
+ `models`. However, the specific subdirectory that is relevant for our 
 -modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
 -
 -Now, let's proceed and spin up an inference server using the package 
@@ -36,24 +51,46 @@
 +will be used by the FastAPI server to load the model for prediction. We
 +will get back to this in a bit. For now, let's proceed and spin up an
 +inference server using the package that exists within the repository.
-@@ -149,2 +164,2 @@
+ 
+ [beginner tutorials]: https://fastapi.tiangolo.com/tutorial/
+@@ -147,6 +162,6 @@
+     curl -X POST \
+         localhost:8080/api/v1/model/predict \
 -        -H 'Content-Type: application/json' \
 -        -d '"string"'
 +        -H 'Content-Type: multipart/form-data' \
 +        -F "image_file=@/path/to/image/file"
-@@ -159 +174 @@
+     ```
+     
+@@ -157,5 +172,5 @@
+         'localhost:8080/api/v1/model/predict', `
+         '-H', 'Content-Type: multipart/form-data', `
 -        '-d', '"string"',
 +        '-F', '"image_file=@\path\to\image\file"',
-@@ -165 +180 @@
+     ```
+     
+@@ -163,5 +178,5 @@
+ 
+ ```
 -{"data":[{"input":"string"}]}
 +{"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
-@@ -183 +198,2 @@
+ ```
+ 
+@@ -181,5 +196,6 @@
+ `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
+ contains several fields: some are defined and some others not. The 
 -`MODEL_UUID` field inherits their values from the environment variables.
 +`PRED_MODEL_UUID` and `PRED_MODEL_PATH` fields inherit their values 
 +from the environment variables.
-@@ -194 +210,4 @@
+ 
+ `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
+@@ -192,5 +208,8 @@
+     LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"
+ 
 -    MODEL_UUID: str
 +    USE_CUDA: bool = False
 +    USE_MPS: bool = False
 +    PRED_MODEL_UUID: str
 +    PRED_MODEL_PATH: str
+ ...
+ ```

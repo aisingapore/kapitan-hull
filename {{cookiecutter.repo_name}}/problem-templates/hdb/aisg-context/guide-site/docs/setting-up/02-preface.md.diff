@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/setting-up/02-preface.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/setting-up/02-preface.md
-@@ -5,4 +5,4 @@
+@@ -3,8 +3,8 @@
+ ## Repository Setup
+ 
 -This repository intend to provide an end-to-end template for AI 
 -Singapore's AI engineers to onboard their AI projects. Instructions for 
 -generating this template is detailed in the [`cookiecutter`][ccutter] 
@@ -9,17 +11,26 @@
 +engineers to onboard their AI projects. Instructions for generating 
 +this template is detailed in the [`cookiecutter`][ccutter] template's 
 +repository's [`README.md`][readme].
-@@ -22 +22,4 @@
+ 
+ While this repository provides users with a set of boilerplates, here 
+@@ -20,5 +20,8 @@
+ 
+ Since we will be making use of this repository in multiple environments, 
 -__ensure that this repository is pushed to a remote__.  
 +__ensure that this repository is pushed to a remote__. Most probably you 
 +will be resorting to [AI Singapore's GitLab instance][aisg-gitlab] as
 +the remote. Refer to [this section][cr8-proj] on creating a blank remote 
 +_repository_ (or _project_ using GitLab's terminology).  
-@@ -35,0 +39,3 @@
+ After creating the remote repository, retrieve the remote URL and push
+ the local repository to remote:
+@@ -34,4 +37,46 @@
+ ```
+ 
 +Go to [this section][gitlab-page] for more information on interacting 
 +with the on-premise GitLab instance.
 +
-@@ -37,0 +44,39 @@
+ [ccutter]: https://github.com/cookiecutter/cookiecutter
+ [readme]: https://github.com/aisingapore/kapitan-hull/blob/main/README.md
 +[aisg-gitlab]: https://gitlab.aisingapore.net/
 +[cr8-proj]: https://docs.gitlab.com/ee/user/project/
 +[gitlab-page]: https://lighthouse.aisingapore.net/Platforms/InfraOps/Gitlab

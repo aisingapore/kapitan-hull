@@ -1,4 +1,6 @@
 --- {{cookiecutter.repo_name}}/docker/{{cookiecutter.repo_name}}-cpu.Dockerfile
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/docker/{{cookiecutter.repo_name}}-cpu.Dockerfile
-@@ -29,0 +30 @@
+@@ -28,2 +28,3 @@
+ # Install pip requirements
+ RUN pip install -r {{cookiecutter.repo_name}}/requirements.txt
 +RUN pip install -r {{cookiecutter.repo_name}}/pytorch-cpu-requirements.txt

@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/08c-batch-inferencing.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/runai/08c-batch-inferencing.md
-@@ -17,4 +17,5 @@
+@@ -15,8 +15,9 @@
+ 
+     ```bash
 -    mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/data/batch-infer && cd $_
 -    echo -n "Output1" > in1.txt
 -    echo -n "Output2" > in2.txt
@@ -10,20 +12,36 @@
 +    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip
 +    unzip batched-mnist-input-data.zip
 +    rm batched-mnist-input-data.zip
-@@ -32,3 +33,3 @@
+     ```
+ 
+@@ -30,7 +31,7 @@
+         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
 -        --command -- /bin/bash -c "echo -n 'Output1' > in1.txt && \
 -            echo -n 'Output2' > in2.txt && \
 -            echo -n 'Output3' > in3.txt"
 +        --command -- /bin/bash -c "wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip && \
 +            unzip batched-mnist-input-data.zip && \
 +            rm batched-mnist-input-data.zip"
-@@ -43,0 +45,2 @@
+     ```
+ 
+@@ -42,4 +43,6 @@
+     # Navigate back to root directory
+     cd "$(git rev-parse --show-toplevel)"
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_PATH="./models/$PRED_MODEL_UUID/artifacts/model/model.pt"
-@@ -59 +62 @@
+     conda activate {{cookiecutter.repo_name}}
+     python src/batch_infer.py
+@@ -57,5 +60,5 @@
+         --command -- python src/batch_infer.py \
+             output_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/batch_infer_res.jsonl \
 -            input_data_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/data/batch-infer
 +            input_data_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/data/batch-mnist-input-data
-@@ -68,3 +71,5 @@
+     ```
+ 
+@@ -66,7 +69,9 @@
+ ```jsonl
+ ...
 -{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in1.txt", "prediction": "Output1"}
 -{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in2.txt", "prediction": "Output2"}
 -{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in3.txt", "prediction": "Output3"}
@@ -32,3 +50,5 @@
 +{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
 +{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
 +{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
+ ...
+ ```

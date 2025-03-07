@@ -1,14 +1,22 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/mkdocs.yml
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/mkdocs.yml
-@@ -14 +14 @@
+@@ -12,5 +12,5 @@
+ 
+ # Copyright
 -copyright: ""
 +copyright: Copyright &copy; 2023-2024 - AI Singapore
-@@ -95 +95 @@
+ 
+ # Configuration
+@@ -93,9 +93,9 @@
+   social:
+     - icon: fontawesome/brands/twitter
 -      link: https://twitter.com/
 +      link: https://twitter.com/aisingapore
-@@ -97 +97 @@
+     - icon: fontawesome/brands/linkedin
 -      link: https://www.linkedin.com/
 +      link: https://www.linkedin.com/company/aisingapore
-@@ -99 +99 @@
+     - icon: fontawesome/brands/instagram
 -      link: https://www.instagram.com/
 +      link: https://www.instagram.com/ai_singapore/
+ 
+ # Extensions

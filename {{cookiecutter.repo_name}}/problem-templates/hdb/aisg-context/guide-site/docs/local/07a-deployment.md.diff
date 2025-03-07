@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/07a-deployment.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/local/07a-deployment.md
-@@ -83,10 +83,10 @@
+@@ -81,14 +81,14 @@
+     ```bash
+     conda activate {{cookiecutter.repo_name}}
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 -    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
 -    ```
@@ -21,7 +23,11 @@
 +    conda activate {{cookiecutter.repo_name}}
 +    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
 +    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
-@@ -98,4 +98,20 @@
+     ```
+ 
+@@ -96,8 +96,24 @@
+ experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 
+ `models`. However, the specific subdirectory that is relevant for our 
 -modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
 -
 -Now, let's proceed and spin up an inference server using the package 
@@ -46,27 +52,46 @@
 +will be used by the FastAPI server to load the model for prediction. We
 +will get back to this in a bit. For now, let's proceed and spin up an
 +inference server using the package that exists within the repository.
-@@ -149,2 +165,2 @@
+ 
+ [beginner tutorials]: https://fastapi.tiangolo.com/tutorial/
+@@ -147,6 +163,6 @@
+     curl -X POST \
+         localhost:8080/api/v1/model/predict \
 -        -H 'Content-Type: application/json' \
 -        -d '"string"'
 +        -H 'Content-Type: multipart/form-data' \
 +        -F "csv_file=@/path/to/csv/file"
-@@ -159 +175 @@
+     ```
+     
+@@ -157,12 +173,8 @@
+         'localhost:8080/api/v1/model/predict', `
+         '-H', 'Content-Type: multipart/form-data', `
 -        '-d', '"string"',
 +        '-F', "csv_file=@/path/to/csv/file"
-@@ -162,5 +178 @@
+     ```
+     
 -Output sample:
 -
 -```
 -{"data":[{"input":"string"}]}
 -```
 +Output sample: The output will be a CSV file with the original columns plus a predictions column.
-@@ -183 +195,2 @@
+ 
+ With the returned JSON object, we have successfully submitted a request
+@@ -181,5 +193,6 @@
+ `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
+ contains several fields: some are defined and some others not. The 
 -`MODEL_UUID` field inherits their values from the environment variables.
 +`PRED_MODEL_UUID` and `PRED_MODEL_PATH` fields inherit their values 
 +from the environment variables.
-@@ -194 +207,3 @@
+ 
+ `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
+@@ -192,5 +205,7 @@
+     LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"
+ 
 -    MODEL_UUID: str
 +    USE_CUDA: bool = False
 +    PRED_MODEL_UUID: str = "test"
 +    PRED_MODEL_PATH: str
+ ...
+ ```

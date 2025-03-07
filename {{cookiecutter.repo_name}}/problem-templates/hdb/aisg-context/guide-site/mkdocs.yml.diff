@@ -1,20 +1,40 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/mkdocs.yml
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/mkdocs.yml
-@@ -14 +14 @@
+@@ -12,5 +12,5 @@
+ 
+ # Copyright
 -copyright: ""
 +copyright: Copyright &copy; 2023-2024 - AI Singapore
-@@ -62 +61,0 @@
+ 
+ # Configuration
+@@ -60,5 +60,4 @@
+     - Job Orchestration: local/06a-job-orchestration.md
+     - Deployment: local/07a-deployment.md
 -    - Batch Inferencing: local/08a-batch-inferencing.md
-@@ -69 +67,0 @@
+   - Using Docker:
+     - Developer Workspace: docker/03b-dev-wksp.md
+@@ -67,5 +66,4 @@
+     - Job Orchestration: docker/06b-job-orchestration.md
+     - Deployment: docker/07b-deployment.md
 -    - Batch Inferencing: docker/08b-batch-inferencing.md
-@@ -76 +73,0 @@
+   - Using Run:ai:
+     - Developer Workspace: runai/03c-dev-wksp.md
+@@ -74,5 +72,4 @@
+     - Job Orchestration: runai/06c-job-orchestration.md
+     - Deployment: runai/07c-deployment.md
 -    - Batch Inferencing: runai/08c-batch-inferencing.md
-@@ -95 +92 @@
+   - Sorting Out the Rest:
+     - CI/CD: appendix/09-cicd.md
+@@ -93,9 +90,9 @@
+   social:
+     - icon: fontawesome/brands/twitter
 -      link: https://twitter.com/
 +      link: https://twitter.com/aisingapore
-@@ -97 +94 @@
+     - icon: fontawesome/brands/linkedin
 -      link: https://www.linkedin.com/
 +      link: https://www.linkedin.com/company/aisingapore
-@@ -99 +96 @@
+     - icon: fontawesome/brands/instagram
 -      link: https://www.instagram.com/
 +      link: https://www.instagram.com/ai_singapore/
+ 
+ # Extensions

@@ -1,12 +1,14 @@
 --- {{cookiecutter.repo_name}}/conf/batch_infer.yaml
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/conf/batch_infer.yaml
-@@ -1,2 +1,2 @@
+@@ -1,6 +1,8 @@
 -# model_path: "./models/model.pt"
 -input_data_dir: "./data/batch-infer"
 +model_path: "./models/model.pt"
 +input_data_dir: "./data/batch-mnist-input-data"
-@@ -4 +4,3 @@
+ output_path: "batch_infer_res.jsonl"
 -file_check_glob: "*.txt"
 +file_check_glob: "*.png"
 +use_cuda: false
 +use_mps: false
+ 
+ hydra:

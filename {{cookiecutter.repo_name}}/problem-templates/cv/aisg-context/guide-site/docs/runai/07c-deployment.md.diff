@@ -1,18 +1,34 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/07c-deployment.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/runai/07c-deployment.md
-@@ -92 +92 @@
+@@ -90,9 +90,9 @@
+     ```bash
+     conda activate {{cookiecutter.repo_name}}
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-@@ -96 +96 @@
+     export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
+     export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME> # If applicable
+     export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD> # If applicable
 -    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
 +    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
-@@ -102 +102 @@
+     ```
+ 
+@@ -100,5 +100,5 @@
+ 
+     ```bash
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-@@ -112 +112 @@
+     runai submit \
+         --job-name-prefix <YOUR_HYPHENATED_NAME>-download-artifacts \
+@@ -110,5 +110,5 @@
+         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
+         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
 -        --command -- python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
 +        --command -- python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
-@@ -118,4 +118,7 @@
+     ```
+ 
+@@ -116,8 +116,11 @@
+ experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 
+ `models`. However, the specific subdirectory that is relevant for our 
 -modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
 -
 -Now, let's proceed and spin up an inference server using the package 
@@ -24,30 +40,60 @@
 +for prediction. We will get back to this in a bit. For now, let's 
 +proceed and spin up an inference server using the package that exists 
 +within the repository.
-@@ -134 +137,2 @@
+ 
+ [beginner tutorials]: https://fastapi.tiangolo.com/tutorial/
+@@ -132,5 +135,6 @@
+     # Running in a working `{{cookiecutter.repo_name}}` repository
+     conda activate {{cookiecutter.repo_name}}
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_PATH="<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPENATED_NAME>/models/$PRED_MODEL_UUID/model/model.pt"
-@@ -148 +152 @@
+     gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+         -k uvicorn.workers.UvicornWorker \
+@@ -146,5 +150,5 @@
+ 
+     ```bash
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-@@ -154,0 +159 @@
+     runai submit \
+         --job-name-prefix <YOUR_HYPHENATED_NAME>-inference \
+@@ -153,4 +157,5 @@
+         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
 +        -e PRED_MODEL_PATH=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPENATED_NAME>/models/$PRED_MODEL_UUID/model/model.pt \
-@@ -173,2 +178,2 @@
+         --service-type external-url,port=8080:8080 \
+         --command -- gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+@@ -171,6 +176,6 @@
+     curl -X POST \
+         localhost:8080/api/v1/model/predict \
 -        -H 'Content-Type: application/json' \
 -        -d '"string"'
 +        -H 'Content-Type: multipart/form-data' \
 +        -F "image_file=@/path/to/image/file"
-@@ -180 +185 @@
+     ```
+   
+@@ -178,5 +183,5 @@
+ 
+ ```
 -{"data":[{"input":"string"}]}
 +{"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
-@@ -198 +203,2 @@
+ ```
+ 
+@@ -196,5 +201,6 @@
+ `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
+ contains several fields: some are defined and some others not. The 
 -`MODEL_UUID` field inherits their values from the environment variables.
 +`PRED_MODEL_UUID` and `PRED_MODEL_PATH` fields inherit their values 
 +from the environment variables.
-@@ -209 +215,4 @@
+ 
+ `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
+@@ -207,5 +213,8 @@
+     LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"
+ 
 -    MODEL_UUID: str
 +    USE_CUDA: bool = False
 +    USE_MPS: bool = False
 +    PRED_MODEL_UUID: str
 +    PRED_MODEL_PATH: str
+ ...
+ ```

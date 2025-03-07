@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/appendix/09-cicd.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/appendix/09-cicd.md
-@@ -47,3 +47,5 @@
+@@ -45,7 +45,9 @@
+   GitHub flow _(other workflows might not heed such practices)_.
+ 
 -As we move along, we should be able to relate parts of the flow
 -described above with the stages defined by the default GitLab CI
 -pipeline.
@@ -9,27 +11,39 @@
 +
 +[lighthouse]: https://lighthouse.aisingapore.net/tools-and-tech/Gitlab-CICD
 +
-@@ -66 +68,4 @@
+ 
+ ## Environment Variables
+@@ -64,5 +66,8 @@
+   encoded credentials for a service account on your GCP project. This 
+   is to allow the pipeline to interact with the Google Artifact 
 -  Registry. See [here][gcp-sa] on how to generate this file.
 +  Registry. See [here][gcp-sa] on how to generate this file.  
 +  After you've generated the JSON file, please encode the file content 
 +  using `base64 -i <file>`. Afterwhich, copy paste the encoded value 
 +  and define it as a CI/CD variable. 
-@@ -72,2 +77,2 @@
+ {%- endif %}
+ 
+@@ -70,9 +75,9 @@
+ listed [here][cicd-var]. 
+ {%- if cookiecutter.platform == 'onprem' %}
 -The environment variable `HARBOR_ROBOT_CREDS_JSON` needs to be a `File` 
 -type.
 +The environment variable `HARBOR_ROBOT_CREDS_JSON` needs to be a
 +`variable` type.
-@@ -75,2 +80,2 @@
+ {%- elif cookiecutter.platform == 'gcp' %}
 -The environment variable `GCP_SERVICE_ACCOUNT_KEY` needs to be a `File`
 -type.
 +The environment variable `GCP_SERVICE_ACCOUNT_KEY` needs to be a 
 +`variable` type.
-@@ -130 +135,2 @@
+ {%- endif %}
+ 
+@@ -128,370 +133,8 @@
+ {%- endif %}
+ 
 -## Stages & Jobs
 +After defining the CI/CD Variables for the project, your pipeline 
 +should be able to pass. If not, re-run the pipeline. 
-@@ -132,364 +138 @@
+ 
 -In the default pipeline, we have 3 stages defined:
 -
 -- `test`: For every push to certain branches, the source code residing
@@ -395,7 +409,11 @@
 -
 -## Conclusion
 +## Moving Forward
-@@ -508 +151,8 @@
+ 
+ The stages and jobs defined in this default pipeline is rudimentary at
+@@ -506,3 +149,10 @@
+ 
+ There's much more that can be done but whatever has been shared thus 
 -far is hopefully enough for one to get started with CI/CD.
 +far is hopefully enough for one to get started with CI/CD. 
 +

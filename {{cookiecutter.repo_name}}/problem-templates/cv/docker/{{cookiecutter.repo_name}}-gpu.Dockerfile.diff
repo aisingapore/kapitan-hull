@@ -1,6 +1,13 @@
 --- {{cookiecutter.repo_name}}/docker/{{cookiecutter.repo_name}}-gpu.Dockerfile
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/docker/{{cookiecutter.repo_name}}-gpu.Dockerfile
-@@ -37,0 +38 @@
+@@ -36,4 +36,5 @@
+ # Install pip requirements
+ RUN pip install -r {{cookiecutter.repo_name}}/requirements.txt
 +RUN pip install -r {{cookiecutter.repo_name}}/pytorch-gpu-requirements.txt
-@@ -42,0 +44 @@
+ 
+ # Use this if deployed outside Run:ai
+@@ -41,3 +42,4 @@
+ #RUN micromamba install python=3.12.4 -c defaults -n base -y
+ #RUN micromamba run -n base pip install -r {{cookiecutter.repo_name}}/requirements.txt
 +#RUN micromamba run -n base pip install -r {{cookiecutter.repo_name}}/pytorch-gpu-requirements.txt
+ #RUN echo 'alias python="micromamba run -n base python"' >> "${HOME_DIR}/.bashrc"

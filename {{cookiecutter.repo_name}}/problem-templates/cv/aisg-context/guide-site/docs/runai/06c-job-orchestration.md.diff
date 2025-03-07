@@ -1,24 +1,49 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/06c-job-orchestration.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/runai/06c-job-orchestration.md
-@@ -47,2 +47,2 @@
+@@ -45,6 +45,6 @@
+ 
+ ```yaml
 -raw_data_dir_path: "./data/raw"
 -processed_data_dir_path: "./data/processed"
 +raw_data_dir_path: "./data/mnist-pngs-data-aisg"
 +processed_data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
-@@ -104,2 +104,2 @@
+ ```
+ 
+@@ -92,5 +92,5 @@
+ 
+     ```bash
+-    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
++    # Run `runai login` and `runai config project aisg` first if needed
+     # Run this in the base of your project repository, and change accordingly
+     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
+@@ -102,6 +102,6 @@
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+         --command -- /bin/bash -c "python -u src/process_data.py \
 -            raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw \
 -            processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed"
 +            raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg \
 +            processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"
-@@ -111 +111 @@
+     ```
+ 
+@@ -109,5 +109,5 @@
+ proceed with training the predictive model.
+ The processed data is exported to the directory
 -`/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed`.
 +`/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed`.
-@@ -141,0 +142,4 @@
+ We will be passing this path to the model training workflows.
+ 
+@@ -140,4 +140,8 @@
+     buckets, assuming the client is authorised for access to {{objstg}}.
+ 
 +    !!! note
 +        The username and password for the MLflow Tracking server
 +        can be retrieved from the MLOps team or your team lead.
 +
-@@ -163,3 +167,13 @@
+     To log and upload artifacts to {{objstg}} buckets through MLFlow, 
+     you need to ensure that the client has access to the credentials of
+@@ -161,7 +165,17 @@
+ mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
+ mlflow_run_name: "train-model"
 -data_dir_path: "./data/processed"
 -dummy_param1: 1.3
 -dummy_param2: 0.8
@@ -35,7 +60,18 @@
 +dry_run: false
 +model_checkpoint_interval: 2
 +model_checkpoint_dir_path: "./models/checkpoint"
-@@ -229,3 +243,6 @@
+ ```
+ 
+@@ -214,5 +228,5 @@
+ 
+     ```bash
+-    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
++    # Run `runai login` and `runai config project aisg` first if needed
+     # Run this in the base of your project repository, and change accordingly
+     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
+@@ -227,7 +241,10 @@
+         -e OMP_NUM_THREADS=2 \
+         --command -- /bin/bash -c "python -u src/train_model.py \
 -            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
 -            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
 -            mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"
@@ -45,17 +81,36 @@
 +            mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
 +            model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models \
 +            epochs=3"
-@@ -304,2 +321,2 @@
+     ```
+ 
+@@ -302,6 +319,6 @@
+     n_jobs: 1
+     params:
 -      dummy_param1: range(0.9,1.7,step=0.1)
 -      dummy_param2: choice(0.7,0.8,0.9)
 +      lr: range(0.9,1.7,step=0.1)
 +      gamma: choice(0.7,0.8,0.9)
-@@ -332 +349 @@
+ ```
+ 
+@@ -330,5 +347,5 @@
+ ```python
+ ...
 -    return args["dummy_param1"], args["dummy_param2"]
 +    return curr_test_loss, curr_test_accuracy
-@@ -376,0 +394 @@
+ ...
+ ```
+@@ -363,5 +380,5 @@
+ 
+     ```bash
+-    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
++    # Run `runai login` and `runai config project aisg` first if needed
+     # Run this in the base of your project repository, and change accordingly
+     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
+@@ -375,8 +392,12 @@
+         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
+         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
 +        -e OMP_NUM_THREADS=2 \
-@@ -378,3 +396,6 @@
+         --command -- /bin/bash -c "python -u src/train_model.py --multirun \
 -            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
 -            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
 -            mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"
@@ -65,3 +120,5 @@
 +            mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
 +            model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models \
 +            epochs=3"
+     ```
+ 

@@ -1,16 +1,17 @@
 --- {{cookiecutter.repo_name}}/src/{{cookiecutter.src_package_name}}/data_prep/datasets.py
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/src/{{cookiecutter.src_package_name}}/data_prep/datasets.py
-@@ -1,2 +1 @@
+@@ -1,13 +1,14 @@
 -"""Dataset classes for defining how datasets are to be loaded.
 -"""
 +"""Dataset classes for defining how datasets are to be loaded."""
-@@ -3,0 +3 @@
+ 
 +import glob
-@@ -5 +5,2 @@
+ import os
 -import shutil
 +
 +import pandas as pd
-@@ -8,4 +9,4 @@
+ 
+ 
 -class DummyDataset():
 -    """Dummy dataset class."""
 -    
@@ -19,7 +20,11 @@
 +    """HDB Dataset class."""
 +
 +    def __init__(self, data_dir_path: str) -> None:
-@@ -17,6 +18,18 @@
+         if not os.path.isdir(data_dir_path):
+             e = "Path is not a directory, or does not exist: {}".format(data_dir_path)
+@@ -15,8 +16,20 @@
+         self.data_dir_path = data_dir_path
+ 
 -    def save_data(self, processed_data_dir_path) -> None:
 -        shutil.copytree(
 -            self.data_dir_path,

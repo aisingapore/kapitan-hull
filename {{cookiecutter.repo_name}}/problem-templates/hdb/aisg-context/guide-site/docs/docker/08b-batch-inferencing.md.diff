@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/08b-batch-inferencing.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/docker/08b-batch-inferencing.md
-@@ -3,98 +3 @@
+@@ -1,100 +1,3 @@
+ # Batch Inferencing
+ 
 -Some problem statements do not warrant the deployment of an API server
 -but instead methods for conducting batched inferencing where a batch
 -of data is provided to a script and it is able to churn out a set of

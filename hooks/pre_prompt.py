@@ -26,10 +26,6 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
                 modified_lines.append(original_lines[line_index])
                 line_index += 1
 
-            if hunk.removed == 0:
-                modified_lines.append(original_lines[line_index])
-                line_index += 1
-
             for line in hunk:
                 if line.is_removed or line.is_context:
                     # Skip original lines (those that are removed)

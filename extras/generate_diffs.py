@@ -22,7 +22,7 @@ def create_patch(alt_path: str, base_path: str) -> None:
 
         # Use difflib to create a unified diff
         diff = difflib.unified_diff(
-            base_lines, alt_lines, fromfile=base_path, tofile=alt_path, n=0
+            base_lines, alt_lines, fromfile=base_path, tofile=alt_path, n=2
         )
 
         # Create diff file path

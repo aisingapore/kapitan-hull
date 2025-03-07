@@ -1,21 +1,36 @@
 --- {{cookiecutter.repo_name}}/src/train_model.py
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/src/train_model.py
-@@ -2 +2 @@
+@@ -1,4 +1,4 @@
+ """
 -This script is for training a dummy model on a dummy dataset.
 +This script is for training a model on the MNIST dataset.
-@@ -8,0 +9 @@
+ """
+ import os
+@@ -7,4 +7,5 @@
+ import hydra
+ import mlflow
 +import torch
-@@ -16 +17 @@
+ 
+ import {{cookiecutter.src_package_name}} as {{cookiecutter.src_package_name_short}}
+@@ -14,5 +15,5 @@
+ @hydra.main(version_base=None, config_path="../conf", config_name="train_model.yaml")
+ def main(args):
 -    """This is the main function for 'training' the model.
 +    """This is the main function for training the model.
-@@ -39,2 +40,4 @@
+ 
+     Parameters
+@@ -37,10 +38,75 @@
+         "log_params",
+         params={
 -            "dummy_param1": args["dummy_param1"],
 -            "dummy_param2": args["dummy_param2"],
 +            "learning_rate": args["lr"],
 +            "gamma": args["gamma"],
 +            "seed": args["seed"],
 +            "epochs": args["epochs"],
-@@ -44 +47,64 @@
+         },
+     )
+ 
 -    model = {{cookiecutter.src_package_name_short}}.modeling.models.DummyModel()
 +    torch.manual_seed(args["seed"])
 +
@@ -81,7 +96,11 @@
 +            )
 +
 +        scheduler.step()
-@@ -51,13 +116,0 @@
+ 
+     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
+@@ -49,17 +115,4 @@
+         dictionary=omegaconf.OmegaConf.to_container(args, resolve=True),
+         artifact_file="train_model_config.json",
 -    )
 -
 -    os.makedirs(args["artifact_dir_path"], exist_ok=True)
@@ -95,6 +114,12 @@
 -        "log_artifact",
 -        local_path=artifact_path,
 -        artifact_path="outputs"
-@@ -81 +134 @@
+     )
+ 
+@@ -79,5 +132,5 @@
+ 
+     # Outputs for conf/train_model.yaml for hydra.sweeper.direction
 -    return args["dummy_param1"], args["dummy_param2"]
 +    return curr_test_loss, curr_test_accuracy
+ 
+ 

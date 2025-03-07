@@ -1,23 +1,29 @@
 --- {{cookiecutter.repo_name}}/.gitlab-ci.yml
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/.gitlab-ci.yml
-@@ -3,3 +2,0 @@
+@@ -1,9 +1,5 @@
+ default:
+   tags:
 -{%- if cookiecutter.platform == 'onprem' %}
 -    - on-prem
 -{%- elif cookiecutter.platform == 'gcp' %}
-@@ -7 +3,0 @@
+     - gcp
 -{%- endif %}
-@@ -13 +9 @@
+   cache:
+     key: $CI_COMMIT_REF_SLUG
+@@ -11,79 +7,119 @@
+       - ./conda
+   image:
 -    name: continuumio/miniconda3:24.7.1-0
 +    name: ${PYTHON_IMAGE}
-@@ -15 +11,2 @@
+ 
 -stages:
 +stages: 
 +  - build
-@@ -16,0 +14 @@
+   - test
 +  - deploy
-@@ -18 +15,0 @@
+   - deploy-docs
 -  - build
-@@ -20,2 +17,66 @@
+ 
 -test:conda-build:
 -  stage: test
 +variables:
@@ -86,14 +92,14 @@
 +      destination: {{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA} 
 +
 +build:
-@@ -23 +84 @@
+   script:
 -    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p ./conda/{{cookiecutter.repo_name}} -y
 +    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p $VENV_DIRECTORY -y
-@@ -25,3 +85,0 @@
+   rules:
 -    - if: $CI_MERGE_REQUEST_IID
 -      changes:
 -        - {{cookiecutter.repo_name}}-conda-env.yaml
-@@ -29,9 +86,0 @@
+     - if: $CI_PIPELINE_SOURCE == "push"
 -      changes:
 -        - {{cookiecutter.repo_name}}-conda-env.yaml
 -    - if: $CI_PIPELINE_SOURCE == "web"
@@ -103,7 +109,7 @@
 -    - if: $CI_COMMIT_TAG
 -      when: never
 -  needs: []
-@@ -39,7 +88 @@
+ 
 -test:pylint:
 -  stage: test
 -  before_script:
@@ -112,31 +118,32 @@
 -  script:
 -    - pylint src --fail-under=7.0 --ignore=tests --disable=W1202
 +test:lint:
-@@ -47,4 +89,0 @@
+   rules:
 -    - if: $CI_MERGE_REQUEST_IID
 -      changes:
 -        - src/**/*
 -        - conf/**/*
-@@ -52,6 +90,0 @@
+     - if: $CI_PIPELINE_SOURCE == "push"
 -    - if: $CI_PIPELINE_SOURCE == "web"
 -    - if: $CI_COMMIT_TAG
 -      when: never
 -  needs:
 -    - job: test:conda-build
 -      optional: true
-@@ -60,6 +92,0 @@
+ 
+ test:pytest:
 -  stage: test
 -  before_script: 
 -    - source activate ./conda/{{cookiecutter.repo_name}}
 -    - pip install -r dev-requirements.txt
 -  script:
 -    - pytest src/tests --junitxml=./rspec.xml
-@@ -67,4 +93,0 @@
+   rules:
 -    - if: $CI_MERGE_REQUEST_IID
 -      changes:
 -        - src/**/*
 -        - conf/**/*
-@@ -72,8 +95,9 @@
+     - if: $CI_PIPELINE_SOURCE == "push"
 -    - if: $CI_PIPELINE_SOURCE == "web"
 -    - if: $CI_COMMIT_TAG
 -      when: never
@@ -154,7 +161,7 @@
 +build:cpu-push:
 +  rules:
 +    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-@@ -81,2 +105,14 @@
+   needs:
 -    - job: test:conda-build
 -      optional: true
 +    - job: build:cpu-build
@@ -171,13 +178,20 @@
 +    - job: build:gpu-build
 +      artifacts: true
 +
-@@ -87 +123 @@
+ 
+ pages:
+   stage: deploy-docs
+   before_script:
 -    - source activate ./conda/{{cookiecutter.repo_name}}
 +    - source activate $VENV_DIRECTORY
-@@ -104 +140 @@
+     - pip install -r docs-requirements.txt
+     - pip install -r aisg-context/guide-site/mkdocs-requirements.txt
+@@ -102,123 +138,4 @@
+         - aisg-context/guide-site/**/*
+   needs:
 -    - job: test:conda-build
 +    - job: build
-@@ -106,119 +141,0 @@
+       optional: true
 -
 -build:cpu-image:
 -  stage: build

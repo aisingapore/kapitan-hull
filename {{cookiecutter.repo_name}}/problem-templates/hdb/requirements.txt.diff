@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/requirements.txt
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/requirements.txt
-@@ -13,0 +14,6 @@
+@@ -12,2 +12,8 @@
+ pydantic-settings==2.4.0
+ ipykernel==6.29.5
 +## These are packages used for this problem template, change accordingly to your needs
 +scikit-learn==1.3.2
 +category_encoders==2.6.2
