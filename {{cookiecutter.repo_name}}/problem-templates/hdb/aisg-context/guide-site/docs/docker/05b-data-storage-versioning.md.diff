@@ -3,7 +3,7 @@
 @@ -3 +3 @@
 -## Sample Data
 +## HDB Resale Price Data
-@@ -5,2 +5,6 @@
+@@ -5,2 +5,12 @@
 -We can generate some sample data to use to test the different 
 -components of Kapitan Hull.
 +While you may have your own project data to work with, for the purpose
@@ -12,13 +12,12 @@
 +Coder workspace.
 +
 +[prob]: ../setting-up/02-preface.md#guides-problem-statement
-@@ -6,0 +10,6 @@
++
 +!!! info "Volume Mounts"
 +
 +    We will be mounting the entire repository as a volume in the docker 
 +    container. Hence the following commands can be executed locally in your 
 +    repository to download the data and it will mounted into the container.
-+
 @@ -12,3 +22,2 @@
 -    echo "Test1" > data1.txt
 -    echo "Test2" > data2.txt

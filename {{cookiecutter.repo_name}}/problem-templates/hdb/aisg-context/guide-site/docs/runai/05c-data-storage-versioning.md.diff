@@ -9,15 +9,13 @@
 +our Coder workspace.
 +
 +[prob]: ../setting-up/02-preface.md#guides-problem-statement
-@@ -11,4 +15,3 @@
--    mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw && cd "$_"
+@@ -12,3 +16,2 @@
 -    echo "Test1" > data1.txt
 -    echo "Test2" > data2.txt
 -    echo "Test3" > data3.txt
-+    mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw && cd "$_"
 +    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/ResaleflatpricesbasedonregistrationdatefromJan2017onwards.csv
 +    cd ../..
-@@ -16,0 +18,7 @@
+@@ -16,0 +20,7 @@
 +!!! info
 +    The sample data for this guide's problem statement is made
 +    accessible to the public. Hence any team or individual can download
@@ -25,6 +23,6 @@
 +    accessible and neither should it be, especially if it is a 100E
 +    project.
 +
-@@ -18 +27 @@
+@@ -18 +28 @@
 -data and eventually 'training' a dummy model.
 +data and eventually training a resale price prediction model.

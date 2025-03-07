@@ -1,23 +1,14 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/07a-deployment.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/local/07a-deployment.md
-@@ -83,10 +83,10 @@
+@@ -83,2 +83,2 @@
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
--    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
--    ```
--
--=== "Windows Powershell"
--
--    ```powershell
--    conda activate {{cookiecutter.repo_name}}
--    $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
 -    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
 +    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
-+    ```
-+
-+=== "Windows PowerShell"
-+
-+    ```powershell
+@@ -90,3 +90,3 @@
+-    conda activate {{cookiecutter.repo_name}}
+-    $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
+-    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
 +    conda activate {{cookiecutter.repo_name}}
 +    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
 +    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"

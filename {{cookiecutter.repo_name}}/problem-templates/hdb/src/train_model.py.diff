@@ -16,13 +16,13 @@
 +    if use_cuda := args["use_cuda"]:
 +       params["device"] = cuda
 +       params["tree_method"] = "hist"     
-@@ -38,4 +47 @@
+@@ -38,4 +50 @@
 -        params={
 -            "dummy_param1": args["dummy_param1"],
 -            "dummy_param2": args["dummy_param2"],
 -        },
 +        params=params,
-@@ -44,2 +50,6 @@
+@@ -44,2 +53,6 @@
 -    model = {{cookiecutter.src_package_name_short}}.modeling.models.DummyModel()
 -
 +    model = {{cookiecutter.src_package_name_short}}.modeling.models.Model()
@@ -31,17 +31,17 @@
 +    # train_score = model.train(params, X_train, y_train, mlflow_init_status)
 +    # test_rmse = model.evaluate()
 +    
-@@ -55 +65 @@
+@@ -55 +68 @@
 -        args["artifact_dir_path"], "output.txt"
 +        args["artifact_dir_path"], "xgbreg.json"
-@@ -56,0 +67,3 @@
+@@ -56,0 +70,3 @@
 +    
 +    # model.save_model(os.path.join(args["artifact_dir_path"], "xgbreg.json"))
 +    
-@@ -63 +76 @@
+@@ -63 +79 @@
 -        artifact_path="outputs"
 +        artifact_path="model"
-@@ -80,2 +93,4 @@
+@@ -80,2 +96,4 @@
 -    # Outputs for conf/train_model.yaml for hydra.sweeper.direction
 -    return args["dummy_param1"], args["dummy_param2"]
 +    ## Uncomment return line
