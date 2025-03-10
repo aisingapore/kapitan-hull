@@ -1,12 +1,14 @@
 --- {{cookiecutter.repo_name}}/docker/{{cookiecutter.repo_name}}-gpu.Dockerfile
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/docker/{{cookiecutter.repo_name}}-gpu.Dockerfile
-@@ -36,4 +36,5 @@
+@@ -34,10 +34,12 @@
+ COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} ${REPO_DIR} {{cookiecutter.repo_name}}
+ 
  # Install pip requirements
  RUN pip install -r {{cookiecutter.repo_name}}/requirements.txt
 +RUN pip install -r {{cookiecutter.repo_name}}/pytorch-gpu-requirements.txt
  
  # Use this if deployed outside Run:ai
-@@ -41,3 +42,4 @@
+ #RUN micromamba shell init -s bash -r ${HOME_DIR}/micromamba
  #RUN micromamba install python=3.12.4 -c defaults -n base -y
  #RUN micromamba run -n base pip install -r {{cookiecutter.repo_name}}/requirements.txt
 +#RUN micromamba run -n base pip install -r {{cookiecutter.repo_name}}/pytorch-gpu-requirements.txt

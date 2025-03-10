@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/setting-up/01-prerequisites.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/setting-up/01-prerequisites.md
-@@ -6,8 +6,12 @@
+@@ -4,12 +4,16 @@
+ 
+ Aside from an internet connection, you would need the following to
  follow through with the guide:
  
 +- NUS Staff/Student account.
@@ -13,7 +15,11 @@
 +        - Refer to [NUS IT eGuides][nus-it] for installation guides.
      - __Web browser__
      - __Terminal__
-@@ -23,5 +27,7 @@
+     - __[Git][git]__
+     - __[Rancher Desktop][rancher]__ or __[Docker Engine][docker]:__
+@@ -21,9 +25,11 @@
+           through [Rancher Desktop][rancher].
+     - __[miniconda][mcond]:__ for Python virtual environment management.
      - __[`kubectl`][kubectl]:__ CLI for Kubernetes.
  {%- if cookiecutter.platform == 'onprem' %}  
 -    - __[AWS CLI][awscli]:__ CLI for AWS services.
@@ -22,7 +28,11 @@
 +      Elastic Cloud Storage (ECS) service through the S3 protocol.
          - You may choose to just use [`boto3`][boto3], the Python SDK 
            for AWS instead, to interact with the ECS service within a 
-@@ -34,12 +40,12 @@
+           Python environment. However, this does not fall under the 
+           scope of this guide.
+@@ -32,23 +38,27 @@
+ {%- endif %}
+     - *(Optional)* __[`helm`][helm]:__ CLI for Kubernetes' package 
        manager.
  {%- if cookiecutter.orchestrator == 'runai' %}  
 -- Access to a project on a Run:ai cluster.  
@@ -38,7 +48,9 @@
 +- Credentials for AI Singapore's Harbor registry. 
    See [here][harbor-page] for more information.
  {%- elif cookiecutter.platform == 'gcp' %}
-@@ -49,4 +55,8 @@
+ - Access to a project on [Google Cloud Platform][gcp].  
+   See [here][gcp-page] for more information.
+ {%- endif %}
  - Credentials for an MLflow Tracking server.  
    See [here][mlflow-page] for more information.
 +
@@ -47,9 +59,15 @@
 +    with or notify the MLOps team at `mlops@aisingapore.org`.
  
  !!! info
-@@ -79,4 +89,5 @@
+     Wherever relevant, you can toggle between the different commands
+     that need to be executed for either Linux/macOS or the Windows 
+@@ -77,8 +87,9 @@
+         VSCode.
+ 
  [pshell]: https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.2
  [winterm]: https://docs.microsoft.com/en-us/windows/terminal/
 +[nus-it]: https://nusit.nus.edu.sg/eguides/
  [git]: https://git-scm.com/downloads
  [rancher]: https://rancherdesktop.io
+ [docker]: https://docs.docker.com/engine/install
+ [mcond]: https://conda.io/projects/conda/en/latest/user-guide/install/index.html

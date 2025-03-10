@@ -1,13 +1,17 @@
 --- {{cookiecutter.repo_name}}/src/train_model.py
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/src/train_model.py
-@@ -1,4 +1,5 @@
+@@ -1,6 +1,7 @@
  """
 -This script is for training a dummy model on a dummy dataset.
 +This script is for training a XGBRegressor model on the HDB dataset. Note that
 +the script is incomplete and requires you to modify it accordingly to your solution.
  """
  import os
-@@ -33,15 +34,27 @@
+ import logging
+ import omegaconf
+@@ -31,19 +32,31 @@
+ 
+     mlflow_init_status, mlflow_run = {{cookiecutter.src_package_name_short}}.general_utils.mlflow_init(
          args, setup_mlflow=args["setup_mlflow"], autolog=args["mlflow_autolog"]
      )
 +    
@@ -41,7 +45,11 @@
 +    
      {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
          mlflow_init_status,
-@@ -53,6 +66,9 @@
+         "log_dict",
+         dictionary=omegaconf.OmegaConf.to_container(args, resolve=True),
+@@ -51,17 +64,20 @@
+     )
+ 
      os.makedirs(args["artifact_dir_path"], exist_ok=True)
      artifact_path = os.path.join(
 -        args["artifact_dir_path"], "output.txt"
@@ -52,14 +60,19 @@
 +    
      with open(artifact_path, "w") as f:
          f.write('\n'.join([f'{x}: {args[x]}' for x in args]))
-@@ -61,5 +77,5 @@
+     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
+         mlflow_init_status,
          "log_artifact",
          local_path=artifact_path,
 -        artifact_path="outputs"
 +        artifact_path="model"
      )
  
-@@ -78,6 +94,8 @@
+     if mlflow_init_status:
+         artifact_uri = mlflow.get_artifact_uri()
+@@ -76,10 +92,12 @@
+         mlflow.end_run()
+     else:
          logger.info("Model training has completed.")
  
 -    # Outputs for conf/train_model.yaml for hydra.sweeper.direction
@@ -70,3 +83,5 @@
 +    # return test_rmse
  
  
+ if __name__ == "__main__":
+     main()

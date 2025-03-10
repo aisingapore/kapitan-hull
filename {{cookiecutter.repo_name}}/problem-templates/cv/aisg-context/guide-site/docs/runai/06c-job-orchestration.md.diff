@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/06c-job-orchestration.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/runai/06c-job-orchestration.md
-@@ -45,6 +45,6 @@
+@@ -43,10 +43,10 @@
+ Run:ai. You can first your configuration variables at 
+ `conf/process_data.yaml`, specifically this section:
  
  ```yaml
 -raw_data_dir_path: "./data/raw"
@@ -9,14 +11,22 @@
 +processed_data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
  ```
  
-@@ -92,5 +92,5 @@
+ This requires the Docker image to be built from a Dockerfile 
+ (`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
+@@ -90,9 +90,9 @@
+ 
+ === "Coder Workspace Terminal using Run:ai"
  
      ```bash
 -    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
 +    # Run `runai login` and `runai config project aisg` first if needed
      # Run this in the base of your project repository, and change accordingly
      # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
-@@ -102,6 +102,6 @@
+     runai submit \
+         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
+@@ -100,16 +100,16 @@
+         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
+         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
          --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
          --command -- /bin/bash -c "python -u src/process_data.py \
 -            raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw \
@@ -25,14 +35,18 @@
 +            processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"
      ```
  
-@@ -109,5 +109,5 @@
+ After some time, the data processing job should conclude and we can
  proceed with training the predictive model.
  The processed data is exported to the directory
 -`/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed`.
 +`/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed`.
  We will be passing this path to the model training workflows.
  
-@@ -140,4 +140,8 @@
+ ## Model Training
+ 
+@@ -138,8 +138,12 @@
+     namespace for projects that requires model experimentation. 
+     Artifacts logged through the MLflow API can be uploaded to {{objstg}} 
      buckets, assuming the client is authorised for access to {{objstg}}.
  
 +    !!! note
@@ -41,7 +55,11 @@
 +
      To log and upload artifacts to {{objstg}} buckets through MLFlow, 
      you need to ensure that the client has access to the credentials of
-@@ -161,7 +165,17 @@
+     an account that can write to a bucket. This is usually settled by 
+     the MLOps team, so you need only interact with MLFlow to download 
+@@ -159,11 +163,21 @@
+ mlflow_autolog: false
+ mlflow_tracking_uri: "./mlruns"
  mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
  mlflow_run_name: "train-model"
 -data_dir_path: "./data/processed"
@@ -62,14 +80,22 @@
 +model_checkpoint_dir_path: "./models/checkpoint"
  ```
  
-@@ -214,5 +228,5 @@
+ After that, we build the Docker image from the Docker file 
+ `docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
+@@ -212,9 +226,9 @@
+ 
+ === "Coder Workspace Terminal using Run:ai"
  
      ```bash
 -    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
 +    # Run `runai login` and `runai config project aisg` first if needed
      # Run this in the base of your project repository, and change accordingly
      # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
-@@ -227,7 +241,10 @@
+     $ runai submit \
+         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
+@@ -225,11 +239,14 @@
+         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
+         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
          -e OMP_NUM_THREADS=2 \
          --command -- /bin/bash -c "python -u src/train_model.py \
 -            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
@@ -83,7 +109,11 @@
 +            epochs=3"
      ```
  
-@@ -302,6 +319,6 @@
+ Once you have successfully run an experiment, you may inspect the run
+ on the MLflow Tracking server. Through the MLflow Tracking server
+@@ -300,10 +317,10 @@
+     storage: null
+     n_trials: 3
      n_jobs: 1
      params:
 -      dummy_param1: range(0.9,1.7,step=0.1)
@@ -92,21 +122,33 @@
 +      gamma: choice(0.7,0.8,0.9)
  ```
  
-@@ -330,5 +347,5 @@
+ These fields are used by the Optuna Sweeper plugin to configure the
+ Optuna study.
+@@ -328,9 +345,9 @@
+ 
+ `src/train_model.py`
  ```python
  ...
 -    return args["dummy_param1"], args["dummy_param2"]
 +    return curr_test_loss, curr_test_accuracy
  ...
  ```
-@@ -363,5 +380,5 @@
+ 
+ `conf/train_model.yaml`
+@@ -361,9 +378,9 @@
+ 
+ === "Coder Workspace Terminal using Run:ai"
  
      ```bash
 -    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
 +    # Run `runai login` and `runai config project aisg` first if needed
      # Run this in the base of your project repository, and change accordingly
      # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
-@@ -375,8 +392,12 @@
+     runai submit \
+         --job-name-prefix <YOUR_HYPHENATED_NAME>-train-hp \
+@@ -373,12 +390,16 @@
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
          -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
          -e MLFLOW_HPTUNING_TAG=$(date +%s) \
 +        -e OMP_NUM_THREADS=2 \
@@ -121,4 +163,6 @@
 +            model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models \
 +            epochs=3"
      ```
+ 
+ ![MLflow Tracking Server - Hyperparameter Tuning Runs](../common/assets/screenshots/mlflow-tracking-hptuning-runs.png)
  

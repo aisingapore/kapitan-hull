@@ -1,13 +1,19 @@
 --- {{cookiecutter.repo_name}}/src/{{cookiecutter.src_package_name}}_fastapi/v1/routers/model.py
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/src/{{cookiecutter.src_package_name}}_fastapi/v1/routers/model.py
-@@ -4,4 +4,6 @@
+@@ -2,8 +2,10 @@
+ 
+ import os
  import logging
  import fastapi
 +import torchvision
 +from PIL import Image
  
  import {{cookiecutter.src_package_name}}_fastapi as {{cookiecutter.src_package_name_short}}_fapi
-@@ -13,19 +15,21 @@
+ 
+ 
+@@ -11,23 +13,25 @@
+ 
+ 
  ROUTER = fastapi.APIRouter()
  PRED_MODEL = {{cookiecutter.src_package_name_short}}_fapi.deps.PRED_MODEL
 +DEVICE = {{cookiecutter.src_package_name_short}}_fapi.deps.DEVICE
@@ -34,7 +40,11 @@
 +        Dictionary containing the file name and prediction for the image.
  
      Raises
-@@ -38,16 +42,30 @@
+     ------
+     fastapi.HTTPException
+@@ -36,30 +40,45 @@
+     """
+     result_dict = {"data": []}
  
      try:
 -        logger.info("Copying input...")
@@ -69,7 +79,8 @@
 +        os.remove(image_file.filename)
  
      return result_dict
-@@ -56,10 +74,11 @@
+ 
+ 
  @ROUTER.get("/version", status_code=fastapi.status.HTTP_200_OK)
  def model_version():
 -    """Get sample version used for the API.

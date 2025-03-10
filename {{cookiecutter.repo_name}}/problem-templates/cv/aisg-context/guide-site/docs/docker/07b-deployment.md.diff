@@ -1,48 +1,50 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/07b-deployment.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/07b-deployment.md
-@@ -81,5 +81,5 @@
+@@ -79,48 +79,45 @@
+ === "Linux"
+ 
      ```bash
      sudo chown 2222:2222 ./models
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
      docker run --rm \
          -v ./models:/models \
-@@ -87,5 +87,5 @@
+         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
          --network host \
          {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
 -        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
 +        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
      ```
  
-@@ -93,5 +93,5 @@
+ === "macOS"
  
      ```bash
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
      docker run --rm \
          -v ./models:/models \
-@@ -99,5 +99,5 @@
+         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
          --network host \
          {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
 -        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
 +        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
      ```
  
-@@ -105,5 +105,5 @@
+ === "Windows PowerShell"
  
      ```powershell
 -    $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
 +    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
      docker run --rm `
          -v .\models:/models `
-@@ -111,5 +111,5 @@
+         -e MLFLOW_TRACKING_URI=http://localhost:5000 `
          --network host `
          {{cookiecutter.registry_project_path}}/cpu:0.1.0 `
 -        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
 +        python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='/models/$PRED_MODEL_UUID')"
      ```
  
-@@ -117,8 +117,5 @@
+ Executing the commands above will download the artifacts related to the
  experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 
  `models`. However, the specific subdirectory that is relevant for our 
 -modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
@@ -52,25 +54,41 @@
 +modules to load will be `./models/<MLFLOW_RUN_UUID>/model/model.pt`.
  
  [beginner tutorials]: https://fastapi.tiangolo.com/tutorial/
-@@ -147,4 +144,5 @@
+ 
+ ### Running the API Server
+@@ -145,8 +142,9 @@
+     docker run --rm \
+         -p 8080:8080 \
          -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
          -w /home/aisg/{{cookiecutter.repo_name}}/src \
 +        -e PRED_MODEL_PATH="../models/$PRED_MODEL_UUID/model/model.pt" \
          {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
          gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
-@@ -160,4 +158,5 @@
+             -k uvicorn.workers.UvicornWorker \
+             -b 0.0.0.0:8080 -w 2 -t 90
+@@ -158,8 +156,9 @@
+     docker run --rm \
+         -p 8080:8080 \
          -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
          -w /home/aisg/{{cookiecutter.repo_name}}/src \
 +        -e PRED_MODEL_PATH="../models/$PRED_MODEL_UUID/model/model.pt" \
          {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
          gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
-@@ -181,4 +180,5 @@
+             -k uvicorn.workers.UvicornWorker \
+             -b 0.0.0.0:8080 -w 2 -t 90
+@@ -179,8 +178,9 @@
+     docker run --rm `
+         -p 8080:8080 `
          -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
          -w /home/aisg/{{cookiecutter.repo_name}}/src `
 +        -e PRED_MODEL_PATH="../models/$Env:PRED_MODEL_UUID/model/model.pt" `
          {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
          gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP `
-@@ -201,6 +201,6 @@
+             -k uvicorn.workers.UvicornWorker `
+             -b 0.0.0.0:8080 -w 2 -t 90
+@@ -199,36 +199,36 @@
+     ```bash
+     docker run --rm --network=host \
          curlimages/curl -X POST \
              localhost:8080/api/v1/model/predict \
 -            -H 'Content-Type: application/json' \
@@ -79,7 +97,10 @@
 +            -F "image_file=@/path/to/image/file"
      ```
  
-@@ -211,6 +211,6 @@
+ === "macOS"
+ 
+     ```bash
+     docker run --rm --network=host \
          curlimages/curl -X POST \
              localhost:8080/api/v1/model/predict \
 -            -H 'Content-Type: application/json' \
@@ -88,7 +109,10 @@
 +            -F "image_file=@/path/to/image/file"
      ```
  
-@@ -221,6 +221,6 @@
+ === "Windows PowerShell"
+ 
+     ```powershell
+     docker run --rm --network=host `
          curlimages/curl -X POST `
              localhost:8080/api/v1/model/predict `
 -            -H 'Content-Type: application/json' `
@@ -97,14 +121,18 @@
 +            -F "image_file=@/path/to/image/file"
      ```
      
-@@ -228,5 +228,5 @@
+ Output sample:
  
  ```
 -{"data":[{"input":"string"}]}
 +{"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
  ```
  
-@@ -246,5 +246,6 @@
+ With the returned JSON object, we have successfully submitted a request
+ to the FastAPI server and it returned predictions as part of the
+@@ -244,9 +244,10 @@
+ data and schema validation, as well as [settings management]. There's a 
+ class called `Settings` under the module
  `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
  contains several fields: some are defined and some others not. The 
 -`MODEL_UUID` field inherits their values from the environment variables.
@@ -112,7 +140,11 @@
 +from the environment variables.
  
  `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
-@@ -257,5 +258,8 @@
+ ```python
+ ...
+@@ -255,9 +256,12 @@
+     API_NAME: str = "{{cookiecutter.src_package_name}}_fastapi"
+     API_V1_STR: str = "/api/v1"
      LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"
  
 -    MODEL_UUID: str
@@ -122,3 +154,5 @@
 +    PRED_MODEL_PATH: str
  ...
  ```
+ 
+ FastAPI automatically generates interactive API documentation for easy

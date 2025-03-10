@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/05c-data-storage-versioning.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/runai/05c-data-storage-versioning.md
-@@ -3,6 +3,10 @@
+@@ -1,18 +1,28 @@
+ # Data Storage & Versioning
+ 
  ## Sample Data
  
 -We can generate some sample data to use to test the different 
@@ -13,7 +15,7 @@
 +[prob]: ../setting-up/02-preface.md#guides-problem-statement
  
  === "Coder Workspace Terminal"
-@@ -10,9 +14,15 @@
+ 
      ```bash
      mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw && cd "$_"
 -    echo "Test1" > data1.txt

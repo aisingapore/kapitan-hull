@@ -1,12 +1,18 @@
 --- {{cookiecutter.repo_name}}/src/{{cookiecutter.src_package_name}}_fastapi/v1/routers/model.py
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/src/{{cookiecutter.src_package_name}}_fastapi/v1/routers/model.py
-@@ -4,4 +4,5 @@
+@@ -2,8 +2,9 @@
+ 
+ import os
  import logging
  import fastapi
 +import pandas as pd
  
  import {{cookiecutter.src_package_name}}_fastapi as {{cookiecutter.src_package_name_short}}_fapi
-@@ -16,40 +17,48 @@
+ 
+ 
+@@ -14,44 +15,52 @@
+ PRED_MODEL = {{cookiecutter.src_package_name_short}}_fapi.deps.PRED_MODEL
+ 
  
  @ROUTER.post("/predict", status_code=fastapi.status.HTTP_200_OK)
 -def predict(data: str = fastapi.Body()):
@@ -78,3 +84,5 @@
 -    return result_dict
  
  
+ @ROUTER.get("/version", status_code=fastapi.status.HTTP_200_OK)
+ def model_version():

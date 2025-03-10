@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/08c-batch-inferencing.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/runai/08c-batch-inferencing.md
-@@ -15,8 +15,9 @@
+@@ -13,12 +13,13 @@
+ 
+ === "Coder Workspace Terminal"
  
      ```bash
 -    mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/data/batch-infer && cd $_
@@ -14,7 +16,11 @@
 +    rm batched-mnist-input-data.zip
      ```
  
-@@ -30,7 +31,7 @@
+ === "Using Run:ai"
+ 
+@@ -28,11 +29,11 @@
+         -i alpine \
+         --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/data/batch-infer \
          --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
          --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
 -        --command -- /bin/bash -c "echo -n 'Output1' > in1.txt && \
@@ -25,21 +31,32 @@
 +            rm batched-mnist-input-data.zip"
      ```
  
-@@ -42,4 +43,6 @@
+ To execute the batch inferencing script:
+ 
+@@ -40,8 +41,10 @@
+ 
+     ```bash
      # Navigate back to root directory
      cd "$(git rev-parse --show-toplevel)"
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_PATH="./models/$PRED_MODEL_UUID/artifacts/model/model.pt"
      conda activate {{cookiecutter.repo_name}}
      python src/batch_infer.py
-@@ -57,5 +60,5 @@
+     ```
+ 
+@@ -55,20 +58,22 @@
+         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
          --command -- python src/batch_infer.py \
              output_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/batch_infer_res.jsonl \
 -            input_data_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/data/batch-infer
 +            input_data_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/data/batch-mnist-input-data
      ```
  
-@@ -66,7 +69,9 @@
+ The script will log to the terminal the location of the
+ `.jsonl` file (`batch-infer-res.jsonl`) containing predictions that
+ look like such:
+ 
  ```jsonl
  ...
 -{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in1.txt", "prediction": "Output1"}
@@ -52,3 +69,5 @@
 +{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
  ...
  ```
+ 
+ The `hydra.job.chdir=True` flag writes the `.jsonl` file containing

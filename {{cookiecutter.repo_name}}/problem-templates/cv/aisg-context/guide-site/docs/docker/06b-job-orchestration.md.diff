@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/06b-job-orchestration.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/06b-job-orchestration.md
-@@ -34,6 +34,6 @@
+@@ -32,10 +32,10 @@
+ is to run through a Docker container. You can first your configuration
+ variables at `conf/process_data.yaml`, specifically this section:
  
  ```yaml
 -raw_data_dir_path: "./data/raw"
@@ -9,7 +11,11 @@
 +processed_data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
  ```
  
-@@ -150,7 +150,17 @@
+ This requires the Docker image to be built from a Dockerfile 
+ (`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
+@@ -148,11 +148,21 @@
+ mlflow_autolog: false
+ mlflow_tracking_uri: "./mlruns"
  mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
  mlflow_run_name: "train-model"
 -data_dir_path: "./data/processed"
@@ -30,13 +36,21 @@
 +model_checkpoint_dir_path: "./models/checkpoint"
  ```
  
-@@ -248,4 +258,5 @@
+ After that, we build the Docker image from the Docker file 
+ `docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
+@@ -246,8 +256,9 @@
+ 
+ === "Linux"
  
      !!! info
 +        Add `no_cuda=false` to use GPUs behind the image name.  
          Add `--gpus=all` for Nvidia GPUs in front of the image name.  
          Add `--device=nvidia.com/gpu=all` for Nvidia GPUs using Podman
-@@ -345,6 +356,6 @@
+         instead of Docker.  
+         Add `--device=/dev/kfd --device=/dev/dri --group-add` video for
+@@ -343,10 +354,10 @@
+     storage: null
+     n_trials: 3
      n_jobs: 1
      params:
 -      dummy_param1: range(0.9,1.7,step=0.1)
@@ -45,10 +59,16 @@
 +      gamma: choice(0.7,0.8,0.9)
  ```
  
-@@ -373,5 +384,5 @@
+ These fields are used by the Optuna Sweeper plugin to configure the
+ Optuna study.
+@@ -371,9 +382,9 @@
+ 
+ `src/train_model.py`
  ```python
  ...
 -    return args["dummy_param1"], args["dummy_param2"]
 +    return curr_test_loss, curr_test_accuracy
  ...
  ```
+ 
+ `conf/train_model.yaml`

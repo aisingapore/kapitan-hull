@@ -1,13 +1,19 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/mkdocs.yml
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/mkdocs.yml
-@@ -12,5 +12,5 @@
+@@ -10,9 +10,9 @@
+ repo_url: ""
+ edit_uri: ""
  
  # Copyright
 -copyright: ""
 +copyright: Copyright &copy; 2023-2024 - AI Singapore
  
  # Configuration
-@@ -93,9 +93,9 @@
+ docs_dir: docs
+ theme:
+@@ -91,13 +91,13 @@
+   version:
+     provider: mike
    social:
      - icon: fontawesome/brands/twitter
 -      link: https://twitter.com/
@@ -20,3 +26,5 @@
 +      link: https://www.instagram.com/ai_singapore/
  
  # Extensions
+ markdown_extensions:
+   - admonition

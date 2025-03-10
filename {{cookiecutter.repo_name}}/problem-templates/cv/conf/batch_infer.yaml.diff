@@ -1,6 +1,6 @@
 --- {{cookiecutter.repo_name}}/conf/batch_infer.yaml
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/conf/batch_infer.yaml
-@@ -1,6 +1,8 @@
+@@ -1,8 +1,10 @@
 -# model_path: "./models/model.pt"
 -input_data_dir: "./data/batch-infer"
 +model_path: "./models/model.pt"
@@ -12,3 +12,5 @@
 +use_mps: false
  
  hydra:
+   job:
+     chdir: False

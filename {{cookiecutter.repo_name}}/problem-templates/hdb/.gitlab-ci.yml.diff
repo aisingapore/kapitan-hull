@@ -1,6 +1,6 @@
 --- {{cookiecutter.repo_name}}/.gitlab-ci.yml
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/.gitlab-ci.yml
-@@ -1,9 +1,5 @@
+@@ -1,91 +1,127 @@
  default:
    tags:
 -{%- if cookiecutter.platform == 'onprem' %}
@@ -10,7 +10,7 @@
 -{%- endif %}
    cache:
      key: $CI_COMMIT_REF_SLUG
-@@ -11,79 +7,119 @@
+     paths:
        - ./conda
    image:
 -    name: continuumio/miniconda3:24.7.1-0
@@ -186,7 +186,11 @@
 +    - source activate $VENV_DIRECTORY
      - pip install -r docs-requirements.txt
      - pip install -r aisg-context/guide-site/mkdocs-requirements.txt
-@@ -102,123 +138,4 @@
+   script:
+     - sphinx-apidoc -f -o docs src
+@@ -100,125 +136,6 @@
+         - docs/**/*
+         - src/**/*
          - aisg-context/guide-site/**/*
    needs:
 -    - job: test:conda-build

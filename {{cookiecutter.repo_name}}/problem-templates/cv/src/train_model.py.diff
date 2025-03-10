@@ -1,25 +1,32 @@
 --- {{cookiecutter.repo_name}}/src/train_model.py
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/src/train_model.py
-@@ -1,4 +1,4 @@
+@@ -1,20 +1,21 @@
  """
 -This script is for training a dummy model on a dummy dataset.
 +This script is for training a model on the MNIST dataset.
  """
  import os
-@@ -7,4 +7,5 @@
+ import logging
+ import omegaconf
  import hydra
  import mlflow
 +import torch
  
  import {{cookiecutter.src_package_name}} as {{cookiecutter.src_package_name_short}}
-@@ -14,5 +15,5 @@
+ 
+ 
+ # pylint: disable = no-value-for-parameter
  @hydra.main(version_base=None, config_path="../conf", config_name="train_model.yaml")
  def main(args):
 -    """This is the main function for 'training' the model.
 +    """This is the main function for training the model.
  
      Parameters
-@@ -37,10 +38,75 @@
+     ----------
+     args : omegaconf.DictConfig
+@@ -35,33 +36,85 @@
+     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
+         mlflow_init_status,
          "log_params",
          params={
 -            "dummy_param1": args["dummy_param1"],
@@ -98,7 +105,8 @@
 +        scheduler.step()
  
      {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
-@@ -49,17 +115,4 @@
+         mlflow_init_status,
+         "log_dict",
          dictionary=omegaconf.OmegaConf.to_container(args, resolve=True),
          artifact_file="train_model_config.json",
 -    )
@@ -116,10 +124,16 @@
 -        artifact_path="outputs"
      )
  
-@@ -79,5 +132,5 @@
+     if mlflow_init_status:
+         artifact_uri = mlflow.get_artifact_uri()
+@@ -77,9 +130,9 @@
+     else:
+         logger.info("Model training has completed.")
  
      # Outputs for conf/train_model.yaml for hydra.sweeper.direction
 -    return args["dummy_param1"], args["dummy_param2"]
 +    return curr_test_loss, curr_test_accuracy
  
  
+ if __name__ == "__main__":
+     main()

@@ -1,6 +1,6 @@
 --- {{cookiecutter.repo_name}}/docker/{{cookiecutter.repo_name}}-gpu.Dockerfile
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/docker/{{cookiecutter.repo_name}}-gpu.Dockerfile
-@@ -1,2 +1,37 @@
+@@ -1,4 +1,39 @@
 +# Use this if deployed outside Run:ai
 +#FROM nvcr.io/nvidia/cuda:12.1.0-cudnn8-devel-ubuntu22.04 AS compile-image
 +FROM python:3.12-slim AS compile-image
@@ -38,7 +38,11 @@
 +
  # Use this if deployed outside Run:ai
  #FROM nvcr.io/nvidia/cuda:12.1.0-cudnn8-devel-ubuntu22.04
-@@ -32,8 +67,9 @@
+ FROM python:3.12-slim
+ 
+@@ -30,12 +65,13 @@
+ 
+ USER ${NON_ROOT_USER}
  WORKDIR ${HOME_DIR}
  
 +COPY --from=compile-image ${HOME_DIR}/.local ${HOME_DIR}/.local
@@ -50,3 +54,5 @@
 +WORKDIR ${HOME_DIR}/{{cookiecutter.repo_name}}
  
  # Use this if deployed outside Run:ai
+ #RUN micromamba shell init -s bash -r ${HOME_DIR}/micromamba
+ #RUN micromamba install python=3.12.4 -c defaults -n base -y

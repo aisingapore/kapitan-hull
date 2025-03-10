@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/07c-deployment.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/runai/07c-deployment.md
-@@ -90,9 +90,9 @@
+@@ -88,19 +88,19 @@
+ === "Coder Workspace Terminal"
+ 
      ```bash
      conda activate {{cookiecutter.repo_name}}
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
@@ -12,21 +14,25 @@
 +    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
      ```
  
-@@ -100,5 +100,5 @@
+ === "Using Run:ai"
  
      ```bash
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
      runai submit \
          --job-name-prefix <YOUR_HYPHENATED_NAME>-download-artifacts \
-@@ -110,5 +110,5 @@
+         -i {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
+         --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPENATED_NAME> \
+@@ -108,15 +108,21 @@
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+         -e MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI> \
          -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
          -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
 -        --command -- python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
 +        --command -- python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
      ```
  
-@@ -116,5 +116,11 @@
+ Executing the commands above will download the artifacts related to the
  experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 
  `models`. However, the specific subdirectory that is relevant for our 
 -modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
@@ -39,7 +45,11 @@
 +within the repository.
  
  Now, let's proceed and spin up an inference server using the package 
-@@ -132,5 +138,6 @@
+ that exists within the repository.
+ 
+@@ -130,9 +136,10 @@
+ 
+     ```bash
      # Running in a working `{{cookiecutter.repo_name}}` repository
      conda activate {{cookiecutter.repo_name}}
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
@@ -47,20 +57,29 @@
 +    export PRED_MODEL_PATH="<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPENATED_NAME>/models/$PRED_MODEL_UUID/model/xgbreg.json"
      gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
          -k uvicorn.workers.UvicornWorker \
-@@ -146,5 +153,5 @@
+         -b 0.0.0.0:8080 -w 2 -t 90 --chdir src
+     ```
+@@ -144,15 +151,16 @@
+ 
+ === "Using Run:ai"
  
      ```bash
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
      runai submit \
          --job-name-prefix <YOUR_HYPHENATED_NAME>-inference \
-@@ -153,4 +160,5 @@
+         -i {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+         --working-dir /home/aisg/{{cookiecutter.repo_name}}/src \
          --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
          --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
 +        -e PRED_MODEL_PATH=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPENATED_NAME>/models/$PRED_MODEL_UUID/model/xgbreg.json \
          --service-type external-url,port=8080:8080 \
          --command -- gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
-@@ -171,15 +179,11 @@
+             -k uvicorn.workers.UvicornWorker \
+             -b 0.0.0.0:8080 -w 2 -t 90
+@@ -169,19 +177,15 @@
+ 
+     ```bash
      curl -X POST \
          localhost:8080/api/v1/model/predict \
 -        -H 'Content-Type: application/json' \
@@ -81,7 +100,11 @@
 +With the returned CSV file, we have successfully submitted a request
  to the FastAPI server and it returned predictions as part of the
  response.
-@@ -196,5 +200,6 @@
+ 
+ [reason]: https://fastapi.tiangolo.com/deployment/server-workers/
+@@ -194,9 +198,10 @@
+ data and schema validation, as well as [settings management]. There's a 
+ class called `Settings` under the module
  `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
  contains several fields: some are defined and some others not. The 
 -`MODEL_UUID` field inherits their values from the environment variables.
@@ -89,7 +112,11 @@
 +from the environment variables.
  
  `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
-@@ -207,5 +212,7 @@
+ ```python
+ ...
+@@ -205,9 +210,11 @@
+     API_NAME: str = "{{cookiecutter.src_package_name}}_fastapi"
+     API_V1_STR: str = "/api/v1"
      LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"
  
 -    MODEL_UUID: str
@@ -98,3 +125,5 @@
 +    PRED_MODEL_PATH: str
  ...
  ```
+ 
+ FastAPI automatically generates interactive API documentation for easy

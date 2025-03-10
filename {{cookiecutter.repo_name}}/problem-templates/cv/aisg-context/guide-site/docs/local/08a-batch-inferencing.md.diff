@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/08a-batch-inferencing.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/local/08a-batch-inferencing.md
-@@ -15,8 +15,8 @@
+@@ -13,31 +13,21 @@
+ 
+ === "Linux/macOS"
  
      ```bash
 -    mkdir -p data/batch-infer && cd $_
@@ -13,7 +15,7 @@
 +    rm batched-mnist-input-data.zip
      ```
  
-@@ -24,18 +24,8 @@
+ === "Windows PowerShell"
  
      ```powershell
 -    New-Item -ItemType Directory -Force -Path 'data/batch-infer'
@@ -36,21 +38,33 @@
 +    rm batched-mnist-input-data.zip
      ```
  
-@@ -47,4 +37,6 @@
+ To execute the batch inferencing script locally:
+ 
+@@ -45,8 +35,10 @@
+ 
+     ```bash
      # Navigate back to root directory
      cd "$(git rev-parse --show-toplevel)"
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_PATH="$PWD/models/$PRED_MODEL_UUID/artifacts/model/model.pt"
      conda activate {{cookiecutter.repo_name}}
      python src/batch_infer.py
-@@ -56,4 +48,6 @@
+     ```
+ 
+@@ -54,8 +46,10 @@
+ 
+     ```powershell
      # Navigate back to root directory
      Set-Location -Path (git rev-parse --show-toplevel)
 +    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
 +    $Env:PRED_MODEL_PATH="$(Get-Location)\models\$Env:PRED_MODEL_UUID\artifacts\model\model.pt"
      conda activate {{cookiecutter.repo_name}}
      python src/batch_infer.py
-@@ -66,7 +60,9 @@
+     ```
+ 
+@@ -64,11 +58,13 @@
+ look like such:
+ 
  ```jsonl
  ...
 -{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in1.txt", "prediction": "Output1"}
@@ -63,3 +77,5 @@
 +{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
  ...
  ```
+ 
+ The `hydra.job.chdir=True` flag writes the `.jsonl` file containing

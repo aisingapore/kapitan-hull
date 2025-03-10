@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/conf/train_model.yaml
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/conf/train_model.yaml
-@@ -4,8 +4,17 @@
+@@ -2,12 +2,21 @@
+ mlflow_autolog: false
+ mlflow_tracking_uri: "./mlruns"
  mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
  mlflow_run_name: "train-model"
 -data_dir_path: "./data/processed"
@@ -22,7 +24,11 @@
 +model_checkpoint_dir_path: "./models"
  
  defaults:
-@@ -18,9 +27,9 @@
+   - override hydra/sweeper: optuna
+   - override hydra/sweeper/sampler: tpe
+@@ -16,11 +25,11 @@
+   sweeper:
+     sampler:
        seed: 55
      direction: ["minimize", "maximize"]
 -    study_name: "base-template"

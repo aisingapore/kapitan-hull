@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/setting-up/02-preface.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/setting-up/02-preface.md
-@@ -3,8 +3,8 @@
+@@ -1,12 +1,12 @@
+ # Preface
+ 
  ## Repository Setup
  
 -This repository intend to provide an end-to-end template for AI 
@@ -13,7 +15,11 @@
 +repository's [`README.md`][readme].
  
  While this repository provides users with a set of boilerplates, here 
-@@ -20,5 +20,8 @@
+ you are also presented with a linear guide on how to use them. The 
+ boilerplates are rendered and customised when you generated this 
+@@ -18,9 +18,12 @@
+     template has to offer, you can deviate from it as much as you wish
+     and customise it to your needs.
  
  Since we will be making use of this repository in multiple environments, 
 -__ensure that this repository is pushed to a remote__.  
@@ -23,7 +29,11 @@
 +_repository_ (or _project_ using GitLab's terminology).  
  After creating the remote repository, retrieve the remote URL and push
  the local repository to remote:
-@@ -34,4 +37,31 @@
+ 
+ ```bash
+@@ -32,6 +35,33 @@
+ git commit -m "Initial commit."
+ git push -u origin main
  ```
  
 +Go to [this section][gitlab-page] for more information on interacting 

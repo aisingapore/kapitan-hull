@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/06a-job-orchestration.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/local/06a-job-orchestration.md
-@@ -42,4 +42,7 @@
+@@ -40,17 +40,16 @@
+ raw_data_dir_path: "./data/raw"
+ processed_data_dir_path: "./data/processed"
  ```
  
 +There are other configurables in the `conf/process_data.yaml` which are used
@@ -8,7 +10,7 @@
 +
  After that, run the script:
  
-@@ -47,8 +50,4 @@
+ === "Linux/macOS"
  
      ```bash
 -    # Add no_cuda=False at the end to enable GPU use.
@@ -17,7 +19,11 @@
 -    # Also set HIP_VISIBLE_DEVICES=0 if RoCM is used.
      python src/process_data.py
      ```
-@@ -94,6 +93,11 @@
+ 
+ === "Windows PowerShell"
+@@ -92,10 +91,15 @@
+ mlflow_tracking_uri: "./mlruns"
+ mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
  mlflow_run_name: "train-model"
  data_dir_path: "./data/processed"
 -dummy_param1: 1.3
@@ -31,7 +37,11 @@
 +seed: 1111
  ```
  
-@@ -164,12 +168,14 @@
+ After that, run the script:
+ 
+@@ -162,16 +166,18 @@
+ hydra:
+   sweeper:
      sampler:
        seed: 55
 -    direction: ["minimize", "maximize"]
@@ -50,24 +60,31 @@
 +      max_depth: range(2,20,step=1)
  ```
  
-@@ -198,5 +204,5 @@
+ These fields are used by the Optuna Sweeper plugin to configure the
+ Optuna study.
+@@ -196,22 +202,22 @@
+ 
+ `src/train_model.py`
  ```python
  ...
 -    return args["dummy_param1"], args["dummy_param2"]
 +    return test_rmse ## or any other metrics
  ...
  ```
-@@ -205,5 +211,5 @@
+ 
+ `conf/train_model.yaml`
  ```yaml
  ...
 -    direction: ["minimize", "maximize"]
 +    direction: ["minimize"] ## or ["maximise"], if you're looking to maximise the test_rmse value
  ...
  ```
-@@ -211,5 +217,5 @@
+ 
  In the training script the returned variables are to contain values
  that we seek to optimise for. In this case, we seek to minimise the 
 -loss and maximise the accuracy. The `hydra.sweeper.direction` field in 
 +root mean square error. The `hydra.sweeper.direction` field in 
  the YAML config is used to specify the direction that those variables 
  are to optimise towards, defined in a positional manner within a list.
+ 
+ An additional thing to take note of is that for each trial where a

@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/06b-job-orchestration.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/docker/06b-job-orchestration.md
-@@ -37,4 +37,7 @@
+@@ -35,8 +35,11 @@
+ ```yaml
+ raw_data_dir_path: "./data/raw"
  processed_data_dir_path: "./data/processed"
  ```
 +
@@ -8,7 +10,11 @@
 +in data preparation scripts found in `src/{{cookiecutter.src_package_name}}/data_prep`.
  
  This requires the Docker image to be built from a Dockerfile 
-@@ -151,6 +154,11 @@
+ (`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
+ provided in this template:
+@@ -149,10 +152,15 @@
+ mlflow_tracking_uri: "./mlruns"
+ mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
  mlflow_run_name: "train-model"
  data_dir_path: "./data/processed"
 -dummy_param1: 1.3
@@ -22,7 +28,11 @@
 +seed: 1111
  ```
  
-@@ -339,12 +347,14 @@
+ After that, we build the Docker image from the Docker file 
+ `docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
+@@ -337,16 +345,18 @@
+ hydra:
+   sweeper:
      sampler:
        seed: 55
 -    direction: ["minimize", "maximize"]
@@ -41,14 +51,19 @@
 +      max_depth: range(2,20,step=1)
  ```
  
-@@ -373,5 +383,5 @@
+ These fields are used by the Optuna Sweeper plugin to configure the
+ Optuna study.
+@@ -371,22 +381,22 @@
+ 
+ `src/train_model.py`
  ```python
  ...
 -    return args["dummy_param1"], args["dummy_param2"]
 +    return test_rmse ## or any other metrics
  ...
  ```
-@@ -380,11 +390,11 @@
+ 
+ `conf/train_model.yaml`
  ```yaml
  ...
 -    direction: ["minimize", "maximize"]
@@ -64,3 +79,5 @@
 +root mean square error. The `hydra.sweeper.direction` field in 
  the YAML config is used to specify the direction that those variables 
  are to optimise towards, defined in a positional manner within a list.
+ 
+ An additional thing to take note of is that for each trial where a

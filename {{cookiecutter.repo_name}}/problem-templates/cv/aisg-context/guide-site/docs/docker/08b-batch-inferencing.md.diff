@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/08b-batch-inferencing.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/08b-batch-inferencing.md
-@@ -16,11 +16,11 @@
+@@ -14,70 +14,79 @@
+ === "Linux"
+ 
      ```bash
      docker run --rm \
 -        -u $(id -u):$(id -g) \
@@ -18,7 +20,8 @@
 +                rm batched-mnist-input-data.zip"
      ```
  
-@@ -29,10 +29,10 @@
+ === "macOS"
+ 
      ```bash
      docker run --rm \
 -        -w /batch-infer \
@@ -34,7 +37,8 @@
 +                rm batched-mnist-input-data.zip"
      ```
  
-@@ -41,10 +41,10 @@
+ === "Windows PowerShell"
+ 
      ```powershell
      docker run --rm `
 -        -w /batch-infer `
@@ -50,7 +54,9 @@
 +                rm batched-mnist-input-data.zip"
      ```
  
-@@ -54,7 +54,10 @@
+ To execute the batch inferencing script using the Docker image:
+ 
+ === "Linux"
  
      ```bash
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
@@ -61,7 +67,10 @@
 +        -e PRED_MODEL_PATH="./models/$PRED_MODEL_UUID/model/model.pt" \
          {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
          python src/batch_infer.py output_path=data/batch-infer/batch_infer_res.jsonl
-@@ -65,7 +68,10 @@
+     sudo chmod $(id -u):$(id -g) data/batch-infer/batch_infer_res.jsonl
+     ```
+ 
+ === "macOS"
  
      ```bash
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
@@ -72,7 +81,9 @@
 +        -e PRED_MODEL_PATH="./models/$PRED_MODEL_UUID/model/model.pt" \
          {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
          python src/batch_infer.py output_path=data/batch-infer/batch_infer_res.jsonl
-@@ -75,7 +81,10 @@
+     ```
+ 
+ === "Windows PowerShell"
  
      ```powershell
 +    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
@@ -83,7 +94,11 @@
 +        -e PRED_MODEL_PATH="./models/$Env:PRED_MODEL_UUID/model/model.pt" `
          {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
          python src/batch_infer.py output_path=data/batch-infer/batch_infer_res.jsonl
-@@ -88,7 +97,9 @@
+     ```
+ 
+@@ -86,11 +95,13 @@
+ look like such:
+ 
  ```jsonl
  ...
 -{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in1.txt", "prediction": "Output1"}
@@ -96,3 +111,5 @@
 +{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
  ...
  ```
+ 
+ The `hydra.job.chdir=True` flag writes the `.jsonl` file containing
