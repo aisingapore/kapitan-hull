@@ -26,13 +26,30 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
                 modified_lines.append(original_lines[line_index])
                 line_index += 1
 
+            hunk_line_index = 0
             for line in hunk:
                 if line.is_removed or line.is_context:
+                    # Verify that the line to be removed/kept matches the expected content
+                    if line_index < len(original_lines):
+                        original_line = original_lines[line_index].rstrip('\n')
+                        expected_line = line.value.rstrip('\n')
+                        
+                        if original_line != expected_line:
+                            print(f"WARNING: Line mismatch in {source_file_path} at line {line_index + 1}")
+                            print(f"  Expected: '{expected_line}'")
+                            print(f"  Found:    '{original_line}'")
+                            print("Continuing with patch application, but results may be incorrect.")
+                    else:
+                        print(f"WARNING: Trying to modify line {line_index + 1} in {source_file_path}, but file only has {len(original_lines)} lines")
+                    
                     # Skip original lines (those that are removed)
                     line_index += 1
+                
                 if line.is_added or line.is_context:
                     # Add new lines (those that are added)
                     modified_lines.append(line.value)
+                
+                hunk_line_index += 1
 
         # Append any remaining lines after the last hunk
         while line_index < len(original_lines):
