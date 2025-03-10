@@ -14,51 +14,92 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
             with open(target_file_path, "w") as f:
                 pass  # Create an empty file if it does not exist
 
-        modified_lines = []
+        try:
+            with open(source_file_path, "r") as f:
+                original_lines = f.readlines()
 
-        with open(source_file_path, "r") as f:
-            original_lines = f.readlines()
+            modified_lines = []
+            line_index = 0
+            
+            for hunk in patched_file:
+                # Apply each hunk
+                while line_index < hunk.source_start - 1:
+                    modified_lines.append(original_lines[line_index])
+                    line_index += 1
 
-        line_index = 0
-        for hunk in patched_file:
-            # Apply each hunk
-            while line_index < hunk.source_start - 1:
+                # Extract context lines for matching
+                context_lines = []
+                for line in hunk:
+                    if line.is_context or line.is_removed:
+                        context_lines.append(line.value.rstrip('\n'))
+                
+                # Check if we need to search for a better match
+                current_line = line_index
+                if current_line < len(original_lines):
+                    original_line = original_lines[current_line].rstrip('\n')
+                    expected_line = next((l.value.rstrip('\n') for l in hunk if l.is_context or l.is_removed), None)
+                    
+                    if expected_line and original_line != expected_line:
+                        print(f"WARNING: Line mismatch in {source_file_path} at line {current_line + 1}")
+                        print(f"  Expected: '{expected_line}'")
+                        print(f"  Found:    '{original_line}'")
+                        print("Attempting to find the correct location...")
+                        
+                        # Try to find a better match by looking ahead in the file
+                        match_found = False
+                        search_range = min(100, len(original_lines) - current_line)  # Look ahead up to 100 lines
+                        
+                        for offset in range(search_range):
+                            search_index = current_line + offset
+                            
+                            # Check if we have enough lines left to match the context
+                            if search_index + len(context_lines) <= len(original_lines):
+                                # Check if the context matches at this position
+                                match = True
+                                for i, ctx_line in enumerate(context_lines):
+                                    if original_lines[search_index + i].rstrip('\n') != ctx_line:
+                                        match = False
+                                        break
+                                
+                                if match:
+                                    print(f"Found matching context at line {search_index + 1}")
+                                    # Add lines up to the new match position
+                                    while line_index < search_index:
+                                        modified_lines.append(original_lines[line_index])
+                                        line_index += 1
+                                    match_found = True
+                                    break
+                        
+                        if not match_found:
+                            print(f"ERROR: Could not find matching context in {source_file_path}")
+                            print("Aborting patch for this file.")
+                            raise ValueError("Patch context not found")
+                
+                # Apply the hunk at the current position
+                for line in hunk:
+                    if line.is_removed or line.is_context:
+                        # Skip original lines (those that are removed)
+                        if line_index < len(original_lines):
+                            line_index += 1
+                    
+                    if line.is_added or line.is_context:
+                        # Add new lines (those that are added)
+                        modified_lines.append(line.value)
+
+            # Append any remaining lines after the last hunk
+            while line_index < len(original_lines):
                 modified_lines.append(original_lines[line_index])
                 line_index += 1
 
-            hunk_line_index = 0
-            for line in hunk:
-                if line.is_removed or line.is_context:
-                    # Verify that the line to be removed/kept matches the expected content
-                    if line_index < len(original_lines):
-                        original_line = original_lines[line_index].rstrip('\n')
-                        expected_line = line.value.rstrip('\n')
-                        
-                        if original_line != expected_line:
-                            print(f"WARNING: Line mismatch in {source_file_path} at line {line_index + 1}")
-                            print(f"  Expected: '{expected_line}'")
-                            print(f"  Found:    '{original_line}'")
-                            print("Continuing with patch application, but results may be incorrect.")
-                    else:
-                        print(f"WARNING: Trying to modify line {line_index + 1} in {source_file_path}, but file only has {len(original_lines)} lines")
-                    
-                    # Skip original lines (those that are removed)
-                    line_index += 1
+            # Write the patched content back into the file
+            with open(target_file_path, "w") as f:
+                f.writelines(modified_lines)
                 
-                if line.is_added or line.is_context:
-                    # Add new lines (those that are added)
-                    modified_lines.append(line.value)
+            print(f"Successfully applied patch to {target_file_path}")
                 
-                hunk_line_index += 1
-
-        # Append any remaining lines after the last hunk
-        while line_index < len(original_lines):
-            modified_lines.append(original_lines[line_index])
-            line_index += 1
-
-        # Write the patched content back into the file
-        with open(target_file_path, "w") as f:
-            f.writelines(modified_lines)
+        except Exception as e:
+            print(f"Failed to apply patch to {target_file_path}: {str(e)}")
+            print("Skipping this file and continuing with the next one.")
 
 
 def generate_template_scripts() -> None:
