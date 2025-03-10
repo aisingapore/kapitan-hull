@@ -49,31 +49,85 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
                         match_found = False
                         search_range = min(100, len(original_lines) - current_line)  # Look ahead up to 100 lines
                         
-                        for offset in range(search_range):
-                            search_index = current_line + offset
-                            
-                            # Check if we have enough lines left to match the context
-                            if search_index + len(context_lines) <= len(original_lines):
-                                # Check if the context matches at this position
-                                match = True
-                                for i, ctx_line in enumerate(context_lines):
-                                    if original_lines[search_index + i].rstrip('\n') != ctx_line:
-                                        match = False
-                                        break
+                        # First try to find a perfect match for the first few context lines
+                        context_prefix = context_lines[:min(3, len(context_lines))]
+                        if context_prefix:
+                            for offset in range(search_range):
+                                search_index = current_line + offset
                                 
-                                if match:
-                                    print(f"Found matching context at line {search_index + 1}")
-                                    # Add lines up to the new match position
-                                    while line_index < search_index:
-                                        modified_lines.append(original_lines[line_index])
-                                        line_index += 1
-                                    match_found = True
-                                    break
+                                # Check if we have enough lines left to match the context prefix
+                                if search_index + len(context_prefix) <= len(original_lines):
+                                    # Check if the context prefix matches at this position
+                                    prefix_match = True
+                                    for i, ctx_line in enumerate(context_prefix):
+                                        if original_lines[search_index + i].rstrip('\n') != ctx_line:
+                                            prefix_match = False
+                                            break
+                                    
+                                    if prefix_match:
+                                        print(f"Found matching context prefix at line {search_index + 1}")
+                                        # Add lines up to the new match position
+                                        while line_index < search_index:
+                                            modified_lines.append(original_lines[line_index])
+                                            line_index += 1
+                                        match_found = True
+                                        break
+                        
+                        # If no prefix match, try to match the full context
+                        if not match_found:
+                            for offset in range(search_range):
+                                search_index = current_line + offset
+                                
+                                # Check if we have enough lines left to match the context
+                                if search_index + len(context_lines) <= len(original_lines):
+                                    # Check if the context matches at this position
+                                    match = True
+                                    for i, ctx_line in enumerate(context_lines):
+                                        if original_lines[search_index + i].rstrip('\n') != ctx_line:
+                                            match = False
+                                            break
+                                    
+                                    if match:
+                                        print(f"Found matching context at line {search_index + 1}")
+                                        # Add lines up to the new match position
+                                        while line_index < search_index:
+                                            modified_lines.append(original_lines[line_index])
+                                            line_index += 1
+                                        match_found = True
+                                        break
                         
                         if not match_found:
-                            print(f"ERROR: Could not find matching context in {source_file_path}")
-                            print("Aborting patch for this file.")
-                            raise ValueError("Patch context not found")
+                            # Try to find a partial match (at least 50% of context lines)
+                            min_match_lines = max(1, len(context_lines) // 2)
+                            best_match_score = 0
+                            best_match_index = -1
+                            
+                            for offset in range(search_range):
+                                search_index = current_line + offset
+                                match_score = 0
+                                
+                                # Check how many context lines match at this position
+                                for i, ctx_line in enumerate(context_lines):
+                                    if search_index + i < len(original_lines) and original_lines[search_index + i].rstrip('\n') == ctx_line:
+                                        match_score += 1
+                                
+                                if match_score > best_match_score:
+                                    best_match_score = match_score
+                                    best_match_index = search_index
+                            
+                            if best_match_score >= min_match_lines:
+                                print(f"Found partial match ({best_match_score}/{len(context_lines)} lines) at line {best_match_index + 1}")
+                                # Add lines up to the best match position
+                                while line_index < best_match_index:
+                                    modified_lines.append(original_lines[line_index])
+                                    line_index += 1
+                                match_found = True
+                        
+                        if not match_found:
+                            print(f"WARNING: Could not find matching context in {source_file_path}")
+                            print(f"Context lines: {context_lines[:3]}")
+                            print("Continuing with best effort...")
+                            # Instead of raising an error, we'll continue at the current position
                 
                 # Apply the hunk at the current position
                 for line in hunk:
