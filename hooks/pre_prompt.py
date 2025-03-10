@@ -130,15 +130,30 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
                             # Instead of raising an error, we'll continue at the current position
                 
                 # Apply the hunk at the current position
+                removed_count = 0
                 for line in hunk:
                     if line.is_removed or line.is_context:
                         # Skip original lines (those that are removed)
                         if line_index < len(original_lines):
+                            if line.is_removed:
+                                removed_count += 1
                             line_index += 1
                     
                     if line.is_added or line.is_context:
                         # Add new lines (those that are added)
                         modified_lines.append(line.value)
+                
+                # If we didn't remove any lines but should have, try to advance the line_index
+                # This handles cases where the context matched but the lines to remove didn't
+                if removed_count == 0 and any(line.is_removed for line in hunk):
+                    # Just advance by the number of lines that should have been removed
+                    expected_removed = sum(1 for line in hunk if line.is_removed)
+                    if line_index + expected_removed <= len(original_lines):
+                        print(f"WARNING: Lines to remove don't match expected content in {source_file_path}")
+                        print(f"Expected: {[l.value.rstrip('\\n') for l in hunk if l.is_removed]}")
+                        print(f"Found: {[original_lines[line_index+i].rstrip('\\n') for i in range(expected_removed) if line_index+i < len(original_lines)]}")
+                        print("Proceeding with caution...")
+                        line_index += expected_removed
 
             # Append any remaining lines after the last hunk
             while line_index < len(original_lines):
@@ -146,7 +161,12 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
                 line_index += 1
 
             # Check if this is a template file that might contain Jinja2 syntax
-            is_template_file = target_file_path.endswith(('.yml', '.yaml', '.j2', '.html', '.md'))
+            is_template_file = target_file_path.endswith(('.yml', '.yaml', '.j2', '.html', '.md', '.jinja2'))
+            
+            # Additional check for files that might contain Jinja2 syntax based on content
+            if not is_template_file and any('{%' in line or '{{' in line for line in modified_lines):
+                is_template_file = True
+                print(f"Detected Jinja2 syntax in {target_file_path}, treating as template file")
             
             # Write the modified content back to the target file
             with open(target_file_path, "w") as f:
@@ -166,26 +186,47 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
 def generate_template_scripts() -> None:
     base_dir = os.path.join(os.getcwd(), "{{cookiecutter.repo_name}}")
     problem_templates_dir = os.path.join(base_dir, "problem-templates")
+    
+    # Check if problem_templates_dir exists
+    if not os.path.exists(problem_templates_dir):
+        print(f"Problem templates directory not found: {problem_templates_dir}")
+        return
+    
     for problem_domain in os.listdir(problem_templates_dir):
         src_dir = os.path.join(problem_templates_dir, problem_domain)
 
         if not os.path.isdir(src_dir):
             continue
 
+        print(f"Processing problem domain: {problem_domain}")
+        patch_count = 0
+        success_count = 0
+        
         for root, dirs, files in os.walk(src_dir):
             for file_name in files:
                 if file_name.endswith(".diff"):
                     diff_file_path = os.path.join(root, file_name)
+                    patch_count += 1
 
                     try:
                         with open(diff_file_path, "r") as diff_file:
-                            patch_set = PatchSet(diff_file.read())
+                            patch_content = diff_file.read()
+                            if not patch_content.strip():
+                                print(f"Empty diff file: {diff_file_path}")
+                                os.remove(diff_file_path)
+                                continue
+                                
+                            patch_set = PatchSet(patch_content)
+                        
                         apply_patch(patch_set, os.getcwd())
+                        success_count += 1
 
                         # Remove the diff file after applying
                         os.remove(diff_file_path)
                     except Exception as e:
-                        print(f"Patch failed for {root}/{file_name}: {e}")
+                        print(f"Patch failed for {diff_file_path}: {e}")
+        
+        print(f"Applied {success_count}/{patch_count} patches for {problem_domain}")
 
 
 if __name__ == "__main__":

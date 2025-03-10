@@ -19,18 +19,39 @@ def create_patch(alt_path: str, base_path: str) -> None:
 
         if base_lines and not base_lines[-1].endswith("\n"):
             base_lines[-1] += "\n"
+            
+        # Check if this is a template file that might contain Jinja2 syntax
+        is_template_file = alt_path.endswith(('.yml', '.yaml', '.j2', '.html', '.md', '.jinja2'))
+        
+        # Additional check for files that might contain Jinja2 syntax based on content
+        if not is_template_file:
+            for line in alt_lines + base_lines:
+                if '{%' in line or '{{' in line:
+                    is_template_file = True
+                    print(f"Detected Jinja2 syntax in {alt_path}, treating as template file")
+                    break
+        
+        # For template files, we need to be careful with the diff context
+        context_lines = 4 if is_template_file else 2
 
         # Use difflib to create a unified diff
         diff = difflib.unified_diff(
-            base_lines, alt_lines, fromfile=base_path, tofile=alt_path, n=2
+            base_lines, alt_lines, fromfile=base_path, tofile=alt_path, n=context_lines
         )
 
         # Create diff file path
         diff_path = alt_path + ".diff"
 
         # Write the diff to the diff file
-        with open(diff_path, "w") as diff_file:
-            diff_file.writelines(diff)
+        diff_content = list(diff)
+        if diff_content:
+            with open(diff_path, "w") as diff_file:
+                diff_file.writelines(diff_content)
+            print(f"Created diff: {diff_path}")
+        else:
+            print(f"No differences found between {alt_path} and {base_path}")
+    except FileNotFoundError:
+        print(f"File not found: {alt_path} or {base_path}")
     except Exception as e:
         print(f"Patch failed for {alt_path}, {base_path}: {e}")
 
