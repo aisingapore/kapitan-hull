@@ -95,7 +95,7 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
             with open(target_file_path, "w") as f:
                 f.writelines(modified_lines)
                 
-            print(f"Successfully applied patch to {target_file_path}")
+            #print(f"Successfully applied patch to {target_file_path}")
                 
         except Exception as e:
             print(f"Failed to apply patch to {target_file_path}: {str(e)}")
