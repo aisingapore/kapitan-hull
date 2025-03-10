@@ -22,96 +22,75 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
             line_index = 0
             
             for hunk in patched_file:
-                # Get the context and removed lines from the hunk for pattern matching
-                pattern_lines = []
-                for line in hunk:
-                    if line.is_context or line.is_removed:
-                        pattern_lines.append(line.value.rstrip('\n'))
-                
-                if not pattern_lines:
-                    # If there are no context or removed lines, just add the new lines
-                    for line in hunk:
-                        if line.is_added:
-                            modified_lines.append(line.value)
-                    continue
-                
-                # Try to find the best match for the pattern in the original file
-                best_match_index = -1
-                best_match_score = 0
-                
-                # Start searching from the current line_index
-                for i in range(line_index, len(original_lines) - len(pattern_lines) + 1):
-                    match_score = 0
-                    for j, pattern_line in enumerate(pattern_lines):
-                        if i + j < len(original_lines) and original_lines[i + j].rstrip('\n') == pattern_line:
-                            match_score += 1
-                    
-                    # If we found a perfect match, use it
-                    if match_score == len(pattern_lines):
-                        best_match_index = i
-                        break
-                    
-                    # Otherwise, keep track of the best partial match
-                    if match_score > best_match_score:
-                        best_match_score = match_score
-                        best_match_index = i
-                
-                # If we couldn't find any match, try a more flexible approach
-                if best_match_index == -1 or best_match_score < len(pattern_lines) // 2:
-                    # Look for the first line of the pattern anywhere in the file
-                    if pattern_lines:
-                        first_pattern = pattern_lines[0]
-                        for i in range(line_index, len(original_lines)):
-                            if original_lines[i].rstrip('\n') == first_pattern:
-                                best_match_index = i
-                                break
-                
-                # If we still couldn't find a match, just continue from the current position
-                if best_match_index == -1:
-                    print(f"WARNING: Could not find match for hunk in {source_file_path}")
-                    print(f"Context before: {pattern_lines[:2]}")
-                    print(f"Lines to remove: {[l.value.rstrip('\\n') for l in hunk if l.is_removed][:2]}")
-                    print("Skipping this hunk.")
-                    continue
-                
-                # Add lines up to the match position
-                while line_index < best_match_index:
+                # Apply each hunk
+                while line_index < hunk.source_start - 1:
                     modified_lines.append(original_lines[line_index])
                     line_index += 1
-                
-                # Apply the hunk
-                removed_count = 0
+
+                # Extract context lines for matching
+                context_lines = []
                 for line in hunk:
-                    if line.is_removed:
-                        # Skip the line in the original file (remove it)
-                        if line_index < len(original_lines):
-                            line_index += 1
-                            removed_count += 1
-                    elif line.is_context:
-                        # Keep the context line and move to the next line
-                        if line_index < len(original_lines):
-                            modified_lines.append(original_lines[line_index])
-                            line_index += 1
-                    elif line.is_added:
-                        # Add the new line
-                        modified_lines.append(line.value)
+                    if line.is_context or line.is_removed:
+                        context_lines.append(line.value.rstrip('\n'))
                 
-                # If we didn't remove any lines but should have, try to advance the line_index
-                # This handles cases where the context matched but the lines to remove didn't
-                if removed_count == 0 and any(line.is_removed for line in hunk):
-                    # Just advance by the number of lines that should have been removed
-                    expected_removed = sum(1 for line in hunk if line.is_removed)
-                    line_index += expected_removed
-                    print(f"WARNING: Lines to remove don't match expected content in {source_file_path}")
-                    print(f"Expected: {[l.value.rstrip('\\n') for l in hunk if l.is_removed]}")
-                    print(f"Found: {[original_lines[line_index-expected_removed+i].rstrip('\\n') for i in range(expected_removed) if line_index-expected_removed+i < len(original_lines)]}")
-                    print("Proceeding with caution...")
-            
-            # Add any remaining lines
+                # Check if we need to search for a better match
+                current_line = line_index
+                if current_line < len(original_lines):
+                    original_line = original_lines[current_line].rstrip('\n')
+                    expected_line = next((l.value.rstrip('\n') for l in hunk if l.is_context or l.is_removed), None)
+                    
+                    if expected_line and original_line != expected_line:
+                        print(f"WARNING: Line mismatch in {source_file_path} at line {current_line + 1}")
+                        print(f"  Expected: '{expected_line}'")
+                        print(f"  Found:    '{original_line}'")
+                        print("Attempting to find the correct location...")
+                        
+                        # Try to find a better match by looking ahead in the file
+                        match_found = False
+                        search_range = min(100, len(original_lines) - current_line)  # Look ahead up to 100 lines
+                        
+                        for offset in range(search_range):
+                            search_index = current_line + offset
+                            
+                            # Check if we have enough lines left to match the context
+                            if search_index + len(context_lines) <= len(original_lines):
+                                # Check if the context matches at this position
+                                match = True
+                                for i, ctx_line in enumerate(context_lines):
+                                    if original_lines[search_index + i].rstrip('\n') != ctx_line:
+                                        match = False
+                                        break
+                                
+                                if match:
+                                    print(f"Found matching context at line {search_index + 1}")
+                                    # Add lines up to the new match position
+                                    while line_index < search_index:
+                                        modified_lines.append(original_lines[line_index])
+                                        line_index += 1
+                                    match_found = True
+                                    break
+                        
+                        if not match_found:
+                            print(f"ERROR: Could not find matching context in {source_file_path}")
+                            print("Aborting patch for this file.")
+                            raise ValueError("Patch context not found")
+                
+                # Apply the hunk at the current position
+                for line in hunk:
+                    if line.is_removed or line.is_context:
+                        # Skip original lines (those that are removed)
+                        if line_index < len(original_lines):
+                            line_index += 1
+                    
+                    if line.is_added or line.is_context:
+                        # Add new lines (those that are added)
+                        modified_lines.append(line.value)
+
+            # Append any remaining lines after the last hunk
             while line_index < len(original_lines):
                 modified_lines.append(original_lines[line_index])
                 line_index += 1
-            
+
             # Check if this is a template file that might contain Jinja2 syntax
             is_template_file = target_file_path.endswith(('.yml', '.yaml', '.j2', '.html', '.md'))
             
