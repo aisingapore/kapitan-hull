@@ -73,7 +73,7 @@ def generate_diffs():
                         create_patch(alt_file_path, base_file_path)
 
                         # Remove the original file in alt_dir
-                        #os.remove(alt_file_path)
+                        os.remove(alt_file_path)
 
 
 if __name__ == "__main__":
