@@ -1,10 +1,26 @@
 import argparse
+import logging
 import os
+import sys
 
 from unidiff import PatchSet
 
 
-def apply_patch(patch: PatchSet, src_dir: str) -> None:
+# Configure logging
+def setup_logging(level=logging.WARNING):
+    logging.basicConfig(
+        level=level,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S',
+        stream=sys.stdout
+    )
+    return logging.getLogger(__name__)
+
+
+def apply_patch(patch: PatchSet, src_dir: str, logger=None) -> None:
+    if logger is None:
+        logger = setup_logging()
+        
     for patched_file in patch:
         source_file_path = os.path.join(src_dir, patched_file.source_file)
         target_file_path = os.path.join(src_dir, patched_file.target_file)
@@ -13,6 +29,7 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
             os.makedirs(os.path.dirname(target_file_path), exist_ok=True)
             with open(target_file_path, "w") as f:
                 pass  # Create an empty file if it does not exist
+            logger.debug(f"Created empty file: {target_file_path}")
 
         try:
             with open(source_file_path, "r") as f:
@@ -40,10 +57,10 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
                     expected_line = next((l.value.rstrip('\n') for l in hunk if l.is_context or l.is_removed), None)
                     
                     if expected_line and original_line != expected_line:
-                        print(f"WARNING: Line mismatch in {source_file_path} at line {current_line + 1}")
-                        print(f"  Expected: '{expected_line}'")
-                        print(f"  Found:    '{original_line}'")
-                        print("Attempting to find the correct location...")
+                        logger.warning(f"Line mismatch in {source_file_path} at line {current_line + 1}")
+                        logger.warning(f"  Expected: '{expected_line}'")
+                        logger.warning(f"  Found:    '{original_line}'")
+                        logger.info("Attempting to find the correct location...")
                         
                         # Try to find a better match by looking ahead in the file
                         match_found = False
@@ -65,7 +82,7 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
                                             break
                                     
                                     if prefix_match:
-                                        print(f"Found matching context prefix at line {search_index + 1}")
+                                        logger.info(f"Found matching context prefix at line {search_index + 1}")
                                         # Add lines up to the new match position
                                         while line_index < search_index:
                                             modified_lines.append(original_lines[line_index])
@@ -88,7 +105,7 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
                                             break
                                     
                                     if match:
-                                        print(f"Found matching context at line {search_index + 1}")
+                                        logger.info(f"Found matching context at line {search_index + 1}")
                                         # Add lines up to the new match position
                                         while line_index < search_index:
                                             modified_lines.append(original_lines[line_index])
@@ -116,7 +133,7 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
                                     best_match_index = search_index
                             
                             if best_match_score >= min_match_lines:
-                                print(f"Found partial match ({best_match_score}/{len(context_lines)} lines) at line {best_match_index + 1}")
+                                logger.info(f"Found partial match ({best_match_score}/{len(context_lines)} lines) at line {best_match_index + 1}")
                                 # Add lines up to the best match position
                                 while line_index < best_match_index:
                                     modified_lines.append(original_lines[line_index])
@@ -124,9 +141,9 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
                                 match_found = True
                         
                         if not match_found:
-                            print(f"WARNING: Could not find matching context in {source_file_path}")
-                            print(f"Context lines: {context_lines[:3]}")
-                            print("Continuing with best effort...")
+                            logger.warning(f"Could not find matching context in {source_file_path}")
+                            logger.warning(f"Context lines: {context_lines[:3]}")
+                            logger.warning("Continuing with best effort...")
                             # Instead of raising an error, we'll continue at the current position
                 
                 # Apply the hunk at the current position
@@ -149,10 +166,10 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
                     # Just advance by the number of lines that should have been removed
                     expected_removed = sum(1 for line in hunk if line.is_removed)
                     if line_index + expected_removed <= len(original_lines):
-                        print(f"WARNING: Lines to remove don't match expected content in {source_file_path}")
-                        print(f"Expected: {[l.value.rstrip('\\n') for l in hunk if l.is_removed]}")
-                        print(f"Found: {[original_lines[line_index+i].rstrip('\\n') for i in range(expected_removed) if line_index+i < len(original_lines)]}")
-                        print("Proceeding with caution...")
+                        logger.warning(f"Lines to remove don't match expected content in {source_file_path}")
+                        logger.warning(f"Expected: {[l.value.rstrip('\\n') for l in hunk if l.is_removed]}")
+                        logger.warning(f"Found: {[original_lines[line_index+i].rstrip('\\n') for i in range(expected_removed) if line_index+i < len(original_lines)]}")
+                        logger.warning("Proceeding with caution...")
                         line_index += expected_removed
 
             # Append any remaining lines after the last hunk
@@ -166,7 +183,7 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
             # Additional check for files that might contain Jinja2 syntax based on content
             if not is_template_file and any('{%' in line or '{{' in line for line in modified_lines):
                 is_template_file = True
-                print(f"Detected Jinja2 syntax in {target_file_path}, treating as template file")
+                logger.info(f"Detected Jinja2 syntax in {target_file_path}, treating as template file")
             
             # Write the modified content back to the target file
             with open(target_file_path, "w") as f:
@@ -176,29 +193,33 @@ def apply_patch(patch: PatchSet, src_dir: str) -> None:
                 else:
                     f.writelines(modified_lines)
             
-            print(f"Successfully applied patch to {target_file_path}")
+            logger.info(f"Successfully applied patch to {target_file_path}")
                 
         except Exception as e:
-            print(f"Failed to apply patch to {target_file_path}: {str(e)}")
-            print("Skipping this file and continuing with the next one.")
+            logger.error(f"Failed to apply patch to {target_file_path}: {str(e)}")
+            logger.warning("Skipping this file and continuing with the next one.")
 
 
-def generate_template_scripts() -> None:
+def generate_template_scripts(logger=None) -> None:
+    if logger is None:
+        logger = setup_logging()
+        
     base_dir = os.path.join(os.getcwd(), "{{cookiecutter.repo_name}}")
     problem_templates_dir = os.path.join(base_dir, "problem-templates")
     
     # Check if problem_templates_dir exists
     if not os.path.exists(problem_templates_dir):
-        print(f"Problem templates directory not found: {problem_templates_dir}")
+        logger.error(f"Problem templates directory not found: {problem_templates_dir}")
         return
     
     for problem_domain in os.listdir(problem_templates_dir):
         src_dir = os.path.join(problem_templates_dir, problem_domain)
 
         if not os.path.isdir(src_dir):
+            logger.debug(f"Skipping non-directory: {src_dir}")
             continue
 
-        print(f"Processing problem domain: {problem_domain}")
+        logger.info(f"Processing problem domain: {problem_domain}")
         patch_count = 0
         success_count = 0
         
@@ -207,26 +228,29 @@ def generate_template_scripts() -> None:
                 if file_name.endswith(".diff"):
                     diff_file_path = os.path.join(root, file_name)
                     patch_count += 1
+                    logger.debug(f"Processing diff file: {diff_file_path}")
 
                     try:
                         with open(diff_file_path, "r") as diff_file:
                             patch_content = diff_file.read()
                             if not patch_content.strip():
-                                print(f"Empty diff file: {diff_file_path}")
+                                logger.warning(f"Empty diff file: {diff_file_path}")
                                 os.remove(diff_file_path)
+                                logger.debug(f"Removed empty diff file: {diff_file_path}")
                                 continue
                                 
                             patch_set = PatchSet(patch_content)
                         
-                        apply_patch(patch_set, os.getcwd())
+                        apply_patch(patch_set, os.getcwd(), logger)
                         success_count += 1
 
                         # Remove the diff file after applying
                         os.remove(diff_file_path)
+                        logger.debug(f"Removed diff file after applying: {diff_file_path}")
                     except Exception as e:
-                        print(f"Patch failed for {diff_file_path}: {e}")
+                        logger.error(f"Patch failed for {diff_file_path}: {e}")
         
-        print(f"Applied {success_count}/{patch_count} patches for {problem_domain}")
+        logger.info(f"Applied {success_count}/{patch_count} patches for {problem_domain}")
 
 
 if __name__ == "__main__":
@@ -237,12 +261,29 @@ if __name__ == "__main__":
 
     apply_parser = subparsers.add_parser("apply", help="Apply a diff file")
     apply_parser.add_argument("diff_file", help="Path to the diff file")
+    parser.add_argument(
+        "--log-level", 
+        type=str, 
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+        default="WARNING",
+        help="Set the logging level (default: WARNING)"
+    )
 
     args = parser.parse_args()
+    
+    # Set up logging with the specified level
+    log_level = getattr(logging, args.log_level) if hasattr(args, "log_level") else logging.WARNING
+    logger = setup_logging(log_level)
+    
+    logger.debug("Starting patch application process")
 
     if hasattr(args, "diff_file"):
+        logger.info(f"Applying patch from file: {args.diff_file}")
         with open(args.diff_file, "r") as diff_file:
             patch_set = PatchSet(diff_file.read())
-        apply_patch(patch_set, os.getcwd())
+        apply_patch(patch_set, os.getcwd(), logger)
     else:
-        generate_template_scripts()
+        logger.info("Generating template scripts")
+        generate_template_scripts(logger)
+        
+    logger.debug("Patch application process completed")
