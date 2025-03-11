@@ -1,6 +1,10 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/04b-virtual-env.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/04b-virtual-env.md
-@@ -22,2 +22,5 @@
+@@ -19,10 +19,13 @@
+     instead.
+ 
+ ## Docker Image Debugging
+ 
 -We would need to build a Docker image to create a virtual environment
 -that will contain all the dependencies required for this guide. This
 +While we will be making use of AI Singapore's remote infrastructure
@@ -8,3 +12,7 @@
 +machine to execute some of the steps of the end-to-end machine learning
 +workflow. Hence, we can begin by creating a virtual environment that
 +will contain all the dependencies required for this guide. This
+ requires the Docker image to be built from a Dockerfile
+ (`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
+ provided in this template:
+ 

@@ -1,21 +1,43 @@
 --- {{cookiecutter.repo_name}}/src/train_model.py
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/src/train_model.py
-@@ -2 +2 @@
+@@ -1,20 +1,21 @@
+ """
 -This script is for training a dummy model on a dummy dataset.
 +This script is for training a model on the MNIST dataset.
-@@ -8,0 +9 @@
+ """
+ import os
+ import logging
+ import omegaconf
+ import hydra
+ import mlflow
 +import torch
-@@ -16 +17 @@
+ 
+ import {{cookiecutter.src_package_name}} as {{cookiecutter.src_package_name_short}}
+ 
+ 
+ # pylint: disable = no-value-for-parameter
+ @hydra.main(version_base=None, config_path="../conf", config_name="train_model.yaml")
+ def main(args):
 -    """This is the main function for 'training' the model.
 +    """This is the main function for training the model.
-@@ -39,2 +40,4 @@
+ 
+     Parameters
+     ----------
+     args : omegaconf.DictConfig
+@@ -35,33 +36,85 @@
+     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
+         mlflow_init_status,
+         "log_params",
+         params={
 -            "dummy_param1": args["dummy_param1"],
 -            "dummy_param2": args["dummy_param2"],
 +            "learning_rate": args["lr"],
 +            "gamma": args["gamma"],
 +            "seed": args["seed"],
 +            "epochs": args["epochs"],
-@@ -44 +47,64 @@
+         },
+     )
+ 
 -    model = {{cookiecutter.src_package_name_short}}.modeling.models.DummyModel()
 +    torch.manual_seed(args["seed"])
 +
@@ -81,7 +103,12 @@
 +            )
 +
 +        scheduler.step()
-@@ -51,13 +116,0 @@
+ 
+     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
+         mlflow_init_status,
+         "log_dict",
+         dictionary=omegaconf.OmegaConf.to_container(args, resolve=True),
+         artifact_file="train_model_config.json",
 -    )
 -
 -    os.makedirs(args["artifact_dir_path"], exist_ok=True)
@@ -95,6 +122,18 @@
 -        "log_artifact",
 -        local_path=artifact_path,
 -        artifact_path="outputs"
-@@ -81 +134 @@
+     )
+ 
+     if mlflow_init_status:
+         artifact_uri = mlflow.get_artifact_uri()
+@@ -77,9 +130,9 @@
+     else:
+         logger.info("Model training has completed.")
+ 
+     # Outputs for conf/train_model.yaml for hydra.sweeper.direction
 -    return args["dummy_param1"], args["dummy_param2"]
 +    return curr_test_loss, curr_test_accuracy
+ 
+ 
+ if __name__ == "__main__":
+     main()

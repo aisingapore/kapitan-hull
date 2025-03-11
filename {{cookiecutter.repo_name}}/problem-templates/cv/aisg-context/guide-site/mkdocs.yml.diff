@@ -1,14 +1,30 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/mkdocs.yml
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/mkdocs.yml
-@@ -14 +14 @@
+@@ -10,9 +10,9 @@
+ repo_url: ""
+ edit_uri: ""
+ 
+ # Copyright
 -copyright: ""
 +copyright: Copyright &copy; 2023-2024 - AI Singapore
-@@ -95 +95 @@
+ 
+ # Configuration
+ docs_dir: docs
+ theme:
+@@ -91,13 +91,13 @@
+   version:
+     provider: mike
+   social:
+     - icon: fontawesome/brands/twitter
 -      link: https://twitter.com/
 +      link: https://twitter.com/aisingapore
-@@ -97 +97 @@
+     - icon: fontawesome/brands/linkedin
 -      link: https://www.linkedin.com/
 +      link: https://www.linkedin.com/company/aisingapore
-@@ -99 +99 @@
+     - icon: fontawesome/brands/instagram
 -      link: https://www.instagram.com/
 +      link: https://www.instagram.com/ai_singapore/
+ 
+ # Extensions
+ markdown_extensions:
+   - admonition

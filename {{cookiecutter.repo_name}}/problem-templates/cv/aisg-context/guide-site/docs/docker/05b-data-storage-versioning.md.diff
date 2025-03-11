@@ -1,6 +1,10 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/05b-data-storage-versioning.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/05b-data-storage-versioning.md
-@@ -5,2 +5,6 @@
+@@ -1,28 +1,37 @@
+ # Data Storage & Versioning
+ 
+ ## Sample Data
+ 
 -We can generate some sample data to use to test the different 
 -components of Kapitan Hull.
 +While you may have your own project data to work with, for the purpose
@@ -9,7 +13,10 @@
 +VSCode server workspace.
 +
 +[prob]: ../setting-up/02-preface.md#guides-problem-statement
-@@ -11,4 +15,3 @@
+ 
+ === "Linux/macOS"
+ 
+     ```bash
 -    mkdir -p ./data/raw && cd "$_"
 -    echo "Test1" > data1.txt
 -    echo "Test2" > data2.txt
@@ -17,7 +24,11 @@
 +    mkdir -p ./data && cd "$_"
 +    wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/mnist-pngs-data-aisg.zip
 +    unzip mnist-pngs-data-aisg.zip
-@@ -20,5 +23,4 @@
+     ```
+ 
+ === "Windows Powershell"
+ 
+     ```powershell
 -    New-Item -ItemType Directory -Path .\data\raw -Force | Out-Null
 -    Set-Location -Path .\data\raw
 -    Set-Content -Path .\data1.txt -Value "Test1"
@@ -27,7 +38,8 @@
 +    Set-Location -Path "data"
 +    Invoke-WebRequest -Uri "https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/mnist-pngs-data-aisg.zip" -OutFile "mnist-pngs-data-aisg.zip"
 +    Expand-Archive -Path "mnist-pngs-data-aisg.zip" -DestinationPath "."
-@@ -26,0 +29,7 @@
+     ```
+ 
 +!!! info
 +    The sample data for this guide's problem statement is made
 +    accessible to the public. Hence any team or individual can download
@@ -35,6 +47,6 @@
 +    accessible and neither should it be, especially if it is a 100E
 +    project.
 +
-@@ -28 +37 @@
+ In the next section, we will work towards processing this set of raw
 -data and eventually 'training' a dummy model.
 +data and eventually training an image classification model.

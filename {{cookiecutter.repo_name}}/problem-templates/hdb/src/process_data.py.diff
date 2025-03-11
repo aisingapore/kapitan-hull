@@ -1,12 +1,20 @@
 --- {{cookiecutter.repo_name}}/src/process_data.py
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/src/process_data.py
-@@ -33 +33 @@
+@@ -29,23 +29,28 @@
+         )
+     )
+ 
+     raw_data_dir_path = args["raw_data_dir_path"]
 -    dataset = {{cookiecutter.src_package_name_short}}.data_prep.datasets.DummyDataset(
 +    dataset = {{cookiecutter.src_package_name_short}}.data_prep.datasets.HdbDataset(
-@@ -35,0 +36,2 @@
+         raw_data_dir_path
+     )
 +    
 +    raw_data = dataset.load_data()
-@@ -40,4 +42,5 @@
+ 
+     processed_data_dir_path = args["processed_data_dir_path"]
+     os.makedirs(args["processed_data_dir_path"], exist_ok=True)
+ 
 -    logger.info(
 -        "Copying files from %s to %s.",
 -        raw_data_dir_path,
@@ -16,7 +24,7 @@
 +    data_processor = {{cookiecutter.src_package_name_short}}.data_prep.transforms.Transform()
 +    X_train, X_test, y_train, y_test = data_processor.transform(
 +       raw_data, args["test_size"], args["seed"]
-@@ -45,4 +48,6 @@
+     )
 -    dataset.save_data(processed_data_dir_path)
 -
 -    logger.info("All raw data has been processed.")
@@ -27,3 +35,6 @@
 +    y_test.to_csv(os.path.join(processed_data_dir_path, "y_test.csv"), index=False)
 +    logger.info("All raw data has been processed and saved.")
 +    ## Example code, adjust or use your own code
+ 
+ if __name__ == "__main__":
+     main()

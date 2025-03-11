@@ -1,7 +1,8 @@
 --- {{cookiecutter.repo_name}}/conf/process_data.yaml
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/conf/process_data.yaml
-@@ -2,0 +3,40 @@
-+
+@@ -1,2 +1,41 @@
+ raw_data_dir_path: "./data/raw"
+ processed_data_dir_path: "./data/processed"
 +test_size: 0.2
 +seed: 1111
 +
