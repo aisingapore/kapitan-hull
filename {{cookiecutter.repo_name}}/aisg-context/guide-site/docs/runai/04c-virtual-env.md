@@ -53,6 +53,11 @@ workspace directory:
     `pip install` executions. However, there's no similar flag for
     `conda` at the moment so the above is a blanket solution.
 
+The Conda YAML configuration file uses the `requirements.txt` to create
+a Conda environment. This is so that there is parity between the 
+development and deployment environment as the Docker image would use 
+`requirements.txt` as the list of packages to be installed.
+
 ??? info "Reference Link(s)"
 
     - [`conda` Docs - Managing environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file)
