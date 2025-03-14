@@ -88,7 +88,7 @@
 -        -H 'Content-Type: application/json' \
 -        -d '"string"'
 +        -H 'Content-Type: multipart/form-data' \
-+        -F "image_file=@/path/to/image/file"
++        -F "image_file=@./src/tests/sample_mnist_data_for_tests/train/0/16585.png"
      ```
    
  Output sample:
