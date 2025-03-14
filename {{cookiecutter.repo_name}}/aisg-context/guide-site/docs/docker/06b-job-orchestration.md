@@ -207,7 +207,7 @@ well with the following command:
     docker run --rm \
         -p 5000:5000 \
         -v ./mlruns:/mlruns \
-        ghcr.io/mlflow/mlflow:v2.16.0 \
+        ghcr.io/mlflow/mlflow:v2.20.3 \
         mlflow server -h 0.0.0.0
     ```
 
