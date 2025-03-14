@@ -39,7 +39,8 @@ COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} ${REPO_DIR} {{cookiecutter.repo_na
 RUN micromamba shell init -s bash -r ${HOME_DIR}/micromamba
 RUN micromamba install python=3.12.9 -c defaults -n base -y
 RUN micromamba run -n base pip install -r {{cookiecutter.repo_name}}/requirements.txt
-RUN echo 'alias python="micromamba run -n base python"' >> "${HOME_DIR}/.bashrc"
+RUN mkdir -p ${HOME_DIR}/.local/bin
+RUN ln -sf ${HOME_DIR}/micromamba/bin/python ${HOME_DIR}/.local/bin
 
 # Use this if deployed outside Run:ai
 #RUN pip install -r {{cookiecutter.repo_name}}/requirements.txt
