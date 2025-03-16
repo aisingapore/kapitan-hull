@@ -39,7 +39,7 @@ the near future.
 - End-to-end ML project structure
 - MLOps best practices
 - Run:ai integration
-- Problem-specific templates (CV, HDB)
+- Problem-specific templates
 - Docker configuration
 
 ## Installation
