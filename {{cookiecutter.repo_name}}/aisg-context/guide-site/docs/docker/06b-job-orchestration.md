@@ -256,6 +256,7 @@ the running MLFlow server:
     ```bash
     docker run --rm \
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
         -w /home/aisg/{{cookiecutter.repo_name}} \
         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
         --network=host \
@@ -268,6 +269,7 @@ the running MLFlow server:
     ```bash
     docker run --rm \
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
         -w /home/aisg/{{cookiecutter.repo_name}} \
         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
         --network=host \
@@ -288,6 +290,7 @@ the running MLFlow server:
     ```powershell
     docker run --rm \
         -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
+        -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
         -w /home/aisg/{{cookiecutter.repo_name}} `
         -e MLFLOW_TRACKING_URI=http://localhost:5000 `
         --network=host `

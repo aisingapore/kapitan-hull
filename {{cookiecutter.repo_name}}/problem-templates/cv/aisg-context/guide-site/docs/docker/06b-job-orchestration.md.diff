@@ -48,7 +48,7 @@
          Add `--device=nvidia.com/gpu=all` for Nvidia GPUs using Podman
          instead of Docker.  
          Add `--device=/dev/kfd --device=/dev/dri --group-add` video for
-@@ -343,10 +354,10 @@
+@@ -346,10 +357,10 @@
      storage: null
      n_trials: 3
      n_jobs: 1
@@ -61,7 +61,7 @@
  
  These fields are used by the Optuna Sweeper plugin to configure the
  Optuna study.
-@@ -371,9 +382,9 @@
+@@ -374,9 +385,9 @@
  
  `src/train_model.py`
  ```python
