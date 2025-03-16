@@ -42,5 +42,5 @@ RUN micromamba run -n base pip install -r {{cookiecutter.repo_name}}/requirement
 RUN mkdir -p ${HOME_DIR}/.local/bin
 RUN ln -sf ${HOME_DIR}/micromamba/bin/python ${HOME_DIR}/.local/bin
 
-# Use this if deployed outside Run:ai
+# Use this if deployed within Run:ai
 #RUN pip install -r {{cookiecutter.repo_name}}/requirements.txt
