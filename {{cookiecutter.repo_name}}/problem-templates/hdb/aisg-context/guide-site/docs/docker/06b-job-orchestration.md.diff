@@ -30,7 +30,7 @@
  
  After that, we build the Docker image from the Docker file 
  `docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
-@@ -337,16 +345,18 @@
+@@ -340,16 +348,18 @@
  hydra:
    sweeper:
      sampler:
@@ -53,7 +53,7 @@
  
  These fields are used by the Optuna Sweeper plugin to configure the
  Optuna study.
-@@ -371,22 +381,22 @@
+@@ -374,22 +384,22 @@
  
  `src/train_model.py`
  ```python

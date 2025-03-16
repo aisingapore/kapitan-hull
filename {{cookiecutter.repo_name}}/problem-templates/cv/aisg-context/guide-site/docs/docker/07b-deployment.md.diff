@@ -86,39 +86,45 @@
          gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP `
              -k uvicorn.workers.UvicornWorker `
              -b 0.0.0.0:8080 -w 2 -t 90
-@@ -199,36 +199,36 @@
+@@ -196,39 +196,39 @@
+ 
+ === "Linux"
+ 
      ```bash
-     docker run --rm --network=host \
+-    docker run --rm --network=host \
++    docker run --rm --network=host -v $(pwd):/home/curl_user \
          curlimages/curl -X POST \
              localhost:8080/api/v1/model/predict \
 -            -H 'Content-Type: application/json' \
 -            -d '"string"'
 +            -H 'Content-Type: multipart/form-data' \
-+            -F "image_file=@/path/to/image/file"
++            -F "image_file=@./src/tests/sample_mnist_data_for_tests/train/0/16585.png"
      ```
  
  === "macOS"
  
      ```bash
-     docker run --rm --network=host \
+-    docker run --rm --network=host \
++    docker run --rm --network=host -v $(pwd):/home/curl_user \
          curlimages/curl -X POST \
              localhost:8080/api/v1/model/predict \
 -            -H 'Content-Type: application/json' \
 -            -d '"string"'
 +            -H 'Content-Type: multipart/form-data' \
-+            -F "image_file=@/path/to/image/file"
++            -F "image_file=@./src/tests/sample_mnist_data_for_tests/train/0/16585.png"
      ```
  
  === "Windows PowerShell"
  
      ```powershell
-     docker run --rm --network=host `
+-    docker run --rm --network=host `
++    docker run --rm --network=host -v "$(Get-Location):/home/curl_user" `
          curlimages/curl -X POST `
              localhost:8080/api/v1/model/predict `
 -            -H 'Content-Type: application/json' `
 -            -d '"string"'
 +            -H 'Content-Type: multipart/form-data' `
-+            -F "image_file=@/path/to/image/file"
++            -F "image_file=@./src/tests/sample_mnist_data_for_tests/train/0/16585.png"
      ```
      
  Output sample:

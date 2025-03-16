@@ -224,11 +224,11 @@ we can run a job using it:
         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-        -e OMP_NUM_THREADS=2 \
         --command -- /bin/bash -c "python -u src/train_model.py \
+            mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
+            mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
             data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
-            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
-            mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"
+            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models"
     ```
 
 Once you have successfully run an experiment, you may inspect the run
@@ -375,9 +375,10 @@ by default.
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
         --command -- /bin/bash -c "python -u src/train_model.py --multirun \
+            mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
+            mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
             data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
-            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
-            mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"
+            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models"
     ```
 
 ![MLflow Tracking Server - Hyperparameter Tuning Runs](../common/assets/screenshots/mlflow-tracking-hptuning-runs.png)

@@ -1,0 +1,23 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/04c-virtual-env.md
++++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/runai/04c-virtual-env.md
+@@ -56,8 +56,20 @@
+ The Conda YAML configuration file uses the `requirements.txt` to create
+ a Conda environment. This is so that there is parity between the 
+ development and deployment environment as the Docker image would use 
+ `requirements.txt` as the list of packages to be installed.
++
++You will have to do an extra pip installation, depending on whether you
++rely on the CPU-only or GPU-enabled variant. You can make use of these
++requirements files:
++
++```bash
++# CPU-only
++pip install -r pytorch-cpu-requirements.txt
++
++# GPU-enabled
++pip install -r pytorch-gpu-requirements.txt
++```
+ 
+ ??? info "Reference Link(s)"
+ 
+     - [`conda` Docs - Managing environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file)

@@ -207,7 +207,7 @@ well with the following command:
     docker run --rm \
         -p 5000:5000 \
         -v ./mlruns:/mlruns \
-        ghcr.io/mlflow/mlflow:v2.16.0 \
+        ghcr.io/mlflow/mlflow:v2.20.3 \
         mlflow server -h 0.0.0.0
     ```
 
@@ -218,7 +218,7 @@ well with the following command:
         -p 5000:5000 \
         -v ./mlruns:/mlruns \
         --platform linux/amd64 \
-        ghcr.io/mlflow/mlflow:v2.16.0 \
+        ghcr.io/mlflow/mlflow:v2.20.3 \
         mlflow server -h 0.0.0.0
     ```
 
@@ -228,7 +228,7 @@ well with the following command:
     docker run --rm `
         -p 5000:5000 `
         -v .\mlruns:/mlruns `
-        ghcr.io/mlflow/mlflow:v2.16.0 `
+        ghcr.io/mlflow/mlflow:v2.20.3 `
         mlflow server -h 0.0.0.0
     ```
 
@@ -256,11 +256,12 @@ the running MLFlow server:
     ```bash
     docker run --rm \
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
         -w /home/aisg/{{cookiecutter.repo_name}} \
         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
         --network=host \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
-        python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
+        bash -c "python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI"
     ```
 
 === "macOS"
@@ -268,11 +269,12 @@ the running MLFlow server:
     ```bash
     docker run --rm \
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
         -w /home/aisg/{{cookiecutter.repo_name}} \
         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
         --network=host \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
-        python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
+        bash -c "python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI"
     ```
 
 === "Windows PowerShell"
@@ -288,11 +290,12 @@ the running MLFlow server:
     ```powershell
     docker run --rm \
         -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
+        -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
         -w /home/aisg/{{cookiecutter.repo_name}} `
         -e MLFLOW_TRACKING_URI=http://localhost:5000 `
         --network=host `
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
-        python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
+        bash -c "python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI"
     ```
 
 [rocm-wsl]: https://rocm.docs.amd.com/projects/radeon/en/latest/docs/install/wsl/howto_wsl.html
@@ -416,7 +419,7 @@ container. This tag is defined using the environment value
         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
         --network=host \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
-        python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
+        bash -c "python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI"
     ```
 
 === "macOS"
@@ -429,7 +432,7 @@ container. This tag is defined using the environment value
         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
         --network=host \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
-        python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
+        bash -c "python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI"
     ```
 
 === "Windows PowerShell"
@@ -452,7 +455,7 @@ container. This tag is defined using the environment value
         -e MLFLOW_TRACKING_URI=http://localhost:5000 `
         --network=host `
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
-        python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI
+        bash -c "python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI"
     ```
 
 ![MLflow Tracking Server - Hyperparameter Tuning Runs](../common/assets/screenshots/mlflow-tracking-hptuning-runs.png)

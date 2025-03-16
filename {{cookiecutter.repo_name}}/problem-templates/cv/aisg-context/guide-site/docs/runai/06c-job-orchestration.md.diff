@@ -13,17 +13,6 @@
  
  This requires the Docker image to be built from a Dockerfile 
  (`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
-@@ -90,9 +90,9 @@
- 
- === "Coder Workspace Terminal using Run:ai"
- 
-     ```bash
--    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
-+    # Run `runai login` and `runai config project aisg` first if needed
-     # Run this in the base of your project repository, and change accordingly
-     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
-     runai submit \
-         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
 @@ -100,16 +100,16 @@
          --working-dir /home/aisg/{{cookiecutter.repo_name}} \
          --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
@@ -82,36 +71,25 @@
  
  After that, we build the Docker image from the Docker file 
  `docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
-@@ -212,9 +226,9 @@
- 
- === "Coder Workspace Terminal using Run:ai"
- 
-     ```bash
--    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
-+    # Run `runai login` and `runai config project aisg` first if needed
-     # Run this in the base of your project repository, and change accordingly
-     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
-     $ runai submit \
-         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
-@@ -225,11 +239,14 @@
+@@ -223,13 +237,15 @@
+         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
          -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
          -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-         -e OMP_NUM_THREADS=2 \
++        -e OMP_NUM_THREADS=2 \
          --command -- /bin/bash -c "python -u src/train_model.py \
+             mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
+             mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
 -            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
--            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
--            mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"
+-            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models"
 +            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed \
-+            setup_mlflow=true \
-+            mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
-+            mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
 +            model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models \
 +            epochs=3"
      ```
  
  Once you have successfully run an experiment, you may inspect the run
  on the MLflow Tracking server. Through the MLflow Tracking server
-@@ -300,10 +317,10 @@
+@@ -300,10 +316,10 @@
      storage: null
      n_trials: 3
      n_jobs: 1
@@ -124,7 +102,7 @@
  
  These fields are used by the Optuna Sweeper plugin to configure the
  Optuna study.
-@@ -328,9 +345,9 @@
+@@ -328,9 +344,9 @@
  
  `src/train_model.py`
  ```python
@@ -135,31 +113,18 @@
  ```
  
  `conf/train_model.yaml`
-@@ -361,9 +378,9 @@
- 
- === "Coder Workspace Terminal using Run:ai"
- 
-     ```bash
--    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
-+    # Run `runai login` and `runai config project aisg` first if needed
-     # Run this in the base of your project repository, and change accordingly
-     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
-     runai submit \
-         --job-name-prefix <YOUR_HYPHENATED_NAME>-train-hp \
-@@ -373,12 +390,16 @@
+@@ -373,13 +389,15 @@
          --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
          -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
          -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
          -e MLFLOW_HPTUNING_TAG=$(date +%s) \
 +        -e OMP_NUM_THREADS=2 \
          --command -- /bin/bash -c "python -u src/train_model.py --multirun \
+             mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
+             mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
 -            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
--            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
--            mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"
+-            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models"
 +            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed \
-+            setup_mlflow=true \
-+            mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
-+            mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
 +            model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models \
 +            epochs=3"
      ```
