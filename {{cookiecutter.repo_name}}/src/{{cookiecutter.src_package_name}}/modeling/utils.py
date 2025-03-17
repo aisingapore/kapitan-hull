@@ -8,30 +8,21 @@ import {{cookiecutter.src_package_name}} as {{cookiecutter.src_package_name_shor
 
 logger = logging.getLogger(__name__)
 
-def load_model():
-    """Load dummy model.
 
-    A sample utility function to be used.
-
-    Returns
-    -------
-    loaded_model : 
-        Object containing dummy model.
-    """
-    loaded_model = {{cookiecutter.src_package_name_short}}.modeling.models.DummyModel()
-
-    return loaded_model
-
-
-def train(model, epochs=5, learning_rate=0.01, batch_size=32):
+def train(mlflow_init_status, model, dataset, epoch, learning_rate=0.01, batch_size=32):
     """Simulate training a model.
 
     Parameters
     ----------
+    mlflow_init_status : bool
+        Boolean value indicative of success of intialising connection
+        with MLflow server.
     model : object
         The model to train.
-    epochs : int, optional
-        Number of epochs to train for, by default 5.
+    dataset : object
+        The dataset.
+    epoch : int
+        Current epoch value.
     learning_rate : float, optional
         Learning rate for training, by default 0.01.
     batch_size : int, optional
@@ -39,63 +30,103 @@ def train(model, epochs=5, learning_rate=0.01, batch_size=32):
 
     Returns
     -------
-    dict
-        Dictionary containing training metrics.
+    loss : float
+        Simulated loss value for the training dataset.
     """
-    logger.info(f"Starting training with {epochs} epochs, lr={learning_rate}, batch_size={batch_size}")
     
-    metrics = {
-        "train_loss": [],
-        "train_accuracy": []
-    }
+    model.train()
     
-    for epoch in range(1, epochs + 1):
-        # Simulate training for 1 second
-        time.sleep(1)
-        
-        # Generate fake metrics that improve over time
-        loss = 1.0 - (0.15 * epoch) + random.uniform(-0.05, 0.05)
-        loss = max(0.1, loss)  # Ensure loss doesn't go below 0.1
-        accuracy = 0.5 + (0.08 * epoch) + random.uniform(-0.02, 0.02)
-        accuracy = min(0.98, accuracy)  # Cap accuracy at 0.98
-        
-        metrics["train_loss"].append(loss)
-        metrics["train_accuracy"].append(accuracy)
-        
-        logger.info(f"Epoch {epoch}/{epochs} - loss: {loss:.4f}, accuracy: {accuracy:.4f}")
+    # Generate fake metrics that improve over time
+    loss = 1.0 - (0.15 * epoch) + random.uniform(-0.05, 0.05)
+    loss = max(0.1, loss)  # Ensure loss doesn't go below 0.1
+    accuracy = 0.5 + (0.08 * epoch) + random.uniform(-0.02, 0.02)
+    accuracy = min(0.98, accuracy)  # Cap accuracy at 0.98
     
-    return metrics
+    logger.info(f"Epoch {epoch} - loss: {loss:.4f}, accuracy: {accuracy:.4f}")
+    
+    {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
+        mlflow_init_status,
+        "log_metric",
+        key="train_loss",
+        value=loss,
+        step=epoch,
+    )
+
+    {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
+        mlflow_init_status,
+        "log_metric",
+        key="train_accuracy",
+        value=accuracy,
+        step=epoch,
+    )
+
+    return loss
 
 
-def test(model, test_size=100):
+def test(mlflow_init_status, model, dataset, epoch, test_size=100):
     """Simulate testing a model.
 
     Parameters
     ----------
+    mlflow_init_status : bool
+        Boolean value indicative of success of intialising connection
+        with MLflow server.
     model : object
         The model to test.
+    dataset : object
+        The dataset.
+    epoch : int
+        Current epoch value.
     test_size : int, optional
         Number of test samples, by default 100.
 
     Returns
     -------
-    dict
-        Dictionary containing test metrics.
+    test_loss : float
+        Average loss value for the test dataset.
+    test_accuracy : float
+        Accuracy value for the test dataset.
     """
     logger.info(f"Evaluating model on {test_size} test samples")
     
-    # Simulate a short evaluation time
-    time.sleep(1)
+    model.predict()
     
     # Generate fake test metrics
     test_loss = random.uniform(0.1, 0.3)
     test_accuracy = random.uniform(0.85, 0.95)
     
-    metrics = {
-        "test_loss": test_loss,
-        "test_accuracy": test_accuracy
-    }
-    
     logger.info(f"Test results - loss: {test_loss:.4f}, accuracy: {test_accuracy:.4f}")
     
-    return metrics
+    {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
+        mlflow_init_status,
+        "log_metric",
+        key="test_loss",
+        value=test_loss,
+        step=epoch
+    )
+
+    {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
+        mlflow_init_status,
+        "log_metric",
+        key="test_accuracy",
+        value=test_accuracy,
+        step=epoch
+    )
+
+    return test_loss, test_accuracy
+
+
+def load_model():
+    """Load dummy model.
+
+    A sample utility function to be used.
+
+    Returns
+    -------
+    loaded_model : object
+        Object containing dummy model.
+    """
+    loaded_model = {{cookiecutter.src_package_name_short}}.modeling.models.DummyModel()
+
+    return loaded_model
+

@@ -29,6 +29,11 @@ def main(args):
             hydra.utils.get_original_cwd(), "conf", "logging.yaml"
         )
     )
+    logger.info(
+        "Starting training with {} epochs, lr={}, batch_size={}".format(
+            args['epochs'], args['lr'], args['train_bs']
+        )
+    )
 
     mlflow_init_status, mlflow_run = {{cookiecutter.src_package_name_short}}.general_utils.mlflow_init(
         args["mlflow_tracking_uri"], args["mlflow_exp_name"], 
@@ -39,41 +44,26 @@ def main(args):
         mlflow_init_status,
         "log_params",
         params={
-            "dummy_param1": args["dummy_param1"],
-            "dummy_param2": args["dummy_param2"],
+            "learning_rate": args["lr"],
+            "train_batch_size": args["train_bs"],
+            "test_batch_size": args["test_bs"]
         },
     )
 
-    # Create model
+    dataset = {{cookiecutter.src_package_name_short}}.data_prep.datasets.DummyDataset(args["data_dir_path"])
+
     model = {{cookiecutter.src_package_name_short}}.modeling.models.DummyModel()
     
-    # Train the model
-    logger.info("Starting model training...")
-    epochs = 5  # Default number of epochs
-    train_metrics = {{cookiecutter.src_package_name_short}}.modeling.utils.train(
-        model, 
-        epochs=epochs, 
-        learning_rate=args["dummy_param1"],
-        batch_size=int(32 * args["dummy_param2"])
-    )
-    
-    # Test the model
-    logger.info("Evaluating model...")
-    test_metrics = {{cookiecutter.src_package_name_short}}.modeling.utils.test(model)
-    
-    # Log metrics to MLflow
-    if mlflow_init_status:
-        # Log final metrics
-        mlflow.log_metric("final_train_loss", train_metrics["train_loss"][-1])
-        mlflow.log_metric("final_train_accuracy", train_metrics["train_accuracy"][-1])
-        mlflow.log_metric("test_loss", test_metrics["test_loss"])
-        mlflow.log_metric("test_accuracy", test_metrics["test_accuracy"])
-        
-        # Log metrics for each epoch
-        for epoch, (loss, acc) in enumerate(zip(train_metrics["train_loss"], 
-                                               train_metrics["train_accuracy"]), 1):
-            mlflow.log_metric("train_loss", loss, step=epoch)
-            mlflow.log_metric("train_accuracy", acc, step=epoch)
+    for epoch in range(1, args["epochs"] + 1):
+        curr_train_loss = {{cookiecutter.src_package_name_short}}.modeling.utils.train(
+            mlflow_init_status, model, dataset, epoch, 
+            learning_rate=args["lr"],
+            batch_size=int(args["train_bs"])
+        )
+        curr_test_loss, curr_test_accuracy = {{cookiecutter.src_package_name_short}}.modeling.utils.test(
+            mlflow_init_status, model, dataset, epoch,
+            test_size=args["test_bs"]
+        )
 
     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
         mlflow_init_status,
@@ -86,21 +76,11 @@ def main(args):
     os.makedirs(args["artifact_dir_path"], exist_ok=True)
     
     # Save training configuration
-    artifact_path = os.path.join(args["artifact_dir_path"], "output.txt")
+    artifact_path = os.path.join(
+        args["artifact_dir_path"], "output.txt"
+    )
     with open(artifact_path, "w") as f:
         f.write('\n'.join([f'{x}: {args[x]}' for x in args]))
-    
-    # Save metrics
-    metrics_path = os.path.join(args["artifact_dir_path"], "metrics.json")
-    with open(metrics_path, "w") as f:
-        json.dump({
-            "training": train_metrics,
-            "testing": test_metrics,
-            "hyperparameters": {
-                "learning_rate": args["dummy_param1"],
-                "batch_size_factor": args["dummy_param2"]
-            }
-        }, f, indent=2)
     
     # Log artifacts to MLflow
     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
@@ -108,13 +88,6 @@ def main(args):
         "log_artifact",
         local_path=artifact_path,
         artifact_path="outputs"
-    )
-    
-    {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
-        mlflow_init_status,
-        "log_artifact",
-        local_path=metrics_path,
-        artifact_path="metrics"
     )
 
     if mlflow_init_status:
@@ -132,8 +105,7 @@ def main(args):
         logger.info("Model training has completed.")
 
     # Outputs for conf/train_model.yaml for hydra.sweeper.direction
-    # Return negative loss (to minimize) and accuracy (to maximize)
-    return -test_metrics["test_loss"], test_metrics["test_accuracy"]
+    return curr_test_loss, curr_test_accuracy
 
 
 if __name__ == "__main__":
