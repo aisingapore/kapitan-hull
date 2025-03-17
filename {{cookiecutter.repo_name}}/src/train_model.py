@@ -30,7 +30,9 @@ def main(args):
     )
 
     mlflow_init_status, mlflow_run = {{cookiecutter.src_package_name_short}}.general_utils.mlflow_init(
-        args, setup_mlflow=args["setup_mlflow"], autolog=args["mlflow_autolog"]
+        args["mlflow_tracking_uri"], args["mlflow_exp_name"], 
+        args["mlflow_run_name"], setup_mlflow=args["setup_mlflow"], 
+        autolog=args["mlflow_autolog"], resume=args["resume"]
     )
     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
         mlflow_init_status,

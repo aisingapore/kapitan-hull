@@ -39,18 +39,27 @@ def setup_logging(
         logger.info("Logging config file is not found. Basic config is being used.")
 
 
-def mlflow_init(args, run_name='train-model', setup_mlflow=False, autolog=False):
+def mlflow_init(
+    tracking_uri, exp_name, run_name, setup_mlflow=False, 
+    autolog=False, resume=False
+    ):
     """Initialise MLflow connection.
 
     Parameters
     ----------
-    args : dict
-        Dictionary containing the pipeline's configuration passed from
-        Hydra.
+    tracking_uri : string
+        Tracking URI used for MLFlow
+    exp_name : string
+        Experiment name used for MLFlow
+    run_name : string
+        Run name for the experiment used for MLFlow
     setup_mlflow : bool, optional
         Choice to set up MLflow connection, by default False
     autolog : bool, optional
         Choice to set up MLflow's autolog, by default False
+    resume : bool, optional
+        Choice to resume using the latest previous run with the same 
+        name, by default False
 
     Returns
     -------
@@ -67,14 +76,13 @@ def mlflow_init(args, run_name='train-model', setup_mlflow=False, autolog=False)
     mlflow_run = None
     if setup_mlflow:
         try:
-            mlflow.set_tracking_uri(args["mlflow_tracking_uri"])
-            mlflow.set_experiment(args["mlflow_exp_name"])
+            mlflow.set_tracking_uri(tracking_uri)
+            mlflow.set_experiment(exp_name)
             mlflow.enable_system_metrics_logging()
 
             if autolog:
                 mlflow.autolog()
 
-            run_name = args.get('mlflow_run_name', run_name) # conf files take precedence
             if "MLFLOW_HPTUNING_TAG" in os.environ: run_name += "-hp"
 
             run_name += "-{:.0f}".format(time.time())
