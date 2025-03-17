@@ -85,9 +85,36 @@ def mlflow_init(
 
             if "MLFLOW_HPTUNING_TAG" in os.environ: run_name += "-hp"
 
-            run_name += "-{:.0f}".format(time.time())
-
-            mlflow.start_run(run_name=run_name)
+            base_run_name = run_name
+            
+            if resume:
+                # Try to find the most recent run with the same prefix name
+                client = mlflow.tracking.MlflowClient()
+                experiment = client.get_experiment_by_name(exp_name)
+                if experiment:
+                    runs = client.search_runs(
+                        experiment_ids=[experiment.experiment_id],
+                        filter_string=f"tags.mlflow.runName LIKE '{base_run_name}-%'",
+                        order_by=["attribute.start_time DESC"],
+                        max_results=1
+                    )
+                    if runs:
+                        # Resume the most recent run
+                        mlflow.start_run(run_id=runs[0].info.run_id)
+                        logger.info(f"Resuming previous run: {runs[0].info.run_name}")
+                    else:
+                        # No previous run found, create a new one
+                        run_name = f"{base_run_name}-{int(time.time())}"
+                        mlflow.start_run(run_name=run_name)
+                        logger.info(f"No previous run found. Starting new run: {run_name}")
+                else:
+                    # Experiment not found, create a new run
+                    run_name = f"{base_run_name}-{int(time.time())}"
+                    mlflow.start_run(run_name=run_name)
+            else:
+                # Start a new run with timestamp
+                run_name = f"{base_run_name}-{int(time.time())}"
+                mlflow.start_run(run_name=run_name)
 
             set_tag = lambda env_var, tag_name='': mlflow.set_tag(
                 tag_name if tag_name != '' else env_var.lower(), 
