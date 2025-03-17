@@ -1,14 +1,6 @@
 --- {{cookiecutter.repo_name}}/.gitlab-ci.yml
-+++ {{cookiecutter.repo_name}}/problem-templates/hdb/.gitlab-ci.yml
-@@ -1,91 +1,127 @@
- default:
-   tags:
--{%- if cookiecutter.platform == 'onprem' %}
--    - on-prem
--{%- elif cookiecutter.platform == 'gcp' %}
-     - gcp
--{%- endif %}
-   cache:
++++ {{cookiecutter.repo_name}}/problem-templates/cv/.gitlab-ci.yml
+@@ -9,83 +9,135 @@
      key: $CI_COMMIT_REF_SLUG
      paths:
        - ./conda
@@ -70,7 +62,7 @@
 +      job_name: build:cpu-push
 +      stage: deploy
 +      docker_image_name: cpu
-+      registry: {{cookiecutter.registry_project_path.split('/')[0]}}
++      registry: {{cookiecutter.registry_project_path.split('/')[0]}}     
 +      destination: {{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA}
 +
 +  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-deployment/docker-build@0.1.1
@@ -82,14 +74,26 @@
 +      docker_image_name: gpu
 +      image_tag: ${CI_COMMIT_SHORT_SHA}
 +      expiry_time: "30"
-+
++{%- if cookiecutter.platform == 'onprem' %}
 +  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-deployment/docker-push@0.1.1
 +    inputs:
 +      job_name: build:gpu-push
 +      stage: deploy
 +      docker_image_name: gpu
 +      registry: {{cookiecutter.registry_project_path.split('/')[0]}}
-+      destination: {{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_SHORT_SHA}
++      destination: {{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA}
++      registry_username: robot\$harbor-robot-token
++      registry_access_key: ${HARBOR_ROBOT_TOKEN}
++{%- elif cookiecutter.platform == 'gcp' %}
++  - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-deployment/docker-push@0.1.1
++    inputs:
++      job_name: build:gpu-push
++      stage: deploy
++      docker_image_name: gpu
++      registry: {{cookiecutter.registry_project_path.split('/')[0]}}
++      destination: {{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA} 
++      registry_access_key: ${GCLOUD_SERVICE_KEY}
++{%- endif %}
 +
 +build:
    script:
@@ -188,7 +192,7 @@
      - pip install -r aisg-context/guide-site/mkdocs-requirements.txt
    script:
      - sphinx-apidoc -f -o docs src
-@@ -100,125 +136,6 @@
+@@ -100,125 +152,6 @@
          - docs/**/*
          - src/**/*
          - aisg-context/guide-site/**/*
