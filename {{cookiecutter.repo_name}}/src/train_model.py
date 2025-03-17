@@ -54,16 +54,14 @@ def main(args):
 
     model = {{cookiecutter.src_package_name_short}}.modeling.models.DummyModel()
     
-    for epoch in range(1, args["epochs"] + 1):
-        # Use step_offset to continue from the last step when resuming
-        actual_step = step_offset + epoch
+    for epoch in range(step_offset + 1, args["epochs"] + step_offset + 1):
         curr_train_loss = {{cookiecutter.src_package_name_short}}.modeling.utils.train(
-            mlflow_init_status, model, dataset, actual_step, 
+            mlflow_init_status, model, dataset, epoch, 
             learning_rate=args["lr"],
             batch_size=int(args["train_bs"])
         )
         curr_test_loss, curr_test_accuracy = {{cookiecutter.src_package_name_short}}.modeling.utils.test(
-            mlflow_init_status, model, dataset, actual_step,
+            mlflow_init_status, model, dataset, epoch,
             test_size=args["test_bs"]
         )
 
