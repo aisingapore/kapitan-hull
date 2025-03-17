@@ -35,8 +35,8 @@ def setup_logging(
             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             level=default_level,
         )
-        logger.info(error)
-        logger.info("Logging config file is not found. Basic config is being used.")
+        logger.error(error)
+        logger.error("Logging config file is not found. Basic config is being used.")
 
 
 def mlflow_init(
