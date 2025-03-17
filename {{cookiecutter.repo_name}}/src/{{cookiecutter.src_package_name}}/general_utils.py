@@ -111,10 +111,10 @@ def mlflow_init(
                         logger.info(f"Resuming previous run: {runs[0].info.run_name}")
                         
                         # Find the maximum step across all metrics
-                        metric_keys = [m.key for m in client.get_run(run_id).data.metrics]
+                        metrics = client.get_run(run_id).data.metrics
                         max_steps = []
                         
-                        for metric_key in metric_keys:
+                        for metric_key in metrics.keys():
                             metric_history = client.get_metric_history(run_id, metric_key)
                             if metric_history:
                                 max_steps.append(max(m.step for m in metric_history))
