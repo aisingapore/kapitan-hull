@@ -71,9 +71,15 @@ def mlflow_init(
         On successful initialisation, the function returns an object
         containing the data and properties for the MLflow run.
         On failure, the function returns a null value.
+        
+    step_offset : int
+        The last step number from the previous run if resuming, or 0 if starting a new run.
+        This can be used to continue logging metrics with incrementing step numbers.
     """
     init_success = False
     mlflow_run = None
+    step_offset = 0
+    
     if setup_mlflow:
         try:
             mlflow.set_tracking_uri(tracking_uri)
@@ -86,10 +92,10 @@ def mlflow_init(
             if "MLFLOW_HPTUNING_TAG" in os.environ: run_name += "-hp"
 
             base_run_name = run_name
+            client = mlflow.tracking.MlflowClient()
             
             if resume:
                 # Try to find the most recent run with the same prefix name
-                client = mlflow.tracking.MlflowClient()
                 experiment = client.get_experiment_by_name(exp_name)
                 if experiment:
                     runs = client.search_runs(
@@ -100,8 +106,22 @@ def mlflow_init(
                     )
                     if runs:
                         # Resume the most recent run
-                        mlflow.start_run(run_id=runs[0].info.run_id)
+                        run_id = runs[0].info.run_id
+                        mlflow.start_run(run_id=run_id)
                         logger.info(f"Resuming previous run: {runs[0].info.run_name}")
+                        
+                        # Find the maximum step across all metrics
+                        metric_keys = [m.key for m in client.get_run(run_id).data.metrics]
+                        max_steps = []
+                        
+                        for metric_key in metric_keys:
+                            metric_history = client.get_metric_history(run_id, metric_key)
+                            if metric_history:
+                                max_steps.append(max(m.step for m in metric_history))
+                        
+                        if max_steps:
+                            step_offset = max(max_steps)
+                            logger.info(f"Continuing from step {step_offset}")
                     else:
                         # No previous run found, create a new one
                         run_name = f"{base_run_name}-{int(time.time())}"
@@ -132,7 +152,7 @@ def mlflow_init(
             logger.error("MLflow initialisation has failed.")
             logger.error(e)
 
-    return init_success, mlflow_run
+    return init_success, mlflow_run, step_offset
 
 
 def mlflow_log(mlflow_init_status, log_function, **kwargs):

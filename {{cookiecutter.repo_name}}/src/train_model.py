@@ -35,7 +35,7 @@ def main(args):
         )
     )
 
-    mlflow_init_status, mlflow_run = {{cookiecutter.src_package_name_short}}.general_utils.mlflow_init(
+    mlflow_init_status, mlflow_run, step_offset = {{cookiecutter.src_package_name_short}}.general_utils.mlflow_init(
         args["mlflow_tracking_uri"], args["mlflow_exp_name"], 
         args["mlflow_run_name"], setup_mlflow=args["setup_mlflow"], 
         autolog=args["mlflow_autolog"], resume=args["resume"]
@@ -55,13 +55,15 @@ def main(args):
     model = {{cookiecutter.src_package_name_short}}.modeling.models.DummyModel()
     
     for epoch in range(1, args["epochs"] + 1):
+        # Use step_offset to continue from the last step when resuming
+        actual_step = step_offset + epoch
         curr_train_loss = {{cookiecutter.src_package_name_short}}.modeling.utils.train(
-            mlflow_init_status, model, dataset, epoch, 
+            mlflow_init_status, model, dataset, actual_step, 
             learning_rate=args["lr"],
             batch_size=int(args["train_bs"])
         )
         curr_test_loss, curr_test_accuracy = {{cookiecutter.src_package_name_short}}.modeling.utils.test(
-            mlflow_init_status, model, dataset, epoch,
+            mlflow_init_status, model, dataset, actual_step,
             test_size=args["test_bs"]
         )
 
