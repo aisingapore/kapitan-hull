@@ -111,13 +111,36 @@ def mlflow_init(
                         logger.info(f"Resuming previous run: {runs[0].info.run_name}")
                         
                         # Find the maximum step across all metrics
-                        metrics = client.get_run(run_id).data.metrics
+                        run_data = client.get_run(run_id).data
                         max_steps = []
                         
-                        for metric_key in metrics.keys():
-                            metric_history = client.get_metric_history(run_id, metric_key)
-                            if metric_history:
-                                max_steps.append(max(m.step for m in metric_history))
+                        # Get all metric keys - handle different MLflow API versions
+                        try:
+                            # Try accessing metrics as a dictionary
+                            metric_keys = run_data.metrics.keys()
+                        except AttributeError:
+                            try:
+                                # Try accessing metrics as a list of objects with key attribute
+                                metric_keys = [m.key for m in run_data.metrics]
+                            except (AttributeError, TypeError):
+                                # Fallback: get metric keys from metric history
+                                logger.warning("Could not directly access metric keys, using alternative method")
+                                metric_keys = []
+                                # Try to get all metrics by listing them from the run
+                                try:
+                                    for metric in client.list_metrics(run_id):
+                                        metric_keys.append(metric.key)
+                                except Exception as e:
+                                    logger.warning(f"Error listing metrics: {e}")
+                        
+                        # Get maximum step for each metric
+                        for metric_key in metric_keys:
+                            try:
+                                metric_history = client.get_metric_history(run_id, metric_key)
+                                if metric_history:
+                                    max_steps.append(max(m.step for m in metric_history))
+                            except Exception as e:
+                                logger.warning(f"Error getting history for metric {metric_key}: {e}")
                         
                         if max_steps:
                             step_offset = max(max_steps)
