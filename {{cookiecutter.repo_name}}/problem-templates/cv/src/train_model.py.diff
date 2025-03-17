@@ -24,7 +24,7 @@
      Parameters
      ----------
      args : omegaconf.DictConfig
-@@ -35,33 +36,85 @@
+@@ -37,33 +38,85 @@
      {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
          mlflow_init_status,
          "log_params",
@@ -126,7 +126,7 @@
  
      if mlflow_init_status:
          artifact_uri = mlflow.get_artifact_uri()
-@@ -77,9 +130,9 @@
+@@ -79,9 +132,9 @@
      else:
          logger.info("Model training has completed.")
  

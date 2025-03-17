@@ -9,7 +9,7 @@
  import os
  import logging
  import omegaconf
-@@ -31,19 +32,31 @@
+@@ -33,19 +34,31 @@
          args["mlflow_tracking_uri"], args["mlflow_exp_name"], 
          args["mlflow_run_name"], setup_mlflow=args["setup_mlflow"], 
          autolog=args["mlflow_autolog"], resume=args["resume"]
@@ -47,7 +47,7 @@
          mlflow_init_status,
          "log_dict",
          dictionary=omegaconf.OmegaConf.to_container(args, resolve=True),
-@@ -51,17 +64,20 @@
+@@ -53,17 +66,20 @@
      )
  
      os.makedirs(args["artifact_dir_path"], exist_ok=True)
@@ -70,7 +70,7 @@
  
      if mlflow_init_status:
          artifact_uri = mlflow.get_artifact_uri()
-@@ -76,10 +92,12 @@
+@@ -78,10 +94,12 @@
          mlflow.end_run()
      else:
          logger.info("Model training has completed.")
