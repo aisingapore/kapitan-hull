@@ -21,7 +21,7 @@ def setup_logging(
     ----------
     logging_config_path : str, optional
         Path to YAML file containing configuration for Python logger,
-        by default "./config/logging_config.yaml"
+        by default "./conf/logging.yaml"
     default_level : logging object, optional, by default logging.INFO
     """
 
