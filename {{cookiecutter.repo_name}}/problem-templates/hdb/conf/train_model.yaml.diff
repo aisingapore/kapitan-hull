@@ -1,24 +1,26 @@
 --- {{cookiecutter.repo_name}}/conf/train_model.yaml
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/conf/train_model.yaml
-@@ -3,11 +3,15 @@
+@@ -3,13 +3,15 @@
  mlflow_tracking_uri: "./mlruns"
  mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
  mlflow_run_name: "train-model"
  data_dir_path: "./data/processed"
--dummy_param1: 1.3
--dummy_param2: 0.8
+-lr: 1.3
+-train_bs: 32
+-test_bs: 100
  artifact_dir_path: "./models"
+-epochs: 5
 +use_cuda: false
 +n_estimators: 100
 +lr: 0.5
 +gamma: 1
 +max_depth: 5
 +seed: 1111
+ resume: false
  
  defaults:
    - override hydra/sweeper: optuna
-   - override hydra/sweeper/sampler: tpe
-@@ -15,12 +19,14 @@
+@@ -18,12 +20,14 @@
  hydra:
    sweeper:
      sampler:
@@ -31,8 +33,8 @@
      n_trials: 3
      n_jobs: 1
      params:
--      dummy_param1: range(0.9,1.7,step=0.1)
--      dummy_param2: choice(0.7,0.8,0.9)
+-      lr: range(0.9,1.7,step=0.1)
+-      train_bs: choice(32,48,64)
 +      n_estimators: range(50, 200, step=10)
 +      lr: tag(log, interval(0.1, 0.6))
 +      gamma: choice(0,0.1,0.2,0.3,0.4,0.5)

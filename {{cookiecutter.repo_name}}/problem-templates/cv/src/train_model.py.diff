@@ -1,12 +1,13 @@
 --- {{cookiecutter.repo_name}}/src/train_model.py
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/src/train_model.py
-@@ -1,20 +1,21 @@
+@@ -1,21 +1,21 @@
  """
 -This script is for training a dummy model on a dummy dataset.
 +This script is for training a model on the MNIST dataset.
  """
  import os
  import logging
+-import json
  import omegaconf
  import hydra
  import mlflow
@@ -24,23 +25,38 @@
      Parameters
      ----------
      args : omegaconf.DictConfig
-@@ -35,33 +36,85 @@
-     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
+@@ -28,13 +28,8 @@
+         logging_config_path=os.path.join(
+             hydra.utils.get_original_cwd(), "conf", "logging.yaml"
+         )
+     )
+-    logger.info(
+-        "Starting training with {} epochs, lr={}, batch_size={}".format(
+-            args['epochs'], args['lr'], args['train_bs']
+-        )
+-    )
+ 
+     mlflow_init_status, mlflow_run = {{cookiecutter.src_package_name_short}}.general_utils.mlflow_init(
+         args["mlflow_tracking_uri"], args["mlflow_exp_name"], 
+         args["mlflow_run_name"], setup_mlflow=args["setup_mlflow"], 
+@@ -44,53 +39,86 @@
          mlflow_init_status,
          "log_params",
          params={
--            "dummy_param1": args["dummy_param1"],
--            "dummy_param2": args["dummy_param2"],
-+            "learning_rate": args["lr"],
+             "learning_rate": args["lr"],
+-            "train_batch_size": args["train_bs"],
+-            "test_batch_size": args["test_bs"]
 +            "gamma": args["gamma"],
 +            "seed": args["seed"],
 +            "epochs": args["epochs"],
          },
      )
  
--    model = {{cookiecutter.src_package_name_short}}.modeling.models.DummyModel()
+-    dataset = {{cookiecutter.src_package_name_short}}.data_prep.datasets.DummyDataset(args["data_dir_path"])
 +    torch.manual_seed(args["seed"])
-+
+ 
+-    model = {{cookiecutter.src_package_name_short}}.modeling.models.DummyModel()
+-    
 +    use_cuda = not args["no_cuda"] and torch.cuda.is_available()
 +    if use_cuda:
 +        device = torch.device("cuda")
@@ -71,13 +87,18 @@
 +        optimiser, step_size=1, gamma=args["gamma"]
 +    )
 +
-+    for epoch in range(1, args["epochs"] + 1):
-+        curr_train_loss = {{cookiecutter.src_package_name_short}}.modeling.utils.train(
+     for epoch in range(1, args["epochs"] + 1):
+         curr_train_loss = {{cookiecutter.src_package_name_short}}.modeling.utils.train(
+-            mlflow_init_status, model, dataset, epoch, 
+-            learning_rate=args["lr"],
+-            batch_size=int(args["train_bs"])
 +            args, model, device, train_loader, optimiser, epoch, mlflow_init_status
-+        )
-+        curr_test_loss, curr_test_accuracy = {{cookiecutter.src_package_name_short}}.modeling.utils.test(
+         )
+         curr_test_loss, curr_test_accuracy = {{cookiecutter.src_package_name_short}}.modeling.utils.test(
+-            mlflow_init_status, model, dataset, epoch,
+-            test_size=args["test_bs"]
 +            model, device, test_loader, epoch, mlflow_init_status
-+        )
+         )
 +
 +        if epoch % args["model_checkpoint_interval"] == 0:
 +            logger.info("Exporting the model for epoch %s.", epoch)
@@ -109,31 +130,27 @@
          "log_dict",
          dictionary=omegaconf.OmegaConf.to_container(args, resolve=True),
          artifact_file="train_model_config.json",
--    )
--
+     )
+ 
+-    # Save metrics to artifact directory
 -    os.makedirs(args["artifact_dir_path"], exist_ok=True)
+-    
+-    # Save training configuration
 -    artifact_path = os.path.join(
 -        args["artifact_dir_path"], "output.txt"
 -    )
 -    with open(artifact_path, "w") as f:
 -        f.write('\n'.join([f'{x}: {args[x]}' for x in args]))
+-    
+-    # Log artifacts to MLflow
 -    {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
 -        mlflow_init_status,
 -        "log_artifact",
 -        local_path=artifact_path,
 -        artifact_path="outputs"
-     )
- 
+-    )
+-    
      if mlflow_init_status:
          artifact_uri = mlflow.get_artifact_uri()
-@@ -77,9 +130,9 @@
-     else:
-         logger.info("Model training has completed.")
- 
-     # Outputs for conf/train_model.yaml for hydra.sweeper.direction
--    return args["dummy_param1"], args["dummy_param2"]
-+    return curr_test_loss, curr_test_accuracy
- 
- 
- if __name__ == "__main__":
-     main()
+         logger.info("Artifact URI: %s", artifact_uri)
+         {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(

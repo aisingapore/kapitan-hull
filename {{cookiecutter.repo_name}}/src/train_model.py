@@ -3,6 +3,7 @@ This script is for training a dummy model on a dummy dataset.
 """
 import os
 import logging
+import json
 import omegaconf
 import hydra
 import mlflow
@@ -28,20 +29,41 @@ def main(args):
             hydra.utils.get_original_cwd(), "conf", "logging.yaml"
         )
     )
+    logger.info(
+        "Starting training with {} epochs, lr={}, batch_size={}".format(
+            args['epochs'], args['lr'], args['train_bs']
+        )
+    )
 
-    mlflow_init_status, mlflow_run = {{cookiecutter.src_package_name_short}}.general_utils.mlflow_init(
-        args, setup_mlflow=args["setup_mlflow"], autolog=args["mlflow_autolog"]
+    mlflow_init_status, mlflow_run, step_offset = {{cookiecutter.src_package_name_short}}.general_utils.mlflow_init(
+        args["mlflow_tracking_uri"], args["mlflow_exp_name"], 
+        args["mlflow_run_name"], setup_mlflow=args["setup_mlflow"], 
+        autolog=args["mlflow_autolog"], resume=args["resume"]
     )
     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
         mlflow_init_status,
         "log_params",
         params={
-            "dummy_param1": args["dummy_param1"],
-            "dummy_param2": args["dummy_param2"],
+            "learning_rate": args["lr"],
+            "train_batch_size": args["train_bs"],
+            "test_batch_size": args["test_bs"]
         },
     )
 
+    dataset = {{cookiecutter.src_package_name_short}}.data_prep.datasets.DummyDataset(args["data_dir_path"])
+
     model = {{cookiecutter.src_package_name_short}}.modeling.models.DummyModel()
+    
+    for epoch in range(step_offset + 1, args["epochs"] + step_offset + 1):
+        curr_train_loss = {{cookiecutter.src_package_name_short}}.modeling.utils.train(
+            mlflow_init_status, model, dataset, epoch, 
+            learning_rate=args["lr"],
+            batch_size=int(args["train_bs"])
+        )
+        curr_test_loss, curr_test_accuracy = {{cookiecutter.src_package_name_short}}.modeling.utils.test(
+            mlflow_init_status, model, dataset, epoch,
+            test_size=args["test_bs"]
+        )
 
     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
         mlflow_init_status,
@@ -50,12 +72,17 @@ def main(args):
         artifact_file="train_model_config.json",
     )
 
+    # Save metrics to artifact directory
     os.makedirs(args["artifact_dir_path"], exist_ok=True)
+    
+    # Save training configuration
     artifact_path = os.path.join(
         args["artifact_dir_path"], "output.txt"
     )
     with open(artifact_path, "w") as f:
         f.write('\n'.join([f'{x}: {args[x]}' for x in args]))
+    
+    # Log artifacts to MLflow
     {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
         mlflow_init_status,
         "log_artifact",
@@ -78,7 +105,7 @@ def main(args):
         logger.info("Model training has completed.")
 
     # Outputs for conf/train_model.yaml for hydra.sweeper.direction
-    return args["dummy_param1"], args["dummy_param2"]
+    return curr_test_loss, curr_test_accuracy
 
 
 if __name__ == "__main__":
