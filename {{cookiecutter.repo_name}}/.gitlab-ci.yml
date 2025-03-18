@@ -1,4 +1,4 @@
-{%- if cookiecutter.aisg_gitlab %}
+{%- if cookiecutter.aisg_gitlab -%}
 default:
   tags:
 {%- if cookiecutter.platform == 'onprem' %}
@@ -208,8 +208,7 @@ pages:
   needs:
     - job: build
       optional: true
-
-{%- else %}
+{%- else -%}
 default:
   tags:
 {%- if cookiecutter.platform == 'onprem' %}
@@ -434,4 +433,4 @@ build:retag-images:
       optional: true
     - job: build:gpu-image
       optional: true
-{%- endif %}
+{%- endif -%}
