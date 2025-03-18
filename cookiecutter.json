@@ -27,7 +27,7 @@
             "runai": "runai - Run:ai (with AISG Resources)",
             "noorch": "noorch - No orchestrator (not implemented yet)"
         },
-        "aisg_gitlab": "aisg-gitlab - Choose whether .gitlab-ci.yml uses AISG GitLab",
+        "aisg_gitlab": "aisg-gitlab - Choose whether .gitlab-ci.yml runs in AISG GitLab",
         "proj_name": "proj_name - Project name used by the orchestrator (for Run:ai, this will be the Run:ai project name)",
         "registry_project_path": "registry_project_path - Full path to container registry (without trailing slash, e.g., registry.domain.tld/project/image)",
         "problem_template": {
