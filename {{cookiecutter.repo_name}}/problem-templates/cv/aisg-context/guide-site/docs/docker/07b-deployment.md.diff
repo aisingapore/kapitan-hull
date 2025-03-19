@@ -136,19 +136,19 @@
  
  With the returned JSON object, we have successfully submitted a request
  to the FastAPI server and it returned predictions as part of the
-@@ -244,9 +244,10 @@
+@@ -245,9 +245,10 @@
  data and schema validation, as well as [settings management]. There's a 
  class called `Settings` under the module
  `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
  contains several fields: some are defined and some others not. The 
--`MODEL_UUID` field inherits their values from the environment variables.
+-`MODEL_UUID` field inherits its value from the environment variables.
 +`PRED_MODEL_UUID` and `PRED_MODEL_PATH` fields inherit their values 
 +from the environment variables.
  
  `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
  ```python
  ...
-@@ -255,9 +256,12 @@
+@@ -256,9 +257,12 @@
      API_NAME: str = "{{cookiecutter.src_package_name}}_fastapi"
      API_V1_STR: str = "/api/v1"
      LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"

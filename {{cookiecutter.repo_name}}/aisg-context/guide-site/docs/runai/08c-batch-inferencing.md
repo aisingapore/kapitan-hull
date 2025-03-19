@@ -8,7 +8,7 @@ predictions, perhaps exported to a file.
 This template provides a Python script (`src/batch_infer.py`) and a 
 configuration file (`conf/batch_infer.yaml`) for this purpose. 
 
-Let's first download some data on our Coder workspace for us to conduct
+Let's first create some sample data on our Coder workspace for us to conduct
 batch inferencing on:
 
 === "Coder Workspace Terminal"

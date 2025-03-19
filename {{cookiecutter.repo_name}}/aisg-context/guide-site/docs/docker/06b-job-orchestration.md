@@ -29,7 +29,7 @@ values can be overridden through the CLI.
 ## Data Preparation & Preprocessing
 
 To process the sample raw data, there are many ways to do so. One way
-is to run through a Docker container. You can first your configuration
+is to run through a Docker container. You can first update your configuration
 variables at `conf/process_data.yaml`, specifically this section:
 
 ```yaml
@@ -117,7 +117,7 @@ docker push {{cookiecutter.registry_project_path}}/cpu:0.1.0
 ## Model Training
 
 Now that we have processed the raw data, we can look into training the
-sentiment classification model. The script relevant for this section
+model. The script relevant for this section
 is `src/train_model.py`. In this script, you can see it using some
 utility functions from
 `src/{{cookiecutter.src_package_name}}/general_utils.py`

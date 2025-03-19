@@ -1,0 +1,96 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/07a-deployment.md
++++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/local/07a-deployment.md
+@@ -1,6 +1,12 @@
+ # Deployment
+ 
++!!! info
++
++    The guide below is only meant for reference only and not meant to
++    be followed verbatim. You may need to generate your own guide 
++    site if you require guidance specifically for your own project.
++ 
+ Assuming we have a predictive model that we are satisfied with, we can
+ serve it within a REST API service with which requests can be made to
+ and predictions are returned.
+ 
+@@ -49,10 +55,10 @@
+ 
+ If you were to inspect the `src` folder, you would notice that there
+ exists more than one package:
+ 
+-- `{{cookiecutter.src_package_name}}`
+-- `{{cookiecutter.src_package_name}}_fastapi`
++- `project_package`
++- `project_package_fastapi`
+ 
+ The former contains the modules for executing pipelines like data 
+ preparation and model training while the latter is dedicated to modules 
+ meant for the REST API. Regardless, the packages can be imported by 
+@@ -78,17 +84,17 @@
+ 
+ === "Linux/macOS"
+ 
+     ```bash
+-    conda activate {{cookiecutter.repo_name}}
++    conda activate project
+     export MODEL_UUID=<MLFLOW_RUN_UUID>
+     python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
+     ```
+ 
+ === "Windows PowerShell"
+ 
+     ```powershell
+-    conda activate {{cookiecutter.repo_name}}
++    conda activate project
+     $Env:MODEL_UUID=<MLFLOW_RUN_UUID>
+     python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
+     ```
+ 
+@@ -113,10 +119,10 @@
+ 
+ === "Linux/macOS"
+ 
+     ```bash
+-    conda activate {{cookiecutter.repo_name}}
+-    gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
++    conda activate project
++    gunicorn project_package_fastapi.main:APP \
+         -k uvicorn.workers.UvicornWorker \
+         -b 0.0.0.0:8080 -w 2 -t 90 --chdir src
+     ```
+ 
+@@ -128,10 +134,10 @@
+ 
+ === "Windows PowerShell"
+ 
+     ```powershell
+-    conda activate {{cookiecutter.repo_name}}
+-    uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP --app-dir src
++    conda activate project
++    uvicorn project_package_fastapi.main:APP --app-dir src
+     ```
+ 
+ And with that, our document site for our server is viewable through
+ [`localhost:8080/docs`](http://localhost:8080/docs) and will look as
+@@ -177,18 +183,18 @@
+ Now you might be wondering, how does the FastAPI server knows the path
+ to the model for it to load? FastAPI utilises [Pydantic], a library for 
+ data and schema validation, as well as [settings management]. There's a 
+ class called `Settings` under the module
+-`src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
++`src/project_package_fastapi/config.py`. This class 
+ contains several fields: some are defined and some others not. The 
+ `MODEL_UUID` field inherits its value from the environment variables.
+ 
+-`src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
++`src/project_package_fastapi/config.py`:
+ ```python
+ ...
+ class Settings(pydantic_settings.BaseSettings):
+ 
+-    API_NAME: str = "{{cookiecutter.src_package_name}}_fastapi"
++    API_NAME: str = "project_package_fastapi"
+     API_V1_STR: str = "/api/v1"
+     LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"
+ 
+     MODEL_UUID: str

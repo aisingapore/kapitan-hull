@@ -28,7 +28,7 @@ COOKIE_INPUTS = {
         "regex": r"^(https?:\/\/)?([a-zA-Z0-9.-]+(:[a-zA-Z0-9.-]+)?@)?([a-zA-Z0-9.-]+)(:[0-9]+)?\/([a-zA-Z0-9._-]+\/)*([a-zA-Z0-9._-]+)(:[a-zA-Z0-9._-]+)?$"},
     "problem_template": {
         "user_input": "{{cookiecutter.problem_template}}",
-        "avail": ["base", "cv", "hdb"]},
+        "avail": ["base", "cv", "hdb", "unified"]}, # hdb, unified - hidden options, only invoked through cookiecutter.json
     "author_name": {
         "user_input": "{{cookiecutter.author_name}}",
         "regex": r"^[a-zA-Z](?:_?[a-zA-Z0-9]+)*$"}

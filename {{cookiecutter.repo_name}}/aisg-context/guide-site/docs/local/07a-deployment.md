@@ -137,7 +137,7 @@ And with that, our document site for our server is viewable through
 [`localhost:8080/docs`](http://localhost:8080/docs) and will look as
 such:
 
-![MLflow - Dashboard Run View](../common/assets/screenshots/mlflow-dashboard-run-view.png)
+![FastAPI - OpenAPI Docs](../common/assets/screenshots/fastapi-openapi-docs.png)
 
 In another terminal, use the `curl` command to submit a request to the API:
 
@@ -155,7 +155,7 @@ In another terminal, use the `curl` command to submit a request to the API:
     ```powershell
     curl.exe '-X', 'POST', `
         'localhost:8080/api/v1/model/predict', `
-        '-H', 'Content-Type: multipart/form-data', `
+        '-H', 'Content-Type: application/json', `
         '-d', '"string"',
     ```
     
@@ -180,7 +180,7 @@ data and schema validation, as well as [settings management]. There's a
 class called `Settings` under the module
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
 contains several fields: some are defined and some others not. The 
-`MODEL_UUID` field inherits their values from the environment variables.
+`MODEL_UUID` field inherits its value from the environment variables.
 
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
 ```python

@@ -1,7 +1,7 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/06b-job-orchestration.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/06b-job-orchestration.md
 @@ -32,10 +32,10 @@
- is to run through a Docker container. You can first your configuration
+ is to run through a Docker container. You can first update your configuration
  variables at `conf/process_data.yaml`, specifically this section:
  
  ```yaml

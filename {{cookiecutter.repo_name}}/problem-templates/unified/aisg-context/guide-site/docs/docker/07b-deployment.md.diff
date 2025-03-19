@@ -1,0 +1,134 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/07b-deployment.md
++++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/docker/07b-deployment.md
+@@ -1,6 +1,12 @@
+ # Deployment
+ 
++!!! info
++
++    The guide below is only meant for reference only and not meant to
++    be followed verbatim. You may need to generate your own guide 
++    site if you require guidance specifically for your own project.
++ 
+ Assuming we have a predictive model that we are satisfied with, we can
+ serve it within a REST API service with which requests can be made to
+ and predictions are returned.
+ 
+@@ -49,10 +55,10 @@
+ 
+ If you were to inspect the `src` folder, you would notice that there
+ exists more than one package:
+ 
+-- `{{cookiecutter.src_package_name}}`
+-- `{{cookiecutter.src_package_name}}_fastapi`
++- `project_package`
++- `project_package_fastapi`
+ 
+ The former contains the modules for executing pipelines like data 
+ preparation and model training while the latter is dedicated to modules 
+ meant for the REST API. Regardless, the packages can be imported by 
+@@ -84,9 +90,9 @@
+     docker run --rm \
+         -v ./models:/models \
+         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
+         --network host \
+-        {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
++        registry.aisingapore.net/project-path/cpu:0.1.0 \
+         python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
+     ```
+ 
+ === "macOS"
+@@ -96,9 +102,9 @@
+     docker run --rm \
+         -v ./models:/models \
+         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
+         --network host \
+-        {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
++        registry.aisingapore.net/project-path/cpu:0.1.0 \
+         python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
+     ```
+ 
+ === "Windows PowerShell"
+@@ -108,9 +114,9 @@
+     docker run --rm `
+         -v .\models:/models `
+         -e MLFLOW_TRACKING_URI=http://localhost:5000 `
+         --network host `
+-        {{cookiecutter.registry_project_path}}/cpu:0.1.0 `
++        registry.aisingapore.net/project-path/cpu:0.1.0 `
+         python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='/models/$MODEL_UUID')"
+     ```
+ 
+ Executing the commands above will download the artifacts related to the
+@@ -143,12 +149,12 @@
+ 
+     ```bash
+     docker run --rm \
+         -p 8080:8080 \
+-        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
+-        -w /home/aisg/{{cookiecutter.repo_name}}/src \
+-        {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+-        gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
++        -v ./models:/home/aisg/project/models \
++        -w /home/aisg/project/src \
++        registry.aisingapore.net/project-path/gpu:0.1.0 \
++        gunicorn project_package_fastapi.main:APP \
+             -k uvicorn.workers.UvicornWorker \
+             -b 0.0.0.0:8080 -w 2 -t 90
+     ```
+ 
+@@ -156,12 +162,12 @@
+ 
+     ```bash
+     docker run --rm \
+         -p 8080:8080 \
+-        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
+-        -w /home/aisg/{{cookiecutter.repo_name}}/src \
+-        {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+-        gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
++        -v ./models:/home/aisg/project/models \
++        -w /home/aisg/project/src \
++        registry.aisingapore.net/project-path/gpu:0.1.0 \
++        gunicorn project_package_fastapi.main:APP \
+             -k uvicorn.workers.UvicornWorker \
+             -b 0.0.0.0:8080 -w 2 -t 90
+     ```
+ 
+@@ -177,12 +183,12 @@
+ 
+     ```powershell
+     docker run --rm `
+         -p 8080:8080 `
+-        -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
+-        -w /home/aisg/{{cookiecutter.repo_name}}/src `
+-        {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
+-        gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP `
++        -v .\models:/home/aisg/project/models `
++        -w /home/aisg/project/src `
++        registry.aisingapore.net/project-path/gpu:0.1.0 `
++        gunicorn project_package_fastapi.main:APP `
+             -k uvicorn.workers.UvicornWorker `
+             -b 0.0.0.0:8080 -w 2 -t 90
+     ```
+ 
+@@ -243,18 +249,18 @@
+ Now you might be wondering, how does the FastAPI server knows the path
+ to the model for it to load? FastAPI utilises [Pydantic], a library for 
+ data and schema validation, as well as [settings management]. There's a 
+ class called `Settings` under the module
+-`src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
++`src/project_package_fastapi/config.py`. This class 
+ contains several fields: some are defined and some others not. The 
+ `MODEL_UUID` field inherits its value from the environment variables.
+ 
+-`src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
++`src/project_package_fastapi/config.py`:
+ ```python
+ ...
+ class Settings(pydantic_settings.BaseSettings):
+ 
+-    API_NAME: str = "{{cookiecutter.src_package_name}}_fastapi"
++    API_NAME: str = "project_package_fastapi"
+     API_V1_STR: str = "/api/v1"
+     LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"
+ 
+     MODEL_UUID: str

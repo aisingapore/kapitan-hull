@@ -1,0 +1,60 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/04a-virtual-env.md
++++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/local/04a-virtual-env.md
+@@ -1,17 +1,26 @@
+ # Virtual Environments
++
++!!! info
++
++    The guide below is only meant for reference only and not meant to
++    be followed verbatim. You may need to generate your own guide 
++    site if you require guidance specifically for your own project.
+ 
+ We can create a virtual environment that will contain all the 
+ dependencies required for this guide.
+ 
+ ```bash
+-conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml
++conda env create -f project-conda-env.yaml
+ ```
+ 
+ The Conda YAML configuration file uses the `requirements.txt` to create
+ a Conda environment. This is so that there is parity between the 
+ development and deployment environment as the Docker image would use 
+ `requirements.txt` as the list of packages to be installed.
++
++You may have to do extra pip installations, depending on your project's
++requirements. You can install them through `pip install -r <file>`.
+ 
+ !!! info "On the use of GPUs"
+     Conda environment configured using the YAML file does not take into
+     account whether you need extra requirements to use your GPU for
+@@ -20,9 +29,9 @@
+ 
+ Activate your environment by running:
+ 
+ ```bash
+-conda activate {{cookiecutter.repo_name}}
++conda activate project
+ ```
+ 
+ You can either run `python` or install IPython to run an interactive
+ shell and write snippets to test within the environment:
+@@ -65,16 +74,16 @@
+ 
+     === "Linux/macOS"
+ 
+         ```bash
+-        conda activate {{cookiecutter.repo_name}}
++        conda activate project
+         conda list | grep "ipykernel"
+         ```
+   
+     === "Windows PowerShell"
+ 
+         ```powershell
+-        conda activate {{cookiecutter.repo_name}}
++        conda activate project
+         conda list | Select-String "ipykernel"
+         ```
+ 
+ Output should look similar to:
