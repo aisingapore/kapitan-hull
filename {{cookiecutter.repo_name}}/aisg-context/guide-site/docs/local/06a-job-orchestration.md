@@ -61,14 +61,14 @@ After that, run the script:
 
 ## Model Training
 
-Now that we have processed the raw data, we can look into training the
-sentiment classification model. The script relevant for this section
-is `src/train_model.py`. In this script, you can see it using some
-utility functions from
-`src/{{cookiecutter.src_package_name}}/general_utils.py`
-as well, most notably the functions for utilising MLflow utilities for
-tracking experiments. Let's set up the tooling for experiment tracking
-before we start model experimentation.
+Now that we have processed the raw data, we can look into 'training' 
+the model. The script relevant for this section is `src/train_model.py`. 
+
+In this script, you can see it using some utility functions from
+`src/{{cookiecutter.src_package_name}}/general_utils.py` as well, most 
+notably the functions for utilising MLflow utilities for tracking 
+experiments. Let's set up the tooling for experiment tracking before we 
+start model experimentation.
 
 !!! info "Experiment Tracking"
 

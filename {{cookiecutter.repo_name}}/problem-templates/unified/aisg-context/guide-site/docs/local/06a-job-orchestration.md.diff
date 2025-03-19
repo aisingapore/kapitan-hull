@@ -1,0 +1,71 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/06a-job-orchestration.md
++++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/local/06a-job-orchestration.md
+@@ -1,6 +1,12 @@
+ # Job Orchestration
+ 
++!!! info
++
++    The guide below is only meant for reference only and not meant to
++    be followed verbatim. You may need to generate your own guide 
++    site if you require guidance specifically for your own project.
++ 
+ We can set up development workspaces to execute jobs and workflows 
+ locally.
+ 
+ ## Pipeline Configuration
+@@ -11,9 +17,9 @@
+ 
+ The configurations for logging, pipelines and hyperparameter tuning can
+ be found under the `conf` folder. These YAML files are then referred to 
+ by Hydra or general utility functions
+-(`src/{{cookiecutter.src_package_name}}/general_utils.py`)
++(`src/project_package/general_utils.py`)
+ for loading of parameters and configurations. The defined default 
+ values can be overridden through the CLI.
+ 
+ !!! attention
+@@ -64,16 +70,16 @@
+ Now that we have processed the raw data, we can look into 'training' 
+ the model. The script relevant for this section is `src/train_model.py`. 
+ 
+ In this script, you can see it using some utility functions from
+-`src/{{cookiecutter.src_package_name}}/general_utils.py` as well, most 
++`src/project_package/general_utils.py` as well, most 
+ notably the functions for utilising MLflow utilities for tracking 
+ experiments. Let's set up the tooling for experiment tracking before we 
+ start model experimentation.
+ 
+ !!! info "Experiment Tracking"
+ 
+-    In the module `src/{{cookiecutter.src_package_name}}/general_utils.py`,
++    In the module `src/project_package/general_utils.py`,
+     the functions `mlflow_init` and `mlflow_log` are used to initialise
+     MLflow experiments as well as log information and artifacts relevant
+     for a run to an `mlruns` local folder.
+ 
+@@ -89,9 +95,9 @@
+ ```yaml
+ setup_mlflow: true
+ mlflow_autolog: false
+ mlflow_tracking_uri: "./mlruns"
+-mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
++mlflow_exp_name: "project_package_short"
+ mlflow_run_name: "train-model"
+ data_dir_path: "./data/processed"
+ lr: 1.3
+ train_bs: 32
+@@ -123,11 +129,11 @@
+ conda activate mlflow-test
+ mlflow server
+ ```
+ 
+-!!! warning "You may not use the `{{cookiecutter.repo_name}}` Conda environment"
+-
+-    You would most likely not able to use the `{{cookiecutter.repo_name}}`
++!!! warning "You may not use the `project` Conda environment"
++
++    You would most likely not able to use the `project`
+     Conda environment to run `mlflow server` as the package installed
+     within that environment is `mlflow-skinny`, not the fully-featured
+     `mlflow` that contains the server components.
+ 

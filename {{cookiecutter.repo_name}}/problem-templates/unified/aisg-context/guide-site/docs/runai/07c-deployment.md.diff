@@ -1,0 +1,139 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/07c-deployment.md
++++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/runai/07c-deployment.md
+@@ -1,6 +1,12 @@
+ # Deployment
+ 
++!!! info
++
++    The guide below is only meant for reference only and not meant to
++    be followed verbatim. You may need to generate your own guide 
++    site if you require guidance specifically for your own project.
++ 
+ Assuming we have a predictive model that we are satisfied with, we can
+ serve it within a REST API service with which requests can be made to
+ and predictions are returned.
+ 
+@@ -19,27 +25,19 @@
+ [FastAPI]: https://fastapi.tiangolo.com/
+ 
+ ## Model Artifacts
+ 
+-{% if cookiecutter.platform == 'onprem' -%}
+-    {%- set objstg = 'ECS' -%}
+-    {%- set cli = 'AWS' -%}
+-{% elif cookiecutter.platform == 'gcp' -%}
+-    {%- set objstg = 'GCS' -%}
+-    {%- set cli = 'gCloud' -%}
+-{% endif -%}
+-
+ Seen in ["Model Training"][train], we have the trained models uploaded
+-to {{objstg}} through the MLflow Tracking server (done through 
++to GCS/ECS through the MLflow Tracking server (done through 
+ autolog). With that, we have the following pointers to take note of:
+ 
+ - By default, each MLflow experiment run is given a unique ID.
+-- When artifacts are uploaded to {{objstg}} through MLflow, the 
++- When artifacts are uploaded to GCS/ECS through MLflow, the 
+   artifacts are located within directories named after the unique IDs 
+   of the runs.
+ - There are two ways to download the artifacts:
+-    - We can use the {{cli}} CLI to download the predictive model from 
+-      {{objstg}}. Artifacts for specific runs will be uploaded to a 
++    - We can use the gCloud/AWS CLI to download the predictive model from 
++      GCS/ECS. Artifacts for specific runs will be uploaded to a 
+       directory with a convention similar to the following:
+       `<MLFLOW_EXPERIMENT_ARTIFACT_LOCATION>/<MLFLOW_RUN_UUID>/artifacts`.
+     - Alternatively, we can utilise the MLFlow Client library to 
+       retrieve the predictive model. This model can then be propagated 
+@@ -58,10 +56,10 @@
+ 
+ If you were to inspect the `src` folder, you would notice that there
+ exists more than one package:
+ 
+-- `{{cookiecutter.src_package_name}}`
+-- `{{cookiecutter.src_package_name}}_fastapi`
++- `project_package`
++- `project_package_fastapi`
+ 
+ The former contains the modules for executing pipelines like data 
+ preparation and model training while the latter is dedicated to modules 
+ meant for the REST API. Regardless, the packages can be imported by 
+@@ -87,9 +85,9 @@
+ 
+ === "Coder Workspace Terminal"
+ 
+     ```bash
+-    conda activate {{cookiecutter.repo_name}}
++    conda activate project
+     export MODEL_UUID=<MLFLOW_RUN_UUID>
+     export MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI>
+     export MLFLOW_TRACKING_USERNAME=<MLFLOW_TRACKING_USERNAME> # If applicable
+     export MLFLOW_TRACKING_PASSWORD=<MLFLOW_TRACKING_PASSWORD> # If applicable
+@@ -101,9 +99,9 @@
+     ```bash
+     export MODEL_UUID=<MLFLOW_RUN_UUID>
+     runai submit \
+         --job-name-prefix <YOUR_HYPHENATED_NAME>-download-artifacts \
+-        -i {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
++        -i registry.aisingapore.net/project-path/cpu:0.1.0 \
+         --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPENATED_NAME> \
+         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+         -e MLFLOW_TRACKING_URI=<MLFLOW_TRACKING_URI> \
+@@ -128,12 +126,12 @@
+ 
+ === "Coder Workspace Terminal"
+ 
+     ```bash
+-    # Running in a working `{{cookiecutter.repo_name}}` repository
+-    conda activate {{cookiecutter.repo_name}}
+-    export MODEL_UUID=<MLFLOW_RUN_UUID>
+-    gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
++    # Running in a working `project` repository
++    conda activate project
++    export MODEL_UUID=<MLFLOW_RUN_UUID>
++    gunicorn project_package_fastapi.main:APP \
+         -k uvicorn.workers.UvicornWorker \
+         -b 0.0.0.0:8080 -w 2 -t 90 --chdir src
+     ```
+ 
+@@ -147,14 +145,14 @@
+     ```bash
+     export MODEL_UUID=<MLFLOW_RUN_UUID>
+     runai submit \
+         --job-name-prefix <YOUR_HYPHENATED_NAME>-inference \
+-        -i {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+-        --working-dir /home/aisg/{{cookiecutter.repo_name}}/src \
++        -i registry.aisingapore.net/project-path/gpu:0.1.0 \
++        --working-dir /home/aisg/project/src \
+         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+         --service-type external-url,port=8080:8080 \
+-        --command -- gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
++        --command -- gunicorn project_package_fastapi.main:APP \
+             -k uvicorn.workers.UvicornWorker \
+             -b 0.0.0.0:8080 -w 2 -t 90
+     ```
+ 
+@@ -192,18 +190,18 @@
+ Now you might be wondering, how does the FastAPI server knows the path
+ to the model for it to load? FastAPI utilises [Pydantic], a library for 
+ data and schema validation, as well as [settings management]. There's a 
+ class called `Settings` under the module
+-`src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
++`src/project_package_fastapi/config.py`. This class 
+ contains several fields: some are defined and some others not. The 
+ `MODEL_UUID` field inherits its value from the environment variables.
+ 
+-`src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
++`src/project_package_fastapi/config.py`:
+ ```python
+ ...
+ class Settings(pydantic_settings.BaseSettings):
+ 
+-    API_NAME: str = "{{cookiecutter.src_package_name}}_fastapi"
++    API_NAME: str = "project_package_fastapi"
+     API_V1_STR: str = "/api/v1"
+     LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"
+ 
+     MODEL_UUID: str

@@ -3,26 +3,15 @@ import shutil
 
 
 def populate_problem(problem_domain: str) -> None:
+    if problem_domain == "base":
+        shutil.rmtree(os.path.join(os.getcwd(), "problem-templates"))
+        return None
     working_dir = os.getcwd()
     src_dir = os.path.join(working_dir, "problem-templates", problem_domain)
     shutil.copytree(src_dir, working_dir, dirs_exist_ok=True)
     if problem_domain == "hdb":
         os.remove(os.path.join(working_dir, "src", "batch_infer.py"))
         os.remove(os.path.join(working_dir, "conf", "batch_infer.yaml"))
-
-
-def generate_template_scripts() -> None:
-    PROBLEM_TEMPLATE = "{{cookiecutter.problem_template}}"
-
-    match PROBLEM_TEMPLATE:
-        case "base":
-            pass
-        case "cv":
-            populate_problem("cv")
-        case "hdb":
-            populate_problem("hdb")
-        case _:
-            raise ValueError(f"{PROBLEM_TEMPLATE} is not a valid problem template.")
     shutil.rmtree(os.path.join(os.getcwd(), "problem-templates"))
 
 
@@ -51,5 +40,5 @@ def remove_redundant_files() -> None:
 
 
 if __name__ == "__main__":
-    generate_template_scripts()
+    populate_problem("{{cookiecutter.problem_template}}")
     remove_redundant_files()

@@ -1,0 +1,223 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/appendix/09-cicd.md
++++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/appendix/09-cicd.md
+@@ -55,41 +55,33 @@
+ 
+ ## Environment Variables
+ 
+ Before we can make use of the GitLab CI pipeline, we would have to
+-define the following variable(s) for the pipeline beforehand:
+-{%- if cookiecutter.platform == 'onprem' %}
++define the following variable(s) for the pipeline beforehand, depending
++on your project's requirements:
+ 
+ - `HARBOR_ROBOT_CREDS_JSON`: A JSON formatted value that contains
+   encoded credentials for a robot account on Harbor. This is to allow
+   the pipeline to interact with the Harbor server. See the next section 
+   on how to generate this value/file.  
+-{%- elif cookiecutter.platform == 'gcp' %}
+ 
+ - `GCP_SERVICE_ACCOUNT_KEY`: A JSON formatted value that contains 
+   encoded credentials for a service account on your GCP project. This 
+   is to allow the pipeline to interact with the Google Artifact 
+   Registry. See [here][gcp-sa] on how to generate this file.  
+-{%- endif %}
+-  After you've generated the JSON file, please encode the file content 
+-  using `base64 -i <file>`. Afterwhich, copy paste the encoded value 
+-  and define it as a CI/CD variable. 
++  
++For both variables, after you've generated the JSON file, please encode 
++the file content using `base64 -i <file>`. Afterwhich, copy paste the 
++encoded value and define it as a CI/CD variable. 
+ 
+ To define CI/CD variables for a project (repository), follow the steps
+ listed [here][cicd-var]. 
+-{%- if cookiecutter.platform == 'onprem' %}
+-The environment variable `HARBOR_ROBOT_CREDS_JSON` needs to be a 
+-`variable` type.
+-{%- elif cookiecutter.platform == 'gcp' %}
+-The environment variable `GCP_SERVICE_ACCOUNT_KEY` needs to be a 
+-`variable` type.
+-{%- endif %}
++
++Both environment variables `HARBOR_ROBOT_CREDS_JSON` and 
++`GCP_SERVICE_ACCOUNT_KEY` need to be `variable` types.
+ 
+ [cicd-var]: https://docs.gitlab.com/ee/ci/variables/#define-a-cicd-variable-in-the-ui
+-{%- if cookiecutter.platform == 'gcp' %}
+ [gcp-sa]: https://cloud.google.com/iam/docs/keys-create-delete
+-{%- endif %}
+-{%- if cookiecutter.platform == 'onprem' %}
+ 
+ ### Docker Configuration File for Accessing Harbor
+ 
+ The variable `HARBOR_ROBOT_CREDS_JSON` will be used to populate the
+@@ -135,9 +127,8 @@
+ ??? info "Reference Link(s)"
+ 
+     - [GitLab Docs - GitLab CI/CD variables](https://docs.gitlab.com/ee/ci/variables/)
+     - [Docker Docs - Configuration files](https://docs.docker.com/engine/reference/commandline/cli/#configuration-files)
+-{%- endif %}
+ 
+ ## Stages & Jobs
+ 
+ In the default pipeline, we have 3 stages defined:
+@@ -165,16 +156,13 @@
+ 
+ The jobs for each of the stages are executed using Docker images 
+ defined by users. For this, we have to specify in the pipeline the tag
+ associated with the GitLab Runner that has the [Docker executor]. 
+-{%- if cookiecutter.platform == 'onprem' %}
+ The `on-prem` tag calls for runners within our on-premise 
+ infrastructure so on-premise services can be accessed within our 
+ pipelines.
+-{%- elif cookiecutter.platform == 'gcp' %}
+ The `gcp` tag calls for runners on our GCP infrastructure so it can use
+ the GCP services within our pipelines.
+-{%- endif %}
+ 
+ The `./conda` folder generated from creating the Conda environment is 
+ then cached and to be used for other jobs, saving time from rebuilding 
+ the environment in every job that requires it. The 
+@@ -186,13 +174,9 @@
+ 
+     ```yaml
+     default:
+       tags:
+-{%- if cookiecutter.platform == 'onprem' %}
+-        - on-prem
+-{%- elif cookiecutter.platform == 'gcp' %}
+-        - gcp
+-{%- endif %}
++        - on-prem # or `gcp`
+     ...
+     ```
+ 
+ [Gitlab Pages]: https://docs.gitlab.com/ee/user/project/pages
+@@ -234,9 +218,9 @@
+ the job will only execute for the following cases:
+ 
+ - For pushes to branches which merge requests have been created, tests
+   are executed only if changes made to the 
+-  `{{cookiecutter.repo_name}}-conda-env.yaml` are detected. This is to 
++  `project-conda-env.yaml` are detected. This is to 
+   prevent automated tests from running for pushes made to feature 
+   branches with merge requests when  no changes have been made to files 
+   for which tests are relevant. Otherwise, tests will run in a 
+   redundant manner, slowing down the feedback loop.
+@@ -262,9 +246,9 @@
+       stage: test
+       image:
+         name: continuumio/miniconda3:23.10.0-1
+       before_script:
+-        - source activate ./conda/{{cookiecutter.repo_name}}
++        - source activate ./conda/project
+         - pip install -r dev-requirements.txt
+       script:
+         - pylint src --fail-under=7.0 --ignore=tests --disable=W1202
+         - pytest src/tests --junitxml=./rspec.xml
+@@ -346,34 +330,26 @@
+       stage: build
+       image:
+         name: gcr.io/kaniko-project/executor:debug
+         entrypoint: [""]
+-{%- if cookiecutter.platform == 'gcp' %}
+         variables:
+-          GOOGLE_APPLICATION_CREDENTIALS: /kaniko/.docker/config.json
+-{%- endif %}
++          GOOGLE_APPLICATION_CREDENTIALS: /kaniko/.docker/config.json # For GCP
+       before_script:
+-{%- if cookiecutter.platform == 'onprem' %}
+-        - "[[ -z ${HARBOR_ROBOT_CREDS_JSON} ]] && echo 'HARBOR_ROBOT_CREDS_JSON variable is not set.' && exit 1"
+-{%- elif cookiecutter.platform == 'gcp' %}
+-        - "[[ -z ${GCP_SERVICE_ACCOUNT_KEY} ]] && echo 'GCP_SERVICE_ACCOUNT_KEY variable is not set.' && exit 1"
+-{%- endif %}
++        - "[[ -z ${HARBOR_ROBOT_CREDS_JSON} ]] && echo 'HARBOR_ROBOT_CREDS_JSON variable is not set.' && exit 1" # For onprem
++        - "[[ -z ${GCP_SERVICE_ACCOUNT_KEY} ]] && echo 'GCP_SERVICE_ACCOUNT_KEY variable is not set.' && exit 1" # For GCP
+       script:
+         - mkdir -p /kaniko/.docker
+-{%- if cookiecutter.platform == 'onprem' %}
+-        - cat $HARBOR_ROBOT_CREDS_JSON > /kaniko/.docker/config.json
+-{%- elif cookiecutter.platform == 'gcp' %}
+-        - cat $GCP_SERVICE_ACCOUNT_KEY > /kaniko/.docker/config.json
+-{%- endif %}
++        - cat $HARBOR_ROBOT_CREDS_JSON > /kaniko/.docker/config.json # For onprem
++        - cat $GCP_SERVICE_ACCOUNT_KEY > /kaniko/.docker/config.json # For GCP
+         - >-
+           /kaniko/executor
+           --context "${CI_PROJECT_DIR}"
+-          --dockerfile "${CI_PROJECT_DIR}/docker/{{cookiecutter.repo_name}}-cpu.Dockerfile"
+-          --destination "{{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA}"
++          --dockerfile "${CI_PROJECT_DIR}/docker/project-cpu.Dockerfile"
++          --destination "registry.aisingapore.net/project-path/cpu:${CI_COMMIT_SHORT_SHA}"
+       rules:
+         - if: $CI_MERGE_REQUEST_IID
+           changes:
+-            - docker/{{cookiecutter.repo_name}}-cpu.Dockerfile
++            - docker/project-cpu.Dockerfile
+             - src/**/*
+             - conf/**/*
+         - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+         - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
+@@ -394,16 +370,11 @@
+     `gcr.io/kaniko-project/executor:debug` is being used for all 
+     `build` jobs related to building of Docker images. That being said, 
+     the flags used for `kaniko` corresponds well with the flags usually 
+     used for `docker` commands.
+-{%- if cookiecutter.platform == 'onprem' %}
+-  {%- set jsonfile = 'HARBOR_ROBOT_CREDS_JSON' -%}
+-{%- elif cookiecutter.platform == 'gcp' %}
+-  {%- set jsonfile = 'GCP_SERVICE_ACCOUNT_KEY' -%}
+-{%- endif %}
+-
+-Before it goes through the job, it will check whether 
+-`{{jsonfile}}` has been set in the CI/CD variables. 
++
++Before it goes through the job, it will check whether either
++`HARBOR_ROBOT_CREDS_JSON` and `GCP_SERVICE_ACCOUNT_KEY` have been set in the CI/CD variables. 
+ Otherwise, it will prematurely stop the job with the error, preventing 
+ the job from running any further and freeing the CI worker faster to 
+ work on other jobs in the organisation.
+ 
+@@ -462,32 +433,23 @@
+     ...
+     build:retag-images:
+       stage: build
+       image:
+-{%- if cookiecutter.platform == 'onprem' %}
+-        name: gcr.io/go-containerregistry/crane:debug
++        name: gcr.io/go-containerregistry/crane:debug # google/cloud-sdk:debian_component_based for GCP
+         entrypoint: [""]
+-{%- elif cookiecutter.platform == 'gcp' %}
+-        name: google/cloud-sdk:debian_component_based
+       variables:
+-        GOOGLE_APPLICATION_CREDENTIALS: /gcp-sa.json
+-{%- endif %}
++        GOOGLE_APPLICATION_CREDENTIALS: /gcp-sa.json # For GCP
+       before_script:
+-{%- if cookiecutter.platform == 'onprem' %}
+-        - "[[ -z ${HARBOR_ROBOT_CREDS_JSON} ]] && echo 'HARBOR_ROBOT_CREDS_JSON variable is not set.' && exit 1"
+-{%- elif cookiecutter.platform == 'gcp' %}
+-        - "[[ -z ${GCP_SERVICE_ACCOUNT_KEY} ]] && echo 'GCP_SERVICE_ACCOUNT_KEY variable is not set.' && exit 1"
+-{%- endif %}
++        - "[[ -z ${HARBOR_ROBOT_CREDS_JSON} ]] && echo 'HARBOR_ROBOT_CREDS_JSON variable is not set.' && exit 1" # For onprem
++        - "[[ -z ${GCP_SERVICE_ACCOUNT_KEY} ]] && echo 'GCP_SERVICE_ACCOUNT_KEY variable is not set.' && exit 1" # For GCP
+       script:
+-{%- if cookiecutter.platform == 'onprem' %}
+         - cat $HARBOR_ROBOT_CREDS_JSON > /root/.docker/config.json
+-        - crane tag {{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
+-        - crane tag {{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
+-{%- elif cookiecutter.platform == 'gcp' %}
+-        - cat $GCP_SERVICE_ACCOUNT_KEY > /gcp-sa.json
+-        - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_TAG}"
+-        - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_TAG}"
+-{%- endif %}
++        - crane tag registry.aisingapore.net/project-path/cpu:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
++        - crane tag registry.aisingapore.net/project-path/gpu:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
++        # For GCP:
++        #- cat $GCP_SERVICE_ACCOUNT_KEY > /gcp-sa.json
++        #- gcloud container images add-tag "gcr.io/project/project-path/cpu:${CI_COMMIT_SHORT_SHA}" "gcr.io/project/project-path/cpu:${CI_COMMIT_TAG}"
++        #- gcloud container images add-tag "gcr.io/project/project-path/gpu:${CI_COMMIT_SHORT_SHA}" "gcr.io/project/project-path/gpu:${CI_COMMIT_TAG}"
+       rules:
+         - if: $CI_COMMIT_TAG && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+       needs:
+         - job: build:cpu-image

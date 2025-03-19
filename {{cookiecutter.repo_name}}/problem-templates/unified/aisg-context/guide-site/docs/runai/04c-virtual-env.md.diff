@@ -1,0 +1,27 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/04c-virtual-env.md
++++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/runai/04c-virtual-env.md
+@@ -1,6 +1,12 @@
+ # Virtual Environments
+ 
++!!! info
++
++    The guide below is only meant for reference only and not meant to
++    be followed verbatim. You may need to generate your own guide 
++    site if you require guidance specifically for your own project.
++ 
+ While the Docker images you will be using to run experiments on Run:ai
+ would contain the `conda` environments you would need, you can also
+ create these virtual environments within your development environment,
+ and have it be persisted. The following set of commands allows you to
+@@ -56,8 +62,11 @@
+ The Conda YAML configuration file uses the `requirements.txt` to create
+ a Conda environment. This is so that there is parity between the 
+ development and deployment environment as the Docker image would use 
+ `requirements.txt` as the list of packages to be installed.
++
++You may have to do extra pip installations, depending on your project's
++requirements. You can install them through `pip install -r <file>`.
+ 
+ ??? info "Reference Link(s)"
+ 
+     - [`conda` Docs - Managing environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file)

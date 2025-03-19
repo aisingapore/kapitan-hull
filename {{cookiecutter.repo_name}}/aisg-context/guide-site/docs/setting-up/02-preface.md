@@ -2,10 +2,10 @@
 
 ## Repository Setup
 
-This repository intend to provide an end-to-end template for AI 
-Singapore's AI engineers to onboard their AI projects. Instructions for 
-generating this template is detailed in the [`cookiecutter`][ccutter] 
-template's repository's [`README.md`][readme].
+This repository provides an end-to-end template for AI Singapore's AI 
+engineers to onboard their AI projects. Instructions for generating 
+this template is detailed in the [`cookiecutter`][ccutter] template's 
+repository's [`README.md`][readme].
 
 While this repository provides users with a set of boilerplates, here 
 you are also presented with a linear guide on how to use them. The 

@@ -1,0 +1,128 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/04b-virtual-env.md
++++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/docker/04b-virtual-env.md
+@@ -1,6 +1,12 @@
+ # Virtual Environments
+ 
++!!! info
++
++    The guide below is only meant for reference only and not meant to
++    be followed verbatim. You may need to generate your own guide 
++    site if you require guidance specifically for your own project.
++ 
+ !!! warning "Incompatibility issues"
+ 
+     This method is not recommended as it may have unintended
+     consequences on user and group permissions. It is highly
+@@ -22,45 +28,45 @@
+ 
+ We would need to build a Docker image to create a virtual environment
+ that will contain all the dependencies required for this guide. This
+ requires the Docker image to be built from a Dockerfile
+-(`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
++(`docker/project-cpu.Dockerfile`)
+ provided in this template:
+ 
+ === "Linux"
+ 
+     ```bash
+     docker build \
+-        -t {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
+-        -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile .
++        -t registry.aisingapore.net/project-path/cpu:0.1.0 \
++        -f docker/project-cpu.Dockerfile .
+     ```
+ 
+ === "macOS"
+ 
+     ```bash
+     docker build \
+-        -t {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
+-        -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile \
++        -t registry.aisingapore.net/project-path/cpu:0.1.0 \
++        -f docker/project-cpu.Dockerfile \
+         --platform linux/amd64 .
+     ```
+ 
+ === "Windows PowerShell"
+ 
+     ```powershell
+     docker build `
+-        -t {{cookiecutter.registry_project_path}}/cpu:0.1.0 `
+-        -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile .
++        -t registry.aisingapore.net/project-path/cpu:0.1.0 `
++        -f docker/project-cpu.Dockerfile .
+     ```
+ 
+ !!! info "Using GPUs in Docker"
+ 
+     You can build the `gpu` variant by replacing the `cpu` in the above
+     commands to `gpu`, i.e.:
+ 
+-    - `{{cookiecutter.registry_project_path}}/cpu` to
+-      `{{cookiecutter.registry_project_path}}/gpu`
+-    - `docker/{{cookiecutter.repo_name}}-cpu.Dockerfile` to
+-      `docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`
++    - `registry.aisingapore.net/project-path/cpu` to
++      `registry.aisingapore.net/project-path/gpu`
++    - `docker/project-cpu.Dockerfile` to
++      `docker/project-gpu.Dockerfile`
+ 
+ Spin up your Docker image by running:
+ 
+ === "Linux"
+@@ -74,19 +80,19 @@
+ 
+     ```bash
+     docker run -it --rm \
+         -u $(id -u):$(id -g) \
+-        -v ./:/home/aisg/{{cookiecutter.repo_name}} \
+-        {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
++        -v ./:/home/aisg/project \
++        registry.aisingapore.net/project-path/cpu:0.1.0 \
+         bash
+     ```
+ 
+ === "macOS"
+ 
+     ```bash
+     docker run -it --rm \
+-        -v ./:/home/aisg/{{cookiecutter.repo_name}} \
+-        {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
++        -v ./:/home/aisg/project \
++        registry.aisingapore.net/project-path/cpu:0.1.0 \
+         bash
+     ```
+ 
+ === "Windows PowerShell"
+@@ -100,10 +106,10 @@
+         For AMD GPUs, you can follow this [guide][rocm-wsl].
+ 
+     ```powershell
+     docker run -it --rm `
+-        -v .\:/home/aisg/{{cookiecutter.repo_name}} `
+-        {{cookiecutter.registry_project_path}}/cpu:0.1.0 `
++        -v .\:/home/aisg/project `
++        registry.aisingapore.net/project-path/cpu:0.1.0 `
+         bash
+     ```
+ 
+ [rocm-wsl]: https://rocm.docs.amd.com/projects/radeon/en/latest/docs/install/wsl/howto_wsl.html
+@@ -150,16 +156,16 @@
+ 
+     === "Linux/macOS"
+ 
+         ```bash
+-        conda activate {{cookiecutter.repo_name}}
++        conda activate project
+         conda list | grep "ipykernel"
+         ```
+   
+     === "Windows PowerShell"
+ 
+         ```powershell
+-        conda activate {{cookiecutter.repo_name}}
++        conda activate project
+         conda list | Select-String "ipykernel"
+         ```
+ 
+ Output should look similar to:

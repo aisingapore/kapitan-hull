@@ -1,0 +1,57 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/08b-batch-inferencing.md
++++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/docker/08b-batch-inferencing.md
+@@ -1,6 +1,12 @@
+ # Batch Inferencing
+ 
++!!! info
++
++    The guide below is only meant for reference only and not meant to
++    be followed verbatim. You may need to generate your own guide 
++    site if you require guidance specifically for your own project.
++ 
+ Some problem statements do not warrant the deployment of an API server
+ but instead methods for conducting batched inferencing where a batch
+ of data is provided to a script and it is able to churn out a set of
+ predictions, perhaps exported to a file.
+@@ -53,32 +59,32 @@
+ === "Linux"
+ 
+     ```bash
+     docker run --rm \
+-        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+-        -w /home/aisg/{{cookiecutter.repo_name}} \
+-        {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
++        -v ./data:/home/aisg/project/data \
++        -w /home/aisg/project \
++        registry.aisingapore.net/project-path/gpu:0.1.0 \
+         python src/batch_infer.py output_path=data/batch-infer/batch_infer_res.jsonl
+     sudo chmod $(id -u):$(id -g) data/batch-infer/batch_infer_res.jsonl
+     ```
+ 
+ === "macOS"
+ 
+     ```bash
+     docker run --rm \
+-        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+-        -w /home/aisg/{{cookiecutter.repo_name}} \
+-        {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
++        -v ./data:/home/aisg/project/data \
++        -w /home/aisg/project \
++        registry.aisingapore.net/project-path/gpu:0.1.0 \
+         python src/batch_infer.py output_path=data/batch-infer/batch_infer_res.jsonl
+     ```
+ 
+ === "Windows PowerShell"
+ 
+     ```powershell
+     docker run --rm `
+-        -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
+-        -w /home/aisg/{{cookiecutter.repo_name}} `
+-        {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
++        -v .\data:/home/aisg/project/data `
++        -w /home/aisg/project `
++        registry.aisingapore.net/project-path/gpu:0.1.0 `
+         python src/batch_infer.py output_path=data/batch-infer/batch_infer_res.jsonl
+     ```
+ 
+ The script will log to the terminal the location of the

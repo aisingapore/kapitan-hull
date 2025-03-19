@@ -40,7 +40,7 @@ values can be overridden through the CLI.
 
 To process the sample raw data, there are many ways to do so. We can 
 either build within the Coder workspace, or to submit the job through 
-Run:ai. You can first your configuration variables at 
+Run:ai. You can first update your configuration variables at 
 `conf/process_data.yaml`, specifically this section:
 
 ```yaml

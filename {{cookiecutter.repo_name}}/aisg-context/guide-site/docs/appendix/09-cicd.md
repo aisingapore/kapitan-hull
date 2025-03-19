@@ -48,6 +48,11 @@ As we move along, we should be able to relate parts of the flow
 described above with the stages defined by the default GitLab CI
 pipeline.
 
+For more information on Gitlab CI pipeline, you can refer 
+[here][lighthouse] (AISG personnel only).
+
+[lighthouse]: https://lighthouse.aisingapore.net/tools-and-tech/Gitlab-CICD
+
 ## Environment Variables
 
 Before we can make use of the GitLab CI pipeline, we would have to
@@ -57,23 +62,26 @@ define the following variable(s) for the pipeline beforehand:
 - `HARBOR_ROBOT_CREDS_JSON`: A JSON formatted value that contains
   encoded credentials for a robot account on Harbor. This is to allow
   the pipeline to interact with the Harbor server. See the next section 
-  on how to generate this value/file.
+  on how to generate this value/file.  
 {%- elif cookiecutter.platform == 'gcp' %}
 
 - `GCP_SERVICE_ACCOUNT_KEY`: A JSON formatted value that contains 
   encoded credentials for a service account on your GCP project. This 
   is to allow the pipeline to interact with the Google Artifact 
-  Registry. See [here][gcp-sa] on how to generate this file.
+  Registry. See [here][gcp-sa] on how to generate this file.  
 {%- endif %}
+  After you've generated the JSON file, please encode the file content 
+  using `base64 -i <file>`. Afterwhich, copy paste the encoded value 
+  and define it as a CI/CD variable. 
 
 To define CI/CD variables for a project (repository), follow the steps
 listed [here][cicd-var]. 
 {%- if cookiecutter.platform == 'onprem' %}
-The environment variable `HARBOR_ROBOT_CREDS_JSON` needs to be a `File` 
-type.
+The environment variable `HARBOR_ROBOT_CREDS_JSON` needs to be a 
+`variable` type.
 {%- elif cookiecutter.platform == 'gcp' %}
-The environment variable `GCP_SERVICE_ACCOUNT_KEY` needs to be a `File`
-type.
+The environment variable `GCP_SERVICE_ACCOUNT_KEY` needs to be a 
+`variable` type.
 {%- endif %}
 
 [cicd-var]: https://docs.gitlab.com/ee/ci/variables/#define-a-cicd-variable-in-the-ui
@@ -120,6 +128,9 @@ into a CI/CD environment variable of type `File`
 ```
 
 ![GitLab UI - Set File Variable under CI/CD Settings](assets/screenshots/gitlab-settings-cicd-set-file-var.png)
+
+After defining the CI/CD Variables for the project, your pipeline 
+should be able to pass. If not, re-run the pipeline. 
 
 ??? info "Reference Link(s)"
 
@@ -331,7 +342,7 @@ that builds a Docker image:
 
     ```yaml
     ...
-    build:data-prep-image:
+    build:cpu-image:
       stage: build
       image:
         name: gcr.io/kaniko-project/executor:debug
@@ -357,7 +368,7 @@ that builds a Docker image:
           /kaniko/executor
           --context "${CI_PROJECT_DIR}"
           --dockerfile "${CI_PROJECT_DIR}/docker/{{cookiecutter.repo_name}}-cpu.Dockerfile"
-          --destination "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA}"
+          --destination "{{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA}"
       rules:
         - if: $CI_MERGE_REQUEST_IID
           changes:
@@ -469,19 +480,19 @@ the default branch before this.
       script:
 {%- if cookiecutter.platform == 'onprem' %}
         - cat $HARBOR_ROBOT_CREDS_JSON > /root/.docker/config.json
-        - crane tag {{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
-        - crane tag {{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
+        - crane tag {{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
+        - crane tag {{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
 {%- elif cookiecutter.platform == 'gcp' %}
         - cat $GCP_SERVICE_ACCOUNT_KEY > /gcp-sa.json
-        - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_TAG}"
-        - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_TAG}"
+        - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_TAG}"
+        - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_TAG}"
 {%- endif %}
       rules:
         - if: $CI_COMMIT_TAG && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       needs:
-        - job: build:data-prep-image
+        - job: build:cpu-image
           optional: true
-        - job: build:model-training-image
+        - job: build:gpu-image
           optional: true
     ...
     ```
@@ -505,4 +516,11 @@ examples off the top:
 - automate the deployment of the FastAPI servers to Kubernetes clusters
 
 There's much more that can be done but whatever has been shared thus 
-far is hopefully enough for one to get started with CI/CD.
+far is hopefully enough for one to get started with CI/CD. 
+
+Maintaining CI/CD pipelines requires extensive effort from developers. 
+To reduce the effort required from developers, the MLOps Team has 
+written a set of templates in which users can implement - plug and play 
+with [CI/CD Components][cicdcomp].
+
+[cicdcomp]: https://lighthouse.aisingapore.net/Platforms/MLOps&LLMOps/CICD-Components

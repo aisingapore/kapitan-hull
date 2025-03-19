@@ -1,0 +1,15 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/05c-data-storage-versioning.md
++++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/runai/05c-data-storage-versioning.md
+@@ -1,6 +1,12 @@
+ # Data Storage & Versioning
+ 
++!!! info
++
++    The guide below is only meant for reference only and not meant to
++    be followed verbatim. You may need to generate your own guide 
++    site if you require guidance specifically for your own project.
++ 
+ ## Sample Data
+ 
+ We can generate some sample data to use to test the different 
+ components of Kapitan Hull.
