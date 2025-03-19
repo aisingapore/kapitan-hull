@@ -84,6 +84,9 @@ The environment variable `GCP_SERVICE_ACCOUNT_KEY` needs to be a
 `variable` type.
 {%- endif %}
 
+After defining the CI/CD variables for the project, your pipeline
+should be able to pass. If not, re-run the pipeline.
+
 [cicd-var]: https://docs.gitlab.com/ee/ci/variables/#define-a-cicd-variable-in-the-ui
 {%- if cookiecutter.platform == 'gcp' %}
 [gcp-sa]: https://cloud.google.com/iam/docs/keys-create-delete
