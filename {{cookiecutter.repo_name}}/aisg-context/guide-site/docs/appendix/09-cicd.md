@@ -331,8 +331,8 @@ can be found [here][unittests].
 The template has thus far introduced a couple of Docker images relevant
 for the team. The tags for all the Docker images are listed below:
 
-- `{{cookiecutter.registry_project_path}}/data-prep`
-- `{{cookiecutter.registry_project_path}}/model-training`
+- `{{cookiecutter.registry_project_path}}/cpu`
+- `{{cookiecutter.registry_project_path}}/gpu`
 
 The `build` stage aims at automating the building of these Docker
 images in a parallel manner. Let's look at a snippet for a single job

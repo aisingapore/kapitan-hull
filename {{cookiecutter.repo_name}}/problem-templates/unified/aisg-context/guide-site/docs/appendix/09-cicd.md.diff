@@ -93,6 +93,30 @@
      ```
  
  [Gitlab Pages]: https://docs.gitlab.com/ee/user/project/pages
+@@ -210,19 +194,19 @@
+       stage: test
+       image:
+         name: continuumio/miniconda3:23.10.0-1
+       script:
+-        - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p ./conda/{{cookiecutter.repo_name}}
++        - conda env create -f project-conda-env.yaml -p ./conda/project
+       rules:
+         - if: $CI_MERGE_REQUEST_IID
+           changes:
+-            - {{cookiecutter.repo_name}}-conda-env.yaml
++            - project-conda-env.yaml
+         - if: $CI_PIPELINE_SOURCE == "push"
+           changes:
+-            - {{cookiecutter.repo_name}}-conda-env.yaml
++            - project-conda-env.yaml
+         - if: $CI_PIPELINE_SOURCE == "web"
+           changes:
+-            - {{cookiecutter.repo_name}}-conda-env.yaml
++            - project-conda-env.yaml
+         - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_CONDA
+         - if: $CI_COMMIT_TAG
+           when: never
+       needs: []
 @@ -234,9 +218,9 @@
  the job will only execute for the following cases:
  
@@ -115,6 +139,19 @@
        script:
          - pylint src --fail-under=7.0 --ignore=tests --disable=W1202
          - pytest src/tests --junitxml=./rspec.xml
+@@ -330,10 +314,10 @@
+ 
+ The template has thus far introduced a couple of Docker images relevant
+ for the team. The tags for all the Docker images are listed below:
+ 
+-- `{{cookiecutter.registry_project_path}}/data-prep`
+-- `{{cookiecutter.registry_project_path}}/model-training`
++- `registry.aisingapore.net/project-path/cpu`
++- `registry.aisingapore.net/project-path/gpu`
+ 
+ The `build` stage aims at automating the building of these Docker
+ images in a parallel manner. Let's look at a snippet for a single job
+ that builds a Docker image:
 @@ -346,34 +330,26 @@
        stage: build
        image:

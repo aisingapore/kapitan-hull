@@ -13,15 +13,86 @@
  would contain the `conda` environments you would need, you can also
  create these virtual environments within your development environment,
  and have it be persisted. The following set of commands allows you to
-@@ -56,8 +62,11 @@
- The Conda YAML configuration file uses the `requirements.txt` to create
+@@ -10,24 +16,24 @@
+ - First, have VSCode open the repository that you have cloned
+   previously by heading over to the top left hand corner, selecting
+   `File > Open Folder...`, and entering the path to the repository.
+   In this case, you should be navigating to the folder
+-  `/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}`.
++  `/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/project`.
+ 
+ - Now, let's initialise `conda` for the bash shell, and create
+   the virtual environment specified in
+-  `{{cookiecutter.repo_name}}-conda-env.yaml`.
++  `project-conda-env.yaml`.
+ 
+ === "Coder Workspace Terminal"
+ 
+     ```bash
+     # Usually this is fine
+-    conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml
++    conda env create -f project-conda-env.yaml
+     # However, if your configuration doesn't point towards the PVC source, you can use this instead
+     # Consult the MLOps team if you're unsure.
+     conda env create \
+-        -f {{cookiecutter.repo_name}}-conda-env.yaml \
+-        -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}
++        -f project-conda-env.yaml \
++        -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/project
+     ```
+ 
+ ??? warning "If you're using the 2nd `conda env create` option"
+     After creating the `conda` environment, you can create a permanent 
+@@ -35,12 +41,12 @@
+ 
+     === "Coder Workspace Terminal"
+ 
+         ```bash
+-        echo 'alias {{cookiecutter.repo_name}}-conda="conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}"' >> ~/.bashrc
++        echo 'alias project-conda="conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/project"' >> ~/.bashrc
+         source ~/.bashrc
+-        {{cookiecutter.repo_name}}-conda
+-        # conda environment has been activated as ({{cookiecutter.repo_name}})
++        project-conda
++        # conda environment has been activated as project
+         ```
+ 
+ !!! tip
+     If you encounter issues in trying to install Python libraries,
+@@ -57,8 +63,11 @@
  a Conda environment. This is so that there is parity between the 
  development and deployment environment as the Docker image would use 
  `requirements.txt` as the list of packages to be installed.
-+
+ 
 +You may have to do extra pip installations, depending on your project's
 +requirements. You can install them through `pip install -r <file>`.
- 
++
  ??? info "Reference Link(s)"
  
      - [`conda` Docs - Managing environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file)
+     - [StackOverflow - "Pip install killed - out of memory - how to get around it?"](https://stackoverflow.com/questions/57058641/pip-install-killed-out-of-memory-how-to-get-around-it)
+@@ -72,9 +81,9 @@
+ 
+ - Ensure that you are in a project folder which you intend to work
+   on. You can open a folder through `File > Open Folder...`.
+   In this case, you should be navigating to the folder
+-  `/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}`.
++  `/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/project`.
+ 
+ - Install the VSCode extensions [`ms-python.python`][py-ext] and
+   [`ms-toolsai.jupyter`][jy-ext]. After installation of these 
+   extensions, restart VSCode by using the shortcut `Ctrl + Shift + P`, 
+@@ -99,11 +108,11 @@
+ === "Coder Workspace Terminal"
+ 
+     ```bash
+     # Usually this is fine
+-    conda activate {{cookiecutter.repo_name}}
++    conda activate project
+     # If you're using the 2nd option
+-    conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/{{cookiecutter.repo_name}}
++    conda activate /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/conda_envs/project
+     conda list | grep "ipykernel"
+     ```
+     
+ Output should look similar to:
