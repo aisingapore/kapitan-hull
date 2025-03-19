@@ -13,5 +13,16 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.12.9
-      - run: pip install -r mkdocs-requirements.txt
-      - run: mkdocs gh-deploy --force
+      - name: Install dependencies
+        run: |
+          pip install "cookiecutter>=2.2" unidiff
+          pip install -r mkdocs-requirements.txt
+      - name: Generate template with cookiecutter
+        run: |
+          cookiecutter . --no-input --config-file cookiecutter-ghpages.json -o temp_output
+      - name: Build and deploy docs
+        run: |
+          cd temp_output/kapitan-hull-gcp-runai-test
+          pip install -r aisg-context/guide-site/mkdocs-requirements.txt
+          cd aisg-context/guide-site
+          mkdocs gh-deploy --force
