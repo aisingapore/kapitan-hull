@@ -22,7 +22,7 @@ jobs:
           cookiecutter . --no-input --config-file cookiecutter-ghpages.json -o temp_output
       - name: Build and deploy docs
         run: |
-          cd temp_output/kapitan-hull-gcp-runai-test
+          cd temp_output/ghpages
           pip install -r aisg-context/guide-site/mkdocs-requirements.txt
           cd aisg-context/guide-site
           mkdocs gh-deploy --force
