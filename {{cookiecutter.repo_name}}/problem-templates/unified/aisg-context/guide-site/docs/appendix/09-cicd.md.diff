@@ -64,7 +64,7 @@
  ## Stages & Jobs
  
  In the default pipeline, we have 3 stages defined:
-@@ -168,16 +159,13 @@
+@@ -169,16 +160,13 @@
  
  The jobs for each of the stages are executed using Docker images 
  defined by users. For this, we have to specify in the pipeline the tag
@@ -81,7 +81,7 @@
  The `./conda` folder generated from creating the Conda environment is 
  then cached and to be used for other jobs, saving time from rebuilding 
  the environment in every job that requires it. The 
-@@ -189,13 +177,9 @@
+@@ -190,13 +178,9 @@
  
      ```yaml
      default:
@@ -96,13 +96,13 @@
      ```
  
  [Gitlab Pages]: https://docs.gitlab.com/ee/user/project/pages
-@@ -213,19 +197,19 @@
-       stage: test
+@@ -235,19 +219,19 @@
+       stage: build
        image:
-         name: continuumio/miniconda3:23.10.0-1
+         name: ${PYTHON_IMAGE}
        script:
--        - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p ./conda/{{cookiecutter.repo_name}}
-+        - conda env create -f project-conda-env.yaml -p ./conda/project
+-        - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p ${VENV_DIRECTORY}
++        - conda env create -f project-conda-env.yaml -p ${VENV_DIRECTORY}
        rules:
          - if: $CI_MERGE_REQUEST_IID
            changes:
@@ -120,7 +120,7 @@
          - if: $CI_COMMIT_TAG
            when: never
        needs: []
-@@ -237,9 +221,9 @@
+@@ -259,9 +243,9 @@
  the job will only execute for the following cases:
  
  - For pushes to branches which merge requests have been created, tests
@@ -131,18 +131,7 @@
    branches with merge requests when  no changes have been made to files 
    for which tests are relevant. Otherwise, tests will run in a 
    redundant manner, slowing down the feedback loop.
-@@ -265,9 +249,9 @@
-       stage: test
-       image:
-         name: continuumio/miniconda3:23.10.0-1
-       before_script:
--        - source activate ./conda/{{cookiecutter.repo_name}}
-+        - source activate ./conda/project
-         - pip install -r dev-requirements.txt
-       script:
-         - pylint src --fail-under=7.0 --ignore=tests --disable=W1202
-         - pytest src/tests --junitxml=./rspec.xml
-@@ -333,10 +317,10 @@
+@@ -375,10 +359,10 @@
  
  The template has thus far introduced a couple of Docker images relevant
  for the team. The tags for all the Docker images are listed below:
@@ -152,11 +141,11 @@
 +- `registry.aisingapore.net/project-path/cpu`
 +- `registry.aisingapore.net/project-path/gpu`
  
- The `build` stage aims at automating the building of these Docker
+ The `deploy` stage aims at automating the building of these Docker
  images in a parallel manner. Let's look at a snippet for a single job
  that builds a Docker image:
-@@ -349,34 +333,26 @@
-       stage: build
+@@ -391,34 +375,26 @@
+       stage: deploy
        image:
          name: gcr.io/kaniko-project/executor:debug
          entrypoint: [""]
@@ -198,9 +187,9 @@
              - conf/**/*
          - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
          - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
-@@ -397,16 +373,11 @@
+@@ -441,16 +417,11 @@
      `gcr.io/kaniko-project/executor:debug` is being used for all 
-     `build` jobs related to building of Docker images. That being said, 
+     `deploy` jobs related to building of Docker images. That being said, 
      the flags used for `kaniko` corresponds well with the flags usually 
      used for `docker` commands.
 -{%- if cookiecutter.platform == 'onprem' %}
@@ -218,10 +207,10 @@
  the job from running any further and freeing the CI worker faster to 
  work on other jobs in the organisation.
  
-@@ -465,32 +436,23 @@
+@@ -509,32 +480,23 @@
      ...
      build:retag-images:
-       stage: build
+       stage: deploy
        image:
 -{%- if cookiecutter.platform == 'onprem' %}
 -        name: gcr.io/go-containerregistry/crane:debug
@@ -244,15 +233,15 @@
        script:
 -{%- if cookiecutter.platform == 'onprem' %}
          - cat $HARBOR_ROBOT_CREDS_JSON > /root/.docker/config.json
--        - crane tag {{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
--        - crane tag {{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
+-        - crane tag {{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA} ${CI_COMMIT_TAG}
+-        - crane tag {{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_SHORT_SHA} ${CI_COMMIT_TAG}
 -{%- elif cookiecutter.platform == 'gcp' %}
 -        - cat $GCP_SERVICE_ACCOUNT_KEY > /gcp-sa.json
 -        - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_TAG}"
 -        - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_TAG}"
 -{%- endif %}
-+        - crane tag registry.aisingapore.net/project-path/cpu:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
-+        - crane tag registry.aisingapore.net/project-path/gpu:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
++        - crane tag registry.aisingapore.net/project-path/cpu:${CI_COMMIT_SHORT_SHA} ${CI_COMMIT_TAG}
++        - crane tag registry.aisingapore.net/project-path/gpu:${CI_COMMIT_SHORT_SHA} ${CI_COMMIT_TAG}
 +        # For GCP:
 +        #- cat $GCP_SERVICE_ACCOUNT_KEY > /gcp-sa.json
 +        #- gcloud container images add-tag "gcr.io/project/project-path/cpu:${CI_COMMIT_SHORT_SHA}" "gcr.io/project/project-path/cpu:${CI_COMMIT_TAG}"

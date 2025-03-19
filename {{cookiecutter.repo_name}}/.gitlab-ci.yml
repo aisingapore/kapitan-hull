@@ -10,17 +10,23 @@ default:
     paths:
       - ./conda
   image:
-    name: continuumio/miniconda3:24.7.1-0
+    name: ${PYTHON_IMAGE}
 
 stages:
-  - test
-  - deploy-docs
   - build
+  - test
+  - deploy
+  - deploy-docs
 
-test:conda-build:
-  stage: test
+variables:
+  PYTHON_IMAGE: continuumio/miniconda3:24.7.1-0
+  VENV_DIRECTORY: ./conda/{{cookiecutter.repo_name}}
+  IMAGE_TAG: latest
+
+build:conda-env:
+  stage: build
   script:
-    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p ./conda/{{cookiecutter.repo_name}} -y
+    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p ${VENV_DIRECTORY} -y
   rules:
     - if: $CI_MERGE_REQUEST_IID
       changes:
@@ -36,10 +42,10 @@ test:conda-build:
       when: never
   needs: []
 
-test:pylint:
+test:lint:
   stage: test
   before_script:
-    - source activate ./conda/{{cookiecutter.repo_name}}
+    - source activate ${VENV_DIRECTORY}
     - pip install -r dev-requirements.txt
   script:
     - pylint src --fail-under=7.0 --ignore=tests --disable=W1202
@@ -53,13 +59,13 @@ test:pylint:
     - if: $CI_COMMIT_TAG
       when: never
   needs:
-    - job: test:conda-build
+    - job: build:conda-env
       optional: true
 
 test:pytest:
   stage: test
   before_script: 
-    - source activate ./conda/{{cookiecutter.repo_name}}
+    - source activate ${VENV_DIRECTORY}
     - pip install -r dev-requirements.txt
   script:
     - pytest src/tests --junitxml=./rspec.xml
@@ -78,34 +84,11 @@ test:pytest:
     reports:
       junit: rspec.xml
   needs:
-    - job: test:conda-build
-      optional: true
-
-pages:
-  stage: deploy-docs
-  before_script:
-    - source activate ./conda/{{cookiecutter.repo_name}}
-    - pip install -r docs-requirements.txt
-    - pip install -r aisg-context/guide-site/mkdocs-requirements.txt
-  script:
-    - sphinx-apidoc -f -o docs src
-    - sphinx-build -b html docs public
-    - mkdocs build -v -f aisg-context/guide-site/mkdocs.yml -d $PWD/public/guide
-  artifacts:
-    paths:
-    - public
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-      changes:
-        - docs/**/*
-        - src/**/*
-        - aisg-context/guide-site/**/*
-  needs:
-    - job: test:conda-build
+    - job: build:conda-env
       optional: true
 
 build:cpu-image:
-  stage: build
+  stage: deploy
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
@@ -141,13 +124,13 @@ build:cpu-image:
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_DATAPREP
   needs:
-    - job: test:pytest
+    - job: test:lint
       optional: true
-    - job: test:pylint
+    - job: test:pytest
       optional: true
 
 build:gpu-image:
-  stage: build
+  stage: deploy
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
@@ -183,13 +166,13 @@ build:gpu-image:
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_MODEL
   needs:
-    - job: test:pytest
+    - job: test:lint
       optional: true
-    - job: test:pylint
+    - job: test:pytest
       optional: true
 
 build:retag-images:
-  stage: build
+  stage: deploy
   image:
 {%- if cookiecutter.platform == 'onprem' %}
     name: gcr.io/go-containerregistry/crane:debug
@@ -221,4 +204,27 @@ build:retag-images:
     - job: build:cpu-image
       optional: true
     - job: build:gpu-image
+      optional: true
+
+pages:
+  stage: deploy-docs
+  before_script:
+    - source activate ${VENV_DIRECTORY}
+    - pip install -r docs-requirements.txt
+    - pip install -r aisg-context/guide-site/mkdocs-requirements.txt
+  script:
+    - sphinx-apidoc -f -o docs src
+    - sphinx-build -b html docs public
+    - mkdocs build -v -f aisg-context/guide-site/mkdocs.yml -d $PWD/public/guide
+  artifacts:
+    paths:
+    - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - docs/**/*
+        - src/**/*
+        - aisg-context/guide-site/**/*
+  needs:
+    - job: build:conda-env
       optional: true
