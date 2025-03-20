@@ -83,7 +83,7 @@ include:
       stage: deploy
       docker_image_name: gpu
       registry: {{cookiecutter.registry_project_path.split('/')[0]}}
-      destination: {{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA}
+      destination: {{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_SHORT_SHA}
       registry_username: robot\$harbor-robot-token
       registry_access_key: ${HARBOR_ROBOT_TOKEN}
 {%- elif cookiecutter.platform == 'gcp' %}
@@ -94,7 +94,7 @@ include:
       stage: deploy
       docker_image_name: gpu
       registry: {{cookiecutter.registry_project_path.split('/')[0]}}
-      destination: {{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA} 
+      destination: {{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_SHORT_SHA} 
       registry_access_key: ${GCLOUD_SERVICE_KEY}
 {%- endif %}
 
