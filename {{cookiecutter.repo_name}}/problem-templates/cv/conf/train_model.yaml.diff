@@ -25,10 +25,10 @@
 +model_checkpoint_interval: 2
 +model_checkpoint_dir_path: "./models"
  resume: false
+ log_dir: "./logs"
  
  defaults:
-   - override hydra/sweeper: optuna
-@@ -19,11 +26,11 @@
+@@ -20,11 +27,11 @@
    sweeper:
      sampler:
        seed: 55

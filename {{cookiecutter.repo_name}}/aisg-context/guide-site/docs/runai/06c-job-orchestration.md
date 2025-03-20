@@ -46,7 +46,7 @@ Run:ai. You can first update your configuration variables at
 ```yaml
 raw_data_dir_path: "./data/raw"
 processed_data_dir_path: "./data/processed"
-log_dir: "./logs"  # Optional: Custom directory for log files
+log_dir: "./logs"
 ```
 
 This requires the Docker image to be built from a Dockerfile 
@@ -140,7 +140,7 @@ before we start model experimentation.
     namespace for projects that requires model experimentation. 
     Artifacts logged through the MLflow API can be uploaded to {{objstg}} 
     buckets, assuming the client is authorised for access to {{objstg}}.
-    
+
     The `setup_logging` function now supports a `log_dir` parameter that allows
     you to specify a custom directory for log files. This is useful when you want
     to store logs in a specific location, such as a mounted volume in a container
@@ -175,7 +175,7 @@ test_bs: 100
 artifact_dir_path: "./models"
 epochs: 5
 resume: false
-log_dir: "./logs"  # Optional: Custom directory for log files
+log_dir: "./logs"
 ```
 
 After that, we build the Docker image from the Docker file 
@@ -415,7 +415,8 @@ by default.
             mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
             mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
             data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
-            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models"
+            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
+            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs"
     ```
 
 ![MLflow Tracking Server - Hyperparameter Tuning Runs](../common/assets/screenshots/mlflow-tracking-hptuning-runs.png)

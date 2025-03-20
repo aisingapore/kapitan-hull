@@ -10,7 +10,7 @@
 +file_check_glob: "*.png"
 +use_cuda: false
 +use_mps: false
+ log_dir: "./logs"
  
  hydra:
    job:
-     chdir: False

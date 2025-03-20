@@ -39,7 +39,7 @@ found [here][venv]. You can also update your configuration variables at
 ```yaml
 raw_data_dir_path: "./data/raw"
 processed_data_dir_path: "./data/processed"
-log_dir: "./logs"  # Optional: Custom directory for log files
+log_dir: "./logs"
 ```
 
 After that, run the script:
@@ -105,7 +105,7 @@ test_bs: 100
 artifact_dir_path: "./models"
 epochs: 5
 resume: false
-log_dir: "./logs"  # Optional: Custom directory for log files
+log_dir: "./logs"
 ```
 
 After that, run the script:

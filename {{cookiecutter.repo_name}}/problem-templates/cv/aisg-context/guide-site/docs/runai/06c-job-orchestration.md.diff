@@ -9,19 +9,20 @@
 -processed_data_dir_path: "./data/processed"
 +raw_data_dir_path: "./data/mnist-pngs-data-aisg"
 +processed_data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
+ log_dir: "./logs"
  ```
  
  This requires the Docker image to be built from a Dockerfile 
- (`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
-@@ -100,16 +100,16 @@
+@@ -101,17 +101,17 @@
          --working-dir /home/aisg/{{cookiecutter.repo_name}} \
          --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
          --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
          --command -- /bin/bash -c "python -u src/process_data.py \
 -            raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw \
--            processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed"
+-            processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
 +            raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg \
-+            processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"
++            processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed \
+             log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs"
      ```
  
  After some time, the data processing job should conclude and we can
@@ -33,7 +34,7 @@
  
  ## Model Training
  
-@@ -138,8 +138,12 @@
+@@ -140,8 +140,12 @@
      namespace for projects that requires model experimentation. 
      Artifacts logged through the MLflow API can be uploaded to {{objstg}} 
      buckets, assuming the client is authorised for access to {{objstg}}.
@@ -42,11 +43,11 @@
 +        The username and password for the MLflow Tracking server
 +        can be retrieved from the MLOps team or your team lead.
 +
-     To log and upload artifacts to {{objstg}} buckets through MLFlow, 
-     you need to ensure that the client has access to the credentials of
-     an account that can write to a bucket. This is usually settled by 
-     the MLOps team, so you need only interact with MLFlow to download 
-@@ -159,15 +163,21 @@
+     The `setup_logging` function now supports a `log_dir` parameter that allows
+     you to specify a custom directory for log files. This is useful when you want
+     to store logs in a specific location, such as a mounted volume in a container
+     environment or a shared directory for team access. When running in Run:ai,
+@@ -167,14 +171,21 @@
  mlflow_autolog: false
  mlflow_tracking_uri: "./mlruns"
  mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
@@ -57,7 +58,6 @@
 -test_bs: 100
 -artifact_dir_path: "./models"
 -epochs: 5
--resume: false
 +data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
 +no_cuda: true
 +no_mps: true
@@ -71,11 +71,11 @@
 +dry_run: false
 +model_checkpoint_interval: 2
 +model_checkpoint_dir_path: "./models/checkpoint"
+ resume: false
+ log_dir: "./logs"
  ```
  
- After that, we build the Docker image from the Docker file 
- `docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
-@@ -227,13 +237,15 @@
+@@ -236,14 +247,16 @@
          --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
          --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
          -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
@@ -85,15 +85,17 @@
              mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
              mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
 -            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
--            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models"
+-            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
+-            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs"
 +            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed \
 +            model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models \
++            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs \
 +            epochs=3"
      ```
  
  Once you have successfully run an experiment, you may inspect the run
  on the MLflow Tracking server. Through the MLflow Tracking server
-@@ -328,9 +340,9 @@
+@@ -338,9 +351,9 @@
      n_trials: 3
      n_jobs: 1
      params:
@@ -104,7 +106,7 @@
  
  These fields are used by the Optuna Sweeper plugin to configure the
  Optuna study.
-@@ -400,13 +412,15 @@
+@@ -410,14 +423,16 @@
          --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
          -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
          -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
@@ -114,9 +116,11 @@
              mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
              mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
 -            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
--            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models"
+-            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
+-            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs"
 +            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed \
 +            model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models \
++            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs \
 +            epochs=3"
      ```
  

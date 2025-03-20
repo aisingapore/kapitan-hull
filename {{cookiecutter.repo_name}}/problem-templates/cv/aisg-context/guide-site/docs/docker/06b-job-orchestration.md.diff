@@ -9,11 +9,11 @@
 -processed_data_dir_path: "./data/processed"
 +raw_data_dir_path: "./data/mnist-pngs-data-aisg"
 +processed_data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
+ log_dir: "./logs"
  ```
  
  This requires the Docker image to be built from a Dockerfile 
- (`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
-@@ -148,15 +148,21 @@
+@@ -154,14 +154,21 @@
  mlflow_autolog: false
  mlflow_tracking_uri: "./mlruns"
  mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
@@ -24,7 +24,6 @@
 -test_bs: 100
 -artifact_dir_path: "./models"
 -epochs: 5
--resume: false
 +data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
 +no_cuda: true
 +no_mps: true
@@ -38,21 +37,21 @@
 +dry_run: false
 +model_checkpoint_interval: 2
 +model_checkpoint_dir_path: "./models/checkpoint"
+ resume: false
+ log_dir: "./logs"
  ```
  
- After that, we build the Docker image from the Docker file 
- `docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
-@@ -250,8 +256,9 @@
+@@ -257,8 +264,9 @@
  
  === "Linux"
  
      !!! info
-+        Add `no_cuda=false` to use GPUs behind the image name.  
++        Add `no_cuda=false` to use GPUs behind the image name.
          Add `--gpus=all` for Nvidia GPUs in front of the image name.  
          Add `--device=nvidia.com/gpu=all` for Nvidia GPUs using Podman
          instead of Docker.  
          Add `--device=/dev/kfd --device=/dev/dri --group-add` video for
-@@ -368,15 +375,15 @@
+@@ -375,15 +383,15 @@
    sweeper:
      sampler:
        seed: 55

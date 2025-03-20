@@ -24,7 +24,7 @@
  values can be overridden through the CLI.
  
  !!! attention
-@@ -64,16 +70,16 @@
+@@ -65,20 +71,20 @@
  Now that we have processed the raw data, we can look into 'training' 
  the model. The script relevant for this section is `src/train_model.py`. 
  
@@ -35,15 +35,20 @@
  experiments. Let's set up the tooling for experiment tracking before we 
  start model experimentation.
  
- !!! info "Experiment Tracking"
+ !!! info "Experiment Tracking and Logging"
  
 -    In the module `src/{{cookiecutter.src_package_name}}/general_utils.py`,
 +    In the module `src/project_package/general_utils.py`,
      the functions `mlflow_init` and `mlflow_log` are used to initialise
      MLflow experiments as well as log information and artifacts relevant
      for a run to an `mlruns` local folder.
- 
-@@ -89,9 +95,9 @@
+-    
++
+     The `setup_logging` function now supports a `log_dir` parameter that allows
+     you to specify a custom directory for log files. This is useful when you want
+     to store logs in a specific location, such as a mounted volume in a container
+     environment or a shared directory for team access.
+@@ -95,9 +101,9 @@
  ```yaml
  setup_mlflow: true
  mlflow_autolog: false
@@ -54,7 +59,7 @@
  data_dir_path: "./data/processed"
  lr: 1.3
  train_bs: 32
-@@ -123,11 +129,11 @@
+@@ -130,11 +136,11 @@
  conda activate mlflow-test
  mlflow server
  ```

@@ -1,9 +1,9 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/06b-job-orchestration.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/docker/06b-job-orchestration.md
-@@ -35,8 +35,11 @@
- ```yaml
+@@ -36,8 +36,11 @@
  raw_data_dir_path: "./data/raw"
  processed_data_dir_path: "./data/processed"
+ log_dir: "./logs"
  ```
 +
 +There are other configurables in the `conf/process_data.yaml` which are used
@@ -12,7 +12,7 @@
  This requires the Docker image to be built from a Dockerfile 
  (`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
  provided in this template:
-@@ -149,14 +152,15 @@
+@@ -155,13 +158,15 @@
  mlflow_tracking_uri: "./mlruns"
  mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
  mlflow_run_name: "train-model"
@@ -22,18 +22,17 @@
 -test_bs: 100
  artifact_dir_path: "./models"
 -epochs: 5
--resume: false
 +use_cuda: false
 +n_estimators: 100
 +lr: 0.5
 +gamma: 1
 +max_depth: 5
 +seed: 1111
+ resume: false
+ log_dir: "./logs"
  ```
  
- After that, we build the Docker image from the Docker file 
- `docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
-@@ -367,16 +371,18 @@
+@@ -374,16 +379,18 @@
  hydra:
    sweeper:
      sampler:
@@ -56,7 +55,7 @@
  
  These fields are used by the Optuna Sweeper plugin to configure the
  Optuna study.
-@@ -401,22 +407,22 @@
+@@ -408,22 +415,22 @@
  
  `src/train_model.py`
  ```python

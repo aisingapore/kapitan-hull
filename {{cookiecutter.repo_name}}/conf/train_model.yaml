@@ -10,6 +10,7 @@ test_bs: 100
 artifact_dir_path: "./models"
 epochs: 5
 resume: false
+log_dir: "./logs"
 
 defaults:
   - override hydra/sweeper: optuna
