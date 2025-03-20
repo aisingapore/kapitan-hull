@@ -69,12 +69,12 @@ def remove_redundant_files() -> None:
     if ORCH != "runai":
         shutil.rmtree(RUNAI_YAML_PATH)
 
-    # Update the main mkdocs.yml file to remove the Run:ai section
-    update_mkdocs_yml(
-        os.path.join(
-            "aisg-context", "guide-site", "mkdocs.yml"
+        # Update the main mkdocs.yml file to remove the Run:ai section
+        update_mkdocs_yml(
+            os.path.join(
+                "aisg-context", "guide-site", "mkdocs.yml"
+            )
         )
-    )
 
 
 if __name__ == "__main__":
