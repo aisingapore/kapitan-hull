@@ -140,6 +140,7 @@ should be able to pass. If not, re-run the pipeline.
     - [GitLab Docs - GitLab CI/CD variables](https://docs.gitlab.com/ee/ci/variables/)
     - [Docker Docs - Configuration files](https://docs.docker.com/engine/reference/commandline/cli/#configuration-files)
 {%- endif %}
+{%- if not cookiecutter.aisg %}
 
 ## Stages & Jobs
 
@@ -201,6 +202,7 @@ files that is cached within this branch.
 
 [Gitlab Pages]: https://docs.gitlab.com/ee/user/project/pages
 [Docker executor]: https://docs.gitlab.com/runner/executors/docker.html 
+{%- endif %}
 
 ## Variables
 
@@ -209,19 +211,22 @@ The GitLab CI pipeline uses several variables to control its behavior:
 - `PYTHON_IMAGE`: Specifies the Docker image used for Python-based jobs (default: `continuumio/miniconda3:24.7.1-0`)
 - `VENV_DIRECTORY`: Defines the path where the Conda environment will be created and stored
 - `IMAGE_TAG`: Default tag for Docker images (default: `latest`)
+{%- if not cookiecutter.aisg %}
 - `BUILD_CONDA`: When set in a manual pipeline run, forces the Conda environment to be built
 - `BUILD_ALL`: When set in a manual pipeline run, triggers building of all Docker images
 - `BUILD_DATAPREP`: When set in a manual pipeline run, triggers building of the data preparation image
 - `BUILD_MODEL`: When set in a manual pipeline run, triggers building of the model training image
+{%- endif %}
 
 GitLab also provides many predefined variables that are used in the pipeline:
 - `CI_COMMIT_REF_SLUG`: Branch or tag name in a URL-friendly format
-- `CI_PROJECT_DIR`: The full path where the repository is cloned
 - `CI_COMMIT_SHORT_SHA`: The first 8 characters of the commit SHA
-- `CI_MERGE_REQUEST_IID`: The merge request ID if the pipeline is for a merge request
 - `CI_DEFAULT_BRANCH`: The default branch for the project (usually `main`)
-- `CI_COMMIT_TAG`: The commit tag name if the pipeline was triggered by a tag
 - `CI_PIPELINE_SOURCE`: How the pipeline was triggered (e.g., "push", "web", "merge_request_event")
+{%- if not cookiecutter.aisg %}
+- `CI_PROJECT_DIR`: The full path where the repository is cloned
+- `CI_MERGE_REQUEST_IID`: The merge request ID if the pipeline is for a merge request
+- `CI_COMMIT_TAG`: The commit tag name if the pipeline was triggered by a tag
 
 ## Building the Conda Environment
 
@@ -549,6 +554,7 @@ the default branch before this.
     - [GitHub Docs - GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow)
     - [GitLab Docs - GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html)
     - [`go-containerregistry` GitHub - `crane`](https://github.com/google/go-containerregistry/blob/main/cmd/crane/README.md)
+{%- endif %}
 
 ## Conclusion
 

@@ -7,6 +7,7 @@
         "src_package_name_short": "khgr_test",
         "platform": "gcp",
         "orchestrator": "runai",
+        "aisg": true,
         "proj_name": "test-proj",
         "registry_project_path": "asia-southeast1-docker.pkg.dev/infratest-311303/mlops",
         "problem_template": "base",

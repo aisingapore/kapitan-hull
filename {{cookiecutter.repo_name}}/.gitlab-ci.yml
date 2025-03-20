@@ -1,4 +1,3 @@
-{%- if cookiecutter.aisg_gitlab -%}
 default:
   tags:
 {%- if cookiecutter.platform == 'onprem' %}
@@ -23,15 +22,16 @@ variables:
   PYTHON_IMAGE: continuumio/miniconda3:24.7.1-0
   VENV_DIRECTORY: ./conda/{{cookiecutter.repo_name}}
   IMAGE_TAG: latest
+{%- if cookiecutter.aisg %}
 
 include:
   - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-integration/build-conda@0.1.1
     inputs:
       job_name: build
-      stage: build
+      stage: build:conda-env
       image: ${PYTHON_IMAGE}
-      requirements_file: aiap-dsp-mlops-conda-env.yaml
-      python_version: "3.13"
+      requirements_file: {{cookiecutter.repo_name}}-conda-env.yaml
+      python_version: "3.12"
       venv_directory: ${VENV_DIRECTORY}
 
   - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-integration/ruff-lint@0.1.1
@@ -53,7 +53,7 @@ include:
       job_name: build:cpu-build
       stage: deploy
       context: .
-      dockerfile: docker/aiap-dsp-mlops-cpu.Dockerfile
+      dockerfile: docker/{{cookiecutter.repo_name}}-cpu.Dockerfile
       docker_image_name: cpu
       image_tag: ${CI_COMMIT_SHORT_SHA}
       expiry_time: "30"
@@ -71,11 +71,12 @@ include:
       job_name: build:gpu-build
       stage: deploy
       context: .
-      dockerfile: docker/aiap-dsp-mlops-gpu.Dockerfile
+      dockerfile: docker/{{cookiecutter.repo_name}}-gpu.Dockerfile
       docker_image_name: gpu
       image_tag: ${CI_COMMIT_SHORT_SHA}
       expiry_time: "30"
 {%- if cookiecutter.platform == 'onprem' %}
+
   - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-deployment/docker-push@0.1.1
     inputs:
       job_name: build:gpu-push
@@ -86,6 +87,7 @@ include:
       registry_username: robot\$harbor-robot-token
       registry_access_key: ${HARBOR_ROBOT_TOKEN}
 {%- elif cookiecutter.platform == 'gcp' %}
+
   - component: ${CI_SERVER_FQDN}/templates/cicd-workflow/continuous-deployment/docker-push@0.1.1
     inputs:
       job_name: build:gpu-push
@@ -96,7 +98,7 @@ include:
       registry_access_key: ${GCLOUD_SERVICE_KEY}
 {%- endif %}
 
-build:
+build:conda-env:
   script:
     - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p $VENV_DIRECTORY -y
   rules:
@@ -111,7 +113,6 @@ test:pytest:
     - if: $CI_PIPELINE_SOURCE == "push"
 
 build:cpu-build:
-
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
@@ -132,106 +133,12 @@ build:gpu-push:
   needs:
     - job: build:gpu-build
       artifacts: true
+{%- else %}
 
-
-pages:
-  stage: deploy-docs
-  before_script:
-    - source activate $VENV_DIRECTORY
-    - pip install -r docs-requirements.txt
-    - pip install -r aisg-context/guide-site/mkdocs-requirements.txt
+build:conda-env:
+  stage: build
   script:
-    - sphinx-apidoc -f -o docs src
-      docker_image_name: gpu
-      registry: {{cookiecutter.registry_project_path.split('/')[0]}}
-      destination: {{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA} 
-      registry_access_key: ${GCLOUD_SERVICE_KEY}
-{%- endif %}
-
-build:
-  script:
-    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p $VENV_DIRECTORY -y
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "push"
-
-test:lint:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "push"
-
-test:pytest:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "push"
-
-build:cpu-build:
-
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-
-build:cpu-push:
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-  needs:
-    - job: build:cpu-build
-      artifacts: true
-
-build:gpu-build:
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-
-build:gpu-push:
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-  needs:
-    - job: build:gpu-build
-      artifacts: true
-
-
-pages:
-  stage: deploy-docs
-  before_script:
-    - source activate $VENV_DIRECTORY
-    - pip install -r docs-requirements.txt
-    - pip install -r aisg-context/guide-site/mkdocs-requirements.txt
-  script:
-    - sphinx-apidoc -f -o docs src
-    - sphinx-build -b html docs public
-    - mkdocs build -v -f aisg-context/guide-site/mkdocs.yml -d $PWD/public/guide
-  artifacts:
-    paths:
-    - public
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-      changes:
-        - docs/**/*
-        - src/**/*
-        - aisg-context/guide-site/**/*
-  needs:
-    - job: build
-      optional: true
-{%- else -%}
-default:
-  tags:
-{%- if cookiecutter.platform == 'onprem' %}
-    - on-prem
-{%- elif cookiecutter.platform == 'gcp' %}
-    - gcp
-{%- endif %}
-  cache:
-    key: $CI_COMMIT_REF_SLUG
-    paths:
-      - ./conda
-  image:
-    name: continuumio/miniconda3:24.7.1-0
-
-stages:
-  - test
-  - deploy-docs
-  - build
-
-test:conda-build:
-  stage: test
-  script:
-    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p ./conda/{{cookiecutter.repo_name}} -y
+    - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p ${VENV_DIRECTORY} -y
   rules:
     - if: $CI_MERGE_REQUEST_IID
       changes:
@@ -247,10 +154,10 @@ test:conda-build:
       when: never
   needs: []
 
-test:pylint:
+test:lint:
   stage: test
   before_script:
-    - source activate ./conda/{{cookiecutter.repo_name}}
+    - source activate ${VENV_DIRECTORY}
     - pip install -r dev-requirements.txt
   script:
     - pylint src --fail-under=7.0 --ignore=tests --disable=W1202
@@ -264,13 +171,13 @@ test:pylint:
     - if: $CI_COMMIT_TAG
       when: never
   needs:
-    - job: test:conda-build
+    - job: build:conda-env
       optional: true
 
 test:pytest:
   stage: test
   before_script: 
-    - source activate ./conda/{{cookiecutter.repo_name}}
+    - source activate ${VENV_DIRECTORY}
     - pip install -r dev-requirements.txt
   script:
     - pytest src/tests --junitxml=./rspec.xml
@@ -289,34 +196,11 @@ test:pytest:
     reports:
       junit: rspec.xml
   needs:
-    - job: test:conda-build
-      optional: true
-
-pages:
-  stage: deploy-docs
-  before_script:
-    - source activate ./conda/{{cookiecutter.repo_name}}
-    - pip install -r docs-requirements.txt
-    - pip install -r aisg-context/guide-site/mkdocs-requirements.txt
-  script:
-    - sphinx-apidoc -f -o docs src
-    - sphinx-build -b html docs public
-    - mkdocs build -v -f aisg-context/guide-site/mkdocs.yml -d $PWD/public/guide
-  artifacts:
-    paths:
-    - public
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-      changes:
-        - docs/**/*
-        - src/**/*
-        - aisg-context/guide-site/**/*
-  needs:
-    - job: test:conda-build
+    - job: build:conda-env
       optional: true
 
 build:cpu-image:
-  stage: build
+  stage: deploy
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
@@ -352,13 +236,13 @@ build:cpu-image:
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_DATAPREP
   needs:
-    - job: test:pytest
+    - job: test:lint
       optional: true
-    - job: test:pylint
+    - job: test:pytest
       optional: true
 
 build:gpu-image:
-  stage: build
+  stage: deploy
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
@@ -394,13 +278,13 @@ build:gpu-image:
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
     - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_MODEL
   needs:
-    - job: test:pytest
+    - job: test:lint
       optional: true
-    - job: test:pylint
+    - job: test:pytest
       optional: true
 
 build:retag-images:
-  stage: build
+  stage: deploy
   image:
 {%- if cookiecutter.platform == 'onprem' %}
     name: gcr.io/go-containerregistry/crane:debug
@@ -433,4 +317,27 @@ build:retag-images:
       optional: true
     - job: build:gpu-image
       optional: true
-{%- endif -%}
+{%- endif %}
+
+pages:
+  stage: deploy-docs
+  before_script:
+    - source activate ${VENV_DIRECTORY}
+    - pip install -r docs-requirements.txt
+    - pip install -r aisg-context/guide-site/mkdocs-requirements.txt
+  script:
+    - sphinx-apidoc -f -o docs src
+    - sphinx-build -b html docs public
+    - mkdocs build -v -f aisg-context/guide-site/mkdocs.yml -d $PWD/public/guide
+  artifacts:
+    paths:
+    - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - docs/**/*
+        - src/**/*
+        - aisg-context/guide-site/**/*
+  needs:
+    - job: build:conda-env
+      optional: true

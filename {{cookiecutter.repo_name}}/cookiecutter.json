@@ -7,6 +7,7 @@
         "src_package_name_short": "{{cookiecutter.src_package_name_short}}",
         "platform": "{{cookiecutter.platform}}",
         "orchestrator": "{{cookiecutter.orchestrator}}",
+        "aisg": {{"true" if cookiecutter.aisg else "false"}},
         "proj_name": "{{cookiecutter.proj_name}}",
         "registry_project_path": "{{cookiecutter.registry_project_path}}",
         "problem_template": "{{cookiecutter.problem_template}}",
