@@ -19,8 +19,16 @@
     instead.
 
 ## Docker Image Debugging
+{%- if cookiecutter.aisg %}
 
-We would need to build a Docker image to create a virtual environment
+While we will be making use of AI Singapore's remote infrastructure
+{%- else %}
+
+While you might be making use of your own remote infrastructure
+{%- endif %}
+to carry out some workflows, we can still make use of our local
+machine to execute some of the steps of the end-to-end machine learning
+workflow. Hence, we can begin by creating a virtual environment
 that will contain all the dependencies required for this guide. This
 requires the Docker image to be built from a Dockerfile
 (`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)

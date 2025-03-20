@@ -36,27 +36,37 @@ pushes are done to the `main` branch:
 ...
 pages:
   stage: deploy-docs
-  image:
-    name: continuumio/miniconda3:23.10.0-1
   before_script:
-    - source activate ./conda/{{cookiecutter.repo_name}}
+    - source activate ${VENV_DIRECTORY}
     - pip install -r docs-requirements.txt
+    - pip install -r aisg-context/guide-site/mkdocs-requirements.txt
   script:
     - sphinx-apidoc -f -o docs src
     - sphinx-build -b html docs public
+    - mkdocs build -v -f aisg-context/guide-site/mkdocs.yml -d $PWD/public/guide
   artifacts:
     paths:
     - public
-  only:
-    - main
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - docs/**/*
+        - src/**/*
+        - aisg-context/guide-site/**/*
   needs:
-    - test:conda-build
+    - job: build:conda-env
+      optional: true
 ...
 ```
 
 The documentation page is viewable through the following convention:
+{%- if cookiecutter.aisg %}
 `<NAMESPACE>.gitlab.aisingapore.net/<PROJECT_NAME>` or
 `<NAMESPACE>.gitlab.aisingapore.net/<GROUP>/<PROJECT_NAME>`.
+{%- else %}
+`<NAMESPACE>.gitlab.example.com/<PROJECT_NAME>` or
+`<NAMESPACE>.gitlab.example.com/<GROUP>/<PROJECT_NAME>`.
+{%- endif %}
 
 ??? info "Reference Link(s)"
 

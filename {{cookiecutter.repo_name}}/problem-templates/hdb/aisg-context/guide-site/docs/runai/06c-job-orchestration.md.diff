@@ -1,8 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/06c-job-orchestration.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/runai/06c-job-orchestration.md
-@@ -47,8 +47,10 @@
- raw_data_dir_path: "./data/raw"
+@@ -48,8 +48,10 @@
  processed_data_dir_path: "./data/processed"
+ log_dir: "./logs"
  ```
  
 +There are other configurables in the `conf/process_data.yaml` which are used
@@ -11,7 +11,7 @@
  (`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
  provided in this template:
  
-@@ -160,14 +162,15 @@
+@@ -168,13 +170,15 @@
  mlflow_tracking_uri: "./mlruns"
  mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
  mlflow_run_name: "train-model"
@@ -21,18 +21,17 @@
 -test_bs: 100
  artifact_dir_path: "./models"
 -epochs: 5
--resume: false
 +use_cuda: false
 +n_estimators: 100
 +lr: 0.5
 +gamma: 1
 +max_depth: 5
 +seed: 1111
+ resume: false
+ log_dir: "./logs"
  ```
  
- After that, we build the Docker image from the Docker file 
- `docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
-@@ -227,13 +230,15 @@
+@@ -236,14 +240,16 @@
          --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
          --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
          -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
@@ -42,14 +41,16 @@
              mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
              mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
              data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
--            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models"
+-            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
+-            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs"
 +            model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models \
++            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs \
 +            epochs=3"
      ```
  
  Once you have successfully run an experiment, you may inspect the run
  on the MLflow Tracking server. Through the MLflow Tracking server
-@@ -321,16 +326,18 @@
+@@ -331,16 +337,18 @@
  hydra:
    sweeper:
      sampler:
@@ -72,7 +73,7 @@
  
  These fields are used by the Optuna Sweeper plugin to configure the
  Optuna study.
-@@ -355,22 +362,22 @@
+@@ -365,22 +373,22 @@
  
  `src/train_model.py`
  ```python
@@ -98,7 +99,7 @@
  are to optimise towards, defined in a positional manner within a list.
  
  An additional thing to take note of is that for each trial where a
-@@ -400,13 +407,15 @@
+@@ -410,14 +418,16 @@
          --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
          -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
          -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
@@ -108,8 +109,10 @@
              mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
              mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
              data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
--            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models"
+-            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
+-            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs"
 +            model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models \
++            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs \
 +            epochs=3"
      ```
  

@@ -9,9 +9,10 @@ cluster resources can be dedicated.
 
 [coder]: https://coder.com/
 
-## VSCode
+## Coder & VSCode Server
+{%- if cookiecutter,aisg %}
 
-### Prebuilt VSCode Server
+### Prebuilt VSCode Server in Coder
 
 The MLOps team should have spun up a Coder instance in the cluster and 
 handed the URL to you. The only thing you would need to do is to log 
@@ -80,6 +81,15 @@ be persisted.
     cd /<PVC_LOCATION>/workspaces
     mkdir <YOUR_HYPHENATED_NAME>
     ```
+{%- else %}
+
+### Coder Setup & Installation
+
+You can read more [here][coder-docs] on how to set up your own Coder
+instance based on your own specifications.
+
+[coder-docs]: https://coder.com/docs/install
+{%- endif %}
 
 ### Git from VSCode
 

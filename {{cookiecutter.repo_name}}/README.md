@@ -31,6 +31,7 @@ Inputs provided to `cookiecutter` for the generation of this template:
 - __`src_package_name_short`:__ {{cookiecutter.src_package_name_short}}
 - __`platform`:__ {{cookiecutter.platform}}
 - __`orchestrator`:__ {{cookiecutter.orchestrator}}
+- __`aisg`:__ {{cookiecutter.aisg}}
 - __`proj_name`:__ {{cookiecutter.proj_name}}
 - __`registry_project_path`:__ {{cookiecutter.registry_project_path}}
 {% if cookiecutter.problem_template != 'base' -%}

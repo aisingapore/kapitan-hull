@@ -1,5 +1,7 @@
 import re
 import sys
+import os
+import shutil
 
 
 COOKIE_INPUTS = {
@@ -22,7 +24,7 @@ COOKIE_INPUTS = {
         "avail": ["onprem", "gcp"]},
     "orchestrator": {
         "user_input": "{{cookiecutter.orchestrator}}",
-        "avail": ["runai"]},
+        "avail": ["runai", "none"]},
     "registry_project_path": {
         "user_input": "{{cookiecutter.registry_project_path}}",
         "regex": r"^(https?:\/\/)?([a-zA-Z0-9.-]+(:[a-zA-Z0-9.-]+)?@)?([a-zA-Z0-9.-]+)(:[0-9]+)?\/([a-zA-Z0-9._-]+\/)*([a-zA-Z0-9._-]+)(:[a-zA-Z0-9._-]+)?$"},

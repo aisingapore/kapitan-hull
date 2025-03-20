@@ -25,10 +25,12 @@ def main(args):
 
     logger = logging.getLogger(__name__)
     logger.info("Setting up logging configuration.")
-    logger_config_path = os.path.join(
-        hydra.utils.get_original_cwd(), "conf", "logging.yaml"
+    {{cookiecutter.src_package_name_short}}.general_utils.setup_logging(
+        logging_config_path=os.path.join(
+            hydra.utils.get_original_cwd(), "conf", "logging.yaml"
+        ),
+        log_dir=args.get("log_dir", None)
     )
-    {{cookiecutter.src_package_name_short}}.general_utils.setup_logging(logger_config_path)
 
     logger.info("Loading the model...")
     loaded_model = {{cookiecutter.src_package_name_short}}.modeling.utils.load_model()

@@ -1,6 +1,6 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/04a-virtual-env.md
 +++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/local/04a-virtual-env.md
-@@ -1,17 +1,26 @@
+@@ -1,25 +1,30 @@
  # Virtual Environments
 +
 +!!! info
@@ -11,6 +11,14 @@
  
  We can create a virtual environment that will contain all the 
  dependencies required for this guide.
+-{%- if cookiecutter.aisg %}
+-While we will be making use of AI Singapore's remote infrastructure
+-{%- else %}
+ While you might be making use of your own remote infrastructure
+-{%- endif %}
+ to carry out some workflows, we can still make use of our local
+ machine to execute some of the steps of the end-to-end machine learning
+ workflow.
  
  ```bash
 -conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml
@@ -28,7 +36,7 @@
  !!! info "On the use of GPUs"
      Conda environment configured using the YAML file does not take into
      account whether you need extra requirements to use your GPU for
-@@ -20,9 +29,9 @@
+@@ -28,9 +33,9 @@
  
  Activate your environment by running:
  
@@ -39,7 +47,7 @@
  
  You can either run `python` or install IPython to run an interactive
  shell and write snippets to test within the environment:
-@@ -65,16 +74,16 @@
+@@ -73,16 +78,16 @@
  
      === "Linux/macOS"
  

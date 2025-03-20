@@ -1,20 +1,6 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/04a-virtual-env.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/local/04a-virtual-env.md
-@@ -1,8 +1,11 @@
- # Virtual Environments
- 
--We can create a virtual environment that will contain all the 
--dependencies required for this guide.
-+While we will be making use of AI Singapore's remote infrastructure
-+to carry out some workflows, we can still make use of our local
-+machine to execute some of the steps of the end-to-end machine learning
-+workflow. Hence, we can begin by creating a virtual environment that
-+will contain all the dependencies required for this guide.
- 
- ```bash
- conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml
- ```
-@@ -11,13 +14,21 @@
+@@ -19,13 +19,21 @@
  a Conda environment. This is so that there is parity between the 
  development and deployment environment as the Docker image would use 
  `requirements.txt` as the list of packages to be installed.

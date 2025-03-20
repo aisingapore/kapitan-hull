@@ -1,6 +1,14 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/08b-batch-inferencing.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/08b-batch-inferencing.md
-@@ -14,70 +14,79 @@
+@@ -7,77 +7,86 @@
+ 
+ This template provides a Python script (`src/batch_infer.py`) and a 
+ configuration file (`conf/batch_infer.yaml`) for this purpose. 
+ 
+-Let's first create some sample data on our local machine for us to conduct
++Let's first download some data on our local machine for us to conduct
+ batch inferencing on:
+ 
  === "Linux"
  
      ```bash

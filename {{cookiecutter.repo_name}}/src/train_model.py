@@ -27,7 +27,8 @@ def main(args):
     {{cookiecutter.src_package_name_short}}.general_utils.setup_logging(
         logging_config_path=os.path.join(
             hydra.utils.get_original_cwd(), "conf", "logging.yaml"
-        )
+        ),
+        log_dir=args.get("log_dir", None)
     )
     logger.info(
         "Starting training with {} epochs, lr={}, batch_size={}".format(

@@ -32,8 +32,8 @@
      """
  
      logger = logging.getLogger(__name__)
-@@ -29,21 +31,67 @@
-         )
+@@ -30,21 +32,67 @@
+         log_dir=args.get("log_dir", None)
      )
  
      raw_data_dir_path = args["raw_data_dir_path"]

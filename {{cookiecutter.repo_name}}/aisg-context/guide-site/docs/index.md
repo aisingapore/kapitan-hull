@@ -1,10 +1,16 @@
 # {{cookiecutter.project_name}}
 
-{% if cookiecutter.platform == 'gcp' -%}
+{% if (cookiecutter.platform == 'gcp') and (cookiecutter.orchestrator == 'runai') -%}
 ![AI Singapore's Kapitan Hull EPTG GCP Run:ai Banner](./kapitan-hull-eptg-gcp-runai-banner.png)
 
-{% elif cookiecutter.platform == 'onprem' -%}
+{% elif (cookiecutter.platform == 'gcp') and (cookiecutter.orchestrator == 'none') -%}
+![AI Singapore's Kapitan Hull EPTG GCP Banner](./kapitan-hull-eptg-gcp-none-banner.png)
+
+{% elif cookiecutter.platform == 'onprem' and (cookiecutter.orchestrator == 'runai') -%}
 ![AI Singapore's Kapitan Hull EPTG Onprem Run:ai Banner](./kapitan-hull-eptg-onprem-runai-banner.png)
+
+{% elif cookiecutter.platform == 'onprem' and (cookiecutter.orchestrator == 'none') -%}
+![AI Singapore's Kapitan Hull EPTG Onprem Banner](./kapitan-hull-eptg-onprem-none-banner.png)
 
 {% endif -%}
 
@@ -34,6 +40,7 @@ Inputs provided to `cookiecutter` for the generation of this template:
 - __`src_package_name_short`:__ {{cookiecutter.src_package_name_short}}
 - __`platform`:__ {{cookiecutter.platform}}
 - __`orchestrator`:__ {{cookiecutter.orchestrator}}
+- __`aisg`:__ {{cookiecutter.aisg}}
 - __`proj_name`:__ {{cookiecutter.proj_name}}
 - __`registry_project_path`:__ {{cookiecutter.registry_project_path}}
 {% if cookiecutter.problem_template != 'base' -%}

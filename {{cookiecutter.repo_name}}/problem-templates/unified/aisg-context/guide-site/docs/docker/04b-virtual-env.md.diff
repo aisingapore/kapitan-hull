@@ -13,9 +13,21 @@
  
      This method is not recommended as it may have unintended
      consequences on user and group permissions. It is highly
-@@ -22,45 +28,45 @@
+@@ -18,57 +24,52 @@
+     reading [here](#using-virtual-conda-environments-within-vscode) 
+     instead.
  
- We would need to build a Docker image to create a virtual environment
+ ## Docker Image Debugging
+-{%- if cookiecutter.aisg %}
+-
+-While we will be making use of AI Singapore's remote infrastructure
+-{%- else %}
+ 
+ While you might be making use of your own remote infrastructure
+-{%- endif %}
+ to carry out some workflows, we can still make use of our local
+ machine to execute some of the steps of the end-to-end machine learning
+ workflow. Hence, we can begin by creating a virtual environment
  that will contain all the dependencies required for this guide. This
  requires the Docker image to be built from a Dockerfile
 -(`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
@@ -70,7 +82,7 @@
  Spin up your Docker image by running:
  
  === "Linux"
-@@ -74,19 +80,19 @@
+@@ -82,19 +83,19 @@
  
      ```bash
      docker run -it --rm \
@@ -94,7 +106,7 @@
      ```
  
  === "Windows PowerShell"
-@@ -100,10 +106,10 @@
+@@ -108,10 +109,10 @@
          For AMD GPUs, you can follow this [guide][rocm-wsl].
  
      ```powershell
@@ -107,7 +119,7 @@
      ```
  
  [rocm-wsl]: https://rocm.docs.amd.com/projects/radeon/en/latest/docs/install/wsl/howto_wsl.html
-@@ -150,16 +156,16 @@
+@@ -158,16 +159,16 @@
  
      === "Linux/macOS"
  

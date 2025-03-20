@@ -7,6 +7,7 @@
         "src_package_name_short": "khor_test",
         "platform": "onprem",
         "orchestrator": "runai",
+        "aisg": true,
         "proj_name": "mlops-test",
         "registry_project_path": "registry.aisingapore.net/mlops/kapitan-hull-onprem-runai",
         "problem_template": "base",

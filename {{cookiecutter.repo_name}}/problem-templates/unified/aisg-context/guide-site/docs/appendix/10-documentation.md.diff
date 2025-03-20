@@ -1,0 +1,18 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/appendix/10-documentation.md
++++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/appendix/10-documentation.md
+@@ -59,15 +59,10 @@
+ ...
+ ```
+ 
+ The documentation page is viewable through the following convention:
+-{%- if cookiecutter.aisg %}
+-`<NAMESPACE>.gitlab.aisingapore.net/<PROJECT_NAME>` or
+-`<NAMESPACE>.gitlab.aisingapore.net/<GROUP>/<PROJECT_NAME>`.
+-{%- else %}
+ `<NAMESPACE>.gitlab.example.com/<PROJECT_NAME>` or
+ `<NAMESPACE>.gitlab.example.com/<GROUP>/<PROJECT_NAME>`.
+-{%- endif %}
+ 
+ ??? info "Reference Link(s)"
+ 
+     - [GitLab Docs - Pages domain names, URLs, and base URLs](https://docs.gitlab.com/ee/user/project/pages/getting_started_part_one.html)

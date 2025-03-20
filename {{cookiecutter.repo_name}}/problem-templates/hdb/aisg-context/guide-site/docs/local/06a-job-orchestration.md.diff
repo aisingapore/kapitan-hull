@@ -1,8 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/06a-job-orchestration.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/local/06a-job-orchestration.md
-@@ -40,17 +40,16 @@
- raw_data_dir_path: "./data/raw"
+@@ -41,17 +41,16 @@
  processed_data_dir_path: "./data/processed"
+ log_dir: "./logs"
  ```
  
 +There are other configurables in the `conf/process_data.yaml` which are used
@@ -21,7 +21,7 @@
      ```
  
  === "Windows PowerShell"
-@@ -92,14 +91,15 @@
+@@ -98,13 +97,15 @@
  mlflow_tracking_uri: "./mlruns"
  mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
  mlflow_run_name: "train-model"
@@ -31,18 +31,17 @@
 -test_bs: 100
  artifact_dir_path: "./models"
 -epochs: 5
--resume: false
 +use_cuda: false
 +n_estimators: 100
 +lr: 0.5
 +gamma: 1
 +max_depth: 5
 +seed: 1111
+ resume: false
+ log_dir: "./logs"
  ```
  
- After that, run the script:
- 
-@@ -189,16 +189,18 @@
+@@ -196,16 +197,18 @@
  hydra:
    sweeper:
      sampler:
@@ -65,7 +64,7 @@
  
  These fields are used by the Optuna Sweeper plugin to configure the
  Optuna study.
-@@ -223,22 +225,22 @@
+@@ -230,22 +233,22 @@
  
  `src/train_model.py`
  ```python

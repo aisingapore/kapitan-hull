@@ -73,8 +73,9 @@
      ```powershell
      curl.exe '-X', 'POST', `
          'localhost:8080/api/v1/model/predict', `
-         '-H', 'Content-Type: multipart/form-data', `
+-        '-H', 'Content-Type: application/json', `
 -        '-d', '"string"',
++        '-H', 'Content-Type: multipart/form-data', `
 +        '-F', '"image_file=@.\src\tests\sample_mnist_data_for_tests\train\0\16585.png"',
      ```
      

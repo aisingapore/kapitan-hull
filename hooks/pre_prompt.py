@@ -57,6 +57,7 @@ def apply_patch(patch: PatchSet, src_dir: str, logger=None) -> None:
                     expected_line = next((l.value.rstrip('\n') for l in hunk if l.is_context or l.is_removed), None)
                     
                     if expected_line and original_line != expected_line:
+                        logger.warning(f"Error with {target_file_path}")
                         logger.warning(f"Line mismatch in {source_file_path} at line {current_line + 1}")
                         logger.warning(f"  Expected: '{expected_line}'")
                         logger.warning(f"  Found:    '{original_line}'")
@@ -285,5 +286,4 @@ if __name__ == "__main__":
     else:
         logger.info("Generating template scripts")
         generate_template_scripts(logger)
-        
     logger.debug("Patch application process completed")

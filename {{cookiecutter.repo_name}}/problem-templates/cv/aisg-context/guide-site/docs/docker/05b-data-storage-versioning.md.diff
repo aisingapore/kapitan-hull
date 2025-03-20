@@ -1,16 +1,17 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/05b-data-storage-versioning.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/05b-data-storage-versioning.md
-@@ -1,28 +1,37 @@
+@@ -1,28 +1,36 @@
  # Data Storage & Versioning
  
- ## Sample Data
+-## Sample Data
++## MNIST PNG Data for Number Image Classification
  
 -We can generate some sample data to use to test the different 
 -components of Kapitan Hull.
 +While you may have your own project data to work with, for the purpose
 +of following through with this template guide, let's download the 
 +sample data for the [sample problem statement][prob] at hand within our 
-+VSCode server workspace.
++local machine.
 +
 +[prob]: ../setting-up/02-preface.md#guides-problem-statement
  
@@ -44,8 +45,7 @@
 +    The sample data for this guide's problem statement is made
 +    accessible to the public. Hence any team or individual can download
 +    it. It is highly likely that your project's data is not publicly
-+    accessible and neither should it be, especially if it is a 100E
-+    project.
++    accessible and neither should it be.
 +
  In the next section, we will work towards processing this set of raw
 -data and eventually 'training' a dummy model.

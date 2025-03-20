@@ -6,6 +6,7 @@
     "src_package_name_short": "{{ cookiecutter.src_package_name }}",
     "platform": ["onprem", "gcp"],
     "orchestrator": ["runai", "none"],
+    "aisg": true,
     "proj_name": "sample-project",
     "registry_project_path": "registry.domain.tld/sample-project/my-project",
     "problem_template": ["base", "cv"],
@@ -26,6 +27,7 @@
             "runai": "runai - Run:ai (with AISG Resources)",
             "noorch": "noorch - No orchestrator (not implemented yet)"
         },
+        "aisg": "aisg - Choose whether to add AISG context",
         "proj_name": "proj_name - Project name used by the orchestrator (for Run:ai, this will be the Run:ai project name)",
         "registry_project_path": "registry_project_path - Full path to container registry (without trailing slash, e.g., registry.domain.tld/project/image)",
         "problem_template": {

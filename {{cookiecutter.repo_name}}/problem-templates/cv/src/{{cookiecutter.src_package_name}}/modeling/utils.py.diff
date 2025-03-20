@@ -48,7 +48,7 @@
  
      Returns
      -------
--    float
+-    loss : float
 -        Simulated loss value for the training dataset.
 +    loss.item() : float
 +        Average loss value for the training dataset.
@@ -217,7 +217,7 @@
  
      Returns
      -------
--    loaded_model : 
+-    loaded_model : object
 -        Object containing dummy model.
 +    loaded_model : `torch.nn.state_dict` object
 +        Object containing state of predictive model.

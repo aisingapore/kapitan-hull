@@ -39,7 +39,7 @@
  
      Returns
      -------
--    float
+-    loss : float
 -        Simulated loss value for the training dataset.
 +    loaded_model :
 +        Object containing loaded model.
@@ -134,7 +134,7 @@
 -
 -    Returns
 -    -------
--    loaded_model : 
+-    loaded_model : object
 -        Object containing dummy model.
 -    """
 -    loaded_model = {{cookiecutter.src_package_name_short}}.modeling.models.DummyModel()

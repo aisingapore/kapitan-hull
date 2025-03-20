@@ -74,8 +74,9 @@
      ```powershell
      curl.exe '-X', 'POST', `
          'localhost:8080/api/v1/model/predict', `
-         '-H', 'Content-Type: multipart/form-data', `
+-        '-H', 'Content-Type: application/json', `
 -        '-d', '"string"',
++        '-H', 'Content-Type: multipart/form-data', `
 +        '-F', "csv_file=@/path/to/csv/file"
      ```
      

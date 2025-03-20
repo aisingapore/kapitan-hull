@@ -1,10 +1,32 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/setting-up/02-preface.md
 +++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/setting-up/02-preface.md
-@@ -32,6 +32,48 @@
+@@ -18,16 +18,9 @@
+     template has to offer, you can deviate from it as much as you wish
+     and customise it to your needs.
+ 
+ Since we will be making use of this repository in multiple environments, 
+-{%- if cookiecutter.aisg %}
+-__ensure that this repository is pushed to a remote__. Most probably you 
+-will be resorting to [AI Singapore's GitLab instance][aisg-gitlab] as
+-the remote. Refer to [this section][cr8-proj] on creating a blank remote 
+-_repository_ (or _project_ using GitLab's terminology).  
+-{%- else %}
+ __ensure that this repository is pushed to a remote__.  
+-{%- endif %}
+ After creating the remote repository, retrieve the remote URL and push
+ the local repository to remote:
+ 
+ ```bash
+@@ -38,17 +31,49 @@
+ git config user.name "<YOUR_NAME>"
  git commit -m "Initial commit."
  git push -u origin main
  ```
+-{%- if cookiecutter.aisg %}
  
+-Go to [this section][gitlab-page] for more information on interacting 
+-with the on-premise GitLab instance.
+-{%- endif %}
 +!!! info "For AISG projects"
 +
 +    You would most probably be resorting to 
@@ -14,12 +36,14 @@
 +
 +    Go to [this section][gitlab-page] for more information on 
 +    interacting with the on-premise GitLab instance.
-+
+ 
  [ccutter]: https://github.com/cookiecutter/cookiecutter
  [readme]: https://github.com/aisingapore/kapitan-hull/blob/main/README.md
-+[aisg-gitlab]: https://gitlab.aisingapore.net/
-+[cr8-proj]: https://docs.gitlab.com/ee/user/project/
-+[gitlab-page]: https://lighthouse.aisingapore.net/Platforms/InfraOps/Gitlab
+-{%- if cookiecutter.aisg %}
+ [aisg-gitlab]: https://gitlab.aisingapore.net/
+ [cr8-proj]: https://docs.gitlab.com/ee/user/project/
+ [gitlab-page]: https://lighthouse.aisingapore.net/Platforms/InfraOps/Gitlab
+-{%- endif %}
 +
 +## Guide's Problem Statement
 +

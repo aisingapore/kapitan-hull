@@ -46,6 +46,7 @@ Run:ai. You can first update your configuration variables at
 ```yaml
 raw_data_dir_path: "./data/raw"
 processed_data_dir_path: "./data/processed"
+log_dir: "./logs"
 ```
 
 This requires the Docker image to be built from a Dockerfile 
@@ -102,7 +103,8 @@ can submit a job using that image to Run:ai\:
         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
         --command -- /bin/bash -c "python -u src/process_data.py \
             raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw \
-            processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed"
+            processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
+            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs"
     ```
 
 After some time, the data processing job should conclude and we can
@@ -128,7 +130,7 @@ before we start model experimentation.
     {%- set objstg = 'GCS' -%}
 {% endif -%}
 
-!!! info "Experiment Tracking"
+!!! info "Experiment Tracking and Logging"
 
     In the module `src/{{cookiecutter.src_package_name}}/general_utils.py`,
     the functions `mlflow_init` and `mlflow_log` are used to initialise
@@ -138,6 +140,12 @@ before we start model experimentation.
     namespace for projects that requires model experimentation. 
     Artifacts logged through the MLflow API can be uploaded to {{objstg}} 
     buckets, assuming the client is authorised for access to {{objstg}}.
+
+    The `setup_logging` function now supports a `log_dir` parameter that allows
+    you to specify a custom directory for log files. This is useful when you want
+    to store logs in a specific location, such as a mounted volume in a container
+    environment or a shared directory for team access. When running in Run:ai,
+    you might want to set this to a path on your persistent volume.
 
     To log and upload artifacts to {{objstg}} buckets through MLFlow, 
     you need to ensure that the client has access to the credentials of
@@ -167,6 +175,7 @@ test_bs: 100
 artifact_dir_path: "./models"
 epochs: 5
 resume: false
+log_dir: "./logs"
 ```
 
 After that, we build the Docker image from the Docker file 
@@ -232,7 +241,8 @@ we can run a job using it:
             mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
             mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
             data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
-            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models"
+            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
+            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs"
     ```
 
 Once you have successfully run an experiment, you may inspect the run
@@ -405,7 +415,8 @@ by default.
             mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
             mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
             data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
-            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models"
+            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
+            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs"
     ```
 
 ![MLflow Tracking Server - Hyperparameter Tuning Runs](../common/assets/screenshots/mlflow-tracking-hptuning-runs.png)
