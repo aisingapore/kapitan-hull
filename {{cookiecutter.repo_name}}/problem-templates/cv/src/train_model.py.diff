@@ -25,10 +25,10 @@
      Parameters
      ----------
      args : omegaconf.DictConfig
-@@ -28,13 +28,8 @@
-         logging_config_path=os.path.join(
+@@ -29,13 +29,8 @@
              hydra.utils.get_original_cwd(), "conf", "logging.yaml"
-         )
+         ),
+         log_dir=args.get("log_dir", None)
      )
 -    logger.info(
 -        "Starting training with {} epochs, lr={}, batch_size={}".format(
@@ -36,10 +36,10 @@
 -        )
 -    )
  
-     mlflow_init_status, mlflow_run = {{cookiecutter.src_package_name_short}}.general_utils.mlflow_init(
+     mlflow_init_status, mlflow_run, step_offset = {{cookiecutter.src_package_name_short}}.general_utils.mlflow_init(
          args["mlflow_tracking_uri"], args["mlflow_exp_name"], 
          args["mlflow_run_name"], setup_mlflow=args["setup_mlflow"], 
-@@ -44,53 +39,86 @@
+@@ -45,51 +40,84 @@
          mlflow_init_status,
          "log_params",
          params={
@@ -87,7 +87,7 @@
 +        optimiser, step_size=1, gamma=args["gamma"]
 +    )
 +
-     for epoch in range(1, args["epochs"] + 1):
+     for epoch in range(step_offset + 1, args["epochs"] + step_offset + 1):
          curr_train_loss = {{cookiecutter.src_package_name_short}}.modeling.utils.train(
 -            mlflow_init_status, model, dataset, epoch, 
 -            learning_rate=args["lr"],
@@ -130,8 +130,8 @@
          "log_dict",
          dictionary=omegaconf.OmegaConf.to_container(args, resolve=True),
          artifact_file="train_model_config.json",
-     )
- 
+-    )
+-
 -    # Save metrics to artifact directory
 -    os.makedirs(args["artifact_dir_path"], exist_ok=True)
 -    
@@ -148,9 +148,7 @@
 -        "log_artifact",
 -        local_path=artifact_path,
 -        artifact_path="outputs"
--    )
--    
+     )
+ 
      if mlflow_init_status:
          artifact_uri = mlflow.get_artifact_uri()
-         logger.info("Artifact URI: %s", artifact_uri)
-         {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(

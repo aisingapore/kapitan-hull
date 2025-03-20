@@ -16,9 +16,9 @@
  
  import {{cookiecutter.src_package_name}} as {{cookiecutter.src_package_name_short}}
  
-@@ -30,41 +32,47 @@
+@@ -32,41 +34,47 @@
+         log_dir=args.get("log_dir", None)
      )
-     {{cookiecutter.src_package_name_short}}.general_utils.setup_logging(logger_config_path)
  
      logger.info("Loading the model...")
 -    loaded_model = {{cookiecutter.src_package_name_short}}.modeling.utils.load_model()

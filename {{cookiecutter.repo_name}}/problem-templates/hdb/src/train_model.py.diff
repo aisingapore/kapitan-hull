@@ -13,10 +13,10 @@
  import hydra
  import mlflow
  
-@@ -28,43 +28,36 @@
-         logging_config_path=os.path.join(
+@@ -29,43 +29,36 @@
              hydra.utils.get_original_cwd(), "conf", "logging.yaml"
-         )
+         ),
+         log_dir=args.get("log_dir", None)
      )
 -    logger.info(
 -        "Starting training with {} epochs, lr={}, batch_size={}".format(
@@ -24,7 +24,7 @@
 -        )
 -    )
  
-     mlflow_init_status, mlflow_run = {{cookiecutter.src_package_name_short}}.general_utils.mlflow_init(
+     mlflow_init_status, mlflow_run, step_offset = {{cookiecutter.src_package_name_short}}.general_utils.mlflow_init(
          args["mlflow_tracking_uri"], args["mlflow_exp_name"], 
          args["mlflow_run_name"], setup_mlflow=args["setup_mlflow"], 
          autolog=args["mlflow_autolog"], resume=args["resume"]
@@ -56,7 +56,7 @@
 -    model = {{cookiecutter.src_package_name_short}}.modeling.models.DummyModel()
 +    model = {{cookiecutter.src_package_name_short}}.modeling.models.Model()
      
--    for epoch in range(1, args["epochs"] + 1):
+-    for epoch in range(step_offset + 1, args["epochs"] + step_offset + 1):
 -        curr_train_loss = {{cookiecutter.src_package_name_short}}.modeling.utils.train(
 -            mlflow_init_status, model, dataset, epoch, 
 -            learning_rate=args["lr"],
@@ -73,7 +73,7 @@
      {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
          mlflow_init_status,
          "log_dict",
-@@ -73,24 +66,27 @@
+@@ -74,22 +67,25 @@
      )
  
      # Save metrics to artifact directory
@@ -100,13 +100,10 @@
 -        artifact_path="outputs"
 +        artifact_path="model"
      )
--    
-+
+ 
      if mlflow_init_status:
          artifact_uri = mlflow.get_artifact_uri()
-         logger.info("Artifact URI: %s", artifact_uri)
-         {{cookiecutter.src_package_name_short}}.general_utils.mlflow_log(
-@@ -103,10 +99,12 @@
+@@ -104,10 +100,12 @@
          mlflow.end_run()
      else:
          logger.info("Model training has completed.")
