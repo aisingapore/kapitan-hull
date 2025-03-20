@@ -35,6 +35,7 @@ variables at `conf/process_data.yaml`, specifically this section:
 ```yaml
 raw_data_dir_path: "./data/raw"
 processed_data_dir_path: "./data/processed"
+log_dir: "./logs"  # Optional: Custom directory for log files
 ```
 
 This requires the Docker image to be built from a Dockerfile 
@@ -84,7 +85,7 @@ After building the image, you can run the script through Docker:
         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
         -w /home/aisg/{{cookiecutter.repo_name}} \
         {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
-        bash -c "python -u src/process_data.py"
+        bash -c "python -u src/process_data.py log_dir=./logs"
     ```
 
 === "macOS"
@@ -125,13 +126,18 @@ as well, most notably the functions for utilising MLflow utilities for
 tracking experiments. Let's set up the tooling for experiment tracking
 before we start model experimentation.
 
-!!! info "Experiment Tracking"
+!!! info "Experiment Tracking and Logging"
 
     In the module `src/{{cookiecutter.src_package_name}}/general_utils.py`,
     the functions `mlflow_init` and `mlflow_log` are used to initialise
     MLflow experiments as well as log information and artifacts 
     relevant for a run to an `mlruns` local folder. After that, we would 
     use [the MLFlow Docker image][mlflow-docker] for analysis.
+    
+    The `setup_logging` function now supports a `log_dir` parameter that allows
+    you to specify a custom directory for log files. This is useful when you want
+    to store logs in a specific location, such as a mounted volume in a container
+    environment or a shared directory for team access.
 
     ??? info "Reference Link(s)"
 
@@ -156,6 +162,7 @@ test_bs: 100
 artifact_dir_path: "./models"
 epochs: 5
 resume: false
+log_dir: "./logs"  # Optional: Custom directory for log files
 ```
 
 After that, we build the Docker image from the Docker file 
@@ -265,7 +272,7 @@ the running MLFlow server:
         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
         --network=host \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
-        bash -c "python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI"
+        bash -c "python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI log_dir=./logs"
     ```
 
 === "macOS"
@@ -446,7 +453,7 @@ container. This tag is defined using the environment value
         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
         --network=host \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
-        bash -c "python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI"
+        bash -c "python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI log_dir=./logs"
     ```
 
 === "macOS"
