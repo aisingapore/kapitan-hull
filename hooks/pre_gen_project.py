@@ -130,7 +130,6 @@ def delete_other_problem_templates() -> None:
             dir_path = os.path.join(problem_templates_dir, template_dir)
             # Check if it's a directory and not the selected template
             if os.path.isdir(dir_path) and template_dir != problem_template:
-                print(f"Removing unused problem template: {template_dir}")
                 shutil.rmtree(dir_path)
 
 if __name__ == "__main__":
