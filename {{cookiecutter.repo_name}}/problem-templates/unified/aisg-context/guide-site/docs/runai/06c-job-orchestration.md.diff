@@ -24,8 +24,8 @@
  values can be overridden through the CLI.
  
  !!! attention
-@@ -48,41 +54,36 @@
- processed_data_dir_path: "./data/processed"
+@@ -49,41 +55,36 @@
+ log_dir: "./logs"  # Optional: Custom directory for log files
  ```
  
  This requires the Docker image to be built from a Dockerfile 
@@ -77,7 +77,7 @@
      ```
  
  Now that we have the Docker image built and pushed to the registry, we 
-@@ -90,15 +91,15 @@
+@@ -91,15 +92,15 @@
  
  === "Coder Workspace Terminal using Run:ai"
  
@@ -97,7 +97,7 @@
          --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
          --command -- /bin/bash -c "python -u src/process_data.py \
              raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw \
-@@ -116,35 +117,29 @@
+@@ -118,41 +119,35 @@
  Now that we have processed the raw data, we can look into training the
  sentiment classification model. The script relevant for this section
  is `src/train_model.py`. In this script, you can see it using some
@@ -114,7 +114,7 @@
 -    {%- set objstg = 'GCS' -%}
 -{% endif -%}
 -
- !!! info "Experiment Tracking"
+ !!! info "Experiment Tracking and Logging"
  
 -    In the module `src/{{cookiecutter.src_package_name}}/general_utils.py`,
 +    In the module `src/project_package/general_utils.py`,
@@ -125,11 +125,16 @@
      namespace for projects that requires model experimentation. 
 -    Artifacts logged through the MLflow API can be uploaded to {{objstg}} 
 -    buckets, assuming the client is authorised for access to {{objstg}}.
--
--    To log and upload artifacts to {{objstg}} buckets through MLFlow, 
 +    Artifacts logged through the MLflow API can be uploaded to GCS/ECS 
 +    buckets, assuming the client is authorised for access to GCS/ECS.
-+
+     
+     The `setup_logging` function now supports a `log_dir` parameter that allows
+     you to specify a custom directory for log files. This is useful when you want
+     to store logs in a specific location, such as a mounted volume in a container
+     environment or a shared directory for team access. When running in Run:ai,
+     you might want to set this to a path on your persistent volume.
+ 
+-    To log and upload artifacts to {{objstg}} buckets through MLFlow, 
 +    To log and upload artifacts to GCS/ECS buckets through MLFlow, 
      you need to ensure that the client has access to the credentials of
      an account that can write to a bucket. This is usually settled by 
@@ -140,7 +145,7 @@
      ??? info "Reference Link(s)"
  
          - [MLflow Docs - Tracking](https://www.mlflow.org/docs/latest/tracking.html#)
-@@ -157,9 +152,9 @@
+@@ -165,9 +160,9 @@
  ```yaml
  setup_mlflow: true
  mlflow_autolog: false
@@ -151,8 +156,8 @@
  data_dir_path: "./data/processed"
  lr: 1.3
  train_bs: 32
-@@ -169,46 +164,41 @@
- resume: false
+@@ -178,46 +173,41 @@
+ log_dir: "./logs"  # Optional: Custom directory for log files
  ```
  
  After that, we build the Docker image from the Docker file 
@@ -210,7 +215,7 @@
      ```
  
  Now that we have the Docker image built and pushed to the registry, 
-@@ -216,15 +206,15 @@
+@@ -225,15 +215,15 @@
  
  === "Coder Workspace Terminal using Run:ai"
  
@@ -230,7 +235,7 @@
          --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
          -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
          -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-@@ -237,9 +227,9 @@
+@@ -247,9 +237,9 @@
  
  Once you have successfully run an experiment, you may inspect the run
  on the MLflow Tracking server. Through the MLflow Tracking server
@@ -241,7 +246,7 @@
  
  ![MLflow Tracking Server - Inspecting Runs](https://storage.googleapis.com/aisg-mlops-pub-data/images/mlflow-tracking-server-inspect.gif)
  
-@@ -388,15 +378,15 @@
+@@ -398,15 +388,15 @@
  
  === "Coder Workspace Terminal using Run:ai"
  
