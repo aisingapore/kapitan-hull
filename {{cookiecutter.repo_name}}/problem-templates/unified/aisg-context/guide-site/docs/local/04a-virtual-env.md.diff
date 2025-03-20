@@ -14,7 +14,7 @@
 -{%- if cookiecutter.aisg %}
 -While we will be making use of AI Singapore's remote infrastructure
 -{%- else %}
- While you might be making use of your own remote infrastructure 
+ While you might be making use of your own remote infrastructure
 -{%- endif %}
  to carry out some workflows, we can still make use of our local
  machine to execute some of the steps of the end-to-end machine learning
