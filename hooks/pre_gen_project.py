@@ -24,7 +24,7 @@ COOKIE_INPUTS = {
         "avail": ["onprem", "gcp"]},
     "orchestrator": {
         "user_input": "{{cookiecutter.orchestrator}}",
-        "avail": ["runai"]},
+        "avail": ["runai", "none"]},
     "registry_project_path": {
         "user_input": "{{cookiecutter.registry_project_path}}",
         "regex": r"^(https?:\/\/)?([a-zA-Z0-9.-]+(:[a-zA-Z0-9.-]+)?@)?([a-zA-Z0-9.-]+)(:[0-9]+)?\/([a-zA-Z0-9._-]+\/)*([a-zA-Z0-9._-]+)(:[a-zA-Z0-9._-]+)?$"},
@@ -109,29 +109,5 @@ def check_cookiecutter_inputs() -> None:
         sys.exit(1)
 
 
-def delete_other_problem_templates() -> None:
-    """
-    Delete all problem template folders except the one specified by the user.
-    This keeps the repository clean by removing unused template code.
-    """
-    problem_template = COOKIE_INPUTS['problem_template']['user_input']
-    problem_templates_dir = "problem-templates"
-    
-    # If selected template is 'base', delete the entire problem-templates folder
-    if problem_template == "base":
-        if os.path.exists(problem_templates_dir):
-            print(f"Removing entire problem-templates directory for base template")
-            shutil.rmtree(problem_templates_dir)
-        return
-        
-    # Get all directories in the problem-templates folder
-    if os.path.exists(problem_templates_dir):
-        for template_dir in os.listdir(problem_templates_dir):
-            dir_path = os.path.join(problem_templates_dir, template_dir)
-            # Check if it's a directory and not the selected template
-            if os.path.isdir(dir_path) and template_dir != problem_template:
-                shutil.rmtree(dir_path)
-
 if __name__ == "__main__":
     check_cookiecutter_inputs()
-    delete_other_problem_templates()

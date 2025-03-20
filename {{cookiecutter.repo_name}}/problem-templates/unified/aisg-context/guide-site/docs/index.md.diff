@@ -1,15 +1,21 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/index.md
 +++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/index.md
-@@ -1,15 +1,9 @@
+@@ -1,21 +1,9 @@
 -# {{cookiecutter.project_name}}
 +# AI Project Template
  
--{% if cookiecutter.platform == 'gcp' -%}
+-{% if (cookiecutter.platform == 'gcp') and (cookiecutter.orchestrator == 'runai') -%}
 -![AI Singapore's Kapitan Hull EPTG GCP Run:ai Banner](./kapitan-hull-eptg-gcp-runai-banner.png)
 +![AI Singapore's Kapitan Hull Banner](./kapitan-hull-banner.png)
  
--{% elif cookiecutter.platform == 'onprem' -%}
+-{% elif (cookiecutter.platform == 'gcp') and (cookiecutter.orchestrator == 'none') -%}
+-![AI Singapore's Kapitan Hull EPTG GCP Banner](./kapitan-hull-eptg-gcp-none-banner.png)
+-
+-{% elif cookiecutter.platform == 'onprem' and (cookiecutter.orchestrator == 'runai') -%}
 -![AI Singapore's Kapitan Hull EPTG Onprem Run:ai Banner](./kapitan-hull-eptg-onprem-runai-banner.png)
+-
+-{% elif cookiecutter.platform == 'onprem' and (cookiecutter.orchestrator == 'none') -%}
+-![AI Singapore's Kapitan Hull EPTG Onprem Banner](./kapitan-hull-eptg-onprem-none-banner.png)
 -
 -{% endif -%}
 -
@@ -19,7 +25,7 @@
  __A project generated using AI Singapore's Kapitan Hull, an end-to-end 
  ML project template.__
  
-@@ -20,36 +14,15 @@
+@@ -26,36 +14,15 @@
  > https://github.com/aisingapore/kapitan-hull
  
  This `mkdocs` site is for serving the contents of the end-to-end guide 
@@ -59,7 +65,7 @@
  │   │                      for works within the context of AISG's
  │   │                      development environments.
  │   └── guide-site      <- Files relevant for spinning up the `mkdocs`
-@@ -70,12 +43,12 @@
+@@ -76,12 +43,12 @@
  │                          delimited description, e.g.
  │                          `1.0-jqp-initial-data-exploration`.
  ├── src                 <- Directory containing the source code and
@@ -74,7 +80,7 @@
  │   │      server.
  │   └── tests           <- Directory containing tests for the
  │                          repository's packages.
-@@ -85,10 +58,12 @@
+@@ -91,10 +58,12 @@
  │                          to be ignored by Git.
  ├── .gitlab-ci.yml      <- AML file for configuring GitLab CI/CD
  │                          pipelines.

@@ -286,5 +286,4 @@ if __name__ == "__main__":
     else:
         logger.info("Generating template scripts")
         generate_template_scripts(logger)
-        
     logger.debug("Patch application process completed")
