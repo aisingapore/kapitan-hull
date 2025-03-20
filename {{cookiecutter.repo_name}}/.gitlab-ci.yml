@@ -12,7 +12,7 @@ default:
   image:
     name: ${PYTHON_IMAGE}
 
-stages:
+stages: 
   - build
   - test
   - deploy
