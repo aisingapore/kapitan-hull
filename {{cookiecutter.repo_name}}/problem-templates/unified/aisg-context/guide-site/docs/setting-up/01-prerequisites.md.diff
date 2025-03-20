@@ -1,0 +1,142 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/setting-up/01-prerequisites.md
++++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/setting-up/01-prerequisites.md
+@@ -1,23 +1,15 @@
+ # Prerequisites
+ 
+ ## Software & Tooling Prerequisites
+ 
+-Aside from an internet connection, you would need the following to
+-follow through with the guide:
++Aside from an internet connection, you may need the following to
++follow through with the guide, depending on your project's requirements:
+ 
+-{% if cookiecutter.aisg -%}
+-- NUS Staff/Student account.
+-- Azure account provisioned by AI Singapore.
+-{%- endif -%}
+ - PC with the following installed:
+     - If your machine is with a Windows OS, use [__PowerShell__][pshell]
+       instead of the default Command (`cmd.exe`) shell. Best if you
+       resort to [Windows Terminal][winterm].
+-{%- if cookiecutter.aisg %}
+-    - __Pulse Secure__
+-        - Refer to [NUS IT eGuides][nus-it] for installation guides.
+-{%- endif %}
+     - __Web browser__
+     - __Terminal__
+     - __[Git][git]__
+     - __[Rancher Desktop][rancher]__ or __[Docker Engine][docker]:__
+@@ -28,59 +20,45 @@
+         - For Windows or macOS users, the Docker daemon can be installed
+           through [Rancher Desktop][rancher].
+     - __[miniconda][mcond]:__ for Python virtual environment management.
+     - __[`kubectl`][kubectl]:__ CLI for Kubernetes.
+-{%- if cookiecutter.platform == 'onprem' %}
+-{%- if cookiecutter.aisg %}
+-    - __[AWS CLI][awscli]:__ CLI for AWS services, but we will 
+-      specifically be using it for interacting with the AI Singapore's 
+-      Elastic Cloud Storage (ECS) service through the S3 protocol.
+-{%- else %}
+     - __[AWS CLI][awscli]:__ CLI for AWS services.
+-{%- endif %}
+         - You may choose to just use [`boto3`][boto3], the Python SDK 
+           for AWS instead, to interact with the ECS service within a 
+           Python environment. However, this does not fall under the 
+           scope of this guide.
+-{%- elif cookiecutter.platform == 'gcp' %}
+     - __[`gcloud` CLI][gcloud]:__ CLI for interacting with GCP services.
+-{%- endif %}
+     - *(Optional)* __[`helm`][helm]:__ CLI for Kubernetes' package 
+       manager.
+-{%- if cookiecutter.orchestrator == 'runai' %}
+-{%- if cookiecutter.aisg %}
+-- Access to a project on AI Singapore's Run:ai cluster.  
+-{%- else %}
+ - Access to a project on a Run:ai cluster.  
+-{%- endif %}
+   See [here][runai-page] for more information.
+-{%- elif cookiecutter.orchestrator == 'noorch' %}  
+-{%- endif %}
+-{%- if cookiecutter.platform == 'onprem' %}  
+-{%- if cookiecutter.aisg %}
+-- Credentials for AI Singapore's Elastic Cloud Storage (ECS) service.  
+-{%- else %}
+ - Credentials for an S3-compatible service (MinIO, etc).  
+-{%- endif %}
+   See [here][ecs-page] for more information.
+-{%- if cookiecutter.aisg %}
+-- Credentials for AI Singapore's Harbor registry.  
+-{%- else %}
+ - Credentials for a Docker registry.  
+-{%- endif %}
+   See [here][harbor-page] for more information.
+-{%- elif cookiecutter.platform == 'gcp' %}
+ - Access to a project on [Google Cloud Platform][gcp].  
+   See [here][gcp-page] for more information.
+-{%- endif %}
+ - Credentials for an MLflow Tracking server.  
+   See [here][mlflow-page] for more information.
+-{%- if cookiecutter.aisg %}
++
++If you're using AISG infrastructure for your project, you may also need
++the following:
++
++- NUS Staff/Student account.
++- Azure account provisioned by AI Singapore.
++- PC with the following installed:
++    - __Pulse Secure__
++        - Refer to [NUS IT eGuides][nus-it] for installation guides.
++    - For the AWS CLI, you may be using it for interacting with the AI 
++      Singapore's Elastic Cloud Storage (ECS) service through the S3 protocol.
++- Access to a project on AI Singapore's Run:ai cluster.  
++- Credentials for AI Singapore's Elastic Cloud Storage (ECS) service. 
++- Credentials for AI Singapore's Harbor registry. 
+ 
+ !!! note
+-    If you do not have any of the required credentials, please verify 
++    If you are supposed to have access to any of AISG's infrastructure, 
++    and you do not have any of the required credentials, please verify 
+     with or notify the MLOps team at `mlops@aisingapore.org`.
+-{%- endif %}
+ 
+ !!! info
+     Wherever relevant, you can toggle between the different commands
+     that need to be executed for either Linux/macOS or the Windows 
+@@ -109,33 +87,25 @@
+         VSCode.
+ 
+ [pshell]: https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.2
+ [winterm]: https://docs.microsoft.com/en-us/windows/terminal/
++[nus-it]: https://nusit.nus.edu.sg/eguides/
+ [git]: https://git-scm.com/downloads
+ [rancher]: https://rancherdesktop.io
+ [docker]: https://docs.docker.com/engine/install
+ [mcond]: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
+ [kubectl]: https://kubernetes.io/docs/tasks/tools/
++[awscli]: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
++[boto3]: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html
++[gcloud]: https://cloud.google.com/sdk/docs/install
+ [helm]: https://helm.sh/docs/intro/install/
+ [mlflow-page]: https://lighthouse.aisingapore.net/Platforms/MLOps&LLMOps/HelmCharts/MLflow
+ [lf-set]: https://stackoverflow.com/questions/48692741/how-can-i-make-all-line-endings-eols-in-all-files-in-visual-studio-code-unix
+-{% if cookiecutter.platform == 'onprem' -%}  
+-[awscli]: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+-[boto3]: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html
+ [ecs-page]: https://lighthouse.aisingapore.net/Platforms/InfraOps/ECS
+ [harbor-page]: https://lighthouse.aisingapore.net/Platforms/InfraOps/Harbor
+-{% elif cookiecutter.platform == 'gcp' -%}
+-[gcloud]: https://cloud.google.com/sdk/docs/install
+ [gcp]: https://console.cloud.google.com
+ [gcp-page]: https://lighthouse.aisingapore.net/tools-and-tech/gcp#gcp-project
+-{% endif %}
+-{%- if cookiecutter.orchestrator == 'runai' -%}  
+ [runai-page]: https://lighthouse.aisingapore.net/tools-and-tech/runai
+-{%- elif cookiecutter.orchestrator == 'noorch' -%}  
+-{% endif %}
+-{%- if cookiecutter.aisg %}
+-[nus-it]: https://nusit.nus.edu.sg/eguides/
+-{%- endif %}
+ 
+ ## Tips and Tricks
+ 
+ - If you're using Rancher Desktop, you might encounter issues with 

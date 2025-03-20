@@ -1,27 +1,63 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/06c-job-orchestration.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/runai/06c-job-orchestration.md
-@@ -47,2 +47,2 @@
+@@ -43,10 +43,10 @@
+ Run:ai. You can first update your configuration variables at 
+ `conf/process_data.yaml`, specifically this section:
+ 
+ ```yaml
 -raw_data_dir_path: "./data/raw"
 -processed_data_dir_path: "./data/processed"
 +raw_data_dir_path: "./data/mnist-pngs-data-aisg"
 +processed_data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
-@@ -102,2 +102,2 @@
+ log_dir: "./logs"
+ ```
+ 
+ This requires the Docker image to be built from a Dockerfile 
+@@ -101,17 +101,17 @@
+         --working-dir /home/aisg/{{cookiecutter.repo_name}} \
+         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+         --command -- /bin/bash -c "python -u src/process_data.py \
 -            raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw \
--            processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed"
+-            processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
 +            raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/mnist-pngs-data-aisg \
-+            processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed"
-@@ -109 +109 @@
++            processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed \
+             log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs"
+     ```
+ 
+ After some time, the data processing job should conclude and we can
+ proceed with training the predictive model.
+ The processed data is exported to the directory
 -`/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed`.
 +`/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed`.
-@@ -139,0 +140,4 @@
+ We will be passing this path to the model training workflows.
+ 
+ ## Model Training
+ 
+@@ -140,8 +140,12 @@
+     namespace for projects that requires model experimentation. 
+     Artifacts logged through the MLflow API can be uploaded to {{objstg}} 
+     buckets, assuming the client is authorised for access to {{objstg}}.
+ 
 +    !!! note
 +        The username and password for the MLflow Tracking server
 +        can be retrieved from the MLOps team or your team lead.
 +
-@@ -161,3 +165,13 @@
+     The `setup_logging` function now supports a `log_dir` parameter that allows
+     you to specify a custom directory for log files. This is useful when you want
+     to store logs in a specific location, such as a mounted volume in a container
+     environment or a shared directory for team access. When running in Run:ai,
+@@ -167,14 +171,21 @@
+ mlflow_autolog: false
+ mlflow_tracking_uri: "./mlruns"
+ mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
+ mlflow_run_name: "train-model"
 -data_dir_path: "./data/processed"
--dummy_param1: 1.3
--dummy_param2: 0.8
+-lr: 1.3
+-train_bs: 32
+-test_bs: 100
+-artifact_dir_path: "./models"
+-epochs: 5
 +data_dir_path: "./data/processed/mnist-pngs-data-aisg-processed"
 +no_cuda: true
 +no_mps: true
@@ -35,33 +71,58 @@
 +dry_run: false
 +model_checkpoint_interval: 2
 +model_checkpoint_dir_path: "./models/checkpoint"
-@@ -225,3 +239,6 @@
--            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
--            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
--            mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"
-+            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed \
-+            setup_mlflow=true \
-+            mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
-+            mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
-+            model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models \
-+            epochs=3"
-@@ -300,2 +317,2 @@
--      dummy_param1: range(0.9,1.7,step=0.1)
--      dummy_param2: choice(0.7,0.8,0.9)
-+      lr: range(0.9,1.7,step=0.1)
-+      gamma: choice(0.7,0.8,0.9)
-@@ -328 +345 @@
--    return args["dummy_param1"], args["dummy_param2"]
-+    return curr_test_loss, curr_test_accuracy
-@@ -370,0 +388 @@
+ resume: false
+ log_dir: "./logs"
+ ```
+ 
+@@ -236,14 +247,16 @@
+         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
+         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
 +        -e OMP_NUM_THREADS=2 \
-@@ -372,3 +390,6 @@
+         --command -- /bin/bash -c "python -u src/train_model.py \
+             mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
+             mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
 -            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
 -            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
--            mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"
+-            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs"
 +            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed \
-+            setup_mlflow=true \
-+            mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
-+            mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
 +            model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models \
++            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs \
 +            epochs=3"
+     ```
+ 
+ Once you have successfully run an experiment, you may inspect the run
+ on the MLflow Tracking server. Through the MLflow Tracking server
+@@ -338,9 +351,9 @@
+     n_trials: 3
+     n_jobs: 1
+     params:
+       lr: range(0.9,1.7,step=0.1)
+-      train_bs: choice(32,48,64)
++      gamma: choice(0.7,0.8,0.9)
+ ```
+ 
+ These fields are used by the Optuna Sweeper plugin to configure the
+ Optuna study.
+@@ -410,14 +423,16 @@
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
+         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
+         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
++        -e OMP_NUM_THREADS=2 \
+         --command -- /bin/bash -c "python -u src/train_model.py --multirun \
+             mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
+             mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
+-            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
+-            artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
+-            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs"
++            data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed/mnist-pngs-data-aisg-processed \
++            model_checkpoint_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/models \
++            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs \
++            epochs=3"
+     ```
+ 
+ ![MLflow Tracking Server - Hyperparameter Tuning Runs](../common/assets/screenshots/mlflow-tracking-hptuning-runs.png)
+ 

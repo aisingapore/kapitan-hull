@@ -1,6 +1,10 @@
 --- {{cookiecutter.repo_name}}/src/{{cookiecutter.src_package_name}}_fastapi/deps.py
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/src/{{cookiecutter.src_package_name}}_fastapi/deps.py
-@@ -5 +5,4 @@
+@@ -1,5 +1,8 @@
+ """FastAPI dependencies and global variables."""
+ import {{cookiecutter.src_package_name}} as {{cookiecutter.src_package_name_short}}
+ import {{cookiecutter.src_package_name}}_fastapi as {{cookiecutter.src_package_name_short}}_fapi
+ 
 -PRED_MODEL  = {{cookiecutter.src_package_name_short}}.modeling.utils.load_model()
 +PRED_MODEL = {{cookiecutter.src_package_name_short}}.modeling.utils.load_model(
 +    {{cookiecutter.src_package_name_short}}_fapi.config.SETTINGS.PRED_MODEL_PATH,

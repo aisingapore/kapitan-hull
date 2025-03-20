@@ -1,0 +1,36 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/08a-batch-inferencing.md
++++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/local/08a-batch-inferencing.md
+@@ -1,6 +1,12 @@
+ # Batch Inferencing
+ 
++!!! info
++
++    The guide below is only meant for reference only and not meant to
++    be followed verbatim. You may need to generate your own guide 
++    site if you require guidance specifically for your own project.
++ 
+ Some problem statements do not warrant the deployment of an API server
+ but instead methods for conducting batched inferencing where a batch
+ of data is provided to a script and it is able to churn out a set of
+ predictions, perhaps exported to a file.
+@@ -45,18 +51,18 @@
+ 
+     ```bash
+     # Navigate back to root directory
+     cd "$(git rev-parse --show-toplevel)"
+-    conda activate {{cookiecutter.repo_name}}
++    conda activate project
+     python src/batch_infer.py
+     ```
+ 
+ === "Windows PowerShell"
+ 
+     ```powershell
+     # Navigate back to root directory
+     Set-Location -Path (git rev-parse --show-toplevel)
+-    conda activate {{cookiecutter.repo_name}}
++    conda activate project
+     python src/batch_infer.py
+     ```
+ 
+ The script will log to the terminal the location of the

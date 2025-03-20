@@ -1,7 +1,8 @@
 --- {{cookiecutter.repo_name}}/src/{{cookiecutter.src_package_name}}/modeling/models.py
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/src/{{cookiecutter.src_package_name}}/modeling/models.py
-@@ -1,24 +1,37 @@
+@@ -1,41 +1,37 @@
  """Module for containing architectures/definition of models."""
+-import time
 +import torch
  
  
@@ -20,13 +21,31 @@
 +        self.fc1 = torch.nn.Linear(9216, 128)
 +        self.fc2 = torch.nn.Linear(128, 10)
  
--    def predict(self, x):
--        """'Prediction' of the dummy model.
+-    def train(self, X=None, y=None):
+-        """'Trains' the dummy model.
 +    def forward(self, x):
 +        """Forward pass of the model.
  
          Parameters
          ----------
+-        X : Any
+-            Dummy feature data.
+-        y : Any
+-            Dummy target data.
+-
+-        Returns
+-        -------
+-        None
++        x : torch.Tensor
++            Input tensor.
+         """
+-        time.sleep(1)
+-
+-    def predict(self, x=''):
+-        """'Prediction' of the dummy model.
+-
+-        Parameters
+-        ----------
 -        x : str
 -            Input string.
 -        
@@ -34,9 +53,7 @@
 -        -------
 -        str
 -            Output string.
-+        x : torch.Tensor
-+            Input tensor.
-         """
+-        """
 -
 -        return x
 +        x = self.conv1(x)

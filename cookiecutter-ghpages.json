@@ -1,0 +1,16 @@
+{
+    "cookiecutter": {
+        "project_name": "Kapitan Hull Docs for GitHub Pages",
+        "description": "Generating a unified documentation for GitHub Pages",
+        "repo_name": "ghpages",
+        "src_package_name": "khghpages",
+        "src_package_name_short": "khghpages",
+        "platform": "gcp",
+        "orchestrator": "runai",
+        "aisg": true,
+        "proj_name": "test-proj",
+        "registry_project_path": "asia-southeast1-docker.pkg.dev/infratest-311303/mlops",
+        "problem_template": "unified",
+        "author_name": "mlops"
+    }
+}

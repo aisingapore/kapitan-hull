@@ -1,0 +1,66 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/08c-batch-inferencing.md
++++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/runai/08c-batch-inferencing.md
+@@ -1,6 +1,12 @@
+ # Batch Inferencing
+ 
++!!! info
++
++    The guide below is only meant for reference only and not meant to
++    be followed verbatim. You may need to generate your own guide 
++    site if you require guidance specifically for your own project.
++ 
+ Some problem statements do not warrant the deployment of an API server
+ but instead methods for conducting batched inferencing where a batch
+ of data is provided to a script and it is able to churn out a set of
+ predictions, perhaps exported to a file.
+@@ -13,9 +19,9 @@
+ 
+ === "Coder Workspace Terminal"
+ 
+     ```bash
+-    mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/data/batch-infer && cd $_
++    mkdir -p /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/project/data/batch-infer && cd $_
+     echo -n "Output1" > in1.txt
+     echo -n "Output2" > in2.txt
+     echo -n "Output3" > in3.txt
+     ```
+@@ -25,9 +31,9 @@
+     ```bash
+     runai submit \
+         --job-name-prefix <YOUR_HYPHENATED_NAME>-download-batch-data \
+         -i alpine \
+-        --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/data/batch-infer \
++        --working-dir /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/project/data/batch-infer \
+         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+         --command -- /bin/bash -c "echo -n 'Output1' > in1.txt && \
+             echo -n 'Output2' > in2.txt && \
+@@ -40,9 +46,9 @@
+ 
+     ```bash
+     # Navigate back to root directory
+     cd "$(git rev-parse --show-toplevel)"
+-    conda activate {{cookiecutter.repo_name}}
++    conda activate project
+     python src/batch_infer.py
+     ```
+ 
+ === "Using Run:ai"
+@@ -50,14 +56,14 @@
+     ```bash
+     runai submit \
+         --job-name-prefix <YOUR_HYPHENATED_NAME>-batch-inference \
+         -i alpine \
+-        --working-dir /home/aisg/{{cookiecutter.repo_name}} \
++        --working-dir /home/aisg/project \
+         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+         --command -- python src/batch_infer.py \
+-            output_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/batch_infer_res.jsonl \
+-            input_data_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}}/data/batch-infer
++            output_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/project/batch_infer_res.jsonl \
++            input_data_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/project/data/batch-infer
+     ```
+ 
+ The script will log to the terminal the location of the
+ `.jsonl` file (`batch-infer-res.jsonl`) containing predictions that

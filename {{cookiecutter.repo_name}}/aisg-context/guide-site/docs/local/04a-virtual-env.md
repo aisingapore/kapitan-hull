@@ -2,6 +2,14 @@
 
 We can create a virtual environment that will contain all the 
 dependencies required for this guide.
+{%- if cookiecutter.aisg %}
+While we will be making use of AI Singapore's remote infrastructure
+{%- else %}
+While you might be making use of your own remote infrastructure
+{%- endif %}
+to carry out some workflows, we can still make use of our local
+machine to execute some of the steps of the end-to-end machine learning
+workflow.
 
 ```bash
 conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml

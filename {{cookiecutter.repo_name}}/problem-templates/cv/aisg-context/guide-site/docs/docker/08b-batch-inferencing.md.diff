@@ -1,62 +1,114 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/08b-batch-inferencing.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/docker/08b-batch-inferencing.md
-@@ -18,3 +18,3 @@
+@@ -7,77 +7,86 @@
+ 
+ This template provides a Python script (`src/batch_infer.py`) and a 
+ configuration file (`conf/batch_infer.yaml`) for this purpose. 
+ 
+-Let's first create some sample data on our local machine for us to conduct
++Let's first download some data on our local machine for us to conduct
+ batch inferencing on:
+ 
+ === "Linux"
+ 
+     ```bash
+     docker run --rm \
 -        -u $(id -u):$(id -g) \
 -        -w /batch-infer \
 -        -v ./data/batch-infer:/batch-infer \
 +        -u $(id -u): $(id -g) \
 +        -w /data \
 +        -v ./data:/data \
-@@ -22,3 +22,3 @@
+         alpine \
 -            bash -c "echo -n 'Output1' > in1.txt && \
 -                echo -n 'Output2' > in2.txt && \
 -                echo -n 'Output3' > in3.txt"
 +            bash -c "wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip && \
 +                unzip batched-mnist-input-data.zip && \
 +                rm batched-mnist-input-data.zip"
-@@ -31,2 +31,2 @@
+     ```
+ 
+ === "macOS"
+ 
+     ```bash
+     docker run --rm \
 -        -w /batch-infer \
 -        -v ./data/batch-infer:/batch-infer \
 +        -w /data \
 +        -v ./data:/data \
-@@ -34,3 +34,3 @@
+         alpine \
 -            bash -c "echo -n 'Output1' > in1.txt && \
 -                echo -n 'Output2' > in2.txt && \
 -                echo -n 'Output3' > in3.txt"
 +            bash -c "wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip && \
 +                unzip batched-mnist-input-data.zip && \
 +                rm batched-mnist-input-data.zip"
-@@ -43,2 +43,2 @@
+     ```
+ 
+ === "Windows PowerShell"
+ 
+     ```powershell
+     docker run --rm `
 -        -w /batch-infer `
 -        -v .\data\batch-infer:/batch-infer `
 +        -w /data `
 +        -v .\data:/data `
-@@ -46,3 +46,3 @@
+         alpine `
 -            bash -c "echo -n 'Output1' > in1.txt && `
 -                echo -n 'Output2' > in2.txt && `
 -                echo -n 'Output3' > in3.txt"
 +            bash -c "wget https://storage.googleapis.com/aisg-mlops-pub-data/kapitan-hull/batched-mnist-input-data.zip && `
 +                unzip batched-mnist-input-data.zip && `
 +                rm batched-mnist-input-data.zip"
-@@ -55,0 +56 @@
+     ```
+ 
+ To execute the batch inferencing script using the Docker image:
+ 
+ === "Linux"
+ 
+     ```bash
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-@@ -57,0 +59 @@
+     docker run --rm \
+         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
 +        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
-@@ -58,0 +61 @@
+         -w /home/aisg/{{cookiecutter.repo_name}} \
 +        -e PRED_MODEL_PATH="./models/$PRED_MODEL_UUID/model/model.pt" \
-@@ -66,0 +70 @@
+         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+         python src/batch_infer.py output_path=data/batch-infer/batch_infer_res.jsonl
+     sudo chmod $(id -u):$(id -g) data/batch-infer/batch_infer_res.jsonl
+     ```
+ 
+ === "macOS"
+ 
+     ```bash
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-@@ -68,0 +73 @@
+     docker run --rm \
+         -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
 +        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
-@@ -69,0 +75 @@
+         -w /home/aisg/{{cookiecutter.repo_name}} \
 +        -e PRED_MODEL_PATH="./models/$PRED_MODEL_UUID/model/model.pt" \
-@@ -76,0 +83 @@
+         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+         python src/batch_infer.py output_path=data/batch-infer/batch_infer_res.jsonl
+     ```
+ 
+ === "Windows PowerShell"
+ 
+     ```powershell
 +    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
-@@ -78,0 +86 @@
+     docker run --rm `
+         -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
 +        -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
-@@ -79,0 +88 @@
+         -w /home/aisg/{{cookiecutter.repo_name}} `
 +        -e PRED_MODEL_PATH="./models/$Env:PRED_MODEL_UUID/model/model.pt" `
-@@ -90,3 +99,5 @@
+         {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
+         python src/batch_infer.py output_path=data/batch-infer/batch_infer_res.jsonl
+     ```
+ 
+@@ -86,11 +95,13 @@
+ look like such:
+ 
+ ```jsonl
+ ...
 -{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in1.txt", "prediction": "Output1"}
 -{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in2.txt", "prediction": "Output2"}
 -{"time": "2024-02-29T10:09:00+0000", "text_filepath": "./data/batch-infer/in3.txt", "prediction": "Output3"}
@@ -65,3 +117,7 @@
 +{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
 +{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
 +{"time": "YYYY-MM-DDThh:mm:ss+0000", "image_filepath": "/home/aisg/{{cookiecutter.repo_name}}/data/XXXXXX.png", "prediction": "X"}
+ ...
+ ```
+ 
+ The `hydra.job.chdir=True` flag writes the `.jsonl` file containing

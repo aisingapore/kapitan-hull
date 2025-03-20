@@ -39,6 +39,7 @@ found [here][venv]. You can also update your configuration variables at
 ```yaml
 raw_data_dir_path: "./data/raw"
 processed_data_dir_path: "./data/processed"
+log_dir: "./logs"
 ```
 
 After that, run the script:
@@ -61,21 +62,26 @@ After that, run the script:
 
 ## Model Training
 
-Now that we have processed the raw data, we can look into training the
-sentiment classification model. The script relevant for this section
-is `src/train_model.py`. In this script, you can see it using some
-utility functions from
-`src/{{cookiecutter.src_package_name}}/general_utils.py`
-as well, most notably the functions for utilising MLflow utilities for
-tracking experiments. Let's set up the tooling for experiment tracking
-before we start model experimentation.
+Now that we have processed the raw data, we can look into 'training' 
+the model. The script relevant for this section is `src/train_model.py`. 
 
-!!! info "Experiment Tracking"
+In this script, you can see it using some utility functions from
+`src/{{cookiecutter.src_package_name}}/general_utils.py` as well, most 
+notably the functions for utilising MLflow utilities for tracking 
+experiments. Let's set up the tooling for experiment tracking before we 
+start model experimentation.
+
+!!! info "Experiment Tracking and Logging"
 
     In the module `src/{{cookiecutter.src_package_name}}/general_utils.py`,
     the functions `mlflow_init` and `mlflow_log` are used to initialise
     MLflow experiments as well as log information and artifacts relevant
     for a run to an `mlruns` local folder.
+    
+    The `setup_logging` function now supports a `log_dir` parameter that allows
+    you to specify a custom directory for log files. This is useful when you want
+    to store logs in a specific location, such as a mounted volume in a container
+    environment or a shared directory for team access.
 
     ??? info "Reference Link(s)"
 
@@ -93,8 +99,13 @@ mlflow_tracking_uri: "./mlruns"
 mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
 mlflow_run_name: "train-model"
 data_dir_path: "./data/processed"
-dummy_param1: 1.3
-dummy_param2: 0.8
+lr: 1.3
+train_bs: 32
+test_bs: 100
+artifact_dir_path: "./models"
+epochs: 5
+resume: false
+log_dir: "./logs"
 ```
 
 After that, run the script:
@@ -131,6 +142,29 @@ and connect to http://localhost:5000.
 
 ![MLflow Tracking Server - Inspecting Runs](https://storage.googleapis.com/aisg-mlops-pub-data/images/mlflow-tracking-server-inspect.gif)
 
+!!! info "Resuming/adding new epochs"
+
+    The training script supports resuming training from a previous 
+    checkpoint by setting the `resume` parameter to `true` in the 
+    configuration file. When this parameter is enabled, the script will:
+    
+    1. Check for the latest step logged by MLFlow
+    2. Offset the epoch step with the latest step from MLFlow
+    3. Continue training from the last saved epoch
+    4. Log the continued training as part of the same MLflow run
+    
+    This is particularly useful when:
+    
+    - You need to extend training for additional epochs after 
+      evaluating initial results
+    - Training was interrupted and needs to be continued
+    - You want to implement a progressive training strategy with 
+      changing parameters
+    
+    To use this feature, simply set `resume: true` in your 
+    `conf/train_model.yaml` file or append `resume=true` during runtime 
+    as an override and run the training script as normal.
+
 ### Hyperparameter Tuning
 
 For many ML problems, we would be bothered with finding the optimal
@@ -164,13 +198,13 @@ hydra:
     sampler:
       seed: 55
     direction: ["minimize", "maximize"]
-    study_name: "image-classification"
+    study_name: "base-template"
     storage: null
     n_trials: 3
     n_jobs: 1
     params:
-      dummy_param1: range(0.9,1.7,step=0.1)
-      dummy_param2: choice(0.7,0.8,0.9)
+      lr: range(0.9,1.7,step=0.1)
+      train_bs: choice(32,48,64)
 ```
 
 These fields are used by the Optuna Sweeper plugin to configure the
@@ -197,7 +231,7 @@ different files that we have to pay attention to.
 `src/train_model.py`
 ```python
 ...
-    return args["dummy_param1"], args["dummy_param2"]
+    return curr_test_loss, curr_test_accuracy
 ...
 ```
 

@@ -1,11 +1,15 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/07a-deployment.md
 +++ {{cookiecutter.repo_name}}/problem-templates/cv/aisg-context/guide-site/docs/local/07a-deployment.md
-@@ -83,10 +83,10 @@
+@@ -79,27 +79,42 @@
+ === "Linux/macOS"
+ 
+     ```bash
+     conda activate {{cookiecutter.repo_name}}
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 -    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$MODEL_UUID/', dst_path='models/$MODEL_UUID')"
 -    ```
 -
--=== "Windows Powershell"
+-=== "Windows PowerShell"
 -
 -    ```powershell
 -    conda activate {{cookiecutter.repo_name}}
@@ -21,7 +25,11 @@
 +    conda activate {{cookiecutter.repo_name}}
 +    $Env:PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
 +    python -c "import mlflow; mlflow.artifacts.download_artifacts(artifact_uri='runs:/$PRED_MODEL_UUID/', dst_path='models/$PRED_MODEL_UUID')"
-@@ -98,4 +98,19 @@
+     ```
+ 
+ Executing the commands above will download the artifacts related to the
+ experiment run `<MLFLOW_RUN_UUID>` to this repository's subdirectory 
+ `models`. However, the specific subdirectory that is relevant for our 
 -modules to load will be `./models/<MLFLOW_RUN_UUID>/output.txt`.
 -
 -Now, let's proceed and spin up an inference server using the package 
@@ -45,24 +53,64 @@
 +will be used by the FastAPI server to load the model for prediction. We
 +will get back to this in a bit. For now, let's proceed and spin up an
 +inference server using the package that exists within the repository.
-@@ -149,2 +164,2 @@
+ 
+ [beginner tutorials]: https://fastapi.tiangolo.com/tutorial/
+ 
+ ### Running the API Server
+@@ -145,25 +160,25 @@
+ 
+     ```bash
+     curl -X POST \
+         localhost:8080/api/v1/model/predict \
 -        -H 'Content-Type: application/json' \
 -        -d '"string"'
 +        -H 'Content-Type: multipart/form-data' \
-+        -F "image_file=@/path/to/image/file"
-@@ -159 +174 @@
++        -F "image_file=@./src/tests/sample_mnist_data_for_tests/train/0/16585.png"
+     ```
+     
+ === "Windows PowerShell"
+ 
+     ```powershell
+     curl.exe '-X', 'POST', `
+         'localhost:8080/api/v1/model/predict', `
+-        '-H', 'Content-Type: application/json', `
 -        '-d', '"string"',
-+        '-F', '"image_file=@\path\to\image\file"',
-@@ -165 +180 @@
++        '-H', 'Content-Type: multipart/form-data', `
++        '-F', '"image_file=@.\src\tests\sample_mnist_data_for_tests\train\0\16585.png"',
+     ```
+     
+ Output sample:
+ 
+ ```
 -{"data":[{"input":"string"}]}
 +{"data":[{"image_filename":"XXXXX.png","prediction":"X"}]}
-@@ -183 +198,2 @@
--`MODEL_UUID` field inherits their values from the environment variables.
+ ```
+ 
+ With the returned JSON object, we have successfully submitted a request
+ to the FastAPI server and it returned predictions as part of the
+@@ -179,9 +194,10 @@
+ data and schema validation, as well as [settings management]. There's a 
+ class called `Settings` under the module
+ `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
+ contains several fields: some are defined and some others not. The 
+-`MODEL_UUID` field inherits its value from the environment variables.
 +`PRED_MODEL_UUID` and `PRED_MODEL_PATH` fields inherit their values 
 +from the environment variables.
-@@ -194 +210,4 @@
+ 
+ `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
+ ```python
+ ...
+@@ -190,9 +206,12 @@
+     API_NAME: str = "{{cookiecutter.src_package_name}}_fastapi"
+     API_V1_STR: str = "/api/v1"
+     LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"
+ 
 -    MODEL_UUID: str
 +    USE_CUDA: bool = False
 +    USE_MPS: bool = False
 +    PRED_MODEL_UUID: str
 +    PRED_MODEL_PATH: str
+ ...
+ ```
+ 
+ FastAPI automatically generates interactive API documentation for easy

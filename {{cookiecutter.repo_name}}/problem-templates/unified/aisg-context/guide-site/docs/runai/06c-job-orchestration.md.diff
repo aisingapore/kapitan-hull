@@ -1,0 +1,268 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/runai/06c-job-orchestration.md
++++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/runai/06c-job-orchestration.md
+@@ -1,6 +1,12 @@
+ # Job Orchestration
+ 
++!!! info
++
++    The guide below is only meant for reference only and not meant to
++    be followed verbatim. You may need to generate your own guide 
++    site if you require guidance specifically for your own project.
++ 
+ Even though we can set up development workspaces to execute jobs and
+ workflows, these environments often have limited access to resources.
+ To carry out heavier workloads, we encourage the usage of job
+ orchestration features that Run:ai offers.
+@@ -21,9 +27,9 @@
+ 
+ The configurations for logging, pipelines and hyperparameter tuning can
+ be found under the `conf` folder. These YAML files are then referred to 
+ by Hydra or general utility functions
+-(`src/{{cookiecutter.src_package_name}}/general_utils.py`)
++(`src/package/general_utils.py`)
+ for loading of parameters and configurations. The defined default 
+ values can be overridden through the CLI.
+ 
+ !!! attention
+@@ -49,41 +55,36 @@
+ log_dir: "./logs"
+ ```
+ 
+ This requires the Docker image to be built from a Dockerfile 
+-(`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
++(`docker/package-cpu.Dockerfile`)
+ provided in this template:
+ 
+ === "Coder Workspace Terminal"
+ 
+     ```bash
+     docker build \
+-        -t {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
+-        -f $(pwd)/docker/{{cookiecutter.repo_name}}-cpu.Dockerfile \
++        -t registry.aisingapore.net/project-path/cpu:0.1.0 \
++        -f $(pwd)/docker/project-cpu.Dockerfile \
+         $(pwd)
+-{%- if cookiecutter.platform == 'gcp' %}
+     # Run `gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS` 
+-    # and `gcloud auth configure-docker {{cookiecutter.registry_project_path.split('/')[0]}}`
+-{%- elif cookiecutter.platform == 'onprem' %}
+-    # Run `docker login {{cookiecutter.registry_project_path.split('/')[0]}}`
+-{%- endif %}
++    # and `gcloud auth configure-docker <your-gar-domain-name>`
++    # or
++    # Run `docker login registry.aisingapore.net`
+     # to authenticate if you have not done so
+-    docker push {{cookiecutter.registry_project_path}}/cpu:0.1.0
++    docker push registry.aisingapore.net/project-path/cpu:0.1.0
+     ```
+ 
+ === "Using Run:ai"
+ 
+     ```bash
+-    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
++    # Run `runai login` and `runai config project project` first if needed
+     # Run this in the base of your project repository, and change accordingly
++    # Replace --cred-file <file> with --gcp to push to GAR registries
+     khull kaniko --context $(pwd) \
+-        --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-cpu.Dockerfile \
+-        --destination {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
+-{%- if cookiecutter.platform == 'gcp' %}
+-        --gcp \
+-{%- elif cookiecutter.platform == 'onprem' %}
++        --dockerfile $(pwd)/docker/project-cpu.Dockerfile \
++        --destination registry.aisingapore.net/project-path/cpu:0.1.0 \
+         --cred-file /path/to/docker/config.json \
+-{%- endif %}
+         -v <pvc-name>:/path/to/pvc/mount
+     ```
+ 
+ Now that we have the Docker image built and pushed to the registry, we 
+@@ -91,15 +92,15 @@
+ 
+ === "Coder Workspace Terminal using Run:ai"
+ 
+     ```bash
+-    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
++    # Run `runai login` and `runai config project project` first if needed
+     # Run this in the base of your project repository, and change accordingly
+-    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
++    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/project to use the repo in the PVC
+     runai submit \
+         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
+-        -i {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
+-        --working-dir /home/aisg/{{cookiecutter.repo_name}} \
++        -i registry.aisingapore.net/project-path/cpu:0.1.0 \
++        --working-dir /home/aisg/project \
+         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+         --command -- /bin/bash -c "python -u src/process_data.py \
+             raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw \
+@@ -118,41 +119,35 @@
+ Now that we have processed the raw data, we can look into training the
+ sentiment classification model. The script relevant for this section
+ is `src/train_model.py`. In this script, you can see it using some
+ utility functions from
+-`src/{{cookiecutter.src_package_name}}/general_utils.py`
++`src/project_package/general_utils.py`
+ as well, most notably the functions for utilising MLflow utilities for
+ tracking experiments. Let's set up the tooling for experiment tracking
+ before we start model experimentation.
+ 
+-{% if cookiecutter.platform == 'onprem' -%}
+-    {%- set objstg = 'ECS' -%}
+-{% elif cookiecutter.platform == 'gcp' -%}
+-    {%- set objstg = 'GCS' -%}
+-{% endif -%}
+-
+ !!! info "Experiment Tracking and Logging"
+ 
+-    In the module `src/{{cookiecutter.src_package_name}}/general_utils.py`,
++    In the module `src/project_package/general_utils.py`,
+     the functions `mlflow_init` and `mlflow_log` are used to initialise
+     MLflow experiments as well as log information and artifacts 
+     relevant for a run to a remote MLflow Tracking server. An MLflow 
+     Tracking server is usually set up within the Run:ai project's 
+     namespace for projects that requires model experimentation. 
+-    Artifacts logged through the MLflow API can be uploaded to {{objstg}} 
+-    buckets, assuming the client is authorised for access to {{objstg}}.
++    Artifacts logged through the MLflow API can be uploaded to GCS/ECS 
++    buckets, assuming the client is authorised for access to GCS/ECS.
+ 
+     The `setup_logging` function now supports a `log_dir` parameter that allows
+     you to specify a custom directory for log files. This is useful when you want
+     to store logs in a specific location, such as a mounted volume in a container
+     environment or a shared directory for team access. When running in Run:ai,
+     you might want to set this to a path on your persistent volume.
+ 
+-    To log and upload artifacts to {{objstg}} buckets through MLFlow, 
++    To log and upload artifacts to GCS/ECS buckets through MLFlow, 
+     you need to ensure that the client has access to the credentials of
+     an account that can write to a bucket. This is usually settled by 
+     the MLOps team, so you need only interact with MLFlow to download 
+-    the artifacts without explicitly knowing the {{objstg}} credentials.
++    the artifacts without explicitly knowing the GCS/ECS credentials.
+ 
+     ??? info "Reference Link(s)"
+ 
+         - [MLflow Docs - Tracking](https://www.mlflow.org/docs/latest/tracking.html#)
+@@ -165,9 +160,9 @@
+ ```yaml
+ setup_mlflow: true
+ mlflow_autolog: false
+ mlflow_tracking_uri: "./mlruns"
+-mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
++mlflow_exp_name: "project_package_short"
+ mlflow_run_name: "train-model"
+ data_dir_path: "./data/processed"
+ lr: 1.3
+ train_bs: 32
+@@ -178,46 +173,41 @@
+ log_dir: "./logs"
+ ```
+ 
+ After that, we build the Docker image from the Docker file 
+-`docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
++`docker/project-gpu.Dockerfile`:
+ 
+ !!! warning "Attention"
+ 
+     If you're only using CPUs for training, then you can just reuse
+-    the `{{cookiecutter.repo_name}}/cpu` Docker image instead that was
++    the `project/cpu` Docker image instead that was
+     built during the previous step.  
+ 
+ === "Coder Workspace Terminal"
+ 
+     ```bash
+     docker build \
+-        -t {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+-        -f $(pwd)/docker/{{cookiecutter.repo_name}}-gpu.Dockerfile \
++        -t registry.aisingapore.net/project-path/gpu:0.1.0 \
++        -f $(pwd)/docker/project-gpu.Dockerfile \
+         $(pwd)
+-{%- if cookiecutter.platform == 'gcp' %}
+     # Run `gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS` 
+-    # and `gcloud auth configure-docker {{cookiecutter.registry_project_path.split('/')[0]}}`
+-{%- elif cookiecutter.platform == 'onprem' %}
+-    # Run `docker login {{cookiecutter.registry_project_path.split('/')[0]}}`
+-{%- endif %}
++    # and `gcloud auth configure-docker <your-gar-domain-name>`
++    # or
++    # Run `docker login registry.aisingapore.net`
+     # to authenticate if you have not done so
+-    docker push {{cookiecutter.registry_project_path}}/gpu:0.1.0
++    docker push registry.aisingapore.net/project-path/gpu:0.1.0
+     ```
+ 
+ === "Using Run:ai"
+ 
+     ```bash
+-    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
++    # Run `runai login` and `runai config project project` first if needed
+     # Run this in the base of your project repository, and change accordingly
++    # Replace --cred-file <file> with --gcp to push to GAR registries
+     khull kaniko --context $(pwd) \
+-        --dockerfile $(pwd)/docker/{{cookiecutter.repo_name}}-gpu.Dockerfile \
+-        --destination {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+-{%- if cookiecutter.platform == 'gcp' %}
+-        --gcp \
+-{%- elif cookiecutter.platform == 'onprem' %}
++        --dockerfile $(pwd)/docker/project-gpu.Dockerfile \
++        --destination registry.aisingapore.net/project-path/gpu:0.1.0 \
+         --cred-file /path/to/docker/config.json \
+-{%- endif %}
+         -v <pvc-name>:/path/to/pvc/mount
+     ```
+ 
+ Now that we have the Docker image built and pushed to the registry, 
+@@ -225,15 +215,15 @@
+ 
+ === "Coder Workspace Terminal using Run:ai"
+ 
+     ```bash
+-    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
++    # Run `runai login` and `runai config project project` first if needed
+     # Run this in the base of your project repository, and change accordingly
+-    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
++    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/project to use the repo in the PVC
+     $ runai submit \
+         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
+-        -i {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+-        --working-dir /home/aisg/{{cookiecutter.repo_name}} \
++        -i registry.aisingapore.net/project-path/gpu:0.1.0 \
++        --working-dir /home/aisg/project \
+         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
+         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
+@@ -247,9 +237,9 @@
+ 
+ Once you have successfully run an experiment, you may inspect the run
+ on the MLflow Tracking server. Through the MLflow Tracking server
+ interface, you can view the metrics and parameters logged for the run,
+-as well as download the artifacts that have been uploaded to the {{objstg}}
++as well as download the artifacts that have been uploaded to the GCS/ECS
+ bucket. You can also compare runs with each other.
+ 
+ ![MLflow Tracking Server - Inspecting Runs](https://storage.googleapis.com/aisg-mlops-pub-data/images/mlflow-tracking-server-inspect.gif)
+ 
+@@ -398,15 +388,15 @@
+ 
+ === "Coder Workspace Terminal using Run:ai"
+ 
+     ```bash
+-    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
++    # Run `runai login` and `runai config project project` first if needed
+     # Run this in the base of your project repository, and change accordingly
+-    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
++    # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/project to use the repo in the PVC
+     runai submit \
+         --job-name-prefix <YOUR_HYPHENATED_NAME>-train-hp \
+-        -i {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+-        --working-dir /home/aisg/{{cookiecutter.repo_name}} \
++        -i registry.aisingapore.net/project-path/gpu:0.1.0 \
++        --working-dir /home/aisg/project \
+         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
+         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
+         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
+         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \

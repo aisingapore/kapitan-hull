@@ -1,0 +1,324 @@
+--- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/docker/06b-job-orchestration.md
++++ {{cookiecutter.repo_name}}/problem-templates/unified/aisg-context/guide-site/docs/docker/06b-job-orchestration.md
+@@ -1,6 +1,12 @@
+ # Job Orchestration
+ 
++!!! info
++
++    The guide below is only meant for reference only and not meant to
++    be followed verbatim. You may need to generate your own guide 
++    site if you require guidance specifically for your own project.
++ 
+ We can set up development workspaces to execute jobs and workflows 
+ locally through Docker containers.
+ 
+ ## Pipeline Configuration
+@@ -11,9 +17,9 @@
+ 
+ The configurations for logging, pipelines and hyperparameter tuning can
+ be found under the `conf` folder. These YAML files are then referred to 
+ by Hydra or general utility functions
+-(`src/{{cookiecutter.src_package_name}}/general_utils.py`)
++(`src/project_package/general_utils.py`)
+ for loading of parameters and configurations. The defined default 
+ values can be overridden through the CLI.
+ 
+ !!! attention
+@@ -38,9 +44,9 @@
+ log_dir: "./logs"
+ ```
+ 
+ This requires the Docker image to be built from a Dockerfile 
+-(`docker/{{cookiecutter.src_package_name}}-cpu.Dockerfile`)
++(`docker/project-cpu.Dockerfile`)
+ provided in this template:
+ 
+ !!! warning "You may have built the Docker image before"
+ 
+@@ -53,27 +59,27 @@
+ === "Linux"
+ 
+     ```bash
+     docker build \
+-        -t {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
+-        -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile .
++        -t registry.aisingapore.net/project-path/cpu:0.1.0 \
++        -f docker/project-cpu.Dockerfile .
+     ```
+ 
+ === "macOS"
+ 
+     ```bash
+     docker build \
+-        -t {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
+-        -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile \
++        -t registry.aisingapore.net/project-path/cpu:0.1.0 \
++        -f docker/project-cpu.Dockerfile \
+         --platform linux/amd64 .
+     ```
+ 
+ === "Windows PowerShell"
+ 
+     ```powershell
+     docker build `
+-        -t {{cookiecutter.registry_project_path}}/cpu:0.1.0 `
+-        -f docker/{{cookiecutter.repo_name}}-cpu.Dockerfile .
++        -t registry.aisingapore.net/project-path/cpu:0.1.0 `
++        -f docker/project-cpu.Dockerfile .
+     ```
+ 
+ After building the image, you can run the script through Docker:
+ 
+@@ -81,55 +87,55 @@
+ 
+     ```bash
+     sudo chown 2222:2222 ./data
+     docker run --rm \
+-        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+-        -w /home/aisg/{{cookiecutter.repo_name}} \
+-        {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
++        -v ./data:/home/aisg/project/data \
++        -w /home/aisg/project \
++        registry.aisingapore.net/project-path/cpu:0.1.0 \
+         bash -c "python -u src/process_data.py"
+     ```
+ 
+ === "macOS"
+ 
+     ```bash
+     docker run --rm \
+-        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+-        -w /home/aisg/{{cookiecutter.repo_name}} \
+-        {{cookiecutter.registry_project_path}}/cpu:0.1.0 \
++        -v ./data:/home/aisg/project/data \
++        -w /home/aisg/project \
++        registry.aisingapore.net/project-path/cpu:0.1.0 \
+         bash -c "python -u src/process_data.py"
+     ```
+ 
+ === "Windows PowerShell"
+ 
+     ```powershell
+     docker run --rm `
+-        -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
+-        -w /home/aisg/{{cookiecutter.repo_name}} `
+-        {{cookiecutter.registry_project_path}}/cpu:0.1.0 `
++        -v .\data:/home/aisg/project/data `
++        -w /home/aisg/project `
++        registry.aisingapore.net/project-path/cpu:0.1.0 `
+         bash -c "python -u src/process_data.py"
+     ```
+ 
+ Once you are satisfied with the Docker image, you can push it to the 
+ Docker registry:
+ 
+ ```bash
+-docker push {{cookiecutter.registry_project_path}}/cpu:0.1.0
++docker push registry.aisingapore.net/project-path/cpu:0.1.0
+ ```
+ 
+ ## Model Training
+ 
+ Now that we have processed the raw data, we can look into training the
+ model. The script relevant for this section
+ is `src/train_model.py`. In this script, you can see it using some
+ utility functions from
+-`src/{{cookiecutter.src_package_name}}/general_utils.py`
++`src/project_package/general_utils.py`
+ as well, most notably the functions for utilising MLflow utilities for
+ tracking experiments. Let's set up the tooling for experiment tracking
+ before we start model experimentation.
+ 
+ !!! info "Experiment Tracking and Logging"
+ 
+-    In the module `src/{{cookiecutter.src_package_name}}/general_utils.py`,
++    In the module `src/project_package/general_utils.py`,
+     the functions `mlflow_init` and `mlflow_log` are used to initialise
+     MLflow experiments as well as log information and artifacts 
+     relevant for a run to an `mlruns` local folder. After that, we would 
+     use [the MLFlow Docker image][mlflow-docker] for analysis.
+@@ -152,9 +158,9 @@
+ ```yaml
+ setup_mlflow: true
+ mlflow_autolog: false
+ mlflow_tracking_uri: "./mlruns"
+-mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
++mlflow_exp_name: "project_package_short"
+ mlflow_run_name: "train-model"
+ data_dir_path: "./data/processed"
+ lr: 1.3
+ train_bs: 32
+@@ -165,9 +171,9 @@
+ log_dir: "./logs"
+ ```
+ 
+ After that, we build the Docker image from the Docker file 
+-`docker/{{cookiecutter.repo_name}}-gpu.Dockerfile`:
++`docker/project-gpu.Dockerfile`:
+ 
+ !!! warning "You may have built the Docker image before"
+ 
+     If you have followed the section on [virtual environments][venv],
+@@ -176,9 +182,9 @@
+ 
+ !!! warning "Attention"
+ 
+     If you're only using CPUs for training, then you can just reuse
+-    the `{{cookiecutter.repo_name}}/cpu` Docker image instead that was
++    the `project/cpu` Docker image instead that was
+     built during the previous step.  
+     If you're using AMD GPUs for training, you can copy the components
+     from the [`rocm`][rocm] folder in the Kapitan Hull repository.
+ 
+@@ -187,27 +193,27 @@
+ === "Linux"
+ 
+     ```bash
+     docker build \
+-        -t {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+-        -f docker/{{cookiecutter.repo_name}}-gpu.Dockerfile .
++        -t registry.aisingapore.net/project-path/gpu:0.1.0 \
++        -f docker/project-gpu.Dockerfile .
+     ```
+ 
+ === "macOS"
+ 
+     ```bash
+     docker build \
+-        -t {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
+-        -f docker/{{cookiecutter.repo_name}}-gpu.Dockerfile \
++        -t registry.aisingapore.net/project-path/gpu:0.1.0 \
++        -f docker/project-gpu.Dockerfile \
+         --platform linux/amd64 .
+     ```
+ 
+ === "Windows PowerShell"
+ 
+     ```powershell
+     docker build `
+-        -t {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
+-        -f docker/{{cookiecutter.repo_name}}-gpu.Dockerfile .
++        -t registry.aisingapore.net/project-path/gpu:0.1.0 `
++        -f docker/project-gpu.Dockerfile .
+     ```
+ 
+ Before we run the model training image, you can run MLFlow in Docker as
+ well with the following command:
+@@ -265,27 +271,27 @@
+         AMD GPUs in front of the image name.
+ 
+     ```bash
+     docker run --rm \
+-        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+-        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
+-        -w /home/aisg/{{cookiecutter.repo_name}} \
++        -v ./data:/home/aisg/project/data \
++        -v ./models:/home/aisg/project/models \
++        -w /home/aisg/project \
+         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
+         --network=host \
+-        {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
++        registry.aisingapore.net/project-path/gpu:0.1.0 \
+         bash -c "python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI"
+     ```
+ 
+ === "macOS"
+ 
+     ```bash
+     docker run --rm \
+-        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+-        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
+-        -w /home/aisg/{{cookiecutter.repo_name}} \
++        -v ./data:/home/aisg/project/data \
++        -v ./models:/home/aisg/project/models \
++        -w /home/aisg/project \
+         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
+         --network=host \
+-        {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
++        registry.aisingapore.net/project-path/gpu:0.1.0 \
+         bash -c "python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI"
+     ```
+ 
+ === "Windows PowerShell"
+@@ -299,14 +305,14 @@
+         For AMD GPUs, you can follow this [guide][rocm-wsl].
+ 
+     ```powershell
+     docker run --rm \
+-        -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
+-        -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
+-        -w /home/aisg/{{cookiecutter.repo_name}} `
++        -v .\data:/home/aisg/project/data `
++        -v .\models:/home/aisg/project/models `
++        -w /home/aisg/project `
+         -e MLFLOW_TRACKING_URI=http://localhost:5000 `
+         --network=host `
+-        {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
++        registry.aisingapore.net/project-path/gpu:0.1.0 `
+         bash -c "python -u src/train_model.py mlflow_tracking_uri=\$MLFLOW_TRACKING_URI"
+     ```
+ 
+ [rocm-wsl]: https://rocm.docs.amd.com/projects/radeon/en/latest/docs/install/wsl/howto_wsl.html
+@@ -314,9 +320,9 @@
+ Once you are satisfied with the Docker image, you can push it to the 
+ Docker registry:
+ 
+ ```bash
+-docker push {{cookiecutter.registry_project_path}}/gpu:0.1.0
++docker push registry.aisingapore.net/project-path/gpu:0.1.0
+ ```
+ 
+ ![MLflow Tracking Server - Inspecting Runs](https://storage.googleapis.com/aisg-mlops-pub-data/images/mlflow-tracking-server-inspect.gif)
+ 
+@@ -446,27 +452,27 @@
+         AMD GPUs in front of the image name.
+ 
+     ```bash
+     docker run --rm \
+-        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+-        -w /home/aisg/{{cookiecutter.repo_name}} \
++        -v ./data:/home/aisg/project/data \
++        -w /home/aisg/project \
+         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
+         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
+         --network=host \
+-        {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
++        registry.aisingapore.net/project-path/gpu:0.1.0 \
+         bash -c "python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI"
+     ```
+ 
+ === "macOS"
+ 
+     ```bash
+     docker run --rm \
+-        -v ./data:/home/aisg/{{cookiecutter.repo_name}}/data \
+-        -w /home/aisg/{{cookiecutter.repo_name}} \
++        -v ./data:/home/aisg/project/data \
++        -w /home/aisg/project \
+         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
+         -e MLFLOW_TRACKING_URI=http://localhost:5000 \
+         --network=host \
+-        {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
++        registry.aisingapore.net/project-path/gpu:0.1.0 \
+         bash -c "python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI"
+     ```
+ 
+ === "Windows PowerShell"
+@@ -482,14 +488,14 @@
+     ```powershell
+     $Env:MLFLOW_HPTUNING_TAG = [int][double]::Parse((Get-Date).ToUniversalTime().Subtract([datetime]::UnixEpoch).TotalSeconds)
+     [System.Environment]::SetEnvironmentVariable("MLFLOW_HPTUNING_TAG", $Env:MLFLOW_HPTUNING_TAG.ToString())
+     docker run --rm \
+-        -v .\data:/home/aisg/{{cookiecutter.repo_name}}/data `
+-        -w /home/aisg/{{cookiecutter.repo_name}} `
++        -v .\data:/home/aisg/project/data `
++        -w /home/aisg/project `
+         -e MLFLOW_HPTUNING_TAG=$Env:MLFLOW_HPTUNING_TAG `
+         -e MLFLOW_TRACKING_URI=http://localhost:5000 `
+         --network=host `
+-        {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
++        registry.aisingapore.net/project-path/gpu:0.1.0 `
+         bash -c "python -u src/train_model.py --multirun mlflow_tracking_uri=\$MLFLOW_TRACKING_URI"
+     ```
+ 
+ ![MLflow Tracking Server - Hyperparameter Tuning Runs](../common/assets/screenshots/mlflow-tracking-hptuning-runs.png)

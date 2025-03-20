@@ -40,12 +40,13 @@ values can be overridden through the CLI.
 
 To process the sample raw data, there are many ways to do so. We can 
 either build within the Coder workspace, or to submit the job through 
-Run:ai. You can first your configuration variables at 
+Run:ai. You can first update your configuration variables at 
 `conf/process_data.yaml`, specifically this section:
 
 ```yaml
 raw_data_dir_path: "./data/raw"
 processed_data_dir_path: "./data/processed"
+log_dir: "./logs"
 ```
 
 This requires the Docker image to be built from a Dockerfile 
@@ -91,6 +92,8 @@ can submit a job using that image to Run:ai\:
 === "Coder Workspace Terminal using Run:ai"
 
     ```bash
+    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
+    # Run this in the base of your project repository, and change accordingly
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-data-prep \
@@ -100,7 +103,8 @@ can submit a job using that image to Run:ai\:
         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
         --command -- /bin/bash -c "python -u src/process_data.py \
             raw_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/raw \
-            processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed"
+            processed_data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
+            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs"
     ```
 
 After some time, the data processing job should conclude and we can
@@ -126,7 +130,7 @@ before we start model experimentation.
     {%- set objstg = 'GCS' -%}
 {% endif -%}
 
-!!! info "Experiment Tracking"
+!!! info "Experiment Tracking and Logging"
 
     In the module `src/{{cookiecutter.src_package_name}}/general_utils.py`,
     the functions `mlflow_init` and `mlflow_log` are used to initialise
@@ -136,6 +140,12 @@ before we start model experimentation.
     namespace for projects that requires model experimentation. 
     Artifacts logged through the MLflow API can be uploaded to {{objstg}} 
     buckets, assuming the client is authorised for access to {{objstg}}.
+
+    The `setup_logging` function now supports a `log_dir` parameter that allows
+    you to specify a custom directory for log files. This is useful when you want
+    to store logs in a specific location, such as a mounted volume in a container
+    environment or a shared directory for team access. When running in Run:ai,
+    you might want to set this to a path on your persistent volume.
 
     To log and upload artifacts to {{objstg}} buckets through MLFlow, 
     you need to ensure that the client has access to the credentials of
@@ -159,8 +169,13 @@ mlflow_tracking_uri: "./mlruns"
 mlflow_exp_name: "{{cookiecutter.src_package_name_short}}"
 mlflow_run_name: "train-model"
 data_dir_path: "./data/processed"
-dummy_param1: 1.3
-dummy_param2: 0.8
+lr: 1.3
+train_bs: 32
+test_bs: 100
+artifact_dir_path: "./models"
+epochs: 5
+resume: false
+log_dir: "./logs"
 ```
 
 After that, we build the Docker image from the Docker file 
@@ -211,6 +226,8 @@ we can run a job using it:
 === "Coder Workspace Terminal using Run:ai"
 
     ```bash
+    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
+    # Run this in the base of your project repository, and change accordingly
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     $ runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train \
@@ -220,11 +237,12 @@ we can run a job using it:
         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
         -e MLFLOW_TRACKING_USERNAME=<YOUR_MLFLOW_USERNAME> \
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
-        -e OMP_NUM_THREADS=2 \
         --command -- /bin/bash -c "python -u src/train_model.py \
+            mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
+            mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
             data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
             artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
-            mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"
+            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs"
     ```
 
 Once you have successfully run an experiment, you may inspect the run
@@ -259,6 +277,29 @@ bucket. You can also compare runs with each other.
     GPU. This is useful for projects that require a GPU for training,
     but do not require the full capacity of a GPU.
 
+!!! info "Resuming/adding new epochs"
+
+    The training script supports resuming training from a previous 
+    checkpoint by setting the `resume` parameter to `true` in the 
+    configuration file. When this parameter is enabled, the script will:
+    
+    1. Check for the latest step logged by MLFlow
+    2. Offset the epoch step with the latest step from MLFlow
+    3. Continue training from the last saved epoch
+    4. Log the continued training as part of the same MLflow run
+    
+    This is particularly useful when:
+    
+    - You need to extend training for additional epochs after 
+      evaluating initial results
+    - Training was interrupted and needs to be continued
+    - You want to implement a progressive training strategy with 
+      changing parameters
+    
+    To use this feature, simply set `resume: true` in your 
+    `conf/train_model.yaml` file or append `resume=true` during runtime 
+    as an override and run the training script as normal.
+
 ### Hyperparameter Tuning
 
 For many ML problems, we would be bothered with finding the optimal
@@ -292,13 +333,13 @@ hydra:
     sampler:
       seed: 55
     direction: ["minimize", "maximize"]
-    study_name: "image-classification"
+    study_name: "base-template"
     storage: null
     n_trials: 3
     n_jobs: 1
     params:
-      dummy_param1: range(0.9,1.7,step=0.1)
-      dummy_param2: choice(0.7,0.8,0.9)
+      lr: range(0.9,1.7,step=0.1)
+      train_bs: choice(32,48,64)
 ```
 
 These fields are used by the Optuna Sweeper plugin to configure the
@@ -325,7 +366,7 @@ different files that we have to pay attention to.
 `src/train_model.py`
 ```python
 ...
-    return args["dummy_param1"], args["dummy_param2"]
+    return curr_test_loss, curr_test_accuracy
 ...
 ```
 
@@ -358,6 +399,8 @@ by default.
 === "Coder Workspace Terminal using Run:ai"
 
     ```bash
+    # Run `runai login` and `runai config project {{cookiecutter.proj_name}}` first if needed
+    # Run this in the base of your project repository, and change accordingly
     # Switch working-dir to /<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/{{cookiecutter.repo_name}} to use the repo in the PVC
     runai submit \
         --job-name-prefix <YOUR_HYPHENATED_NAME>-train-hp \
@@ -369,9 +412,11 @@ by default.
         -e MLFLOW_TRACKING_PASSWORD=<YOUR_MLFLOW_PASSWORD> \
         -e MLFLOW_HPTUNING_TAG=$(date +%s) \
         --command -- /bin/bash -c "python -u src/train_model.py --multirun \
+            mlflow_tracking_uri=<MLFLOW_TRACKING_URI> \
+            mlflow_exp_name=<NAME_OF_DEFAULT_MLFLOW_EXPERIMENT> \
             data_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/data/processed \
             artifact_dir_path=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/models \
-            mlflow_tracking_uri=<MLFLOW_TRACKING_URI>"
+            log_dir=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPHENATED_NAME>/logs"
     ```
 
 ![MLflow Tracking Server - Hyperparameter Tuning Runs](../common/assets/screenshots/mlflow-tracking-hptuning-runs.png)

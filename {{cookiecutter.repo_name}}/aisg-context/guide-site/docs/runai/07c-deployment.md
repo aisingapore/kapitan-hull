@@ -153,7 +153,7 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org):
         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
         --service-type external-url,port=8080:8080 \
-        --command -- gunicorn {{cookiecutter.repo_name}}_fastapi.main:APP \
+        --command -- gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
             -k uvicorn.workers.UvicornWorker \
             -b 0.0.0.0:8080 -w 2 -t 90
     ```
@@ -195,7 +195,7 @@ data and schema validation, as well as [settings management]. There's a
 class called `Settings` under the module
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
 contains several fields: some are defined and some others not. The 
-`MODEL_UUID` field inherits their values from the environment variables.
+`MODEL_UUID` field inherits its value from the environment variables.
 
 `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
 ```python

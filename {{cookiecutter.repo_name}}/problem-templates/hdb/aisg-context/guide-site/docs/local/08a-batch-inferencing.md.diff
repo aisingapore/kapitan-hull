@@ -1,6 +1,8 @@
 --- {{cookiecutter.repo_name}}/aisg-context/guide-site/docs/local/08a-batch-inferencing.md
 +++ {{cookiecutter.repo_name}}/problem-templates/hdb/aisg-context/guide-site/docs/local/08a-batch-inferencing.md
-@@ -3,76 +3 @@
+@@ -1,78 +1,3 @@
+ # Batch Inferencing
+ 
 -Some problem statements do not warrant the deployment of an API server
 -but instead methods for conducting batched inferencing where a batch
 -of data is provided to a script and it is able to churn out a set of
@@ -9,8 +11,8 @@
 -This template provides a Python script (`src/batch_infer.py`) and a 
 -configuration file (`conf/batch_infer.yaml`) for this purpose. 
 -
--Let's first download some data on our local machine for us to conduct
--batch inferencing on:
+-Let's first create some sample data on our local machine for us to 
+-conduct batch inferencing on:
 -
 -=== "Linux/macOS"
 -

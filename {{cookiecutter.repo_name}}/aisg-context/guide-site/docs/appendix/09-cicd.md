@@ -48,6 +48,11 @@ As we move along, we should be able to relate parts of the flow
 described above with the stages defined by the default GitLab CI
 pipeline.
 
+For more information on Gitlab CI pipeline, you can refer 
+[here][lighthouse] (AISG personnel only).
+
+[lighthouse]: https://lighthouse.aisingapore.net/tools-and-tech/Gitlab-CICD
+
 ## Environment Variables
 
 Before we can make use of the GitLab CI pipeline, we would have to
@@ -57,24 +62,30 @@ define the following variable(s) for the pipeline beforehand:
 - `HARBOR_ROBOT_CREDS_JSON`: A JSON formatted value that contains
   encoded credentials for a robot account on Harbor. This is to allow
   the pipeline to interact with the Harbor server. See the next section 
-  on how to generate this value/file.
+  on how to generate this value/file.  
 {%- elif cookiecutter.platform == 'gcp' %}
 
 - `GCP_SERVICE_ACCOUNT_KEY`: A JSON formatted value that contains 
   encoded credentials for a service account on your GCP project. This 
   is to allow the pipeline to interact with the Google Artifact 
-  Registry. See [here][gcp-sa] on how to generate this file.
+  Registry. See [here][gcp-sa] on how to generate this file.  
 {%- endif %}
+  After you've generated the JSON file, please encode the file content 
+  using `base64 -i <file>`. Afterwhich, copy paste the encoded value 
+  and define it as a CI/CD variable. 
 
 To define CI/CD variables for a project (repository), follow the steps
 listed [here][cicd-var]. 
 {%- if cookiecutter.platform == 'onprem' %}
-The environment variable `HARBOR_ROBOT_CREDS_JSON` needs to be a `File` 
-type.
+The environment variable `HARBOR_ROBOT_CREDS_JSON` needs to be a 
+`variable` type.
 {%- elif cookiecutter.platform == 'gcp' %}
-The environment variable `GCP_SERVICE_ACCOUNT_KEY` needs to be a `File`
-type.
+The environment variable `GCP_SERVICE_ACCOUNT_KEY` needs to be a 
+`variable` type.
 {%- endif %}
+
+After defining the CI/CD variables for the project, your pipeline
+should be able to pass. If not, re-run the pipeline.
 
 [cicd-var]: https://docs.gitlab.com/ee/ci/variables/#define-a-cicd-variable-in-the-ui
 {%- if cookiecutter.platform == 'gcp' %}
@@ -121,11 +132,15 @@ into a CI/CD environment variable of type `File`
 
 ![GitLab UI - Set File Variable under CI/CD Settings](assets/screenshots/gitlab-settings-cicd-set-file-var.png)
 
+After defining the CI/CD Variables for the project, your pipeline 
+should be able to pass. If not, re-run the pipeline. 
+
 ??? info "Reference Link(s)"
 
     - [GitLab Docs - GitLab CI/CD variables](https://docs.gitlab.com/ee/ci/variables/)
     - [Docker Docs - Configuration files](https://docs.docker.com/engine/reference/commandline/cli/#configuration-files)
 {%- endif %}
+{%- if not cookiecutter.aisg %}
 
 ## Stages & Jobs
 
@@ -146,9 +161,10 @@ These stages are defined and listed like so:
     ```yaml
     ...
     stages:
-      - test
-      - deploy-docs
       - build
+      - test
+      - deploy
+      - deploy-docs
     ...
     ```
 
@@ -186,21 +202,46 @@ files that is cached within this branch.
 
 [Gitlab Pages]: https://docs.gitlab.com/ee/user/project/pages
 [Docker executor]: https://docs.gitlab.com/runner/executors/docker.html 
+{%- endif %}
+
+## Variables
+
+The GitLab CI pipeline uses several variables to control its behavior:
+
+- `PYTHON_IMAGE`: Specifies the Docker image used for Python-based jobs (default: `continuumio/miniconda3:24.7.1-0`)
+- `VENV_DIRECTORY`: Defines the path where the Conda environment will be created and stored
+- `IMAGE_TAG`: Default tag for Docker images (default: `latest`)
+{%- if not cookiecutter.aisg %}
+- `BUILD_CONDA`: When set in a manual pipeline run, forces the Conda environment to be built
+- `BUILD_ALL`: When set in a manual pipeline run, triggers building of all Docker images
+- `BUILD_DATAPREP`: When set in a manual pipeline run, triggers building of the data preparation image
+- `BUILD_MODEL`: When set in a manual pipeline run, triggers building of the model training image
+{%- endif %}
+
+GitLab also provides many predefined variables that are used in the pipeline:
+- `CI_COMMIT_REF_SLUG`: Branch or tag name in a URL-friendly format
+- `CI_COMMIT_SHORT_SHA`: The first 8 characters of the commit SHA
+- `CI_DEFAULT_BRANCH`: The default branch for the project (usually `main`)
+- `CI_PIPELINE_SOURCE`: How the pipeline was triggered (e.g., "push", "web", "merge_request_event")
+{%- if not cookiecutter.aisg %}
+- `CI_PROJECT_DIR`: The full path where the repository is cloned
+- `CI_MERGE_REQUEST_IID`: The merge request ID if the pipeline is for a merge request
+- `CI_COMMIT_TAG`: The commit tag name if the pipeline was triggered by a tag
 
 ## Building the Conda Environment
 
-Let's look at the job defined for the `test` stage first:
+Let's look at the job defined for the `build` stage first:
 
 === "`.gitlab-ci.yml`"
 
     ```yaml
     ...
-    test:conda-build:
-      stage: test
+    build:conda-env:
+      stage: build
       image:
-        name: continuumio/miniconda3:23.10.0-1
+        name: ${PYTHON_IMAGE}
       script:
-        - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p ./conda/{{cookiecutter.repo_name}}
+        - conda env create -f {{cookiecutter.repo_name}}-conda-env.yaml -p ${VENV_DIRECTORY}
       rules:
         - if: $CI_MERGE_REQUEST_IID
           changes:
@@ -218,7 +259,7 @@ Let's look at the job defined for the `test` stage first:
     ...
     ```
 
-First of all, this `test:conda-build` job will only execute on the
+First of all, this `build:conda-env` job will only execute on the
 condition that the defined [`rules`][cicd-rules] are met. In this case,
 the job will only execute for the following cases:
 
@@ -241,21 +282,44 @@ The job does not have any jobs that it needs to wait for, thus the
 
 ## Automated Testing & Linting
 
-The next job in the `test` stage is as follows:
+The `test` stage includes two separate jobs: one for linting and one for running tests:
 
-=== "`.gitlab-ci.yml`"
+=== "`.gitlab-ci.yml` - Linting Job"
 
     ```yaml
     ...
-    test:pylint-pytest:
+    test:lint:
       stage: test
-      image:
-        name: continuumio/miniconda3:23.10.0-1
       before_script:
-        - source activate ./conda/{{cookiecutter.repo_name}}
+        - source activate ${VENV_DIRECTORY}
         - pip install -r dev-requirements.txt
       script:
         - pylint src --fail-under=7.0 --ignore=tests --disable=W1202
+      rules:
+        - if: $CI_MERGE_REQUEST_IID
+          changes:
+            - src/**/*
+            - conf/**/*
+        - if: $CI_PIPELINE_SOURCE == "push"
+        - if: $CI_PIPELINE_SOURCE == "web"
+        - if: $CI_COMMIT_TAG
+          when: never
+      needs:
+        - job: build:conda-env
+          optional: true
+    ...
+    ```
+
+=== "`.gitlab-ci.yml` - Testing Job"
+
+    ```yaml
+    ...
+    test:pytest:
+      stage: test
+      before_script: 
+        - source activate ${VENV_DIRECTORY}
+        - pip install -r dev-requirements.txt
+      script:
         - pytest src/tests --junitxml=./rspec.xml
       rules:
         - if: $CI_MERGE_REQUEST_IID
@@ -272,13 +336,12 @@ The next job in the `test` stage is as follows:
         reports:
           junit: rspec.xml
       needs:
-        - job: test:conda-build
+        - job: build:conda-env
           optional: true
     ...
     ```
 
-In this case with the `test:pylint-pytest` job, the job will only 
-execute for the following cases:
+For both the `test:lint` and `test:pytest` jobs, they will only execute for the following cases:
 
 - For pushes to branches which merge requests have been created, tests
   are executed only if changes made to any files within `src` or `conf` 
@@ -288,24 +351,22 @@ execute for the following cases:
 - If the push action is associated with a tag
   (`git push <remote> <tag_name>`), the job will not run.
 
-The job would wait for `test:conda-build` to be completed first before 
-this job can be executed. The `optional: true` option is set so that 
-it would still run if the `conda-build` job doesn't since it has 
-already been cached to be used in this job.
+Both jobs wait for `build:conda-env` to be completed first before they 
+can be executed. The `optional: true` option is set so that they would 
+still run if the `build:conda-env` job doesn't since the environment 
+has already been cached to be used in these jobs.
 
-The job defined above fails under any of the following conditions:
+The `test:lint` job fails if the source code does not meet a linting 
+score of at least 7.0.
 
-- The source code does not meet a linting score of at least 7.0.
-- The source code fails whatever tests have been defined under
-  `src/tests`.
+The `test:pytest` job fails if the source code fails any tests that 
+have been defined under `src/tests`. This job generates a `rspec.xml` 
+file as an artifact so that you can read the test results in the GitLab 
+UI. More information about this can be found [here][unittests].
 
-The job would have to succeed before moving on to the `build` stage.
+Both jobs would have to succeed before moving on to the `deploy` stage.
 Otherwise, no Docker images will be built. This is so that source
-code that fail tests would never be packaged.
-
-The job would generate a `rspec.xml` file as an artifact so that you 
-can read the test results in the GitLab UI. More information about this 
-can be found [here][unittests].
+code that fails either linting or tests would never be packaged.
 
 ??? info "Reference Link(s)"
 
@@ -320,10 +381,10 @@ can be found [here][unittests].
 The template has thus far introduced a couple of Docker images relevant
 for the team. The tags for all the Docker images are listed below:
 
-- `{{cookiecutter.registry_project_path}}/data-prep`
-- `{{cookiecutter.registry_project_path}}/model-training`
+- `{{cookiecutter.registry_project_path}}/cpu`
+- `{{cookiecutter.registry_project_path}}/gpu`
 
-The `build` stage aims at automating the building of these Docker
+The `deploy` stage aims at automating the building of these Docker
 images in a parallel manner. Let's look at a snippet for a single job
 that builds a Docker image:
 
@@ -331,8 +392,8 @@ that builds a Docker image:
 
     ```yaml
     ...
-    build:data-prep-image:
-      stage: build
+    build:cpu-image:
+      stage: deploy
       image:
         name: gcr.io/kaniko-project/executor:debug
         entrypoint: [""]
@@ -357,7 +418,7 @@ that builds a Docker image:
           /kaniko/executor
           --context "${CI_PROJECT_DIR}"
           --dockerfile "${CI_PROJECT_DIR}/docker/{{cookiecutter.repo_name}}-cpu.Dockerfile"
-          --destination "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA}"
+          --destination "{{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA}"
       rules:
         - if: $CI_MERGE_REQUEST_IID
           changes:
@@ -368,7 +429,9 @@ that builds a Docker image:
         - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_ALL
         - if: $CI_PIPELINE_SOURCE == "web" && $BUILD_DATAPREP
       needs:
-        - job: test:pylint-pytest
+        - job: test:lint
+          optional: true
+        - job: test:pytest
           optional: true
     ...
     ```
@@ -381,7 +444,7 @@ that builds a Docker image:
     Docker within Docker ([Docker-in-Docker][dind]) requires privileged 
     mode that poses several security concerns. Hence, the image 
     `gcr.io/kaniko-project/executor:debug` is being used for all 
-    `build` jobs related to building of Docker images. That being said, 
+    `deploy` jobs related to building of Docker images. That being said, 
     the flags used for `kaniko` corresponds well with the flags usually 
     used for `docker` commands.
 {%- if cookiecutter.platform == 'onprem' %}
@@ -396,7 +459,7 @@ Otherwise, it will prematurely stop the job with the error, preventing
 the job from running any further and freeing the CI worker faster to 
 work on other jobs in the organisation.
 
-Just like with the `test` jobs, the each of the jobs under `build` will
+Just like with the `test` jobs, the each of the jobs under `deploy` will
 execute under certain conditions:
 
 - If a push is being done to a branch which has a merge request opened,
@@ -416,8 +479,8 @@ execute under certain conditions:
   model training image) variable has been set. It can be set to any 
   value, but we can set it to `true` by default.
 
-The jobs in the `build` stage requires the `test:pylint-pytest` job to
-be successful, otherwise it would not run.
+The jobs in the `deploy` stage requires the `test:lint` and 
+`test:pytest` jobs to be successful, otherwise it would not run.
 
 Images built through the pipeline will be tagged with the commit
 hashes associated with the commits that triggered it. This is seen
@@ -450,7 +513,7 @@ the default branch before this.
     ```yaml
     ...
     build:retag-images:
-      stage: build
+      stage: deploy
       image:
 {%- if cookiecutter.platform == 'onprem' %}
         name: gcr.io/go-containerregistry/crane:debug
@@ -469,19 +532,19 @@ the default branch before this.
       script:
 {%- if cookiecutter.platform == 'onprem' %}
         - cat $HARBOR_ROBOT_CREDS_JSON > /root/.docker/config.json
-        - crane tag {{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
-        - crane tag {{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA} ${$CI_COMMIT_TAG}
+        - crane tag {{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA} ${CI_COMMIT_TAG}
+        - crane tag {{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_SHORT_SHA} ${CI_COMMIT_TAG}
 {%- elif cookiecutter.platform == 'gcp' %}
         - cat $GCP_SERVICE_ACCOUNT_KEY > /gcp-sa.json
-        - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/data-prep:${CI_COMMIT_TAG}"
-        - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/model-training:${CI_COMMIT_TAG}"
+        - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_TAG}"
+        - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_TAG}"
 {%- endif %}
       rules:
         - if: $CI_COMMIT_TAG && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       needs:
-        - job: build:data-prep-image
+        - job: build:cpu-image
           optional: true
-        - job: build:model-training-image
+        - job: build:gpu-image
           optional: true
     ...
     ```
@@ -491,6 +554,7 @@ the default branch before this.
     - [GitHub Docs - GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow)
     - [GitLab Docs - GitLab Flow](https://docs.gitlab.com/ee/topics/gitlab_flow.html)
     - [`go-containerregistry` GitHub - `crane`](https://github.com/google/go-containerregistry/blob/main/cmd/crane/README.md)
+{%- endif %}
 
 ## Conclusion
 
@@ -505,4 +569,11 @@ examples off the top:
 - automate the deployment of the FastAPI servers to Kubernetes clusters
 
 There's much more that can be done but whatever has been shared thus 
-far is hopefully enough for one to get started with CI/CD.
+far is hopefully enough for one to get started with CI/CD. 
+
+Maintaining CI/CD pipelines requires extensive effort from developers. 
+To reduce the effort required from developers, the MLOps Team has 
+written a set of templates in which users can implement - plug and play 
+with [CI/CD Components][cicdcomp].
+
+[cicdcomp]: https://lighthouse.aisingapore.net/Platforms/MLOps&LLMOps/CICD-Components

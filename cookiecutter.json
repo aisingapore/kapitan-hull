@@ -6,33 +6,35 @@
     "src_package_name_short": "{{ cookiecutter.src_package_name }}",
     "platform": ["onprem", "gcp"],
     "orchestrator": ["runai", "none"],
+    "aisg": true,
     "proj_name": "sample-project",
     "registry_project_path": "registry.domain.tld/sample-project/my-project",
     "problem_template": ["base", "cv"],
     "author_name": "AISG",
     "__prompts__": {
-        "project_name": "project_name - Name of project that will be the header for the README.md. Input to start with alphabet. Only whitespace as separators.",
-        "description": "description - A short description of the project that will be populated in README.md. Max of 72 characters.",
-        "repo_name": "repo_name - Name of repository. Name of the repository folder. Input to start with alphabet characters. No whitespaces or underscores are allowed.",
-        "src_package_name": "src_package_name - Name of the source code's package under the src folder. Input to start with alphabet characters. No whitespaces or hyphens are allowed.",
-        "src_package_name_short": "src_package_name_short - The alias for the source code's package. Input to start with alphabet characters. No whitespaces or hyphens are allowed.",
+        "project_name": "project_name - Project name that will appear as the main header in README.md (must start with a letter, use only spaces as separators)",
+        "description": "description - Brief project description for README.md (max 72 characters)",
+        "repo_name": "repo_name - Repository folder name (must start with a letter, no spaces or underscores allowed, use hyphens instead)",
+        "src_package_name": "src_package_name - Python package name for source code (must start with a letter, no spaces or hyphens allowed, use underscores instead)",
+        "src_package_name_short": "src_package_name_short - Short alias for the source package (must start with a letter, no spaces or hyphens allowed)",
         "platform": {
-            "__prompt__": "platform - The platform the project is running on.",
-            "onprem": "onprem - On premise (AISG)",
+            "__prompt__": "platform - Select the platform where this project will run:",
+            "onprem": "onprem - On-premise infrastructure (AISG)",
             "gcp": "gcp - Google Cloud Platform"
         },
         "orchestrator": {
-            "__prompt__": "orchestrator - The orchestrator the project is using.",
-            "runai": "runai - Run:ai (and other AISG Resources)",
+            "__prompt__": "orchestrator - Select the orchestration system for this project:",
+            "runai": "runai - Run:ai (with AISG Resources)",
             "noorch": "noorch - No orchestrator (not implemented yet)"
         },
-        "proj_name": "proj_name - The project name used in by the repository. If you're using Run:ai, this will be the Run:ai project name used by the repository.",
-        "registry_project_path": "registry_project_path - Path of the registry repository for your container images to be located under. Cannot end with a slash character.",
+        "aisg": "aisg - Choose whether to add AISG context",
+        "proj_name": "proj_name - Project name used by the orchestrator (for Run:ai, this will be the Run:ai project name)",
+        "registry_project_path": "registry_project_path - Full path to container registry (without trailing slash, e.g., registry.domain.tld/project/image)",
         "problem_template": {
-            "__prompt__": "problem_template - Initialise the repository with a default problem statement.",
-            "base": "base - Base template with no model packages",
-            "cv": "cv - Computer Vision (MNIST with Pytorch)"
+            "__prompt__": "problem_template - Select a problem template to initialize your repository:",
+            "base": "base - Base template (minimal setup with no model packages)",
+            "cv": "cv - Computer Vision template (MNIST with PyTorch)"
         },
-        "author_name": "author_name - Your alias or project team's name. Relatively arbitrary. No hyphens are allowed."
+        "author_name": "author_name - Your name or team name (no hyphens allowed)"
     }
 }
