@@ -65,7 +65,7 @@ The documentation page is viewable through the following convention:
 `<NAMESPACE>.gitlab.aisingapore.net/<GROUP>/<PROJECT_NAME>`.
 {%- else %}
 `<NAMESPACE>.gitlab.example.com/<PROJECT_NAME>` or
-`<NAMESPACE>.gitlab.example/<GROUP>/<PROJECT_NAME>`.
+`<NAMESPACE>.gitlab.example.com/<GROUP>/<PROJECT_NAME>`.
 {%- endif %}
 
 ??? info "Reference Link(s)"

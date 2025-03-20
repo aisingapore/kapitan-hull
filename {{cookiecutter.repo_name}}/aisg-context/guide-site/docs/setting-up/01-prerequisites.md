@@ -8,7 +8,7 @@ follow through with the guide:
 {% if cookiecutter.aisg -%}
 - NUS Staff/Student account.
 - Azure account provisioned by AI Singapore.
-{%- endif %}
+{%- endif -%}
 - PC with the following installed:
     - If your machine is with a Windows OS, use [__PowerShell__][pshell]
       instead of the default Command (`cmd.exe`) shell. Best if you
