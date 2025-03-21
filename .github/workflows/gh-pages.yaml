@@ -16,10 +16,10 @@ jobs:
       - name: Install dependencies
         run: |
           pip install "cookiecutter>=2.2" unidiff
-          pip install -r mkdocs-requirements.txt
       - name: Generate template with cookiecutter
         run: |
-          cookiecutter . --no-input --config-file cookiecutter-ghpages.json -o temp_output
+          cookiecutter --replay-file cookiecutter-ghpages.json -o temp_output .
+          ls -al temp_output
       - name: Build and deploy docs
         run: |
           cd temp_output/ghpages
