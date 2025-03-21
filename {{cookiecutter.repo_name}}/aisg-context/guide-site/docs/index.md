@@ -89,7 +89,7 @@ Inputs provided to `cookiecutter` for the generation of this template:
 │                          to be ignored by Docker contexts.
 ├── .gitignore          <- File for specifying files or directories
 │                          to be ignored by Git.
-├── .gitlab-ci.yml      <- AML file for configuring GitLab CI/CD
+├── .gitlab-ci.yml      <- YAML file for configuring GitLab CI/CD
 │                          pipelines.
 ├── .pylintrc           <- Configurations for `pylint`.
 ├── {{cookiecutter.repo_name}}-conda-env.yaml

@@ -82,7 +82,7 @@
  │                          repository's packages.
 @@ -91,10 +58,12 @@
  │                          to be ignored by Git.
- ├── .gitlab-ci.yml      <- AML file for configuring GitLab CI/CD
+ ├── .gitlab-ci.yml      <- YAML file for configuring GitLab CI/CD
  │                          pipelines.
  ├── .pylintrc           <- Configurations for `pylint`.
 -├── {{cookiecutter.repo_name}}-conda-env.yaml
