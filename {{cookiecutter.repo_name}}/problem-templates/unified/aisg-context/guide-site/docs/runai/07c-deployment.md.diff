@@ -88,16 +88,16 @@
 -    # Running in a working `{{cookiecutter.repo_name}}` repository
 -    conda activate {{cookiecutter.repo_name}}
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
--    gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+-    uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
 +    # Running in a working `project` repository
 +    conda activate project
 +    export MODEL_UUID=<MLFLOW_RUN_UUID>
-+    gunicorn project_package_fastapi.main:APP \
-         -k uvicorn.workers.UvicornWorker \
-         -b 0.0.0.0:8080 -w 2 -t 90 --chdir src
++    uvicorn project_package_fastapi.main:APP \
+         --host 0.0.0.0 --port 8080 --workers 2 --app-dir src
      ```
  
-@@ -147,14 +145,14 @@
+     And with that, the link to our document site for our server would
+@@ -146,14 +144,14 @@
      ```bash
      export MODEL_UUID=<MLFLOW_RUN_UUID>
      runai submit \
@@ -109,13 +109,13 @@
          --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
          --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
          --service-type external-url,port=8080:8080 \
--        --command -- gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
-+        --command -- gunicorn project_package_fastapi.main:APP \
-             -k uvicorn.workers.UvicornWorker \
-             -b 0.0.0.0:8080 -w 2 -t 90
+-        --command -- uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
++        --command -- uvicorn project_package_fastapi.main:APP \
+             --host 0.0.0.0 --port 8080 --workers 2 --app-dir src
      ```
  
-@@ -192,18 +190,18 @@
+     And with that, the link to our document site for our server would
+@@ -189,18 +187,18 @@
  Now you might be wondering, how does the FastAPI server knows the path
  to the model for it to load? FastAPI utilises [Pydantic], a library for 
  data and schema validation, as well as [settings management]. There's a 

@@ -59,7 +59,7 @@
      ```
  
  Executing the commands above will download the artifacts related to the
-@@ -143,12 +149,12 @@
+@@ -138,24 +144,24 @@
  
      ```bash
      docker run --rm \
@@ -67,16 +67,15 @@
 -        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
 -        -w /home/aisg/{{cookiecutter.repo_name}}/src \
 -        {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
--        gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+-        uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
 +        -v ./models:/home/aisg/project/models \
 +        -w /home/aisg/project/src \
 +        registry.aisingapore.net/project-path/gpu:0.1.0 \
-+        gunicorn project_package_fastapi.main:APP \
-             -k uvicorn.workers.UvicornWorker \
-             -b 0.0.0.0:8080 -w 2 -t 90
++        uvicorn project_package_fastapi.main:APP \
+             --host 0.0.0.0 --port 8080 --workers 2 --app-dir src
      ```
  
-@@ -156,12 +162,12 @@
+ === "macOS"
  
      ```bash
      docker run --rm \
@@ -84,16 +83,16 @@
 -        -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
 -        -w /home/aisg/{{cookiecutter.repo_name}}/src \
 -        {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
--        gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+-        uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
 +        -v ./models:/home/aisg/project/models \
 +        -w /home/aisg/project/src \
 +        registry.aisingapore.net/project-path/gpu:0.1.0 \
-+        gunicorn project_package_fastapi.main:APP \
-             -k uvicorn.workers.UvicornWorker \
-             -b 0.0.0.0:8080 -w 2 -t 90
++        uvicorn project_package_fastapi.main:APP \
+             --host 0.0.0.0 --port 8080 --workers 2 --app-dir src
      ```
  
-@@ -177,12 +183,12 @@
+ === "Windows PowerShell"
+@@ -170,12 +176,12 @@
  
      ```powershell
      docker run --rm `
@@ -101,16 +100,16 @@
 -        -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
 -        -w /home/aisg/{{cookiecutter.repo_name}}/src `
 -        {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
--        gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP `
+-        uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
 +        -v .\models:/home/aisg/project/models `
 +        -w /home/aisg/project/src `
 +        registry.aisingapore.net/project-path/gpu:0.1.0 `
-+        gunicorn project_package_fastapi.main:APP `
-             -k uvicorn.workers.UvicornWorker `
-             -b 0.0.0.0:8080 -w 2 -t 90
++        uvicorn project_package_fastapi.main:APP `
+             --host 0.0.0.0 --port 8080 --workers 2 --app-dir src
      ```
  
-@@ -243,18 +249,18 @@
+ And with that, our document site for our server is viewable through
+@@ -234,18 +240,18 @@
  Now you might be wondering, how does the FastAPI server knows the path
  to the model for it to load? FastAPI utilises [Pydantic], a library for 
  data and schema validation, as well as [settings management]. There's a 

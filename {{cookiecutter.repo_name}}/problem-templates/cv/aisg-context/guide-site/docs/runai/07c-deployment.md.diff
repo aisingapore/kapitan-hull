@@ -58,11 +58,11 @@
 -    export MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_UUID=<MLFLOW_RUN_UUID>
 +    export PRED_MODEL_PATH="<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPENATED_NAME>/models/$PRED_MODEL_UUID/model/model.pt"
-     gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
-         -k uvicorn.workers.UvicornWorker \
-         -b 0.0.0.0:8080 -w 2 -t 90 --chdir src
+     uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+         --host 0.0.0.0 --port 8080 --workers 2 --app-dir src
      ```
-@@ -144,15 +148,16 @@
+ 
+@@ -143,15 +147,16 @@
  
  === "Using Run:ai"
  
@@ -77,10 +77,10 @@
          --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
 +        -e PRED_MODEL_PATH=/<NAME_OF_DATA_SOURCE>/workspaces/<YOUR_HYPENATED_NAME>/models/$PRED_MODEL_UUID/model/model.pt \
          --service-type external-url,port=8080:8080 \
-         --command -- gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
-             -k uvicorn.workers.UvicornWorker \
-             -b 0.0.0.0:8080 -w 2 -t 90
-@@ -169,16 +174,16 @@
+         --command -- uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+             --host 0.0.0.0 --port 8080 --workers 2 --app-dir src
+     ```
+@@ -167,16 +172,16 @@
  
      ```bash
      curl -X POST \
@@ -100,7 +100,7 @@
  
  With the returned JSON object, we have successfully submitted a request
  to the FastAPI server and it returned predictions as part of the
-@@ -194,9 +199,10 @@
+@@ -191,9 +196,10 @@
  data and schema validation, as well as [settings management]. There's a 
  class called `Settings` under the module
  `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
@@ -112,7 +112,7 @@
  `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
  ```python
  ...
-@@ -205,9 +211,12 @@
+@@ -202,9 +208,12 @@
      API_NAME: str = "{{cookiecutter.src_package_name}}_fastapi"
      API_V1_STR: str = "/api/v1"
      LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"

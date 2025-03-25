@@ -56,37 +56,37 @@
  [beginner tutorials]: https://fastapi.tiangolo.com/tutorial/
  
  ### Running the API Server
-@@ -145,8 +142,9 @@
+@@ -140,8 +137,9 @@
      docker run --rm \
          -p 8080:8080 \
          -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
          -w /home/aisg/{{cookiecutter.repo_name}}/src \
 +        -e PRED_MODEL_PATH="../models/$PRED_MODEL_UUID/model/xgbreg.json" \
          {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
-         gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
-             -k uvicorn.workers.UvicornWorker \
-             -b 0.0.0.0:8080 -w 2 -t 90
-@@ -158,8 +156,9 @@
+         uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+             --host 0.0.0.0 --port 8080 --workers 2 --app-dir src
+     ```
+@@ -152,8 +150,9 @@
      docker run --rm \
          -p 8080:8080 \
          -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
          -w /home/aisg/{{cookiecutter.repo_name}}/src \
 +        -e PRED_MODEL_PATH="../models/$PRED_MODEL_UUID/model/xgbreg.json" \
          {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
-         gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
-             -k uvicorn.workers.UvicornWorker \
-             -b 0.0.0.0:8080 -w 2 -t 90
-@@ -179,8 +178,9 @@
-     docker run --rm `
+         uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+             --host 0.0.0.0 --port 8080 --workers 2 --app-dir src
+     ```
+@@ -173,8 +172,9 @@
          -p 8080:8080 `
          -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
          -w /home/aisg/{{cookiecutter.repo_name}}/src `
-+        -e PRED_MODEL_PATH="../models/$Env:PRED_MODEL_UUID/model/xgbreg.json" `
          {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
-         gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP `
-             -k uvicorn.workers.UvicornWorker `
-             -b 0.0.0.0:8080 -w 2 -t 90
-@@ -199,39 +199,35 @@
++        -e PRED_MODEL_PATH="../models/$Env:PRED_MODEL_UUID/model/xgbreg.json" `
+         uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+             --host 0.0.0.0 --port 8080 --workers 2 --app-dir src
+     ```
+ 
+@@ -191,39 +191,35 @@
      ```bash
      docker run --rm --network=host \
          curlimages/curl -X POST \
@@ -134,8 +134,8 @@
  to the FastAPI server and it returned predictions as part of the
  response.
  
- [reason]: https://fastapi.tiangolo.com/deployment/server-workers/
-@@ -245,9 +241,10 @@
+ [uvicorn]: https://www.uvicorn.org/
+@@ -236,9 +232,10 @@
  data and schema validation, as well as [settings management]. There's a 
  class called `Settings` under the module
  `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
@@ -147,7 +147,7 @@
  `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
  ```python
  ...
-@@ -256,9 +253,11 @@
+@@ -247,9 +244,11 @@
      API_NAME: str = "{{cookiecutter.src_package_name}}_fastapi"
      API_V1_STR: str = "/api/v1"
      LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"

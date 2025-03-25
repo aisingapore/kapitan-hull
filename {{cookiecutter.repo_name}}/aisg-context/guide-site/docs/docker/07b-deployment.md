@@ -125,12 +125,7 @@ that exists within the repository.
 
 ### Running the API Server
 
-Run the FastAPI server using [Gunicorn](https://gunicorn.org)
-(for Linux/macOS) or [`uvicorn`][uvicorn] (for Windows):
-
-!!! attention
-    Gunicorn is only executable on UNIX-based or UNIX-like systems;
-    this method would not be possible/applicable for Windows machines.
+Run the FastAPI server using [`uvicorn`][uvicorn]:
 
 === "Linux"
 
@@ -147,9 +142,8 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org)
         -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
         -w /home/aisg/{{cookiecutter.repo_name}}/src \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
-        gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
-            -k uvicorn.workers.UvicornWorker \
-            -b 0.0.0.0:8080 -w 2 -t 90
+        uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+            --host 0.0.0.0 --port 8080 --workers 2 --app-dir src
     ```
 
 === "macOS"
@@ -160,9 +154,8 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org)
         -v ./models:/home/aisg/{{cookiecutter.repo_name}}/models \
         -w /home/aisg/{{cookiecutter.repo_name}}/src \
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 \
-        gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
-            -k uvicorn.workers.UvicornWorker \
-            -b 0.0.0.0:8080 -w 2 -t 90
+        uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+            --host 0.0.0.0 --port 8080 --workers 2 --app-dir src
     ```
 
 === "Windows PowerShell"
@@ -181,9 +174,8 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org)
         -v .\models:/home/aisg/{{cookiecutter.repo_name}}/models `
         -w /home/aisg/{{cookiecutter.repo_name}}/src `
         {{cookiecutter.registry_project_path}}/gpu:0.1.0 `
-        gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP `
-            -k uvicorn.workers.UvicornWorker `
-            -b 0.0.0.0:8080 -w 2 -t 90
+        uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+            --host 0.0.0.0 --port 8080 --workers 2 --app-dir src
     ```
 
 And with that, our document site for our server is viewable through
@@ -234,7 +226,6 @@ With the returned JSON object, we have successfully submitted a request
 to the FastAPI server and it returned predictions as part of the
 response.
 
-[reason]: https://fastapi.tiangolo.com/deployment/server-workers/
 [uvicorn]: https://www.uvicorn.org/
 [rocm-wsl]: https://rocm.docs.amd.com/projects/radeon/en/latest/docs/install/wsl/howto_wsl.html
 
