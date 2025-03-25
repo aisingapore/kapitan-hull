@@ -57,7 +57,7 @@
  [beginner tutorials]: https://fastapi.tiangolo.com/tutorial/
  
  ### Running the API Server
-@@ -145,25 +160,25 @@
+@@ -134,25 +149,25 @@
  
      ```bash
      curl -X POST \
@@ -88,7 +88,7 @@
  
  With the returned JSON object, we have successfully submitted a request
  to the FastAPI server and it returned predictions as part of the
-@@ -179,9 +194,10 @@
+@@ -167,9 +182,10 @@
  data and schema validation, as well as [settings management]. There's a 
  class called `Settings` under the module
  `src/{{cookiecutter.src_package_name}}_fastapi/config.py`. This class 
@@ -100,7 +100,7 @@
  `src/{{cookiecutter.src_package_name}}_fastapi/config.py`:
  ```python
  ...
-@@ -190,9 +206,12 @@
+@@ -178,9 +194,12 @@
      API_NAME: str = "{{cookiecutter.src_package_name}}_fastapi"
      API_V1_STR: str = "/api/v1"
      LOGGER_CONFIG_PATH: str = "../conf/logging.yaml"

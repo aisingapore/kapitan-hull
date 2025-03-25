@@ -124,7 +124,7 @@ that exists within the repository.
 
 ### Running the API Server
 
-Run the FastAPI server using [Gunicorn](https://gunicorn.org):
+Run the FastAPI server using [`uvicorn`][uvicorn]:
 
 === "Coder Workspace Terminal"
 
@@ -132,9 +132,8 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org):
     # Running in a working `{{cookiecutter.repo_name}}` repository
     conda activate {{cookiecutter.repo_name}}
     export MODEL_UUID=<MLFLOW_RUN_UUID>
-    gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
-        -k uvicorn.workers.UvicornWorker \
-        -b 0.0.0.0:8080 -w 2 -t 90 --chdir src
+    uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+        --host 0.0.0.0 --port 8080 --workers 2 --app-dir src
     ```
 
     And with that, the link to our document site for our server would
@@ -153,9 +152,8 @@ Run the FastAPI server using [Gunicorn](https://gunicorn.org):
         --existing-pvc claimname=<NAME_OF_DATA_SOURCE>,path=/<NAME_OF_DATA_SOURCE> \
         --cpu 2 --cpu-limit 2 --memory 4G --memory-limit 4G --backoff-limit 1 \
         --service-type external-url,port=8080:8080 \
-        --command -- gunicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
-            -k uvicorn.workers.UvicornWorker \
-            -b 0.0.0.0:8080 -w 2 -t 90
+        --command -- uvicorn {{cookiecutter.src_package_name}}_fastapi.main:APP \
+            --host 0.0.0.0 --port 8080 --workers 2 --app-dir src
     ```
 
     And with that, the link to our document site for our server would
@@ -184,7 +182,6 @@ With the returned JSON object, we have successfully submitted a request
 to the FastAPI server and it returned predictions as part of the
 response.
 
-[reason]: https://fastapi.tiangolo.com/deployment/server-workers/
 [uvicorn]: https://www.uvicorn.org/
 
 ### Pydantic Settings
