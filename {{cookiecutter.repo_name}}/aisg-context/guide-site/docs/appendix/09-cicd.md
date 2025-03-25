@@ -117,7 +117,7 @@ so:
     ```
 
 Using the output from above, copy and paste the following content
-into a CI/CD environment variable of type `File`
+into a CI/CD environment variable of type `variable`
 (under `Settings` -> `CI/CD` -> `Variables` -> `Add variable`):
 
 ```json
@@ -410,9 +410,9 @@ that builds a Docker image:
       script:
         - mkdir -p /kaniko/.docker
 {%- if cookiecutter.platform == 'onprem' %}
-        - cat $HARBOR_ROBOT_CREDS_JSON > /kaniko/.docker/config.json
+        - echo $HARBOR_ROBOT_CREDS_JSON > /kaniko/.docker/config.json
 {%- elif cookiecutter.platform == 'gcp' %}
-        - cat $GCP_SERVICE_ACCOUNT_KEY > /kaniko/.docker/config.json
+        - echo $GCP_SERVICE_ACCOUNT_KEY > /kaniko/.docker/config.json
 {%- endif %}
         - >-
           /kaniko/executor
@@ -531,11 +531,11 @@ the default branch before this.
 {%- endif %}
       script:
 {%- if cookiecutter.platform == 'onprem' %}
-        - cat $HARBOR_ROBOT_CREDS_JSON > /root/.docker/config.json
+        - echo $HARBOR_ROBOT_CREDS_JSON > /root/.docker/config.json
         - crane tag {{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA} ${CI_COMMIT_TAG}
         - crane tag {{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_SHORT_SHA} ${CI_COMMIT_TAG}
 {%- elif cookiecutter.platform == 'gcp' %}
-        - cat $GCP_SERVICE_ACCOUNT_KEY > /gcp-sa.json
+        - echo $GCP_SERVICE_ACCOUNT_KEY > /gcp-sa.json
         - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/cpu:${CI_COMMIT_TAG}"
         - gcloud container images add-tag "{{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_SHORT_SHA}" "{{cookiecutter.registry_project_path}}/gpu:${CI_COMMIT_TAG}"
 {%- endif %}
